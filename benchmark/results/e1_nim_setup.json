@@ -1,0 +1,46 @@
+{
+  "experiment": "E1_nim_setup",
+  "timestamp": "2026-03-30T17:10:00+08:00",
+  "hardware": {
+    "gpu": "NVIDIA GeForce RTX 5090",
+    "vram_total_mb": 32607,
+    "driver_version": "577.00",
+    "cuda_version": "12.9"
+  },
+  "nim": {
+    "image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:1.13.1",
+    "profile": "vllm-bf16-tp1-pp1",
+    "engine": "vllm",
+    "precision": "bf16",
+    "max_model_len": 8192,
+    "model_id": "meta-llama/llama-3.1-8b-instruct",
+    "startup_notes": "First boot requires ~42.8GB model download from NGC. Subsequent boots use cached model."
+  },
+  "metrics": {
+    "startup_time_sec": "~600 (first boot with model download)",
+    "vram_usage_mb": 31070,
+    "vram_usage_pct": 95.3,
+    "first_inference_latency_ms": 1388,
+    "first_inference_tokens": 75,
+    "first_inference_tps": 54.0
+  },
+  "ollama_baseline": {
+    "model": "llama3.1:8b",
+    "status": "ready",
+    "vram_usage_mb": "~5000",
+    "note": "Q4 quantized via llama.cpp"
+  },
+  "checklist": {
+    "nim_container_running": true,
+    "api_endpoint_verified": true,
+    "ollama_baseline_ready": true,
+    "startup_time_recorded": true,
+    "vram_usage_recorded": true
+  },
+  "issues_encountered": [
+    "NIM latest (2.0.1) requires CUDA 13.0, driver 577.00 only supports CUDA 12.9 — used 1.13.1 instead",
+    "NIM 1.8.3 TensorRT profile hangs on RTX 5090 (sm_120 too new)",
+    "Default max_model_len=131072 exceeds available KV cache — reduced to 8192",
+    "NGC_API_KEY must be passed via -e env var, no spaces after ="
+  ]
+}

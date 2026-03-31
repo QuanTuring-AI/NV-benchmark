@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  nim-llama:
+    image: nvcr.io/nim/meta/llama-3.1-8b-instruct:latest
+    container_name: nim-llama
+    ports:
+      - "${NIM_PORT:-8000}:8000"
+    environment:
+      - NIM_MANIFEST_PROFILE=${NIM_MANIFEST_PROFILE:-vllm-bf16-tp1}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/v1/models"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 180s

@@ -1,0 +1,117 @@
+{
+  "project": "nim-benchmark",
+  "last_updated": "2026-03-30T17:10:00",
+  "experiments": {
+    "E1_nim_setup": {
+      "status": "completed",
+      "started": "2026-03-29",
+      "completed": "2026-03-30",
+      "notes": "NIM 1.13.1 running with vLLM profile on RTX 5090. max_model_len=8192. VRAM ~31GB.",
+      "checklist": {
+        "nim_container_running": true,
+        "api_endpoint_verified": true,
+        "ollama_baseline_ready": true,
+        "startup_time_recorded": true,
+        "vram_usage_recorded": true
+      }
+    },
+    "E2_benchmark": {
+      "status": "completed",
+      "started": "2026-03-30",
+      "completed": "2026-03-31",
+      "progress": {
+        "total_questions": 100,
+        "completed_questions": 100,
+        "current_round": 3,
+        "total_rounds": 3,
+        "last_question_id": "q100"
+      },
+      "checklist": {
+        "questions_json_prepared": true,
+        "nim_benchmark_done": true,
+        "ollama_benchmark_done": true,
+        "results_saved": true,
+        "summary_generated": true
+      },
+      "key_results": {
+        "nim_avg_tps": 73.8,
+        "ollama_avg_tps": 10.1,
+        "tps_speedup": "7.3x",
+        "nim_avg_ttft_ms": 221,
+        "ollama_avg_ttft_ms": 2876,
+        "ttft_speedup": "13x"
+      }
+    },
+    "E3_guardrails": {
+      "status": "completed",
+      "started": "2026-03-31",
+      "completed": "2026-03-31",
+      "notes": "NeMo Guardrails 0.21.0, self_check input+output rails, 45 questions x 3 rounds x 2 modes = 270 data points",
+      "checklist": {
+        "guardrails_installed": true,
+        "config_created": true,
+        "semiconductor_rules_tested": true,
+        "hallucination_rules_tested": true,
+        "citation_rules_tested": true,
+        "latency_overhead_measured": true
+      },
+      "key_results": {
+        "clean_overhead_ms": 123,
+        "clean_overhead_pct": "2.1%",
+        "edge_case_overhead_ms": 1,
+        "adversarial_detection_rate": "93.3%",
+        "false_positive_rate": "0%",
+        "blocked_avg_latency_ms": 94,
+        "passed_avg_tps": 63.8
+      }
+    },
+    "E4_rag_fullstack": {
+      "status": "not_started",
+      "started": null,
+      "completed": null,
+      "checklist": {
+        "gtc_pdfs_downloaded": false,
+        "knowledge_base_ingested": false,
+        "rag_nim_query_working": false,
+        "rag_nim_guardrails_working": false,
+        "accuracy_tested": false,
+        "accuracy_above_90": false
+      }
+    },
+    "E5_airgap": {
+      "status": "not_started",
+      "started": null,
+      "completed": null,
+      "note": "需要 Allen 手動斷網配合，Claude Code 準備好腳本後通知 Allen",
+      "checklist": {
+        "online_baseline_recorded": false,
+        "offline_test_completed": false,
+        "cold_start_tested": false,
+        "screenshots_saved": false
+      }
+    },
+    "E6_concurrency": {
+      "status": "not_started",
+      "started": null,
+      "completed": null,
+      "checklist": {
+        "async_script_ready": false,
+        "levels_1_5_10_tested": false,
+        "levels_20_50_tested": false,
+        "degradation_curve_generated": false
+      }
+    }
+  },
+  "daily_log": [
+    {
+      "date": "2026-03-29",
+      "experiment": "E1_nim_setup",
+      "completed_items": ["ollama_baseline_ready", "vram_usage_recorded"],
+      "blocked_items": ["nim_container_running"],
+      "blocker": "NGC license acceptance required via browser before NIM image can be pulled",
+      "ollama_tps": 227.4,
+      "gpu_vram_free_mib": 29743,
+      "gpu_temp_c": 55
+    }
+  ]
+}
