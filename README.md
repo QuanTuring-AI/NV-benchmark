@@ -189,21 +189,29 @@ See [DEPLOYMENT_NOTES.md](DEPLOYMENT_NOTES.md) for full details and working conf
 | E5         | Air-gap mode verification (offline operation)   | Planned  |
 | E6         | Concurrency stress test (1–50 concurrent users) | Planned  |
 
+> This table is kept as published in March 2026. What has since happened to E4–E6 is recorded in [ROADMAP_STATUS.md](ROADMAP_STATUS.md).
+
 ---
 
 ## Repository Structure
 
+The series map (volumes × NVIDIA components) is in [SERIES.md](SERIES.md). Each volume has its own evidence index.
+
 ```
 NV-benchmark/
 ├── README.md
+├── SERIES.md                       # Volumes × NVIDIA components · layout rules
+├── ROADMAP_STATUS.md               # Status of Vol.1's planned E4–E6
 ├── LICENSE
-├── DEPLOYMENT_NOTES.md
+├── DEPLOYMENT_NOTES.md             # RTX 5090 deployment notes (linked from the Vol.1 post)
 ├── requirements.txt
 ├── docker-compose.yml
 ├── progress.json
 ├── scripts/
 │   └── check_env.py                # Environment validation
-├── benchmark/
+├── vol2/                           # Vol.2 evidence (not yet published) — index: vol2/README.md
+├── benchmark/                      # Vol.1 evidence — index: benchmark/README.md
+│   ├── README.md                   # Vol.1 evidence index
 │   ├── questions.json              # 100 benchmark questions (E2, 5 categories)
 │   ├── e3_questions.json           # 45 guardrails questions (E3, 3 categories)
 │   ├── run_benchmark.py            # E2: NIM vs Ollama benchmark script

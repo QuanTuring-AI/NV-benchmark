@@ -14,12 +14,22 @@ __pycache__/
 .claude/
 
 # Internal docs (not for public repo)
-daily_reports/
-2026-03-29_NIM_Benchmark_Automation_Spec_v1.md
-2026-03-29_NIM_Benchmark_Experiment_Spec_v1.md
-NIM_Benchmark_LinkedIn_Post.md
-NIM_Benchmark_README.md
-nvidia_dev_post_draft.md
+# CLAUDE.md (public: red lines) and CLAUDE.local.md (internal) are a pair.
+# Only the latter is excluded.
+# After editing this block, run BOTH controls:
+#   git check-ignore -v CLAUDE.local.md   -> must print one line  (positive)
+#   git check-ignore -v CLAUDE.md         -> must print nothing   (negative)
+# Verifying only one side fails silently.
+CLAUDE.local.md
+# (2026-09-14: the per-file entries that used to sit here were removed —
+#  those drafts now live under _internal/, covered by the rule below.)
+
+# Internal staging area (2026-09-13)
+# Drafts and working notes that are not for publication live here.
+# After editing this block, run BOTH controls:
+#   git check-ignore -v _internal/x.md    -> must print one line  (positive)
+#   git check-ignore -v README.md         -> must print nothing   (negative)
+_internal/
 
 # Debug scripts
 benchmark/test_guardrails.py
@@ -28,3 +38,15 @@ benchmark/test_guardrails_debug.py
 # Large data
 chroma_db/
 rag/knowledge/gtc_papers/*.pdf
+
+# --- Defensive guards (2026-09-13, revised 2026-09-15) -----------------
+# Weight and checkpoint files must never exist in this repo. Nothing here
+# matches anything today; the entries are a guard, not a check.
+# Guards that would name an excluded subject are NOT listed here: they live
+# in .git/info/exclude (same effect, not versioned). That file does not
+# travel with a clone, so the staged-content scanner refuses to run unless
+# it finds the expected number of guard lines there.
+*.safetensors
+*.pt
+*.pth
+*.gguf
