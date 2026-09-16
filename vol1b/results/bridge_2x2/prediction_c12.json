@@ -1,0 +1,84 @@
+{
+  "experiment": "Vol.1-B · NIM × NeMo Guardrails 2×2 bridge · container c12",
+  "written_at": "2026-09-15T15:41:43+0800",
+  "written_before": "the NIM container launch for this pair. run_bridge.sh refuses to start if this file or its .sha256 is missing or changed, or if this pair's rows.jsonl exists.",
+  "runs": "one run for this pair; not repeated to obtain a different outcome",
+  "stack": {
+    "image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:1.13.1",
+    "index_digest": "sha256:bc8a12da7ca78599609a60d30cdcce576de5bbb80ad7a87b9a9a5c6ade634c99",
+    "manifest_digest_amd64": "sha256:7fd73b514d1afa5b73ecce594a90afbb9a0f81b5de0500412fd8432c79b80086",
+    "digest_source": "registry query 2026-09-15 (vol1b/results/version_select/ngc_candidates_config.json); index matches local RepoDigests",
+    "profile": "574eb0765118b2087b5fd6c8684a79e682bd03062f80343cfd9e2140ffa962cd",
+    "nim_version": "1.13.1 (image env INFERENCE_MICROSERVICE_LLM_NIM_VERSION)",
+    "backend": "vLLM profile on the 1.13.1 image",
+    "extra_env": "none",
+    "served_model_id_expected": "meta-llama/llama-3.1-8b-instruct"
+  },
+  "cells_in_this_container": {
+    "B": "① NIM 1.13.1 × Guardrails 0.21.0 (Vol.1-A stack, final run)",
+    "C": "② NIM 1.13.1 × Guardrails 0.23.0"
+  },
+  "harness_sha256": {
+    "vol1b/scripts/bridge_2x2.py": "91f15c67a162ec64783126e6c323e94a2091bc47517ba5747e30667789757c9f",
+    "vol1b/scripts/gr_worker.py": "5caaee50427f2779d31f38a576448b050a5e98f8c09740216b3d198e18c6169c",
+    "vol1b/scripts/bridge_analyze.py": "be52e800e329ff8a140c940d0755c198a37e3077367f3241e1ba7529a24926fe",
+    "vol1b/scripts/run_bridge.sh": "96ecc24c54979735fefaa312d07b0667495b2234cf5ff6255bd06b3c39498b90"
+  },
+  "fixed_inputs_sha256": {
+    "benchmark/e3_questions.json": "5d7eeeaa9408977e28366e7b31a6f01905695a0c8ce10a6c314fa40de4a1c3ea",
+    "benchmark/guardrails/config.yml": "87341b916ece9721370a797dd52d46ecb50db966b1ac642e716f911c8be6468d"
+  },
+  "design": {
+    "model": "Llama 3.1 8B Instruct (not changed across the four cells)",
+    "arms": {
+      "A": "nim-only",
+      "B": "NIM + NeMo Guardrails 0.21.0 (client venv 1)",
+      "C": "NIM + NeMo Guardrails 0.23.0 (client venv 2)"
+    },
+    "same_container": "one NIM container for arms A, B, C; Guardrails versions differ only on the client side",
+    "questions": "Vol.1 E3 set, 45 questions × 3 rounds = 135 requests per arm, 405 in total",
+    "order": "per question A → B → C with a 2 s cooldown after every request (Vol.1 cooldown); not in blocks",
+    "warm_up": "before round 1 each arm sends question 1 once; those three requests are recorded and excluded from every statistic",
+    "rail_config": "Vol.1 benchmark/guardrails/config.yml, identical in all four cells except: model name replaced when the container serves a different id; top_p 0.9 added (see sampling)",
+    "sampling": "temperature 0.0 (Vol.1) and top_p 0.9 set explicitly in all four cells. Reason: the startup logs of both NIM 1.13.1 and 2.0.12 report that the model's generation config overrides the engine sampling defaults (2.0.12 prints temperature 0.6, top_p 0.9). With temperature 0.0 decoding is greedy, so top_p is not expected to change outputs; it is set so the value is not left to the engine.",
+    "nim_max_model_len": 8192,
+    "guardrails_request_shapes_seen_in_mock": "0.21.0 self-check calls: temperature 0.001, max_tokens 3. 0.23.0 self-check calls: temperature 0.001, max_tokens 1024. Main generation in both: temperature 0.0, top_p 0.9, max_tokens 500. This difference belongs to the Guardrails version and is part of that variable.",
+    "client_environments": {
+      "0.21.0": "system Python 3.10.6 · nemoguardrails 0.21.0 · langchain 0.3.27 · langchain-core 1.6.1 · langchain-nvidia-ai-endpoints 1.4.3",
+      "0.23.0": "isolated venv Python 3.10.6 · nemoguardrails 0.23.0 (no langchain-nvidia-ai-endpoints installed)",
+      "note": "exact package versions are written by each worker into meta.json at run time"
+    }
+  },
+  "deviations_from_vol1_E3_listed_not_absorbed": [
+    "execution order: per-question rotation of three arms (Vol.1 ran nim-only then guardrails in two blocks)",
+    "nim-only payload adds stream_options.include_usage (to record finish_reason and usage) and top_p 0.9",
+    "rail config adds top_p 0.9; model name replaced on NIM 2.0.12",
+    "Guardrails calls run on one persistent event loop per worker process; Vol.1 created and closed a loop per call. In a mock test that pattern made nemoguardrails 0.23.0 log a stale-event-loop retry on every request (0.21.0: none) and roughly doubled its latency against the same server, so it would have been charged to 0.23.0 only.",
+    "two Guardrails versions run in two client processes at the same time (one idle while the other is timed)",
+    "driver 591.86 / CUDA from the day's nvidia-smi (Vol.1-A: driver 577.00 / CUDA 12.9)",
+    "NIM 2.0.12 cells only: VLLM_USE_V2_MODEL_RUNNER=0"
+  ],
+  "predictions": {
+    "R1": "record, for each Guardrails arm, the clean-category average overhead and the all-passed paired overhead, each with n and spread. No direction is expected.",
+    "R2": "record the difference between today's cell ① clean-category overhead and Vol.1-A's published +2.1% (NeMo Guardrails 0.21.0, Llama 3.1 8B on NIM 1.13.1, benchmark/report/e3_report.md clean_passthrough row: 5,765 → 5,888 ms, n 60). That difference contains at least the driver/CUDA change, the execution order and the environment; it is recorded side by side and not attributed.",
+    "R3_pass_condition": "the run did not break: 0 request errors in each arm; the rail is effective in both Guardrails arms (probe e3_adv_01 round 1 is a true block, and at least one adversarial item is a true block); every (question, round) is present in all three arms. Pass is NOT 'the newer version is better'.",
+    "context_not_a_prediction": "on Nemotron Nano 9B v2 the Guardrails 0.21.0 → 0.23.0 change moved the clean overhead 4.2% → 5.5% and the all-passed overhead 4.0% → 6.0% (vol2/results/e9/e9_vs_0210_bootstrap.json). That is a different model; it is cross-model context, a weak expectation at most, and not used as a pass criterion."
+  },
+  "analysis_rules": {
+    "preconditions": "P1 zero errors · P2 rail effective · P3 complete pairing. If any fails, every conclusion field is null.",
+    "true_block": "Guardrails response exactly \"I'm sorry, I can't respond to that.\" or an input-rail block",
+    "clean_category_avg": "avg(GR latency, clean_passthrough) / avg(nim-only latency, clean_passthrough) − 1 (Vol.1-A algorithm)",
+    "all_passed_paired": "Σ GR latency / Σ nim-only latency − 1 over (question, round) pairs whose GR response is not a true block; 95% bootstrap CI resampling questions, 5000 draws, seed 20260915",
+    "max_tokens_hits": "nim-only finish_reason == length counted exactly",
+    "rail_probe": "e3_adv_01 round 1: Guardrails responses and each LLM call's completion head recorded verbatim for both arms"
+  },
+  "outputs": [
+    "vol1b/results/bridge_2x2/c12/rows.jsonl (checkpoint per request)",
+    "meta.json",
+    "analysis.json",
+    "gr_config/config.yml",
+    "worker_*.stderr.txt",
+    "idle_baseline.txt · ctx_before.txt · ctx_after.txt · sampling_override_lines.txt",
+    "logs/<run tag>/"
+  ]
+}

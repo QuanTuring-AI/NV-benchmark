@@ -1,0 +1,67 @@
+{
+  "experiment": "P19 fifth cell: cell 4 + self-check max_tokens 3",
+  "cells": {
+    "C": "4",
+    "Cp": "5"
+  },
+  "model_served": "meta/llama-3.1-8b-instruct",
+  "image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:2.0.12",
+  "image_index_digest": "sha256:d2c94c1d654c3e80b8bc08cc83298d2ba4e219dff41d1092555795edb93c6545",
+  "manifest_digest_amd64": "sha256:d99584e72ce523e961ec849baf86829303b5b7a1ad75d610d36786fef6e9a2e8",
+  "profile": "092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+  "extra_env": "NIM_MAX_MODEL_LEN=8192 · extra: VLLM_USE_V2_MODEL_RUNNER=0 · all other NIM settings default",
+  "nim_version_from_container_env": "2.0.12",
+  "prediction_file": "prediction_p19.json",
+  "prediction_sha256": "b93b8e4c67ed068e8f9d8b53a1ab644bda42dcdf70a6df67cbe3e2e7bce67f22",
+  "questions": {
+    "file": "benchmark/e3_questions.json",
+    "sha256": "5d7eeeaa9408977e28366e7b31a6f01905695a0c8ce10a6c314fa40de4a1c3ea",
+    "n": 45
+  },
+  "rounds": 3,
+  "order": "per question A -> C -> Cp, 2 s cooldown after every request",
+  "max_tokens": 500,
+  "rail_config": {
+    "source": "benchmark/guardrails/config.yml",
+    "source_sha256": "87341b916ece9721370a797dd52d46ecb50db966b1ac642e716f911c8be6468d",
+    "C_used_sha256": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+    "Cp_used_sha256": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+    "model_name_substitution": {
+      "from": "meta-llama/llama-3.1-8b-instruct",
+      "to": "meta/llama-3.1-8b-instruct"
+    },
+    "added_both": "top_p: 0.9 under the main model parameters",
+    "added_Cp_only": "max_tokens: 3 on the self_check_input and self_check_output prompt entries"
+  },
+  "nim_only_payload": "Vol.1 E3 (model, messages, max_tokens 500, temperature 0.0, stream) + top_p 0.9 + stream_options.include_usage",
+  "started": "2026-09-16T12:58:35+0800",
+  "ctx_start": "29760 MiB, 32607 MiB, 4 %, 48, 39.01 W, 591.86",
+  "worker_versions": {
+    "C": {
+      "nemoguardrails": "0.23.0",
+      "langchain": null,
+      "langchain-core": null,
+      "langchain-nvidia-ai-endpoints": null,
+      "langchain-openai": null,
+      "openai": null,
+      "httpx": "0.28.1",
+      "python": "3.10.6"
+    },
+    "Cp": {
+      "nemoguardrails": "0.23.0",
+      "langchain": null,
+      "langchain-core": null,
+      "langchain-nvidia-ai-endpoints": null,
+      "langchain-openai": null,
+      "openai": null,
+      "httpx": "0.28.1",
+      "python": "3.10.6"
+    }
+  },
+  "worker_config_dirs": {
+    "C": "gr_config_default",
+    "Cp": "gr_config_mt3"
+  },
+  "finished": "2026-09-16T13:39:30+0800",
+  "ctx_end": "29748 MiB, 32607 MiB, 0 %, 57, 97.34 W, 591.86"
+}
