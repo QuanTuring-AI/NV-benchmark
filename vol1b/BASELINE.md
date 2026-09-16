@@ -63,6 +63,8 @@ Vol.1 E3 question set (45 × 3 rounds) · Vol.1 rail config with the model name 
 
 In every cell: 0 request errors, the rail probe was blocked, and all 135 (question, round) pairs are present in all three arms. These were preconditions; if any had failed, the analysis would output no conclusions.
 
+False blocks were 0/90 in all four cells on 2026-09-15 and 2/90 in the default arm on 2026-09-16 under the same configuration. The difference traces to answer-generation variance at temperature 0.0 (11 of 93 paired requests in one run produced different text), not to the rail: the blocked variant was a 500-token repetitive answer, and the judge blocked it in both arms.
+
 The overhead column compares each Guardrails arm with the nim-only arm of the same container and is an **end-to-end wall-clock** figure (§3 item 9). The comparison that is free of the output-length effect is between the two Guardrails arms of one container, because both wrap the question in the same prompt and generate answers of the same length:
 
 | Container | 0.23.0 relative to 0.21.0, clean_passthrough avg | Paired, all passed questions [95% CI] | Source |
