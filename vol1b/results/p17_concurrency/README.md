@@ -10,7 +10,9 @@ concurrency 1 · 4 · 16 · 32 · 64 · 128 · 256 · 512 and judged against the
 | R | synthetic, ISL 3500 ± 300, OSL 500 ± 50, `ignore_eos` (+ two fresh-container re-runs at 128 and 256) | `R/` |
 
 Per profile: `prediction_<P>.json` + `.sha256` (frozen before the run) · `main/levels.jsonl` (one line per level, written as each level ends) ·
-`main/cNNNN/profile_export_aiperf.json|csv` (AIPerf summary per level) · `main/analysis.json` · `main/container/` (GPU context, startup log excerpt,
+`main/cNNNN/profile_export_aiperf.json|csv` (AIPerf's client-side summary per level) · `main/cNNNN/server_metrics_export.json|csv` (the server's own
+`/metrics`, which AIPerf polls about every 330 ms while the level runs — ~190 fetches over a 64 s level — reported as avg/min/max/std and p1…p99 per
+metric series; `summary.endpoint_info` records the fetch count, the window and the update interval) · `main/analysis.json` · `main/container/` (GPU context, startup log excerpt,
 `/metrics` at READY, first request discarded). `slo_margins.json` gives each verdict's distance to its SLO limit. `calibration/` holds the instrument check.
 
 ## Files kept out of the repository and how to regenerate them
@@ -35,8 +37,14 @@ The scripts (`vol1b/scripts/p17_*.py|sh`) are the ones whose SHA-256 the predict
 ## De-identified fields in the AIPerf outputs
 
 AIPerf writes the machine it ran on into its outputs: the artifact directory, the tokenizer path, the full command line and, for
-profile S, the input-file path. In the committed `profile_export_aiperf.json` files (four fields) and `levels.jsonl` files (the
-`command` list) the local user-home prefix has been replaced by `<HOME>`; every other byte is unchanged. `deidentification_ledger.json`
+profile S, the input-file path. In the committed `profile_export_aiperf.json` files (four fields), `server_metrics_export.json` files
+(three fields: `input_config.artifacts.dir`, `input_config.tokenizer.name`, `input_config.datasets[].path`) and `levels.jsonl` files (the
+`command` list) the local user-home prefix has been replaced by `<HOME>`; every other byte is unchanged. The `server_metrics_export.csv`
+files carry no local path, so no field in them was changed. `deidentification_ledger.json`
 lists each file with the SHA-256 of the original and of the committed version and the number of replacements. The originals are kept
-locally, outside version control. Recomputing `analysis.json` for every profile from the de-identified files with `p17_analyze.py`
+locally, outside version control. One caveat for anyone recomputing these digests: AIPerf writes its `.csv` files with CRLF line endings and git
+normalises them to LF on the way in (`core.autocrlf=true`, no `.gitattributes`), so a locally re-run `.csv` will not have the same SHA-256 as the
+committed one even when the content is identical. This affects every AIPerf `.csv` in this tree. The ledger's `original_sha256` is the file as AIPerf
+wrote it; its `deidentified_sha256` is the content committed here, which is what `git show <rev>:<path> | sha256sum` returns. The `.json` files are
+written with LF and are unaffected. Recomputing `analysis.json` for every profile from the de-identified files with `p17_analyze.py`
 reproduces the committed `analysis.json` files byte for byte (checked 2026-09-16).
