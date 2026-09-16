@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# P07 (reopened, design v2) · tool-calling reliability · arms P → A1 → A2, one container at a time, one run per arm.
+# The probe (3 requests, tri-state) is recorded, not a gate; an arm is skipped only if all 3 probe requests get HTTP errors.
+# Arm P is the positive control. If it misses its pre-registered gate, A1 and A2 do not run.
+# Machine-specific paths come from env: NGC_ENV_FILE (passed to --env-file, never read), NIM_CACHE_DIR.
+set -u
+cd "$(dirname "$0")/../.."                                   # vol2/
+ENV="${NGC_ENV_FILE:?set NGC_ENV_FILE}"; CACHE="${NIM_CACHE_DIR:?set NIM_CACHE_DIR}:/opt/nim/.cache"
+PY="${PYTHON:-python}"
+OUT=results/p07_toolcall; mkdir -p "$OUT/logs"
+ctx(){ nvidia-smi --query-gpu=memory.used,memory.total,utilization.gpu,temperature.gpu,power.draw --format=csv,noheader | tr -d '\n'; }
+
+(cd "$OUT" && sha256sum -c prediction_p07.sha256) || { echo "PREDICTION-MISSING-OR-CHANGED"; exit 2; }
+
+arm_cfg(){
+  case $1 in
+    P)  IMG="nvcr.io/nim/meta/llama-3.1-8b-instruct:1.13.1"
+        IDX="sha256:bc8a12da7ca78599609a60d30cdcce576de5bbb80ad7a87b9a9a5c6ade634c99"
+        MAN="sha256:7fd73b514d1afa5b73ecce594a90afbb9a0f81b5de0500412fd8432c79b80086"
+        PROF=574eb0765118b2087b5fd6c8684a79e682bd03062f80343cfd9e2140ffa962cd
+        EXTRA=(); EXTRA_S="NIM_MAX_MODEL_LEN=4096 (E7 arm P used 8192; lowered so all arms share one context length)" ;;
+    A1) IMG="nvcr.io/nim/nvidia/nvidia-nemotron-nano-9b-v2:1.12.2"
+        IDX="sha256:a2f4a5aefe7dd0ff29bfd8d7081ce4977337d1b12081361af7b6283ff9a406b2"
+        MAN="sha256:bdd975848d5d4e2ae1f701a9b78ff7f6ed7de56498f9c2f250d7d98484b0d40f"
+        PROF=5cf34bab34141258d0cc836c66684642d3e3f32b4daaa2008e48bd289d6bc84b
+        EXTRA=(-e NIM_MAX_NUM_SEQS=32); EXTRA_S="NIM_MAX_MODEL_LEN=4096 · NIM_MAX_NUM_SEQS=32 (= E7 arm A1)" ;;
+    A2) IMG="nvcr.io/nim/nvidia/nemotron-3-nano@sha256:ac9d1cefa7ad958a4ad9727871a85c89f79c0d907d78415433b0c83e1a072aa3"
+        IDX="sha256:ac9d1cefa7ad958a4ad9727871a85c89f79c0d907d78415433b0c83e1a072aa3"
+        MAN="$IDX"
+        PROF=1fba9ecfcfb4cde28d4ce3fd55c40bca89a5a613e25e98f057befe6a7e99eada
+        EXTRA=(); EXTRA_S="NIM_MAX_MODEL_LEN=4096 · other settings default (= E7 arm A2)" ;;
+  esac
+}
+
+run_arm(){
+  local arm=$1 lc; lc=$(echo "$arm" | tr A-Z a-z); arm_cfg "$arm"
+  local NAME="nim-p07-$lc"
+  [ -z "$(timeout 30s docker ps -q)" ] || { echo "GPU-BUSY before arm $arm"; timeout 30s docker ps; return 3; }
+  echo "$(date +%FT%T%z) | prelaunch arm $arm | $(ctx)" | tee "$OUT/logs/arm_${lc}_ctx_before.txt"
+  timeout 90s docker run -d --name "$NAME" --gpus all -p 8000:8000 --env-file "$ENV" \
+    -e NIM_MODEL_PROFILE="$PROF" -e NIM_MAX_MODEL_LEN=4096 "${EXTRA[@]}" -v "$CACHE" "$IMG" 2>"$OUT/logs/arm_${lc}_docker_run.stderr.txt" \
+    || { echo "RUN-FAILED arm $arm"; return 1; }
+  local ok=0
+  for i in $(seq 1 120); do
+    L=$(timeout 25s docker logs "$NAME" 2>&1)
+    if echo "$L" | grep -qaE "Uvicorn running|Application startup complete"; then echo "READY $arm $(date +%FT%T%z)"; ok=1; break; fi
+    if echo "$L" | grep -qaE "No available memory|OutOfMemory|Traceback"; then echo "FAILED $arm $(date +%FT%T%z)"; break; fi
+    if [ -z "$(timeout 25s docker ps -q --filter name=$NAME)" ]; then echo "EXITED $arm"; break; fi
+    sleep 10
+  done
+  timeout 30s docker logs "$NAME" > "$OUT/logs/nim-p07-${lc}_startup.log.txt" 2>&1
+  local rc=1
+  if [ $ok = 1 ]; then
+    sleep 5
+    "$PY" scripts/toolcall/toolcall_eval.py --probe --out "$OUT/probe_arm_${lc}.json"; prc=$?
+    if [ $prc = 0 ]; then
+      "$PY" scripts/toolcall/toolcall_eval.py --arm "$arm" --rounds 3 --parallel 8 --time-cap-min 25 \
+        --prelaunch-ctx "$OUT/logs/arm_${lc}_ctx_before.txt" --image "$IMG" --index-digest "$IDX" --manifest-digest "$MAN" \
+        --profile "$PROF" --extra-env "$EXTRA_S" --prediction "$OUT/prediction_p07.json" --out "$OUT/p07_arm_${lc}.json" \
+        2>"$OUT/logs/arm_${lc}_harness.stderr.txt"; rc=$?
+    else
+      echo "PROBE: all 3 probe requests returned HTTP errors on arm $arm ⇒ endpoint rejected the request; arm not measured"; rc=5
+    fi
+  fi
+  timeout 30s docker logs "$NAME" > "$OUT/logs/nim-p07-${lc}_full.log.txt" 2>&1
+  echo "$(date +%FT%T%z) | stop arm $arm | $(ctx)" | tee -a "$OUT/logs/arm_${lc}_ctx_before.txt"
+  timeout 60s docker rm -f "$NAME" >/dev/null; sleep 5
+  return $rc
+}
+
+run_arm P || { echo "arm P did not complete (rc=$?) ⇒ stop"; exit 1; }
+gate=$("$PY" -c "import json;m=json.load(open('$OUT/p07_arm_p.json',encoding='utf-8'))['metrics']['call']['call_observed'];print('PASS' if m['rate'] is not None and m['rate']>=0.70 else 'FAIL', m['k'], m['n'], m['rate'])")
+echo "arm P gate (call · wrapper observed a structured tool call ≥ 70%): $gate" | tee "$OUT/gate_arm_p.txt"
+case "$gate" in PASS*) ;; *) echo "gate not met ⇒ A1/A2 not run"; exit 6 ;; esac
+run_arm A1; echo "arm A1 rc=$?"
+run_arm A2; echo "arm A2 rc=$?"
+echo "P07 done $(date +%FT%T%z)"
