@@ -1,0 +1,8 @@
+# Files whose SHA-256 is recorded in a frozen pre-registration or in a .sha256 sidecar are stored byte for byte.
+# They were written with CRLF line endings on Windows; with the default line-ending conversion git would store them
+# with LF, and the recorded digests would not verify on a non-Windows checkout. This list is the fix, not the guard:
+# the clean-room scan refuses any staged file whose blob does not match the digest that binds it.
+prediction*.json -text
+vol1b/scripts/p17_analyze.py -text
+vol1b/results/p28_judge_isolation/excluded_segments.json -text
+vol1b/results/p20_coresidence/sample.json -text
