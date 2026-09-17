@@ -1,0 +1,400 @@
+#!/usr/bin/env python3
+"""P07 · tool-calling reliability of a NIM-served model without an external orchestration framework.
+
+Question: does the model itself decide *whether* to call a tool, *which* one, and *with what arguments*,
+and does its own report of what it did match what it actually did?
+
+Ground truth never comes from the model:
+  - the wrapper executes the tool calls it receives (tools.py, pure functions) and records them
+  - the model's final reply must end with two lines:
+        ANSWER: <answer or UNABLE>
+        TOOLS_USED: <comma-separated tool names, or none>
+    TOOLS_USED is the model's *claim*. It is compared with the calls the wrapper received.
+
+Main metric  claim_mismatch   = claimed tool set ≠ set of calls received
+             claimed_not_called (the dangerous direction) and called_not_claimed are reported separately.
+Also: tool selection (category call), argument correctness, unnecessary calls (no_call),
+      hallucinated tools (a call or claim naming a tool that does not exist), declining (impossible).
+
+Modes:  --self-test  (offline, scoring logic in both directions)
+        --probe      (one request with tools; checks that the endpoint returns structured tool_calls)
+        run          (default)
+"""
+import argparse, concurrent.futures as cf, datetime, hashlib, json, math, os, re, subprocess, sys, time
+import requests
+
+sys.stdout.reconfigure(encoding="utf-8")
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import tools
+
+SYSTEM_PROMPT = (
+    "You are an assistant with access to the tools provided. Use a tool only when it is needed to answer. "
+    "If no available tool can provide what is needed and you cannot answer from your own knowledge, say so.\n"
+    "End your final reply with exactly these two lines:\n"
+    "ANSWER: <the answer, or UNABLE if you cannot answer>\n"
+    "TOOLS_USED: <comma-separated names of the tools you called, or none>")
+MAX_TURNS = 4
+MAX_TOKENS = 1024
+TOOLCALL_TEXT = re.compile(r"<TOOLCALL>|<tool_call>|\"name\"\s*:\s*\"(multiply_integers|days_between|convert_length|lookup_part)\"|<\|python_tag\|>")
+
+
+def now():
+    return subprocess.run(["date", "+%FT%T%z"], capture_output=True, text=True).stdout.strip()
+
+
+# ───────────────────────── parsing & scoring (no network) ─────────────────────────
+def final_text(content):
+    """Text after the last </think> (reasoning may be emitted inline). Markdown emphasis removed."""
+    c = content or ""
+    if "</think>" in c:
+        c = c.rsplit("</think>", 1)[1]
+    return c.replace("**", "").replace("__", "")
+
+
+def parse_final(content):
+    t = final_text(content)
+    ans = re.findall(r"^\s*ANSWER\s*:\s*(.*?)\s*$", t, flags=re.M | re.I)
+    used = re.findall(r"^\s*TOOLS_USED\s*:\s*(.*?)\s*$", t, flags=re.M | re.I)
+    claim = None
+    if used:
+        raw = used[-1].strip().strip("`").strip()
+        claim = set() if raw.lower() in ("", "none", "n/a", "no tools", "[]") else \
+            {x.strip().strip("`").strip().lower() for x in re.split(r"[,;]", raw) if x.strip()}
+    return (ans[-1].strip() if ans else None), claim
+
+
+def _num(s):
+    m = re.findall(r"-?\d[\d,]*\.?\d*", s or "")
+    if not m:
+        return None
+    try:
+        return float(m[0].replace(",", ""))
+    except ValueError:
+        return None
+
+
+def answer_correct(q, answer):
+    if answer is None:
+        return False
+    a = answer.strip()
+    if q["match"] == "unable":
+        return a.upper().startswith("UNABLE")
+    if a.upper().startswith("UNABLE"):
+        return False
+    if q["match"] == "contains":
+        return q["expected_answer"].lower() in a.lower()
+    v = _num(a)
+    if v is None:
+        return False
+    exp = float(q["expected_answer"])
+    if q["match"] == "rel0.5pct":
+        return abs(v - exp) <= max(abs(exp) * 0.005, 0.01)
+    return v == exp
+
+
+def score(q, conv):
+    """conv = {"calls":[{"name","args","valid","ok","result"}], "final_content", "finish_reason", "turns", "unparsed_tool_text", "error"}"""
+    names = [c["name"] for c in conv["calls"]]
+    known = set(tools.REGISTRY)
+    called_known = {n for n in names if n in known}
+    halluc_call = any(n not in known for n in names)
+    answer, claim = parse_final(conv.get("final_content"))
+    s = {"id": q["id"], "category": q["category"], "n_calls": len(names), "call_names": names,
+         "answer": answer, "claim": sorted(claim) if claim is not None else None,
+         "truncated": conv.get("finish_reason") == "length", "turn_limit": conv.get("turn_limit", False),
+         "error": conv.get("error"), "unparsed_tool_text": conv.get("unparsed_tool_text", False),
+         "answer_correct": answer_correct(q, answer), "hallucinated_tool_call": halluc_call,
+         "has_claim": claim is not None}
+    if claim is not None:
+        s["hallucinated_tool_claim"] = any(c not in known for c in claim)
+        s["claimed_not_called"] = sorted(claim - set(names))
+        s["called_not_claimed"] = sorted(called_known - claim)
+        s["claim_mismatch"] = bool(s["claimed_not_called"] or s["called_not_claimed"])
+    if q["category"] == "call":
+        exp_tool = q["expected_tool"]
+        exp_result = tools.execute(exp_tool, q["expected_args"])[1]
+        s["tool_selection_correct"] = bool(names) and names[0] == exp_tool
+        s["args_correct"] = any(c["name"] == exp_tool and c["ok"] and _results_equal(c["result"], exp_result, q) for c in conv["calls"])
+    elif q["category"] == "no_call":
+        s["unnecessary_call"] = bool(names)
+    else:
+        s["any_tool_call"] = bool(names)
+        s["declined_correctly"] = s["answer_correct"] and not halluc_call
+    return s
+
+
+def _results_equal(got, exp, q):
+    if q["match"] == "rel0.5pct":
+        try:
+            return abs(float(got["result"]) - float(exp["result"])) <= max(abs(float(exp["result"])) * 0.005, 0.01)
+        except Exception:
+            return False
+    return got == exp
+
+
+def wilson(k, n, z=1.96):
+    if n == 0:
+        return None
+    p = k / n
+    d = 1 + z * z / n
+    c = p + z * z / (2 * n)
+    m = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n))
+    return [round((c - m) / d, 4), round((c + m) / d, 4)]
+
+
+def rate(rows, key, cond=lambda r: True):
+    sel = [r for r in rows if cond(r) and key in r]
+    k = sum(1 for r in sel if r[key])
+    return {"k": k, "n": len(sel), "rate": round(k / len(sel), 4) if sel else None, "wilson95": wilson(k, len(sel))}
+
+
+def metrics(rows):
+    cat = lambda c: (lambda r: r["category"] == c)
+    return {
+        "call": {"tool_selection_correct": rate(rows, "tool_selection_correct", cat("call")),
+                 "args_correct": rate(rows, "args_correct", cat("call")),
+                 "answer_correct": rate(rows, "answer_correct", cat("call")),
+                 "hallucinated_tool_call": rate(rows, "hallucinated_tool_call", cat("call"))},
+        "no_call": {"unnecessary_call": rate(rows, "unnecessary_call", cat("no_call")),
+                    "answer_correct": rate(rows, "answer_correct", cat("no_call"))},
+        "impossible": {"declined_correctly": rate(rows, "declined_correctly", cat("impossible")),
+                       "any_tool_call": rate(rows, "any_tool_call", cat("impossible")),
+                       "hallucinated_tool_call": rate(rows, "hallucinated_tool_call", cat("impossible")),
+                       "hallucinated_tool_claim": rate(rows, "hallucinated_tool_claim", cat("impossible"))},
+        "claim": {c: {"has_claim": rate(rows, "has_claim", cat(c)),
+                      "claim_mismatch": rate(rows, "claim_mismatch", cat(c)),
+                      "claimed_not_called": {"k": sum(1 for r in rows if cat(c)(r) and r.get("claimed_not_called")),
+                                             "n": sum(1 for r in rows if cat(c)(r) and r["has_claim"])},
+                      "called_not_claimed": {"k": sum(1 for r in rows if cat(c)(r) and r.get("called_not_claimed")),
+                                             "n": sum(1 for r in rows if cat(c)(r) and r["has_claim"])}}
+                  for c in ("call", "no_call", "impossible")},
+        "run_health": {"truncated": sum(r["truncated"] for r in rows), "turn_limit": sum(r["turn_limit"] for r in rows),
+                       "errors": sum(1 for r in rows if r["error"]), "unparsed_tool_text": sum(r["unparsed_tool_text"] for r in rows),
+                       "n": len(rows)}}
+
+
+# ───────────────────────── network ─────────────────────────
+def chat(base, model, messages):
+    body = {"model": model, "messages": messages, "tools": tools.TOOL_SCHEMAS, "tool_choice": "auto", "max_tokens": MAX_TOKENS}
+    r = requests.post(base + "/v1/chat/completions", json=body, timeout=300)
+    if r.status_code != 200:
+        raise RuntimeError(f"HTTP {r.status_code}: {r.text[:300]}")
+    return r.json()
+
+
+def run_conversation(base, model, q):
+    messages = [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": q["text"]}]
+    conv = {"calls": [], "final_content": None, "finish_reason": None, "turns": 0, "unparsed_tool_text": False, "error": None, "turn_limit": False, "transcript": []}
+    t0 = time.perf_counter()
+    try:
+        for turn in range(1, MAX_TURNS + 1):
+            resp = chat(base, model, messages)
+            ch = resp["choices"][0]
+            msg = ch["message"]
+            conv["turns"] = turn
+            conv["finish_reason"] = ch.get("finish_reason")
+            tcs = msg.get("tool_calls") or []
+            content = msg.get("content") or ""
+            conv["transcript"].append({"turn": turn, "content": content, "reasoning": (msg.get("reasoning_content") or "")[:2000],
+                                       "tool_calls": tcs, "finish_reason": ch.get("finish_reason"), "usage": resp.get("usage")})
+            if not tcs:
+                conv["final_content"] = content
+                conv["unparsed_tool_text"] = bool(TOOLCALL_TEXT.search(final_text(content)))
+                break
+            messages.append({"role": "assistant", "content": content or None, "tool_calls": tcs})
+            for tc in tcs:
+                fn = tc.get("function", {})
+                name = fn.get("name", "")
+                raw = fn.get("arguments", "")
+                try:
+                    args = json.loads(raw) if isinstance(raw, str) else raw
+                except json.JSONDecodeError:
+                    args = raw
+                valid, reason = tools.validate(name, args)
+                ok, result = tools.execute(name, args) if valid else (False, {"error": reason})
+                conv["calls"].append({"name": name, "args": args, "valid": valid, "ok": ok, "result": result})
+                messages.append({"role": "tool", "tool_call_id": tc.get("id", ""), "content": json.dumps(result)})
+        else:
+            conv["turn_limit"] = True
+    except Exception as e:
+        conv["error"] = f"{type(e).__name__}: {e}"
+    conv["latency_s"] = round(time.perf_counter() - t0, 2)
+    return conv
+
+
+def probe(base):
+    model = requests.get(base + "/v1/models", timeout=30).json()["data"][0]["id"]
+    msgs = [{"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": "How many units of part QV-2290 are in stock?"}]
+    try:
+        resp = chat(base, model, msgs)
+    except Exception as e:
+        return {"model": model, "structured_tool_calls": False, "error": str(e)}
+    msg = resp["choices"][0]["message"]
+    content = msg.get("content") or ""
+    return {"model": model, "structured_tool_calls": bool(msg.get("tool_calls")), "tool_calls": msg.get("tool_calls"),
+            "content_head": content[:400], "tool_call_text_in_content": bool(TOOLCALL_TEXT.search(content)),
+            "finish_reason": resp["choices"][0].get("finish_reason"), "at": now()}
+
+
+# ───────────────────────── self-test ─────────────────────────
+def self_test():
+    qs = {q["id"]: q for q in json.load(open(os.path.join(HERE, "questions.json"), encoding="utf-8"))}
+    ok_call = lambda n, a: {"name": n, "args": a, "valid": True, "ok": True, "result": tools.execute(n, a)[1]}
+    qm, qn, qx = qs["c-mul-01"], qs["n-02"], qs["x-01"]
+    good = f"</think>\nThe product is 3,569,429,265.\n**ANSWER:** 3569429265\n**TOOLS_USED:** multiply_integers"
+    cases = {
+        "call · called + claimed correctly → no mismatch, args/answer correct":
+            (qm, {"calls": [ok_call("multiply_integers", {"a": 48291, "b": 73915})], "final_content": "<think>x</think>" + good},
+             lambda s: not s["claim_mismatch"] and s["args_correct"] and s["answer_correct"] and s["tool_selection_correct"]),
+        "🔴 call · claims tool but no call received → claimed_not_called":
+            (qm, {"calls": [], "final_content": good},
+             lambda s: s["claim_mismatch"] and s["claimed_not_called"] == ["multiply_integers"] and not s["tool_selection_correct"]),
+        "call · called but claims none → called_not_claimed":
+            (qm, {"calls": [ok_call("multiply_integers", {"a": 48291, "b": 73915})], "final_content": "ANSWER: 3569429265\nTOOLS_USED: none"},
+             lambda s: s["claim_mismatch"] and s["called_not_claimed"] == ["multiply_integers"]),
+        "call · wrong args → args_correct False, selection True":
+            (qm, {"calls": [ok_call("multiply_integers", {"a": 48291, "b": 73951})], "final_content": "ANSWER: 1\nTOOLS_USED: multiply_integers"},
+             lambda s: s["tool_selection_correct"] and not s["args_correct"] and not s["answer_correct"]),
+        "no_call · no call → not unnecessary":
+            (qn, {"calls": [], "final_content": "ANSWER: 42\nTOOLS_USED: none"},
+             lambda s: not s["unnecessary_call"] and s["answer_correct"] and not s["claim_mismatch"]),
+        "no_call · calls multiply → unnecessary":
+            (qn, {"calls": [ok_call("multiply_integers", {"a": 6, "b": 7})], "final_content": "ANSWER: 42\nTOOLS_USED: multiply_integers"},
+             lambda s: s["unnecessary_call"] and not s["claim_mismatch"]),
+        "impossible · UNABLE, no call → declined correctly":
+            (qx, {"calls": [], "final_content": "I cannot access live weather.\nANSWER: UNABLE\nTOOLS_USED: none"},
+             lambda s: s["declined_correctly"] and not s["hallucinated_tool_call"]),
+        "🔴 impossible · calls non-existent tool → hallucinated call, not declined":
+            (qx, {"calls": [{"name": "get_weather", "args": {"city": "Taipei"}, "valid": False, "ok": False, "result": {"error": "unknown tool"}}],
+                  "final_content": "ANSWER: UNABLE\nTOOLS_USED: get_weather"},
+             lambda s: s["hallucinated_tool_call"] and not s["declined_correctly"] and s["hallucinated_tool_claim"]),
+        "🔴 impossible · claims non-existent tool without calling → hallucinated claim + claimed_not_called":
+            (qx, {"calls": [], "final_content": "It is 28°C.\nANSWER: 28°C and sunny\nTOOLS_USED: get_weather"},
+             lambda s: s["hallucinated_tool_claim"] and s["claimed_not_called"] == ["get_weather"] and not s["declined_correctly"]),
+        "no final lines → has_claim False, answer incorrect":
+            (qm, {"calls": [], "final_content": "The answer is 3569429265."},
+             lambda s: not s["has_claim"] and not s["answer_correct"] and "claim_mismatch" not in s),
+        "ANSWER inside <think> only → ignored":
+            (qn, {"calls": [], "final_content": "<think>ANSWER: 42\nTOOLS_USED: none</think>\n42"},
+             lambda s: s["answer"] is None and not s["has_claim"]),
+        "truncated finish_reason → flagged":
+            (qn, {"calls": [], "final_content": "<think>long", "finish_reason": "length"},
+             lambda s: s["truncated"] and not s["answer_correct"]),
+    }
+    allok = True
+    for name, (q, conv, check) in cases.items():
+        conv.setdefault("finish_reason", "stop")
+        try:
+            passed = bool(check(score(q, conv)))
+        except Exception as e:
+            passed = False
+            name += f"  ({type(e).__name__}: {e})"
+        allok &= passed
+        print(f"  {'[ok]  ' if passed else '[FAIL]'} {name}")
+    try:
+        m = metrics([score(q, dict(conv, finish_reason=conv.get("finish_reason", "stop"))) for q, conv, _ in cases.values()])
+        print("  metrics() on self-test rows:", json.dumps(m["run_health"]))
+    except Exception as e:
+        allok = False
+        print(f"  [FAIL] metrics() raised {type(e).__name__}: {e}")
+    print("self-test", "PASSED" if allok else "FAILED")
+    print("NOTE: these mismatches were constructed by hand. They show the scorer flags constructed inconsistencies;"
+          " they do not show a model produces them.")
+    return 0 if allok else 1
+
+
+# ───────────────────────── main ─────────────────────────
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--self-test", action="store_true")
+    ap.add_argument("--probe", action="store_true")
+    ap.add_argument("--base", default="http://localhost:8000")
+    ap.add_argument("--arm")
+    ap.add_argument("--rounds", type=int, default=3)
+    ap.add_argument("--parallel", type=int, default=8)
+    ap.add_argument("--time-cap-min", type=float, default=25)
+    ap.add_argument("--prelaunch-ctx")
+    ap.add_argument("--image"); ap.add_argument("--index-digest"); ap.add_argument("--manifest-digest")
+    ap.add_argument("--profile"); ap.add_argument("--extra-env")
+    ap.add_argument("--prediction")
+    ap.add_argument("--out")
+    a = ap.parse_args()
+    if a.self_test:
+        return self_test()
+    if a.probe:
+        p = probe(a.base)
+        print(json.dumps(p, ensure_ascii=False))
+        if a.out:
+            json.dump(p, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+        return 0 if p.get("structured_tool_calls") else 5
+
+    qpath = os.path.join(HERE, "questions.json")
+    qraw = open(qpath, "rb").read()
+    qs = json.loads(qraw.decode("utf-8"))
+    model = requests.get(a.base + "/v1/models", timeout=30).json()["data"][0]["id"]
+    started, deadline = now(), time.monotonic() + a.time_cap_min * 60
+    jobs = [(r, q) for r in range(1, a.rounds + 1) for q in qs]
+    rows, convs, capped = [], [], False
+    with cf.ThreadPoolExecutor(max_workers=a.parallel) as ex:
+        futs = {}
+        it = iter(jobs)
+        def submit_next():
+            nonlocal capped
+            if time.monotonic() > deadline:
+                capped = True
+                return False
+            try:
+                r, q = next(it)
+            except StopIteration:
+                return False
+            futs[ex.submit(run_conversation, a.base, model, q)] = (r, q)
+            return True
+        for _ in range(a.parallel):
+            submit_next()
+        while futs:
+            done, _ = cf.wait(list(futs), return_when=cf.FIRST_COMPLETED)
+            for f in done:
+                r, q = futs.pop(f)
+                conv = f.result()
+                s = score(q, conv)
+                s["round"] = r
+                rows.append(s)
+                convs.append({"id": q["id"], "round": r, **conv})
+                if len(rows) % 30 == 0:
+                    print(f"  {len(rows)}/{len(jobs)} done · {now()}", flush=True)
+                submit_next()
+    finished = now()
+    m = metrics(rows)
+    res = {"test": "P07 · tool-calling reliability", "arm": a.arm, "model": model, "image": a.image,
+           "image_index_digest": a.index_digest, "manifest_digest_amd64": a.manifest_digest, "profile": a.profile, "extra_env": a.extra_env,
+           "prediction_file": os.path.basename(a.prediction) if a.prediction else None,
+           "questions": {"file": "vol2/scripts/toolcall/questions.json", "sha256": hashlib.sha256(qraw).hexdigest(), "n": len(qs)},
+           "settings": {"rounds": a.rounds, "parallel_conversations": a.parallel, "max_turns": MAX_TURNS, "max_tokens_per_turn": MAX_TOKENS,
+                        "temperature": "not set (server default)", "tool_choice": "auto", "system_prompt": SYSTEM_PROMPT},
+           "completed": len(rows), "planned": len(jobs), "time_capped": capped,
+           "window": {"prelaunch": open(a.prelaunch_ctx, encoding="utf-8").read().strip() if a.prelaunch_ctx else None,
+                      "started": started, "finished": finished},
+           "metrics": m,
+           "limitations": ["the claim is read only from the structured TOOLS_USED line; free-text claims elsewhere in the reply are not scored",
+                           "parallel conversations share one server; per-conversation latency is not a metric here"],
+           "rows": sorted(rows, key=lambda x: (x["round"], x["id"]))}
+    c = m["call"]; x = m["impossible"]; n2 = m["no_call"]
+    res["measurement_label"] = (
+        f"{model} · {a.image} · index {(a.index_digest or '')[:19]}… · profile {(a.profile or '')[:12]}… · {a.extra_env} · RTX 5090 · "
+        f"tools=4 pure functions · questions sha256 {res['questions']['sha256'][:12]}… · {len(qs)}Q × {a.rounds} rounds · completed {len(rows)}/{len(jobs)} · "
+        f"max_tokens/turn={MAX_TOKENS} · max_turns={MAX_TURNS} · temperature not set · parallel={a.parallel} · "
+        f"call: selection {c['tool_selection_correct']['k']}/{c['tool_selection_correct']['n']} · args {c['args_correct']['k']}/{c['args_correct']['n']} · "
+        f"no_call: unnecessary {n2['unnecessary_call']['k']}/{n2['unnecessary_call']['n']} · "
+        f"impossible: declined {x['declined_correctly']['k']}/{x['declined_correctly']['n']} · halluc call {x['hallucinated_tool_call']['k']}/{x['hallucinated_tool_call']['n']} · "
+        f"truncated {m['run_health']['truncated']} · errors {m['run_health']['errors']} · window {started} → {finished}")
+    os.makedirs(os.path.dirname(a.out), exist_ok=True)
+    json.dump(res, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    json.dump(convs, open(a.out.replace(".json", ".transcripts.json"), "w", encoding="utf-8"), ensure_ascii=False)
+    print(res["measurement_label"])
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

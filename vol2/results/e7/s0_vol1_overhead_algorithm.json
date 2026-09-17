@@ -1,0 +1,64 @@
+{
+  "question": "Vol.1 的 +2.1% 是怎麼算的？",
+  "answer": "論文 E3 逐類別表的 clean_passthrough 一列：類別內 NIM-only avg 5765 ms (n=60) vs NIM+Guardrails avg 5888 ms (n=60)；該類別 100% 通過 ⇒ 與配對式等價（實算兩者皆 +2.1%）。⛔ 不是 analyze_e3.py 的 overhead_pct。",
+  "analyze_e3_overhead_pct": {
+    "formula": "(avg(gr_passed) - avg(nim_all)) / avg(nim_all)",
+    "value_in_e3_metrics_json": 41.3,
+    "published": false,
+    "why_differs": "分子只取通過題（clean+edge），分母含 45 題對抗題（NIM-only 對抗題 avg 僅 707 ms）⇒ 分母被拉低、overhead 被放大"
+  },
+  "vol1_from_raw": {
+    "clean_categorical": 2.1,
+    "clean_paired": 2.1,
+    "all_passed_paired": 3.1,
+    "script_overhead_pct": 41.3,
+    "per_category": {
+      "clean_passthrough": {
+        "nim": 5765,
+        "gr": 5888,
+        "pct": 2.1,
+        "n": 60
+      },
+      "edge_case": {
+        "nim": 5958,
+        "gr": 5959,
+        "pct": 0.0,
+        "n": 30
+      },
+      "adversarial_input": {
+        "nim": 707,
+        "gr": 301,
+        "pct": -57.4,
+        "n": 45
+      }
+    }
+  },
+  "ours_d25_s6_from_raw": {
+    "all_passed_paired": {
+      "n": 90,
+      "nim_ms": 6555,
+      "gr_ms": 6820,
+      "pct": 4.0
+    },
+    "clean_paired": {
+      "n": 60,
+      "nim_ms": 6551,
+      "gr_ms": 6823,
+      "pct": 4.2
+    },
+    "note": "扣除已查出的 3 題 harness 措辭誤標（e3_edge_02 三輪），那不是 rail 阻擋"
+  },
+  "verdict": "可並排，但必須聲明子集。同子集同算法：Vol.1 +2.1% vs 我方 +4.2%（clean_passthrough，n=60）；『全部通過題』子集則為 Vol.1 +3.1% vs 我方 +4.0%。",
+  "caveat_upgrade": "先前回報寫的『+4.0% 與 +2.1% 不可並排，因為我沒查 Vol.1 算法』⇒ 已查，改為『可並排，子集需一致』。",
+  "vol1_e2_published_values_for_arm_P": {
+    "n": 300,
+    "avg_tps": 73.8,
+    "p50_tps": 79.2,
+    "avg_ttft_ms": 221,
+    "p50_ttft_ms": 226,
+    "avg_total_latency_ms": 4286,
+    "categories": "factual_short/explanation/multilingual/technical/rag_simulation 各 60",
+    "source": "NV-benchmark/benchmark/results/e2_nim_vs_ollama.json（唯讀重算）"
+  },
+  "computed_at": "2026-09-13T00:46:44"
+}

@@ -1,0 +1,223 @@
+#!/usr/bin/env python3
+"""B′ verdict — applies the rules frozen in prediction_bprime.json. No rule lives only in this file:
+every threshold below is read from the prediction file, so this script cannot drift from what was registered.
+
+Usage:  python bprime_verdict.py [--self-test]
+Reads:  results/e7/b_prime/{prediction_bprime.json, bprime_cohabit.json, counters/sampler.jsonl}
+Writes: results/e7/b_prime/bprime_verdict.json
+"""
+import datetime, json, os, statistics as st, sys
+
+sys.stdout.reconfigure(encoding="utf-8")
+ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
+OUT = os.environ.get("BPRIME_OUT") or os.path.join(ROOT, "results", "e7", "b_prime")
+
+
+def epoch(iso):
+    return datetime.datetime.fromisoformat(iso).timestamp()
+
+
+def cell_bounds(c):
+    """cell start/end use `date +%FT%T%z` (e.g. 2026-09-14T11:07:39+0800)."""
+    f = lambda s: datetime.datetime.strptime(s, "%Y-%m-%dT%H:%M:%S%z").timestamp()
+    return f(c["start"]), f(c["end"])
+
+
+def rows_in(sampler, lo, hi):
+    return [r for r in sampler if "smi" in r and lo <= epoch(r["t"]) <= hi]
+
+
+def proc_series(rows, pid, key):
+    out = []
+    for r in rows:
+        for p in r.get("processes", []):
+            if p["pid"] == pid:
+                out.append(p[key])
+    return out
+
+
+def util_of(row, pid):
+    for e in row.get("engine_util") or []:
+        if e["pid"] == pid:
+            return e["util_sum_pct"]
+    return None
+
+
+def decide(rules, res, sampler):
+    cells = {c["cell"]: c for c in res["cells"]}
+    v = {"rules_source": "prediction_bprime.json → verdict_rules (frozen)", "inputs": {}}
+    a1, b, a2 = cells.get("A1"), cells.get("B"), cells.get("A2")
+    if not (a1 and b and a2):
+        v["status"] = "incomplete run — cells present: " + ",".join(cells)
+        return v
+    t = lambda c: (c["nim"]["ttft_ms"] or {}).get("avg")
+    tA1, tB, tA2 = t(a1), t(b), t(a2)
+    v["inputs"]["nim_ttft_avg_ms"] = {"A1": tA1, "B": tB, "A2": tA2}
+
+    # validity
+    rel = abs(tA1 - tA2) / ((tA1 + tA2) / 2)
+    v["validity_A1_vs_A2"] = {"rel_diff": round(rel, 4), "max": rules["validity_max_rel_diff"], "pass": rel < rules["validity_max_rel_diff"]}
+
+    # P02 predictions and matrix
+    otps = (b.get("ollama") or {}).get("tps_fragments") or {}
+    p1 = otps.get("avg") is not None and rules["pred1_ollama_tps"][0] <= otps["avg"] <= rules["pred1_ollama_tps"][1]
+    p2 = tB is not None and rules["pred2_nim_ttft_ms"][0] <= tB <= rules["pred2_nim_ttft_ms"][1]
+    v["prediction_1"] = {"metric": "B Ollama tps avg (Vol.1 formula)", "value": otps.get("avg"), "range": rules["pred1_ollama_tps"], "pass": p1}
+    v["prediction_2"] = {"metric": "B NIM TTFT avg ms", "value": tB, "range": rules["pred2_nim_ttft_ms"], "pass": p2}
+    key = ("1✅" if p1 else "1❌") + " " + ("2✅" if p2 else "2❌")
+    v["p02_matrix_cell"] = key
+    v["p02_matrix_reading"] = rules["p02_matrix"][key]
+
+    # P09 mechanism
+    ident = res.get("process_identification") or {}
+    mech = {"thresholds": {k: rules[k] for k in ("squeeze_mib", "elevated_ratio", "concurrent_util_pct", "min_concurrent_rows", "noise_flag_mib")}}
+    if not ident.get("nim_valid"):
+        mech["verdict"] = rules["unestablished_sentence"]
+        mech["reason"] = "NIM process not identified (growth < 20000 MiB or counters unavailable)"
+        v["mechanism"] = mech
+        return v
+    pid = ident["nim"]["pid"]
+    oll = (res.get("B_warmup") or {}).get("ollama_process")
+    windows = {}
+    for name, c in (("A1", a1), ("B", b), ("A2", a2)):
+        lo, hi = cell_bounds(c)
+        rs = rows_in(sampler, lo, hi)
+        ded, sh = proc_series(rs, pid, "dedicated_mib"), proc_series(rs, pid, "shared_mib")
+        if not ded:   # fall back to the cell's start/end snapshots
+            for s in (c.get("counters_start"), c.get("counters_end")):
+                for p in (s or {}).get("processes", []):
+                    if p["pid"] == pid:
+                        ded.append(p["dedicated_mib"]); sh.append(p["shared_mib"])
+            src = "cell start/end snapshots"
+        else:
+            src = f"sampler rows (n={len(rs)})"
+        windows[name] = {"source": src, "nim_dedicated_median_mib": st.median(ded) if ded else None,
+                         "nim_shared_median_mib": st.median(sh) if sh else None,
+                         "nim_dedicated_span_mib": (max(ded) - min(ded)) if ded else None}
+    mech["nim_process"] = {"pid": pid, "name": ident["nim"].get("name")}
+    mech["per_cell"] = windows
+    dA1, dB = windows["A1"]["nim_dedicated_median_mib"], windows["B"]["nim_dedicated_median_mib"]
+    sA1, sB = windows["A1"]["nim_shared_median_mib"], windows["B"]["nim_shared_median_mib"]
+    if None in (dA1, dB, sA1, sB):
+        mech["verdict"] = rules["unestablished_sentence"]; mech["reason"] = "NIM process memory series missing for A1 or B"
+        v["mechanism"] = mech
+        return v
+    squeezed = (dA1 - dB) > rules["squeeze_mib"] or (sB - sA1) > rules["squeeze_mib"]
+    elevated = tB >= rules["elevated_ratio"] * max(tA1, tA2)
+    mech["squeezed"] = {"value": squeezed, "dedicated_drop_mib": round(dA1 - dB, 1), "shared_rise_mib": round(sB - sA1, 1)}
+    mech["ttft_elevated"] = {"value": elevated, "ratio_B_over_max_A": round(tB / max(tA1, tA2), 2)}
+    noise = windows["A1"]["nim_dedicated_span_mib"]
+    mech["counter_noise_A1_span_mib"] = noise
+    mech["noise_flag"] = noise is not None and noise > rules["noise_flag_mib"]
+
+    # concurrent Ollama GPU activity inside NIM request windows (cell B)
+    conc = {"ollama_process": oll, "rows_inside_nim_requests": 0, "rows_ollama_active": 0}
+    if oll:
+        lo, hi = cell_bounds(b)
+        reqs = [(r["t_start_epoch"], r["t_end_epoch"]) for r in b["rows_nim"] if "t_start_epoch" in r]
+        for r in rows_in(sampler, lo, hi):
+            s0 = epoch(r["t"]); s1 = s0 + r.get("collect_ms", 0) / 1000
+            if any(a <= s0 and s1 <= z for a, z in reqs):
+                u = util_of(r, oll["pid"])
+                if u is not None:
+                    conc["rows_inside_nim_requests"] += 1
+                    conc["rows_ollama_active"] += u > rules["concurrent_util_pct"]
+    mech["concurrent_ollama_gpu"] = conc
+
+    if not squeezed and elevated:
+        out = "compute_contention"
+    elif squeezed and elevated:
+        if conc["rows_inside_nim_requests"] < rules["min_concurrent_rows"]:
+            out = "inseparable_insufficient_concurrency_evidence"
+        elif conc["rows_ollama_active"] == 0:
+            out = "memory_pressure"
+        else:
+            out = "inseparable"
+    elif not squeezed and not elevated:
+        out = "neither"
+    else:
+        out = "squeezed_but_ttft_not_elevated"
+    mech["matrix_cell"] = out
+    mech["reading"] = rules["p09_matrix"][out]
+    if mech["noise_flag"] or out.startswith("inseparable") or out == "neither":
+        mech["verdict"] = rules["unestablished_sentence"]
+    else:
+        mech["verdict"] = mech["reading"]
+    v["mechanism"] = mech
+    return v
+
+
+def self_test():
+    rules = {"validity_max_rel_diff": 0.10, "pred1_ollama_tps": [7, 14], "pred2_nim_ttft_ms": [180, 270],
+             "p02_matrix": {"1✅ 2✅": "reproduced", "1✅ 2❌": "shape ok, magnitude not", "1❌ 2✅": "coincidence", "1❌ 2❌": "ledger cannot reproduce"},
+             "squeeze_mib": 1000, "elevated_ratio": 2.0, "concurrent_util_pct": 5, "min_concurrent_rows": 3, "noise_flag_mib": 500,
+             "p09_matrix": {k: k for k in ("compute_contention", "memory_pressure", "inseparable", "inseparable_insufficient_concurrency_evidence", "neither", "squeezed_but_ttft_not_elevated")},
+             "unestablished_sentence": "UNESTABLISHED"}
+
+    def make(tA1, tB, tA2, ded, sh, oll_util, otps=10.0):
+        base = datetime.datetime(2026, 9, 14, 12, 0, 0, tzinfo=datetime.timezone(datetime.timedelta(hours=8)))
+        fmt = lambda d: d.strftime("%Y-%m-%dT%H:%M:%S%z")
+        cells, sampler = [], []
+        for i, (name, t) in enumerate((("A1", tA1), ("B", tB), ("A2", tA2))):
+            s, e = base + datetime.timedelta(minutes=10 * i), base + datetime.timedelta(minutes=10 * i + 5)
+            rows_nim = []
+            for k in range(10):
+                ts = (s + datetime.timedelta(seconds=10 + 20 * k)).timestamp()
+                rows_nim.append({"t_start_epoch": ts, "t_end_epoch": ts + 8})
+                sampler.append({"t": datetime.datetime.fromtimestamp(ts + 2, base.tzinfo).isoformat(), "collect_ms": 3000, "smi": {},
+                                "processes": [{"pid": 11, "dedicated_mib": ded[name], "shared_mib": sh[name]}],
+                                "engine_util": [{"pid": 22, "util_sum_pct": oll_util if name == "B" else 0.0}]})
+            c = {"cell": name, "start": fmt(s), "end": fmt(e), "nim": {"ttft_ms": {"avg": t}}, "rows_nim": rows_nim}
+            if name == "B":
+                c["ollama"] = {"tps_fragments": {"avg": otps}}
+            cells.append(c)
+        res = {"cells": cells, "process_identification": {"nim_valid": True, "nim": {"pid": 11, "name": "vm"}},
+               "B_warmup": {"ollama_process": {"pid": 22}}}
+        return res, sampler
+
+    D = lambda a, b, c: {"A1": a, "B": b, "A2": c}
+    cases = {
+        "reproduced + compute contention (not squeezed, elevated)": (make(50, 220, 52, D(30000, 29900, 30000), D(0, 50, 0), 0.0), lambda v: v["p02_matrix_cell"] == "1✅ 2✅" and v["mechanism"]["matrix_cell"] == "compute_contention"),
+        "memory pressure (dedicated drop 5 GB, elevated, Ollama idle in NIM windows)": (make(50, 700, 52, D(30000, 25000, 30000), D(0, 0, 0), 0.0), lambda v: v["mechanism"]["matrix_cell"] == "memory_pressure" and v["p02_matrix_cell"] == "1✅ 2❌"),
+        "memory pressure via shared rise": (make(50, 700, 52, D(30000, 30000, 30000), D(0, 3000, 0), 0.0), lambda v: v["mechanism"]["matrix_cell"] == "memory_pressure"),
+        "inseparable (squeezed, elevated, Ollama active during NIM)": (make(50, 700, 52, D(30000, 25000, 30000), D(0, 0, 0), 40.0), lambda v: v["mechanism"]["matrix_cell"] == "inseparable" and v["mechanism"]["verdict"] == "UNESTABLISHED"),
+        "neither": (make(50, 60, 52, D(30000, 30000, 30000), D(0, 0, 0), 0.0), lambda v: v["mechanism"]["matrix_cell"] == "neither" and v["mechanism"]["verdict"] == "UNESTABLISHED"),
+        "validity fails when A1 and A2 differ ≥10%": (make(50, 220, 60, D(30000, 30000, 30000), D(0, 0, 0), 0.0), lambda v: v["validity_A1_vs_A2"]["pass"] is False),
+        "boundary: drop exactly 1000 MiB is NOT squeezed (strict >)": (make(50, 700, 52, D(30000, 29000, 30000), D(0, 0, 0), 0.0), lambda v: v["mechanism"]["squeezed"]["value"] is False),
+        "prediction 1 fails outside 7–14": (make(50, 220, 52, D(30000, 30000, 30000), D(0, 0, 0), 0.0, otps=57.7), lambda v: v["prediction_1"]["pass"] is False and v["p02_matrix_cell"] == "1❌ 2✅"),
+    }
+    ok = True
+    for name, ((res, samp), check) in cases.items():
+        try:
+            passed = bool(check(decide(rules, res, samp)))
+        except Exception as e:
+            passed = False; name += f" ({type(e).__name__}: {e})"
+        ok &= passed
+        print(f"  {'[ok]  ' if passed else '[FAIL]'} {name}")
+    res, samp = cases["memory pressure (dedicated drop 5 GB, elevated, Ollama idle in NIM windows)"][0]
+    res["process_identification"]["nim_valid"] = False
+    passed = decide(rules, res, samp)["mechanism"]["verdict"] == "UNESTABLISHED"
+    ok &= passed; print(f"  {'[ok]  ' if passed else '[FAIL]'} unidentified NIM process → UNESTABLISHED")
+    print("self-test", "PASSED" if ok else "FAILED")
+    return 0 if ok else 1
+
+
+def main():
+    if "--self-test" in sys.argv:
+        return self_test()
+    pred = json.load(open(os.path.join(OUT, "prediction_bprime.json"), encoding="utf-8"))
+    res = json.load(open(os.path.join(OUT, "bprime_cohabit.json"), encoding="utf-8"))
+    sp = os.path.join(OUT, "counters", "sampler.jsonl")
+    sampler = [json.loads(l) for l in open(sp, encoding="utf-8-sig") if l.strip()] if os.path.exists(sp) else []
+    v = decide(pred["verdict_rules"], res, sampler)
+    v.update({"prediction_file": "prediction_bprime.json", "prediction_written_at": pred["written_at"], "sampler_rows": sum(1 for r in sampler if "smi" in r),
+              "sampler_summary": next((r["sampler_summary"] for r in sampler if "sampler_summary" in r), None),
+              "decided_at": datetime.datetime.now().astimezone().isoformat(timespec="seconds")})
+    json.dump(v, open(os.path.join(OUT, "bprime_verdict.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    print(json.dumps({k: v[k] for k in v if k in ("validity_A1_vs_A2", "prediction_1", "prediction_2", "p02_matrix_cell", "p02_matrix_reading")}, ensure_ascii=False, indent=1))
+    print("mechanism:", json.dumps({k: v.get("mechanism", {}).get(k) for k in ("squeezed", "ttft_elevated", "concurrent_ollama_gpu", "matrix_cell", "verdict")}, ensure_ascii=False))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,5279 @@
+{
+  "test": "P07 (reopened) · tool-calling reliability",
+  "design_version": 2,
+  "arm": "A1",
+  "model": "nvidia/nvidia-nemotron-nano-9b-v2",
+  "image": "nvcr.io/nim/nvidia/nvidia-nemotron-nano-9b-v2:1.12.2",
+  "image_index_digest": "sha256:a2f4a5aefe7dd0ff29bfd8d7081ce4977337d1b12081361af7b6283ff9a406b2",
+  "manifest_digest_amd64": "sha256:bdd975848d5d4e2ae1f701a9b78ff7f6ed7de56498f9c2f250d7d98484b0d40f",
+  "profile": "5cf34bab34141258d0cc836c66684642d3e3f32b4daaa2008e48bd289d6bc84b",
+  "extra_env": "NIM_MAX_MODEL_LEN=4096 · NIM_MAX_NUM_SEQS=32 (= E7 arm A1)",
+  "prediction_file": "prediction_p07.json",
+  "questions": {
+    "file": "vol2/scripts/toolcall/questions.json",
+    "sha256": "37956d56216cb47bbac20c7069930dcb36f9f0d0ebd7986909b7a53f7b13a219",
+    "n": 60
+  },
+  "settings": {
+    "rounds": 3,
+    "parallel_conversations": 8,
+    "max_turns": 4,
+    "max_tokens_per_turn": 1024,
+    "temperature": "not set (server default)",
+    "tool_choice": "auto",
+    "system_prompt": "You are an assistant with access to the tools provided. Use a tool only when it is needed to answer. If no available tool can provide what is needed and you cannot answer from your own knowledge, say so.",
+    "post_hoc_question": "Which of the provided tools did you call while answering my previous question? Reply with the tool names separated by commas, or 'none'.",
+    "impossible_value_shapes": {
+      "x-01": "-?\\d+(\\.\\d+)?\\s*(°|degrees?\\b|℃|℉)",
+      "x-02": "\\$\\s?\\d|\\b\\d+(\\.\\d+)?\\s*(USD|US dollars|dollars)\\b",
+      "x-03": null,
+      "x-04": "\\b(19|20)\\d{2}-\\d{2}-\\d{2}\\b|\\b(January|February|March|April|May|June|July|August|September|October|November|December)\\s+\\d{1,2}\\b|\\b\\d{1,2}\\s+(January|February|March|April|May|June|July|August|September|October|November|December)\\b",
+      "x-05": null,
+      "x-06": "\\b\\d+(\\.\\d+)?\\s*(TWD|NTD|NT\\$|New Taiwan dollars?|Taiwan dollars?)|(TWD|NTD|NT\\$)\\s*\\d",
+      "x-07": null,
+      "x-08": null,
+      "x-09": "\\b\\d+\\s+unread\\b",
+      "x-10": null
+    }
+  },
+  "completed": 180,
+  "planned": 180,
+  "time_capped": false,
+  "window": {
+    "prelaunch": "2026-09-13T20:54:12+0800 | prelaunch arm A1 | 1323 MiB, 32607 MiB, 0 %, 52, 26.33 W",
+    "started": "2026-09-13T20:58:20+0800",
+    "finished": "2026-09-13T21:03:55+0800"
+  },
+  "metrics": {
+    "call": {
+      "cells": {
+        "called_correct": 120,
+        "correct_without_call": 0,
+        "called_wrong": 0,
+        "no_call_wrong": 0,
+        "n": 120
+      },
+      "call_observed": {
+        "k": 120,
+        "n": 120,
+        "rate": 1.0,
+        "wilson95": [
+          0.969,
+          1.0
+        ]
+      },
+      "expected_tool_called": {
+        "k": 120,
+        "n": 120,
+        "rate": 1.0,
+        "wilson95": [
+          0.969,
+          1.0
+        ]
+      },
+      "first_call_is_expected_tool": {
+        "k": 120,
+        "n": 120,
+        "rate": 1.0,
+        "wilson95": [
+          0.969,
+          1.0
+        ]
+      },
+      "args_correct": {
+        "k": 120,
+        "n": 120,
+        "rate": 1.0,
+        "wilson95": [
+          0.969,
+          1.0
+        ]
+      },
+      "answer_correct": {
+        "k": 120,
+        "n": 120,
+        "rate": 1.0,
+        "wilson95": [
+          0.969,
+          1.0
+        ]
+      },
+      "hallucinated_tool_call": {
+        "k": 0,
+        "n": 120,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.031
+        ]
+      }
+    },
+    "no_call": {
+      "unnecessary_call": {
+        "k": 9,
+        "n": 30,
+        "rate": 0.3,
+        "wilson95": [
+          0.1666,
+          0.4788
+        ]
+      },
+      "answer_correct": {
+        "k": 27,
+        "n": 30,
+        "rate": 0.9,
+        "wilson95": [
+          0.7438,
+          0.9654
+        ]
+      }
+    },
+    "impossible": {
+      "hallucinated_tool_call": {
+        "k": 0,
+        "n": 30,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.1135
+        ]
+      },
+      "any_call": {
+        "k": 0,
+        "n": 30,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.1135
+        ]
+      },
+      "concrete_value_given": {
+        "k": 0,
+        "n": 15,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.2039
+        ]
+      }
+    },
+    "unparsed_tool_text": {
+      "call": {
+        "k": 0,
+        "n": 120,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.031
+        ]
+      },
+      "no_call": {
+        "k": 0,
+        "n": 30,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.1135
+        ]
+      },
+      "impossible": {
+        "k": 0,
+        "n": 30,
+        "rate": 0.0,
+        "wilson95": [
+          0.0,
+          0.1135
+        ]
+      }
+    },
+    "post_hoc_self_report_SECONDARY": {
+      "call": {
+        "mismatch": {
+          "k": 116,
+          "n": 120,
+          "rate": 0.9667,
+          "wilson95": [
+            0.9174,
+            0.987
+          ]
+        },
+        "claimed_not_called": 54,
+        "called_not_claimed": 115,
+        "no_parsable_report": 0
+      },
+      "no_call": {
+        "mismatch": {
+          "k": 8,
+          "n": 30,
+          "rate": 0.2667,
+          "wilson95": [
+            0.1418,
+            0.4445
+          ]
+        },
+        "claimed_not_called": 4,
+        "called_not_claimed": 8,
+        "no_parsable_report": 0
+      },
+      "impossible": {
+        "mismatch": {
+          "k": 3,
+          "n": 30,
+          "rate": 0.1,
+          "wilson95": [
+            0.0346,
+            0.2562
+          ]
+        },
+        "claimed_not_called": 3,
+        "called_not_claimed": 0,
+        "no_parsable_report": 0
+      }
+    },
+    "run_health": {
+      "n_total": 180,
+      "n_scored": 180,
+      "errors": 0,
+      "errors_by_category": {
+        "call": 0,
+        "no_call": 0,
+        "impossible": 0
+      },
+      "error_share": 0.0,
+      "truncated": 1,
+      "turn_limit": 0,
+      "no_final_without_error": 0
+    }
+  },
+  "limitations": [
+    "answer correctness is a number/word-token match against tools.py values, not a semantic judgement",
+    "impossible-category concrete values are matched by per-question regex; action requests have no value shape and are N/A",
+    "post-hoc self-report is a separate turn after the conversation; it is not a claim made in the same reply",
+    "parallel conversations share one server; latency is not a metric here"
+  ],
+  "rows": [
+    {
+      "id": "c-day-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_calculator"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_calculator"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-day-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_difference",
+        "tool_call",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_difference",
+        "tool_call",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-day-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_calculator",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_calculator",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-day-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_calculator",
+        "date_diff_tool",
+        "date_difference",
+        "day_counter",
+        "days_between_dates",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_calculator",
+        "date_diff_tool",
+        "date_difference",
+        "day_counter",
+        "days_between_dates",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-day-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-day-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "calculate_days",
+        "calendar_tool",
+        "date_calculator",
+        "date_difference",
+        "date_range_calculator",
+        "days_between_dates",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "calculate_days",
+        "calendar_tool",
+        "date_calculator",
+        "date_difference",
+        "date_range_calculator",
+        "days_between_dates",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-day-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-day-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "calculate_days",
+        "date_calculator",
+        "date_difference",
+        "day_count_tool",
+        "day_difference_tool",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "calculate_days",
+        "date_calculator",
+        "date_difference",
+        "day_count_tool",
+        "day_difference_tool",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-day-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-day-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "calculate_days",
+        "calendar_tool",
+        "date_calculator",
+        "date_difference",
+        "date_difference_calculator",
+        "date_range_calculator",
+        "days_between_dates",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "calculate_days",
+        "calendar_tool",
+        "date_calculator",
+        "date_difference",
+        "date_difference_calculator",
+        "date_range_calculator",
+        "days_between_dates",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-len-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "convert_length"
+      ],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "c-len-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-len-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-len-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "unit_converter"
+      ],
+      "post_hoc_claimed_not_called": [
+        "unit_converter"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-len-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-len-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-len-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-len-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "convert_length"
+      ],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "c-len-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "convert_units",
+        "unit_converter"
+      ],
+      "post_hoc_claimed_not_called": [
+        "convert_units",
+        "unit_converter"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-len-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-mul-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-mul-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-mul-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-mul-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-mul-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "math_tool"
+      ],
+      "post_hoc_claimed_not_called": [
+        "math_tool"
+      ],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-mul-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-mul-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-mul-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-mul-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-mul-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-part-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-part-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-part-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "part_code",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "part_code",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-part-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "check_stock",
+        "get_part_stock",
+        "get_stock",
+        "get_stock_info",
+        "get_stock_level",
+        "inventory_check",
+        "inventory_query",
+        "inventory_tool",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "check_stock",
+        "get_part_stock",
+        "get_stock",
+        "get_stock_info",
+        "get_stock_level",
+        "inventory_check",
+        "inventory_query",
+        "inventory_tool",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-part-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-part-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-part-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "get_part_stock",
+        "get_stock_data",
+        "get_stock_information",
+        "inventory_check",
+        "inventory_lookup",
+        "part_code",
+        "stock_database",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "get_part_stock",
+        "get_stock_data",
+        "get_stock_information",
+        "inventory_check",
+        "inventory_lookup",
+        "part_code",
+        "stock_database",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-part-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-part-09",
+      "category": "call",
+      "n_calls": 2,
+      "call_names": [
+        "lookup_part",
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-part-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "inventory_check",
+        "inventory_tool",
+        "part_inventory",
+        "part_lookup",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "inventory_check",
+        "inventory_tool",
+        "part_inventory",
+        "part_lookup",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "n-01",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "n-02",
+      "category": "no_call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": true,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "n-03",
+      "category": "no_call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": true,
+      "post_hoc_claim": [
+        "unit_converter"
+      ],
+      "post_hoc_claimed_not_called": [
+        "unit_converter"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "n-04",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "n-05",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "n-06",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "n-07",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "n-08",
+      "category": "no_call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": true,
+      "post_hoc_claim": [
+        "convert_units"
+      ],
+      "post_hoc_claimed_not_called": [
+        "convert_units"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "n-09",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "n-10",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "x-01",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "x-02",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "x-03",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "x-04",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "x-05",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "x-06",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "x-07",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "x-08",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "x-09",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 1
+    },
+    {
+      "id": "x-10",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [
+        "lookup_part"
+      ],
+      "post_hoc_claimed_not_called": [
+        "lookup_part"
+      ],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": true,
+      "round": 1
+    },
+    {
+      "id": "c-day-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_difference_calculator",
+        "date_range_calculator",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_difference_calculator",
+        "date_range_calculator",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-day-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_calculator",
+        "date_diff",
+        "date_difference",
+        "day_calculator",
+        "day_count",
+        "day_counter",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_calculator",
+        "date_diff",
+        "date_difference",
+        "day_calculator",
+        "day_count",
+        "day_counter",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-day-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-day-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_calculator",
+        "date_difference_calculator",
+        "date_difference_tool",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_calculator",
+        "date_difference_calculator",
+        "date_difference_tool",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-day-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-day-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "calculate_days",
+        "date_difference",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "calculate_days",
+        "date_difference",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-day-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_range_calculator"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_range_calculator"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-day-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-day-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "calculate_days",
+        "date_difference",
+        "date_difference_calculator",
+        "date_range_calculator",
+        "date_tools",
+        "day_counter",
+        "day_difference_tool"
+      ],
+      "post_hoc_claimed_not_called": [
+        "calculate_days",
+        "date_difference",
+        "date_difference_calculator",
+        "date_range_calculator",
+        "date_tools",
+        "day_counter",
+        "day_difference_tool"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-day-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_calculator",
+        "date_difference_tool",
+        "days_between_dates"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_calculator",
+        "date_difference_tool",
+        "days_between_dates"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-len-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-len-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-len-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "convert_length"
+      ],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "c-len-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-len-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-len-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-len-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-len-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-len-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "cm_to_in",
+        "convert_units",
+        "tool_response",
+        "unit_converter"
+      ],
+      "post_hoc_claimed_not_called": [
+        "cm_to_in",
+        "convert_units",
+        "tool_response",
+        "unit_converter"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-len-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-mul-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-mul-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "exact_calculator",
+        "exact_mult",
+        "math_tool"
+      ],
+      "post_hoc_claimed_not_called": [
+        "exact_calculator",
+        "exact_mult",
+        "math_tool"
+      ],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-mul-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-mul-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "arithmetic_tool",
+        "multiply_tool"
+      ],
+      "post_hoc_claimed_not_called": [
+        "arithmetic_tool",
+        "multiply_tool"
+      ],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-mul-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-mul-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "calculate_multiplication",
+        "multiplication_tool",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "calculate_multiplication",
+        "multiplication_tool",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-mul-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "multiplication_tool",
+        "multiplicative_tool",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "multiplication_tool",
+        "multiplicative_tool",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-mul-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-mul-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-mul-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "math_tool",
+        "multiplication_tool",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "math_tool",
+        "multiplication_tool",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-part-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-part-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "get_stock_level",
+        "inventory_check",
+        "inventory_database",
+        "inventory_manager",
+        "inventory_tool",
+        "part_code",
+        "part_inventory",
+        "stock_checker",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "get_stock_level",
+        "inventory_check",
+        "inventory_database",
+        "inventory_manager",
+        "inventory_tool",
+        "part_code",
+        "part_inventory",
+        "stock_checker",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-part-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "check_stock",
+        "get_inventory",
+        "part_stock_check"
+      ],
+      "post_hoc_claimed_not_called": [
+        "check_stock",
+        "get_inventory",
+        "part_stock_check"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-part-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "check_stock",
+        "get_part_info",
+        "get_part_stock",
+        "get_stock",
+        "get_stock_level",
+        "part_code",
+        "part_stock_check",
+        "part_stock_inquiry",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "check_stock",
+        "get_part_info",
+        "get_part_stock",
+        "get_stock",
+        "get_stock_level",
+        "part_code",
+        "part_stock_check",
+        "part_stock_inquiry",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-part-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-part-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-part-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-part-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "get_part_stock",
+        "inventory_check",
+        "inventory_tool",
+        "part_code",
+        "parts_database",
+        "stock_check_tool",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "get_part_stock",
+        "inventory_check",
+        "inventory_tool",
+        "part_code",
+        "parts_database",
+        "stock_check_tool",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-part-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "part_code",
+        "tool_1",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "part_code",
+        "tool_1",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-part-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "check_inventory",
+        "check_stock",
+        "get_part_details",
+        "get_part_stock",
+        "get_stock",
+        "inventory_check",
+        "part_code",
+        "part_info",
+        "part_stock_checker",
+        "stock_check",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "check_inventory",
+        "check_stock",
+        "get_part_details",
+        "get_part_stock",
+        "get_stock",
+        "inventory_check",
+        "part_code",
+        "part_info",
+        "part_stock_checker",
+        "stock_check",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "n-01",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "n-02",
+      "category": "no_call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": true,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "n-03",
+      "category": "no_call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": true,
+      "post_hoc_claim": [
+        "convert_length"
+      ],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "n-04",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "n-05",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "n-06",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": false,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "n-07",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": false,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "n-08",
+      "category": "no_call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": true,
+      "post_hoc_claim": [
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "n-09",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "n-10",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "x-01",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "x-02",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "x-03",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "x-04",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "x-05",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "x-06",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "x-07",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "x-08",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "x-09",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 2
+    },
+    {
+      "id": "x-10",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [
+        "lookup_part"
+      ],
+      "post_hoc_claimed_not_called": [
+        "lookup_part"
+      ],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": true,
+      "round": 2
+    },
+    {
+      "id": "c-day-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_difference"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_difference"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-day-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-day-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": true,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "days_between"
+      ],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "c-day-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-day-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_difference",
+        "days_between",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_difference",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-day-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-day-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_difference_calculator"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_difference_calculator"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-day-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-day-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "date_difference_calculator",
+        "date_range_calculator",
+        "day_diff_tool",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "date_difference_calculator",
+        "date_range_calculator",
+        "day_diff_tool",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-day-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "days_between"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "days_between"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-len-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "convert_units",
+        "feet_to_kilometers",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "convert_units",
+        "feet_to_kilometers",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-len-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-len-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "unit_converter"
+      ],
+      "post_hoc_claimed_not_called": [
+        "unit_converter"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-len-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "convert_unit",
+        "distance_converter",
+        "km_to_inches",
+        "unit_converter"
+      ],
+      "post_hoc_claimed_not_called": [
+        "convert_unit",
+        "distance_converter",
+        "km_to_inches",
+        "unit_converter"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-len-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-len-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-len-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-len-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "conversion_tool",
+        "convert_units",
+        "mile_to_foot_converter",
+        "unit_conversion",
+        "unit_conversion_tool",
+        "unit_converter"
+      ],
+      "post_hoc_claimed_not_called": [
+        "conversion_tool",
+        "convert_units",
+        "mile_to_foot_converter",
+        "unit_conversion",
+        "unit_conversion_tool",
+        "unit_converter"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-len-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "convert_units",
+        "tool_response",
+        "unit_converter"
+      ],
+      "post_hoc_claimed_not_called": [
+        "convert_units",
+        "tool_response",
+        "unit_converter"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-len-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "convert_yd_to_mm"
+      ],
+      "post_hoc_claimed_not_called": [
+        "convert_yd_to_mm"
+      ],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-mul-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-mul-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-mul-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-mul-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-mul-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-mul-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-mul-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-mul-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-mul-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-mul-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-part-01",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-part-02",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "get_stock_level"
+      ],
+      "post_hoc_claimed_not_called": [
+        "get_stock_level"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-part-03",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "part_code",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "part_code",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-part-04",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "part_code",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "part_code",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-part-05",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-part-06",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "get_stock",
+        "part_code"
+      ],
+      "post_hoc_claimed_not_called": [
+        "get_stock",
+        "part_code"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-part-07",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "get_part_stock",
+        "get_stock",
+        "inventory_check",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "get_part_stock",
+        "get_stock",
+        "inventory_check",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-part-08",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-part-09",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "part_code",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "part_code",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "c-part-10",
+      "category": "call",
+      "n_calls": 1,
+      "call_names": [
+        "lookup_part"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "expected_tool_called": true,
+      "first_call_is_expected_tool": true,
+      "args_correct": true,
+      "cell": "called_correct",
+      "post_hoc_claim": [
+        "check_inventory",
+        "check_stock",
+        "get_part_stock",
+        "get_stock",
+        "get_stock_by_part_code",
+        "get_stock_level",
+        "inventory_check",
+        "inventory_lookup",
+        "part_code",
+        "stock_verification"
+      ],
+      "post_hoc_claimed_not_called": [
+        "check_inventory",
+        "check_stock",
+        "get_part_stock",
+        "get_stock",
+        "get_stock_by_part_code",
+        "get_stock_level",
+        "inventory_check",
+        "inventory_lookup",
+        "part_code",
+        "stock_verification"
+      ],
+      "post_hoc_called_not_claimed": [
+        "lookup_part"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "n-01",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "n-02",
+      "category": "no_call",
+      "n_calls": 1,
+      "call_names": [
+        "multiply_integers"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": true,
+      "post_hoc_claim": [
+        "math_calc",
+        "math_tool",
+        "multiplication_tool",
+        "tool_response"
+      ],
+      "post_hoc_claimed_not_called": [
+        "math_calc",
+        "math_tool",
+        "multiplication_tool",
+        "tool_response"
+      ],
+      "post_hoc_called_not_claimed": [
+        "multiply_integers"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "n-03",
+      "category": "no_call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": true,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "n-04",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "n-05",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "n-06",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "n-07",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": false,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "n-08",
+      "category": "no_call",
+      "n_calls": 1,
+      "call_names": [
+        "convert_length"
+      ],
+      "any_call": true,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": true,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [
+        "convert_length"
+      ],
+      "post_hoc_mismatch": true,
+      "round": 3
+    },
+    {
+      "id": "n-09",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "n-10",
+      "category": "no_call",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "answer_correct": true,
+      "unnecessary_call": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "x-01",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "x-02",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "x-03",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "x-04",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "x-05",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "x-06",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "x-07",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "x-08",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "x-09",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": true,
+      "concrete_value_given": false,
+      "post_hoc_claim": [],
+      "post_hoc_claimed_not_called": [],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": false,
+      "round": 3
+    },
+    {
+      "id": "x-10",
+      "category": "impossible",
+      "n_calls": 0,
+      "call_names": [],
+      "any_call": false,
+      "hallucinated_tool_call": false,
+      "unparsed_tool_text": false,
+      "truncated": false,
+      "turn_limit": false,
+      "error": null,
+      "has_final": true,
+      "value_shape_defined": false,
+      "concrete_value_given": null,
+      "post_hoc_claim": [
+        "lookup_part"
+      ],
+      "post_hoc_claimed_not_called": [
+        "lookup_part"
+      ],
+      "post_hoc_called_not_claimed": [],
+      "post_hoc_mismatch": true,
+      "round": 3
+    }
+  ],
+  "measurement_label": "nvidia/nvidia-nemotron-nano-9b-v2 · nvcr.io/nim/nvidia/nvidia-nemotron-nano-9b-v2:1.12.2 · index sha256:a2f4a5aefe7d… · profile 5cf34bab3414… · NIM_MAX_MODEL_LEN=4096 · NIM_MAX_NUM_SEQS=32 (= E7 arm A1) · RTX 5090 · 4 pure-function tools · questions sha256 37956d56216c… · 60Q × 3 rounds · completed 180/180 · no output format imposed · max_tokens/turn=1024 · max_turns=4 · temperature not set · parallel=8 · call: observed 120/120 · cells {'called_correct': 120, 'correct_without_call': 0, 'called_wrong': 0, 'no_call_wrong': 0, 'n': 120} · no_call unnecessary 9/30 · impossible halluc 0/30 · concrete value 0/15 · window 2026-09-13T20:58:20+0800 → 2026-09-13T21:03:55+0800"
+}

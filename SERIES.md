@@ -30,7 +30,7 @@ This file lists where each volume's evidence lives and which NVIDIA component ea
 | C · co-residence | 2 | ● 1.13.1 · Llama 3.1 8B | | | Ollama `llama3.1:8b` (co-resident) |
 | E8 · reranker on SciFact | 2 | | | | `all-MiniLM-L6-v2` + `bge-reranker-v2-m3` |
 | E9 · Guardrails overhead | 2 | ○ | ● 0.23.0 | ○ Nemotron Nano 9B v2 | |
-| S6 · self-check judge behaviour | 2 | ○ | ● 0.21.0 → 0.23.0 | ○ Nemotron Nano 9B v2 | |
+| self-check judge behaviour | 2 | ○ | ● 0.21.0 → 0.23.0 | ○ Nemotron Nano 9B v2 | |
 
 Exact images, digests and profiles are in each experiment's result file (`measurement_label`), not here.
 E8 uses no NVIDIA component. It is listed because it belongs to Vol.2's evidence.

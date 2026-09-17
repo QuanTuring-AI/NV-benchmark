@@ -1,0 +1,34 @@
+{
+  "test": "P07 · tool-calling reliability without an external orchestration framework",
+  "written_at": "2026-09-13T16:43:26+0800",
+  "written_before": "any P07 container launch or request (run_p07.sh refuses to start if this file or its .sha256 is missing or changed)",
+  "question": "Does the model itself decide whether to call a tool, which one, and with what arguments, and does its own report of what it did match what it actually did?",
+  "arms": {
+    "P": "Llama 3.1 8B Instruct · NIM 1.13.1 · positive control",
+    "A1": "Nemotron Nano 9B v2 · NIM 1.12.2",
+    "A2": "Nemotron 3 Nano · NIM (digest ac9d1cef…)"
+  },
+  "design": {
+    "questions": "vol2/scripts/toolcall/questions.json sha256 37956d56216cb47bbac20c7069930dcb36f9f0d0ebd7986909b7a53f7b13a219 · 60 = call 40 (10 per tool) + no_call 10 + impossible 10",
+    "rounds": 3,
+    "tools": "4 pure functions (tools.py): multiply_integers, days_between, convert_length, lookup_part",
+    "harness_sha256_of_toolcall_eval_py+tools_py": "630cbe2d82b4ea1b3fad78b06e6eb77dcd7ec4e53baeac6e229f4ebd503d7dc4",
+    "settings": "tool_choice auto · max_tokens 1024 per turn · max 4 model turns · temperature not set · 8 parallel conversations · NIM_MAX_MODEL_LEN 4096 for all arms",
+    "claim": "structured TOOLS_USED line at the end of the final reply",
+    "arm_validity": "a probe request must return structured tool_calls; otherwise the arm is recorded as 'tool channel not active' and no capability metric is reported for it",
+    "time_cap": "25 min per arm; partial completion is reported with its n",
+    "runs": "one run per arm; not repeated to obtain a different outcome"
+  },
+  "gate": {
+    "arm": "P",
+    "metric": "call · tool_selection_correct (first tool call names the expected tool)",
+    "threshold": ">= 70%",
+    "source": "no prior measurement; threshold chosen by this CC from the difficulty of the tools. It is self-defined, not cited.",
+    "if_not_met": "stop and report; A1 and A2 are not run"
+  },
+  "predictions": {
+    "A1_A2_claim_mismatch": "not predicted — no direction assumed",
+    "impossible_hallucinated_tool_rate": "not predicted — no precedent"
+  },
+  "not_in_scope": "no conclusion on whether a model is suitable as an agent"
+}

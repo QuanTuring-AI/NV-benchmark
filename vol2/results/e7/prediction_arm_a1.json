@@ -1,0 +1,30 @@
+{
+  "work_order": "20260913_裁決_D28_Vol2發表前補實驗_資料點規模與公開路徑_含Vol1陽性對照臂.md",
+  "unblocked_by": "20260913_裁決_D30_臂P判定FAIL但閘已達成_C不是選項是義務_221ms牽動已發表SOT.md §6",
+  "written_at": "2026-09-13T03:05:29+08:00",
+  "gate": "D28 對 A1/A2 未設通過判準（只有臂 P 有）⇒ 本檔是 CC 預測，不是閘；落外照實報，⛔ 不調參配合",
+  "harness": "scripts/e7/e7_arm.py（臂 P 同一支）· 100Q × 3 輪 · max_tokens=500 · stream · 無 temperature · COOLDOWN 2s · tps=單字/秒（Vol.1 同式）· 併記 usage 真 token/s",
+  "harness_change_since_arm_p": "新增 content_chars / reasoning_chars 記錄欄（delta.reasoning_content 或 delta.reasoning 的字元數）· 僅記錄，不進 tps／TTFT 計算 · payload 未變",
+  "known_hazard": "🔴 推理模型：若推理內容走 delta.reasoning_content 而非 content，Vol.1 式『單字/秒』只數 content ⇒ 會嚴重低估，且與臂 P 的 83.2 不可比。以 true_tps（usage.completion_tokens）與 output_split 判讀；⛔ 不改計數式",
+  "arm": "A1（S2）",
+  "config": {
+    "image": "nvcr.io/nim/nvidia/nvidia-nemotron-nano-9b-v2:1.12.2",
+    "index_digest": "sha256:a2f4a5aefe7dd0ff29bfd8d7081ce4977337d1b12081361af7b6283ff9a406b2",
+    "manifest_digest_amd64": "sha256:bdd975848d5d4e2ae1f701a9b78ff7f6ed7de56498f9c2f250d7d98484b0d40f",
+    "profile": "5cf34bab34141258d0cc836c66684642d3e3f32b4daaa2008e48bd289d6bc84b",
+    "env": "NIM_MAX_NUM_SEQS=32 · NIM_MAX_MODEL_LEN=4096 · 無 RELAX · CUDA graph 開"
+  },
+  "cc_prediction": {
+    "true_tps_avg": [
+      65,
+      80
+    ],
+    "ttft_avg_ms": [
+      40,
+      70
+    ],
+    "vram_mb_max": "~30,000（vLLM gpu_memory_utilization 預佔，與 KV 用量無關）",
+    "words_per_s": "低信心：9B v2 預設推理開啟；若推理文字在 content（含 <think>）則約 55–75；若走 reasoning 欄則遠低於此",
+    "basis": "D25 S2′ 單流 74.54 tok/s、TTFT p50 46.1 ms（max_tokens=64 · n=7）；500 token 長輸出 decode 略降"
+  }
+}
