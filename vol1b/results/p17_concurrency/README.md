@@ -48,3 +48,24 @@ committed one even when the content is identical. This affects every AIPerf `.cs
 wrote it; its `deidentified_sha256` is the content committed here, which is what `git show <rev>:<path> | sha256sum` returns. The `.json` files are
 written with LF and are unaffected. Recomputing `analysis.json` for every profile from the de-identified files with `p17_analyze.py`
 reproduces the committed `analysis.json` files byte for byte (checked 2026-09-16).
+
+## What limits concurrency in each profile — post-hoc observation, not pre-registered
+
+The server's own metrics (`server_metrics_export.json`, polled about every 330 ms) separate two different ceilings. This was read from the evidence after the run; it is not a pre-registered result and none of the prediction files mention it.
+
+| Level | running, avg / max | KV cache use, avg / max | waiting, avg / max |
+|---|---|---|---|
+| C c0256 | 246.4 / 256 | 60.2% / 69.7% | 4.1 / 212 |
+| C c0512 | 250.9 / 256 | 63.9% / 73.1% | 256.6 / 455 |
+| S c0128 | 82.0 / 99 | 90.8% / 100% | 42.6 / 121 |
+| S c0512 | 81.8 / 103 | 93.0% / 100% | 425.3 / 491 |
+| R c0032 | 20.4 / 22 | 94.5% / 100% | 11.1 / 30 |
+| R c0512 | 21.0 / 23 | 96.4% / 100% | 489.2 / 502 |
+
+**C stops at the engine's sequence cap (`max_num_seqs` = 256) with about 30% of the KV cache still unused; S and R stop at the KV cache.** From `R/main/c0032` on the KV cache is already full and the number of waiting requests climbs from 11 to 489 while the number running stays near 21: in profile R, more concurrency only lengthens the queue.
+
+The arithmetic closes. KV capacity at READY was 5,117 blocks × 16 = 81,872 tokens in all three main runs (`main/container/metrics_at_ready.txt`; the R fresh-container runs had 5,169 blocks). Profile S: 81,872 / 82 running ≈ 998 tokens per request ≈ mean input 898 plus about 100 generated. Profile R: 81,872 / 21 ≈ 3,899 ≈ mean input 3,521 plus about 378 generated. The two ceilings call for different remedies — raising the sequence cap for C, shorter inputs or more KV memory for S and R.
+
+## The profile value in the pre-registrations
+
+`prediction_C.json`, `prediction_S.json` and `prediction_R.json` record `stack.profile` as the line `list-model-profiles` prints — the 64-hex profile id followed by ` (vllm-bf16-tp1-pp1)`. The launcher, `vol1b/scripts/p17_container.sh`, does not read that field: it passes the bare id, `092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90`, to NIM as `NIM_MODEL_PROFILE`. The runs therefore used the intended profile. The two forms are not interchangeable as input: passed verbatim, the recorded form is rejected by NIM (this happened in a later experiment). The pre-registrations are left unchanged, because a pre-registration is never modified; `vol1b/scripts/prediction_guard.py` now refuses such a value in any new pre-registration.

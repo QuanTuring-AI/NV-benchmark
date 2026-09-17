@@ -213,3 +213,53 @@ What this does **not** show:
 Descriptive, post-hoc (not a pre-registered conclusion): self-check completion tokens, median 91 (max 202) for J1024 against 3 for J3; call duration, median 970 ms (p90 1,260) against 60 ms (p90 110). No truncation warnings in either.
 
 Start-up note: the first fifteen start attempts on 2026-09-16 failed or were withheld because the v1 pre-registration recorded the profile together with the display suffix that `list-model-profiles` prints, and that string was passed to NIM verbatim; NIM reported it as "no matching profile … in manifest". The v1 file is kept unchanged (`prediction_p28.json`, see `PREDICTION_V1_SUPERSEDED.md`); v2 differs only in that value, its write time and the runner name, and the v2 runner refuses any profile value that is not a bare 64-hex id. No judgement was made under v1.
+
+## 10 · Co-residence — NIM and Ollama on one GPU, against each engine alone (run 2026-09-17)
+
+Vol.1's NIM-versus-Ollama figures (7.3× throughput, NIM TTFT 221 ms against Ollama 2,876 ms) were measured with both engines resident on the same GPU and questions alternating between them. That condition was neither recorded nor controlled. This run measures its size. **It is not a replication of those figures**: the NIM version, the sampling settings and the Ollama version differ, and no figure below is to be set against 7.3× or 221 ms by subtraction.
+
+Arms: **S-N** NIM alone (Ollama model unloaded, checked before every request) · **S-O** Ollama alone (NIM container stopped, checked before every request) · **C** co-resident (both up; per question one NIM request, 2 s, one Ollama request, 2 s — the rhythm of Vol.1's harness). 50 of the 100 Vol.1 E2 questions, drawn by a pre-registered stratified rule (`results/p20_coresidence/sample.json`), one round; the first request of each series is dropped, leaving 49. S-O ran in two blocks before and after the NIM phase, because it needs the NIM container stopped; S-N and C alternated question by question.
+
+Stack: NIM 2.0.12, bf16 profile, `NIM_MAX_MODEL_LEN=8192`, `VLLM_USE_V2_MODEL_RUNNER=0`, `gpu_memory_utilization` 0.92 not clamped, KV 97,328 tokens at READY · Ollama 0.34.0, `llama3.1:8b` (id `46e0c10c039e`, Q4) — Vol.1's Ollama version was not recorded · temperature 0.0 and top_p 0.9 on both engines · max 500 tokens · driver 591.86 · pre-launch window 652 MiB · 13:03–13:28. Pre-registration `results/p20_coresidence/prediction_p20.json`, frozen before the run.
+
+**Address.** Both engines were called at `127.0.0.1`. On this machine `localhost` resolves to `::1` first and Ollama listens on IPv4 only, so every request to `http://localhost:11434` first spends about 2 s being refused. Measured at the start of each phase: Ollama through `localhost` 2,024–2,088 ms per request, through `127.0.0.1` 8.6–21.9 ms; NIM 3–27 ms either way. Vol.1's harness addressed Ollama as `localhost`. Two separate statements follow. First, the published Vol.1 data carry a floor that no model behaviour explains: in `benchmark/results/e2_nim_vs_ollama.json` none of the 300 Ollama requests has a TTFT below 2,405.9 ms (median 2,868.7, avg 2,875.5, max 10,990.5), while the 300 NIM requests in the same file range from 113.7 to 322.6 ms; the client-side delay measured today is of the size that would produce such a floor. Second, what the machine used in March 2026 did when resolving `localhost` was not recorded and is not established here. No published figure has been adjusted for this; the P20 re-run measures both addresses side by side.
+
+**All preconditions held**: 0 errors in 200 requests; isolation held at every request; 49 valid points in each of the four series; every question present in every series.
+
+Pre-registered result — ratio of means over the 49 questions, 95% bootstrap CI over questions, and the median per-question ratio:
+
+| | C / alone, NIM | C / alone, Ollama |
+|---|---|---|
+| TTFT | 2.55 [1.88, 3.69] · median 1.78 | 10.87 [9.95, 11.98] · median 10.56 |
+| Total latency | 1.07 [1.04, 1.12] | 1.50 [1.42, 1.60] |
+| tps (Vol.1 formula) | 0.87 [0.80, 0.93] | 0.62 [0.57, 0.67] |
+| tps (engine-reported tokens) | 0.86 [0.79, 0.93] | 0.62 [0.57, 0.67] |
+
+| NIM / Ollama tps (Vol.1 formula) | ratio of means |
+|---|---|
+| alone (S-N / S-O) | 0.39 [0.37, 0.42] |
+| co-resident (C) | 0.55 [0.50, 0.60] |
+
+| Series | TTFT avg / p50 / p95 (ms) | tps avg / p50 | completion tokens avg |
+|---|---|---|---|
+| S-N | 291 / 378 / 979 | 79.3 / 84.2 | 343 |
+| S-O | 67 / 72 / 92 | 201.6 / 225.9 | 308 |
+| C, NIM | 742 / 737 / 919 | 68.8 / 82.6 | 341 |
+| C, Ollama | 725 / 741 / 824 | 125.7 / 162.9 | 308 |
+
+The four pre-registered directions all held: NIM TTFT at least doubled co-resident; both engines' throughput fell co-resident; the NIM/Ollama throughput ratio was larger co-resident than alone. On this machine Ollama alone produced about 2.5 times NIM's single-stream throughput; co-resident, about 1.8 times. The Ollama model was reported fully in GPU memory in both Ollama arms; GPU memory in use before each co-resident request had a median of 31,986 MiB of 32,607.
+
+**Post-hoc — the NIM-alone series was not clean (not pre-registered; it changes how the NIM TTFT ratio above should be read).** Every S-N request at an odd position came immediately after the Ollama model had been unloaded; at even positions it did not. Those two halves differ by an order of magnitude:
+
+| NIM request | TTFT avg / median (ms) | tps avg |
+|---|---|---|
+| S-N, not after an unload (24) | 39.9 / 36.4 | 93.0 |
+| S-N, right after an unload (25) | 532.7 / 414.0 | 66.2 |
+| C, right after a load (24) | 891.6 / 881.3 | — |
+| C, Ollama already loaded (25) | 597.9 / 587.2 | — |
+
+GPU memory in use before S-N requests had a median of 25,260 MiB, below the roughly 30 GB NIM holds on its own, which points to part of NIM's memory having been moved out of the GPU while Ollama was loaded and not yet returned when Ollama left. The isolation check (Ollama no longer listed) passed; the physical state had not recovered. The pre-registered NIM TTFT ratio of 2.55 therefore compares co-residence against a baseline that is partly still affected by it. Against the clean half, co-resident NIM TTFT is about 15 times (Ollama already loaded) to 22 times (Ollama just loaded) the alone value. These two figures are post-hoc and rest on 24–25 points each.
+
+Also recorded: the S-O halves before and after the NIM phase differ little (TTFT 59 vs 74 ms avg; tps 203 vs 201). Ollama returned the same text for every question in both of its arms (49 of 49); NIM returned the same text in S-N and C for 26 of 49, the same non-repetition at temperature 0.0 that section 8 showed.
+
+What this does not show: anything about the stack Vol.1 used, or about Vol.1's machine state in March; whether the memory displacement above is specific to Windows and WSL2 (NIM does not list them as validated environments); or how the effect behaves under concurrency — every request here was sent alone.
