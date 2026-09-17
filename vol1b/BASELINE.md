@@ -263,3 +263,44 @@ GPU memory in use before S-N requests had a median of 25,260 MiB, below the roug
 Also recorded: the S-O halves before and after the NIM phase differ little (TTFT 59 vs 74 ms avg; tps 203 vs 201). Ollama returned the same text for every question in both of its arms (49 of 49); NIM returned the same text in S-N and C for 26 of 49, the same non-repetition at temperature 0.0 that section 8 showed.
 
 What this does not show: anything about the stack Vol.1 used, or about Vol.1's machine state in March; whether the memory displacement above is specific to Windows and WSL2 (NIM does not list them as validated environments); or how the effect behaves under concurrency — every request here was sent alone.
+
+## 11 · Co-residence re-run with both Ollama addresses and a recovered NIM-alone baseline (run 2026-09-17)
+
+Section 10 stands as run. This is a second pre-registered run (`results/p20_coresidence_v2/prediction_p20v2.json`, frozen before the run) with two changes. First, Ollama alone is measured through `127.0.0.1` (**S-OL**) and through `localhost` (**S-OH**, the address Vol.1's harness used) on every question, so the client-side address delay described in section 10 becomes a measured quantity. Second, after every Ollama unload, unmeasured 16-token NIM requests are sent until GPU memory in use is back within 1,000 MiB of the level recorded 10 s after NIM became ready (30,310 MiB; floor 29,310 MiB), at most 10 of them. **It is not a replication of the Vol.1 figures**, and no figure below is to be set against 7.3× or 221 ms by subtraction.
+
+Same sample (the 50 questions and run order of section 10), same stack and payloads as section 10: NIM 2.0.12, bf16 profile, `NIM_MAX_MODEL_LEN=8192`, `VLLM_USE_V2_MODEL_RUNNER=0`, `gpu_memory_utilization` 0.92 not clamped, KV 97,328 tokens at READY · Ollama 0.34.0, `llama3.1:8b` (id `46e0c10c039e`, Q4) · temperature 0.0, top_p 0.9, max 500 tokens · driver 591.86 · pre-launch window 1,034 MiB · measured requests 20:48–21:23. Order: S-OL and S-OH on even run positions (NIM stopped) → NIM up → S-N and C on all 50 → NIM down → S-OL and S-OH on odd positions. On each question both Ollama-alone arms ran; which address went first alternated in pairs of positions (25 questions loopback first, 24 localhost first).
+
+**All preconditions held**: 0 errors in 250 requests; isolation and address held at every request (every S-N request had Ollama unloaded and GPU memory at or above the floor); 49 valid points in each of the five series; every question present in every series. Recovery was needed after 25 of the 26 unloads: one warm-up request 24 times, three once, none once; all 26 reached the floor.
+
+| Series | TTFT avg / p50 / p95 (ms) | tps avg / p50 | completion tokens avg |
+|---|---|---|---|
+| S-N (NIM alone) | 38.9 / 35.9 / 74.3 | 85.6 / 95.4 | 343 |
+| S-OL (Ollama alone, 127.0.0.1) | 61.7 / 61.5 / 88.9 | 198.8 / 224.1 | 312 |
+| S-OH (Ollama alone, localhost) | 2,141.1 / 2,118.9 / 2,258.0 | 76.4 / 104.2 | 307 |
+| C, NIM | 788.7 / 769.0 / 1,036.5 | 53.6 / 61.9 | 341 |
+| C, Ollama (127.0.0.1) | 749.4 / 746.8 / 879.5 | 108.5 / 84.8 | 308 |
+
+Ratio of means over the 49 questions, 95% bootstrap CI over questions, median per-question ratio:
+
+| | C / alone, NIM | C / alone (127.0.0.1), Ollama |
+|---|---|---|
+| TTFT | 20.29 [17.77, 23.18] · median 22.52 | 12.14 [11.14, 13.33] · median 12.38 |
+| Total latency | 1.93 [1.60, 2.27] | 1.92 [1.68, 2.20] |
+| tps (Vol.1 formula) | 0.63 [0.55, 0.70] | 0.55 [0.48, 0.61] |
+| tps (engine-reported tokens) | 0.62 [0.54, 0.70] | 0.54 [0.48, 0.60] |
+
+| NIM / Ollama tps (Vol.1 formula) | ratio of means |
+|---|---|
+| alone, Ollama through 127.0.0.1 | 0.43 [0.41, 0.46] · median 0.42 |
+| alone, Ollama through localhost | 1.12 [0.99, 1.31] · median 0.89 |
+| co-resident | 0.49 [0.44, 0.55] · median 0.48 |
+
+**Address delay** (per question, S-OH minus S-OL): TTFT mean 2,079.4 ms [2,060.6, 2,099.1], median 2,059.9, range 1,962.2–2,306.6; total latency mean 2,081.0 ms. Split by which address went first, the median TTFT difference is 2,058.2 ms (localhost first, 24) and 2,065.3 ms (loopback first, 25). Connection probes at the start of each phase: `localhost` 2,040–2,087 ms, `127.0.0.1` 5–31 ms for Ollama; NIM 2–4 ms either way. Throughput computed with Vol.1's formula (tokens over total latency) includes this delay: the same Ollama responses measure 0.38 [0.34, 0.43] times as fast through `localhost`.
+
+Pre-registered predictions: **R1** NIM TTFT C / S-N ≥ 5 — held (20.29). **R2** median address delay between 1,500 and 2,500 ms — held (2,059.9). **R3** NIM/Ollama tps larger through `localhost` than through `127.0.0.1` — held (1.12 vs 0.43). **R4** NIM/Ollama tps through `127.0.0.1` below 1 — held (0.43).
+
+Read together with section 10: with the NIM-alone series recovered, co-resident NIM TTFT is about 20 times the alone value, the size section 10 found post-hoc against its clean half (15–22×), not the 2.55 its pre-registered ratio gave. On this machine, with Ollama addressed as `127.0.0.1`, Ollama alone produced about 2.3 times NIM's single-stream throughput; addressed as `localhost`, the Vol.1 formula puts NIM ahead by about 1.1 times, the whole difference being the client-side delay. The Ollama model was reported fully in GPU memory in all three Ollama series; GPU memory in use before each co-resident NIM request had a median of 32,046 MiB of 32,607.
+
+Also recorded (not pre-registered): the S-O blocks before and after the NIM phase differ little (S-OL TTFT 60.0 vs 63.3 ms avg, S-OH 2,131 vs 2,151). Co-resident NIM TTFT was 936 ms avg on the questions where Ollama had just been loaded and 647 ms where it was already loaded; the two S-N halves (after C, before C) were 33.5 and 44.5 ms. Response text: on every question the Ollama-alone arm sent first returned the same text as the co-resident Ollama request (49 of 49); the arm sent second, an immediate repeat of the same prompt, did so for 21 of 49, which is consistent with Ollama reusing the previous request's prompt cache — the address delay did not depend on the order (above). NIM returned the same text in S-N and C for 26 of 49, as in section 10.
+
+What this does not show: what Vol.1's machine did when resolving `localhost` in March 2026, which was not recorded; anything about the stack Vol.1 used; whether the memory displacement is specific to Windows and WSL2; or behaviour under concurrency — every request here was sent alone. No published figure has been adjusted.
