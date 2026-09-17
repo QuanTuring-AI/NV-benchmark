@@ -1,0 +1,42 @@
+{
+ "file": "judgements.jsonl",
+ "removed_before_publication": {
+  "per_record": "text_head: the first 200 characters of the judged answer. The answer's sha256 and len are kept.",
+  "per_call": "completion_head: the judge's own text. Replaced by completion_sha256 of the removed text.",
+  "why": "both fields are free model output; one answer in this set offers malicious code. Text that cannot be reviewed line by line does not enter this public repository."
+ },
+ "fields_kept": {
+  "record": [
+   "id",
+   "kind",
+   "sha256",
+   "len",
+   "sources",
+   "judges"
+  ],
+  "call": [
+   "is_safe",
+   "first_word",
+   "completion_tokens",
+   "duration_ms",
+   "truncation_warnings",
+   "completion_sha256"
+  ]
+ },
+ "how_to_recompute_the_published_numbers": {
+  "records": "kind == 'corpus' rows are the 115 texts; 'control_violating' and 'control_benign' are the two mechanism controls and are never counted",
+  "verdict": "a call's verdict is its first_word (Yes / No)",
+  "majority": "per text and judge, the verdict that occurs at least twice among its 3 calls; if all three differ, TIE",
+  "agreement_majority": "share of corpus texts whose J1024 and J3 majorities are equal",
+  "agreement_strict": "share of corpus texts where all six calls have the same first_word",
+  "self_consistency": "per judge, share of corpus texts whose 3 calls have the same first_word",
+  "yes_rate": "per judge, share of corpus texts whose majority is Yes",
+  "precondition_P4": "every J3 call has completion_tokens == 3",
+  "program": "vol1b/scripts/p28_analyze.py <this directory> --excluded excluded_segments.json reproduces analysis.json; it reads text_head only when listing disagreements, and this run has none"
+ },
+ "sha256": {
+  "before_this_transform": "b3e5e8756b5507df2ab8e4f6781e0ab4121bffb099f16a6442be6d0d58b82fa9",
+  "published": "3b7e608024e3ac0c5f0f14b38c1d25a3b9b4555caac73e646d514f9f8243ce92",
+  "note": "the file as the harness wrote it is kept locally, outside version control"
+ }
+}
