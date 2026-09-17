@@ -41,7 +41,7 @@ Per-request raw rows (`*.rows.jsonl`) are not included.
 | **E7 · S0** | Recomputes how Vol.1's guardrails overhead was aggregated | `results/e7/s0_vol1_overhead_algorithm.json` | — |
 | **C** | NIM alone → NIM with Ollama resident and alternating → NIM alone after unload | `results/e7/c/c_cohabit.json` · `c_verdict.json` | `results/e7/c/prediction_c.json` (+ `.sha256`) |
 | **E8** | Reranker on / off over a fixed first stage (SciFact) | `results/e8/scifact_RTX5090_20260913.json` | positive controls inside the result (`positive_control`) |
-| **E9** | NeMo Guardrails 0.23.0 on NIM Nemotron Nano 9B v2 | `results/e9/e9_guardrails_0230.json` (response text removed, see *Model output that is not published*) · `e9_analysis.json` · `e9_vs_0210_bootstrap.json` | held out — see *Pre-registrations held out of this repository* |
+| **E9** | NeMo Guardrails 0.23.0 on NIM Nemotron Nano 9B v2 | `results/e9/e9_guardrails_0230.json` (response text removed, see *Model output that is not published*) · `e9_analysis.json` · `e9_vs_0210_bootstrap.json` | `results/e9/prediction_e9.json` (+ `.sha256`) |
 | **S6** | `self_check_facts` judge behaviour, 0.21.0 vs 0.23.0 | `results/s6/s6_summary.json` · `J2_direct_s6_gr0230.json` | held out — see *Pre-registrations held out of this repository* |
 
 | **B′** | Co-residence with Ollama's GPU layers limited by a VRAM ledger (`num_gpu` = 1) | `results/e7/b_prime/bprime_cohabit.json` · `bprime_verdict.json` — **read `results/e7/b_prime/READ_ME_FIRST.md` first** | `results/e7/b_prime/prediction_bprime.json` (+ `.sha256`) |
@@ -124,9 +124,19 @@ and nothing in this repository depends on knowing what they point to.
 
 ---
 
+## The profile value in one pre-registration
+
+`results/e7/prediction_arm_p.json` records `config.profile` as the profile id followed by the profile's description in
+full-width parentheses (83 characters), not the bare 64-hex id. The arm P run itself used the bare id: `e7_arm_p.json`
+records `profile` as `574eb0765118b2087b5fd6c8684a79e682bd03062f80343cfd9e2140ffa962cd`. The two forms are not
+interchangeable as input to NIM — passed verbatim, the recorded form is rejected. The pre-registration is left unchanged,
+because a pre-registration is never modified.
+
+---
+
 ## Pre-registrations held out of this repository
 
-A pre-registration is never modified — its text is the claim, and editing it would forge the record. Three of
+A pre-registration is never modified — its text is the claim, and editing it would forge the record. Two of
 them cannot be published as they stand, so they are not published at all. Each is named here with the digest of
 the exact frozen bytes, so that if it is ever quoted the quotation can be checked against this record.
 
@@ -134,9 +144,8 @@ the exact frozen bytes, so that if it is ever quoted the quotation can be checke
 |---|---|---|---|
 | `results/s6/prediction_s6.json` | `6fd38031984a0edd86129adb08fdb2040704756405299990bdfd4127bc553e58` | 2026-09-13 (no sidecar was written) | one field records the local filesystem path of the isolated virtualenv, including the account name |
 | `results/p07_toolcall/prediction_p07.json` | `29bbd49d1e89c30d967ae2dc50218bb141efa1a5bb31474feac4fc717dd1300d` | 2026-09-13T20:49:12+0800 | one field names an internal reviewer and work-order in a sentence explaining why the test was reopened |
-| `results/e9/prediction_e9.json` | `dc4ce763b0ef700bab169dd133f724808d53ef8cfa4f7dd92bc3b435f667b444` | 2026-09-13T03:06:53+0800 | held pending review; it carries internal codes only, no machine or personal data |
 
-What those three registered, **restated in prose — this is a restatement, not the frozen text**:
+What those two registered, **restated in prose — this is a restatement, not the frozen text**:
 
 - **S6** predicted that on the 9B judge with a `/no_think` system message the parser would keep falling through,
   and recorded the decision rule for that outcome before the run.
@@ -144,12 +153,8 @@ What those three registered, **restated in prose — this is a restatement, not 
   least 70% of scored conversations, a threshold this repository's authors chose with no prior measurement to cite;
   if the gate failed, arms A1 and A2 were not to be run. It predicted **nothing** about A1, A2, hallucinated tool
   calls or unparsed tool text, and stated that no conclusion about a model's suitability as an agent was in scope.
-- **E9** predicted detection 42–45 of 45, rail false blocks 0–3 of 90, and paired overhead 2–12%, with the reasoning
-  that under `/no_think` the judge would mostly answer yes or no so the raised token ceiling would rarely be used.
-  Its positive control required the rail to block at least one adversarial item, and said that if all 45 passed the
-  configuration was to be checked rather than the result reported. Confidence was recorded as medium.
 
-🔴 The measured results for these three runs are published in full. What is missing is the *frozen* statement of
+🔴 The measured results for these two runs are published in full. What is missing is the *frozen* statement of
 what was expected beforehand, and a restatement written afterwards cannot serve that purpose — it is here so the
 reader knows what the claim was, not as a substitute for the record.
 
