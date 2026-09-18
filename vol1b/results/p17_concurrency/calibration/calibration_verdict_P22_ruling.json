@@ -1,0 +1,22 @@
+{
+ "applies_to": "calibration_verdict.json (sha256 recorded in prediction_C/S/R.json inputs_sha256; that file is left unchanged)",
+ "ruling": "P22 \u00a71 (2026-09-15): the instrument check passes. Basis: the disagreement is attributable and disappears when the cause is removed.",
+ "basis": {
+  "cause": "the reference client resolved 'localhost' on this Windows host; per-request TTFT became bimodal (17\u201320 ms vs 30\u201345 ms) plus a slow first request per run",
+  "evidence": {
+   "localhost_new_connection": {
+    "ttft_avg_pct": 43.8,
+    "ttft_p50_pct": 47.4
+   },
+   "127.0.0.1_new_connection": {
+    "ttft_avg_pct": -19.7,
+    "ttft_p50_pct": 0.8,
+    "itl_avg_pct": -4.3,
+    "e2e_avg_pct": -4.5
+   }
+  },
+  "kept": "the localhost runs stay in calibration_verdict.json as the control"
+ },
+ "limitation": "The check compared avg, p50 and min. The SLO verdicts read p99, which was not calibrated. Verdict robustness is therefore judged per level by its boundary distance (slo_margins.json); the narrowest is profile C, interactive SLO, N=32: TTFT p99 459.8 ms vs 500 ms limit, margin 40.2 ms. Next calibration must include the statistic the verdict reads.",
+ "decided_by": "ruling P22 (2026-09-15), recorded 2026-09-16"
+}

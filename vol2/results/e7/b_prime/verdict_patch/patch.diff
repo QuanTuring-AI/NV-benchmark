@@ -1,0 +1,25 @@
+--- results/e7/b_prime/verdict_patch/bprime_verdict_as_registered.py.txt	2026-09-14 11:58:42.279635700 +0800
++++ scripts/e7/bprime_verdict.py	2026-09-14 11:58:50.955345200 +0800
+@@ -14,6 +14,11 @@
+ 
+ 
+ def epoch(iso):
++    # POST-RUN PATCH (2026-09-14): PowerShell's "o" format writes 7 fractional-second digits
++    # (e.g. 2026-09-14T11:36:09.7499100+08:00); Python 3.10 fromisoformat accepts only 3 or 6.
++    # Truncate the fraction to 6 digits. No verdict rule is changed. See results/e7/b_prime/verdict_patch/.
++    import re
++    iso = re.sub(r"(\.\d{6})\d+", r"\1", iso)
+     return datetime.datetime.fromisoformat(iso).timestamp()
+ 
+ 
+@@ -164,7 +169,9 @@
+             for k in range(10):
+                 ts = (s + datetime.timedelta(seconds=10 + 20 * k)).timestamp()
+                 rows_nim.append({"t_start_epoch": ts, "t_end_epoch": ts + 8})
+-                sampler.append({"t": datetime.datetime.fromtimestamp(ts + 2, base.tzinfo).isoformat(), "collect_ms": 3000, "smi": {},
++                # timestamps in the exact format gpu_counters.ps1 writes: 7 fractional digits (post-run patch)
++                iso7 = datetime.datetime.fromtimestamp(ts + 2, base.tzinfo).strftime("%Y-%m-%dT%H:%M:%S.%f") + "4" + "+08:00"
++                sampler.append({"t": iso7, "collect_ms": 3000, "smi": {},
+                                 "processes": [{"pid": 11, "dedicated_mib": ded[name], "shared_mib": sh[name]}],
+                                 "engine_util": [{"pid": 22, "util_sum_pct": oll_util if name == "B" else 0.0}]})
+             c = {"cell": name, "start": fmt(s), "end": fmt(e), "nim": {"ttft_ms": {"avg": t}}, "rows_nim": rows_nim}

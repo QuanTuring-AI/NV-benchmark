@@ -1,0 +1,208 @@
+{
+  "measurement_label": "scifact (HuggingFace dataset mteb/scifact (public) · split=test) · 300Q / 5183 docs · first stage=sentence-transformers/all-MiniLM-L6-v2 · reranker=BAAI/bge-reranker-v2-m3 (fp32) · top-50 -> top-5 · max_len=512 · device=cuda · runs=5 · Hit@5 75.3% -> 79.0% (Wilson 95% CI 74.0–83.2%) · nDCG@5 0.629 -> 0.702 · rerank 額外延遲 p50=974.7ms p95=979.1ms · 陽性對照(shuffle) 通過 · status=valid",
+  "status": "valid",
+  "citable": true,
+  "controls_ok": true,
+  "usage_valid": true,
+  "usage_issues": [],
+  "query_prefix": "",
+  "passage_prefix": "",
+  "dataset": {
+    "name": "scifact",
+    "source": "HuggingFace dataset mteb/scifact (public) · split=test",
+    "split": "test",
+    "n_docs": 5183,
+    "n_queries": 300,
+    "is_public_registry": true,
+    "max_queries_cap": null
+  },
+  "models": {
+    "first_stage": "sentence-transformers/all-MiniLM-L6-v2",
+    "reranker": "BAAI/bge-reranker-v2-m3",
+    "reranker_dtype": "fp32"
+  },
+  "config": {
+    "topk_first_stage": 50,
+    "topk_final": 5,
+    "max_length": 512,
+    "rerank_batch_size": 50,
+    "seed": 1508,
+    "l3_tuning": "none —— 本 harness 不含任何調校參數（紅線 L3）"
+  },
+  "recall_at_first_stage": 0.9,
+  "hit_at_5": {
+    "baseline": 0.7533333333333333,
+    "reranked": 0.79,
+    "delta": 0.036666666666666736
+  },
+  "mrr": {
+    "baseline": 0.6106245411933733,
+    "reranked": 0.6983941009254476,
+    "delta": 0.08776955973207434
+  },
+  "ndcg_at_5": {
+    "baseline": 0.6292831434933516,
+    "reranked": 0.7017981219286672,
+    "delta": 0.07251497843531562
+  },
+  "ci95": {
+    "hit_at_5": {
+      "baseline": [
+        0.7015536959202177,
+        0.7987069662142628
+      ],
+      "reranked": [
+        0.7403879054849664,
+        0.8322789051163471
+      ]
+    },
+    "mrr": {
+      "baseline": [
+        0.5608173930546622,
+        0.6586942618394488
+      ],
+      "reranked": [
+        0.6501722277414421,
+        0.7452762839539059
+      ]
+    },
+    "ndcg_at_5": {
+      "baseline": [
+        0.5814967813868475,
+        0.6773995120652365
+      ],
+      "reranked": [
+        0.6522886013903684,
+        0.7477795296580881
+      ]
+    },
+    "method": "hit@5 = Wilson（比例型，n = 題數）· MRR / nDCG@5 = bootstrap 百分位（2000 次，對題目重抽）。🔴 不是對 runs 取區間 —— 固定 seed 下品質是決定性的，跑次之間的離散度是 0，拿它算區間會得到假的 0 寬度。"
+  },
+  "positive_control": {
+    "mode": "shuffle",
+    "checks": {
+      "oracle_perfect": true,
+      "shuffled_collapsed": true,
+      "rerank_recovers_shuffled": true,
+      "order_invariant": true
+    },
+    "numbers": {
+      "baseline_hit_at_5": 0.7533333333333333,
+      "shuffled_hit_at_5": 0.10666666666666667,
+      "reranked_from_shuffled_hit_at_5": 0.79,
+      "reranked_hit_at_5": 0.79,
+      "oracle_hit_at_5": 1.0,
+      "chance_level": 0.1
+    },
+    "note": "打亂序那一輪是重新跑一次 reranker，不是重用分數 —— 重用會讓 order_invariant 變成恆真式。",
+    "passed": true
+  },
+  "latency_ms": {
+    "rerank_stage": {
+      "p50": 974.7122499684338,
+      "p95": 979.148164956132,
+      "p99": 980.9180820331676,
+      "mean": 976.0353697336977,
+      "n": 1500
+    },
+    "dense_stage": {
+      "p50": 0.1249000197276473,
+      "p95": 0.1647149765631184,
+      "mean": 0.1312204016915833,
+      "n": 1500
+    },
+    "note": "rerank_stage = 加上 reranker 所**額外**付出的延遲（每題 50 pairs，含 CUDA 同步）。dense_stage 為第一階段本身。兩者皆為單題延遲，不是批次吞吐 —— 兩種數字不可互換引用。"
+  },
+  "runs": {
+    "n": 5,
+    "quality_deterministic": true,
+    "per_run": [
+      {
+        "run": 1,
+        "baseline": {
+          "hit_at_5": 0.7533333333333333,
+          "mrr": 0.6106245411933733,
+          "ndcg_at_5": 0.6292831434933516
+        },
+        "reranked": {
+          "hit_at_5": 0.79,
+          "mrr": 0.6983941009254476,
+          "ndcg_at_5": 0.7017981219286672
+        },
+        "rerank_p50_ms": 971.4154000103008,
+        "rerank_p95_ms": 976.5190850303043
+      },
+      {
+        "run": 2,
+        "baseline": {
+          "hit_at_5": 0.7533333333333333,
+          "mrr": 0.6106245411933733,
+          "ndcg_at_5": 0.6292831434933516
+        },
+        "reranked": {
+          "hit_at_5": 0.79,
+          "mrr": 0.6983941009254476,
+          "ndcg_at_5": 0.7017981219286672
+        },
+        "rerank_p50_ms": 974.2320499790367,
+        "rerank_p95_ms": 978.4346700354945
+      },
+      {
+        "run": 3,
+        "baseline": {
+          "hit_at_5": 0.7533333333333333,
+          "mrr": 0.6106245411933733,
+          "ndcg_at_5": 0.6292831434933516
+        },
+        "reranked": {
+          "hit_at_5": 0.79,
+          "mrr": 0.6983941009254476,
+          "ndcg_at_5": 0.7017981219286672
+        },
+        "rerank_p50_ms": 975.1687000098173,
+        "rerank_p95_ms": 979.3466400093166
+      },
+      {
+        "run": 4,
+        "baseline": {
+          "hit_at_5": 0.7533333333333333,
+          "mrr": 0.6106245411933733,
+          "ndcg_at_5": 0.6292831434933516
+        },
+        "reranked": {
+          "hit_at_5": 0.79,
+          "mrr": 0.6983941009254476,
+          "ndcg_at_5": 0.7017981219286672
+        },
+        "rerank_p50_ms": 975.3280000004452,
+        "rerank_p95_ms": 979.7173900180496
+      },
+      {
+        "run": 5,
+        "baseline": {
+          "hit_at_5": 0.7533333333333333,
+          "mrr": 0.6106245411933733,
+          "ndcg_at_5": 0.6292831434933516
+        },
+        "reranked": {
+          "hit_at_5": 0.79,
+          "mrr": 0.6983941009254476,
+          "ndcg_at_5": 0.7017981219286672
+        },
+        "rerank_p50_ms": 975.545549968956,
+        "rerank_p95_ms": 979.8961099964799
+      }
+    ],
+    "note": "runs 量的是延遲分布並充當決定性檢查；quality_deterministic=false 代表有非決定性來源，需先解釋再談結論。"
+  },
+  "env": {
+    "torch_version": "2.7.1+cu128",
+    "cuda_available": true,
+    "python": "3.10.6",
+    "host": "Windows-10-10.0.26200-SP0",
+    "source": "live capture —— 沒有給 --env-snapshot，環境未經 verify_env.py 驗證，請勿把此數字當成受控環境下的結果",
+    "device_name": "NVIDIA GeForce RTX 5090",
+    "device_count": 1,
+    "vram_gb": 31.8
+  }
+}

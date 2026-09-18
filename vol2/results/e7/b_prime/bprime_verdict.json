@@ -1,0 +1,102 @@
+{
+  "rules_source": "prediction_bprime.json → verdict_rules (frozen)",
+  "inputs": {
+    "nim_ttft_avg_ms": {
+      "A1": 67.6,
+      "B": 219.2,
+      "A2": 57.1
+    }
+  },
+  "validity_A1_vs_A2": {
+    "rel_diff": 0.1684,
+    "max": 0.1,
+    "pass": false
+  },
+  "prediction_1": {
+    "metric": "B Ollama tps avg (Vol.1 formula)",
+    "value": 9.6,
+    "range": [
+      7,
+      14
+    ],
+    "pass": true
+  },
+  "prediction_2": {
+    "metric": "B NIM TTFT avg ms",
+    "value": 219.2,
+    "range": [
+      180,
+      270
+    ],
+    "pass": true
+  },
+  "p02_matrix_cell": "1✅ 2✅",
+  "p02_matrix_reading": "Vol.1 condition reproduced; 221 ms is the co-residence cost in that shape",
+  "mechanism": {
+    "thresholds": {
+      "squeeze_mib": 1000,
+      "elevated_ratio": 2.0,
+      "concurrent_util_pct": 5,
+      "min_concurrent_rows": 3,
+      "noise_flag_mib": 500
+    },
+    "nim_process": {
+      "pid": 42592,
+      "name": "vmwp"
+    },
+    "per_cell": {
+      "A1": {
+        "source": "sampler rows (n=55)",
+        "nim_dedicated_median_mib": 28602.7,
+        "nim_shared_median_mib": 84,
+        "nim_dedicated_span_mib": 2.0
+      },
+      "B": {
+        "source": "sampler rows (n=206)",
+        "nim_dedicated_median_mib": 28602.7,
+        "nim_shared_median_mib": 84.0,
+        "nim_dedicated_span_mib": 0.0
+      },
+      "A2": {
+        "source": "sampler rows (n=52)",
+        "nim_dedicated_median_mib": 28602.7,
+        "nim_shared_median_mib": 84.0,
+        "nim_dedicated_span_mib": 0.0
+      }
+    },
+    "squeezed": {
+      "value": false,
+      "dedicated_drop_mib": 0.0,
+      "shared_rise_mib": 0.0
+    },
+    "ttft_elevated": {
+      "value": true,
+      "ratio_B_over_max_A": 3.24
+    },
+    "counter_noise_A1_span_mib": 2.0,
+    "noise_flag": false,
+    "concurrent_ollama_gpu": {
+      "ollama_process": {
+        "pid": 38352,
+        "name": "llama-server",
+        "growth_mib": 1218.2,
+        "dedicated_mib": 1218.2,
+        "shared_mib": 4418
+      },
+      "rows_inside_nim_requests": 5,
+      "rows_ollama_active": 0
+    },
+    "matrix_cell": "compute_contention",
+    "reading": "compute contention (footprint not squeezed, TTFT elevated)",
+    "verdict": "compute contention (footprint not squeezed, TTFT elevated)"
+  },
+  "prediction_file": "prediction_bprime.json",
+  "prediction_written_at": "2026-09-14T11:31:22+0800",
+  "sampler_rows": 326,
+  "sampler_summary": {
+    "wall_s": 1305.3,
+    "cpu_s": 90.8,
+    "logical_cpus": 28
+  },
+  "decided_at": "2026-09-14T11:59:12+08:00"
+}

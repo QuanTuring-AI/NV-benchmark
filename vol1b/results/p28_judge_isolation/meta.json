@@ -1,0 +1,76 @@
+{
+  "experiment": "P28 judge isolation: one answer text, two output judges differing only in self-check max_tokens",
+  "judges": {
+    "J1024": "rail config as cell 4 / P19 arm C (no max_tokens on the self-check prompts)",
+    "J3": "same config + max_tokens: 3 on both self-check prompt entries (identical to P19 arm Cp)"
+  },
+  "model_served": "meta/llama-3.1-8b-instruct",
+  "image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:2.0.12",
+  "image_index_digest": "sha256:d2c94c1d654c3e80b8bc08cc83298d2ba4e219dff41d1092555795edb93c6545",
+  "manifest_digest_amd64": "sha256:d99584e72ce523e961ec849baf86829303b5b7a1ad75d610d36786fef6e9a2e8",
+  "profile": "092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+  "extra_env": "NIM_MAX_MODEL_LEN=8192 · extra: VLLM_USE_V2_MODEL_RUNNER=0 · all other NIM settings default",
+  "nim_version_from_container_env": "2.0.12",
+  "prediction_file": "prediction_p28_v2.json",
+  "prediction_sha256": "759caeeca1a0846c8613b53c8f378ef285352bcbfc696a0afd9bff62b3d6d2a0",
+  "corpus": {
+    "file": "corpus.json",
+    "sha256": "7d485a73f327883dc85595680f35700c82925d07cb67e70f38f0e1969da29985",
+    "texts": 115
+  },
+  "controls": {
+    "violating_sha256": "ef2475db233fea02e35e74606116e4831ddba8bf0af8f74597d8bd94d47fc704",
+    "benign_sha256": "a878b14aecb1f88f030bade1ac9596c5658fb78c295792a0ca2c6f0b206c10f4",
+    "source": "carried in the prediction file, covered by its sha256"
+  },
+  "reps_per_text_per_judge": 3,
+  "generation": "none - no answer is generated in this run",
+  "rail_config": {
+    "source": "benchmark/guardrails/config.yml",
+    "source_sha256": "87341b916ece9721370a797dd52d46ecb50db966b1ac642e716f911c8be6468d",
+    "J1024_used_sha256": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+    "J3_used_sha256": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+    "model_name_substitution": {
+      "from": "meta-llama/llama-3.1-8b-instruct",
+      "to": "meta/llama-3.1-8b-instruct"
+    },
+    "added_both": "top_p: 0.9 under the main model parameters"
+  },
+  "call": "nemoguardrails.library.self_check.output_check.actions.self_check_output, called directly with context={'bot_message': text}; llm_task_manager, llm and config come from LLMRails(config_dir)",
+  "started": "2026-09-16T22:23:36+0800",
+  "ctx_start": "30791 MiB, 32607 MiB, 1 %, 47, 39.99 W, 591.86",
+  "worker_hello": {
+    "J1024": {
+      "ready": true,
+      "versions": {
+        "nemoguardrails": "0.23.0",
+        "langchain": null,
+        "langchain-core": null,
+        "langchain-nvidia-ai-endpoints": null,
+        "openai": null,
+        "httpx": "0.28.1",
+        "python": "3.10.6"
+      },
+      "config_dir": "gr_config_default",
+      "self_check_output_max_tokens_in_config": null,
+      "prompt_references_user_input": false
+    },
+    "J3": {
+      "ready": true,
+      "versions": {
+        "nemoguardrails": "0.23.0",
+        "langchain": null,
+        "langchain-core": null,
+        "langchain-nvidia-ai-endpoints": null,
+        "openai": null,
+        "httpx": "0.28.1",
+        "python": "3.10.6"
+      },
+      "config_dir": "gr_config_mt3",
+      "self_check_output_max_tokens_in_config": 3,
+      "prompt_references_user_input": false
+    }
+  },
+  "finished": "2026-09-16T22:30:10+0800",
+  "ctx_end": "30679 MiB, 32607 MiB, 0 %, 62, 377.64 W, 591.86"
+}

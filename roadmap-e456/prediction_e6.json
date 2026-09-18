@@ -1,0 +1,63 @@
+{
+  "experiment": "E6 · concurrency on the Vol.1 stack",
+  "written_at": "2026-09-13T16:34:25+0800",
+  "written_before": "container launch and any E6 request (run_e6.sh refuses to start if this file or its .sha256 is missing or changed)",
+  "design": {
+    "model": "meta-llama/llama-3.1-8b-instruct",
+    "image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:1.13.1",
+    "index_digest": "sha256:bc8a12da7ca78599609a60d30cdcce576de5bbb80ad7a87b9a9a5c6ade634c99",
+    "profile": "574eb0765118b2087b5fd6c8684a79e682bd03062f80343cfd9e2140ffa962cd",
+    "env": "NIM_MAX_MODEL_LEN=8192 · all other NIM settings default",
+    "levels": [
+      1,
+      4,
+      16,
+      32,
+      50
+    ],
+    "questions": "benchmark/questions.json (sha256 262f2339…) fixed order, cycled, restart at q001 per level",
+    "waves": "1 warmup wave per level (not counted) + max(3, ceil(100/c)) measured waves ⇒ every level covers all 100 questions at least once",
+    "per_request": "Vol.1 E2 benchmark_nim timing logic; max_tokens=500; stream; temperature not set; timeout 90 s",
+    "stop_rule": "any failed request at a level ⇒ stop scanning upward",
+    "runs": "one run. Not repeated to obtain a different outcome."
+  },
+  "predictions": [
+    {
+      "id": "P1",
+      "claim": "c=1 per-request tps avg within 70.7–95.7 (Vol.2 arm P avg 83.2 ±15%)",
+      "role": "positive control: the concurrency harness at c=1 reproduces the single-request measurement on the same stack",
+      "basis": "vol2/results/e7/e7_arm_p.json (same image, profile, env, per-request formula). Differences: no 2 s cooldown in E6; different window.",
+      "if_fails": "harness or window differs from arm P ⇒ report; do not interpret higher levels as a concurrency effect without explaining this first"
+    },
+    {
+      "id": "P2",
+      "claim": "c=1 TTFT avg within 30–80 ms",
+      "role": "positive control (same as P1)",
+      "basis": "arm P TTFT avg 48.4 ms"
+    },
+    {
+      "id": "P3",
+      "claim": "aggregate fragments/s mean increases strictly from c=1 → 4 → 16",
+      "basis": "continuous batching; no prior measurement on this stack ⇒ directional only"
+    },
+    {
+      "id": "P4",
+      "claim": "TTFT p50 at the highest tested level > TTFT p50 at c=1",
+      "basis": "queueing and prefill contention; directional only"
+    },
+    {
+      "id": "P5",
+      "claim": "0 failed requests at every level up to c=50",
+      "basis": "vLLM queues requests beyond its batch capacity instead of rejecting them; timeout 90 s with max_tokens=500. Low confidence: never run on this stack.",
+      "reporting_rule": "if true ⇒ 'no ceiling reached within 1–50', never 'the limit is 50'"
+    }
+  ],
+  "not_predicted": [
+    "behaviour between c=32 and c=50 (direction of aggregate throughput)",
+    "per-wave CV at any level"
+  ],
+  "reporting": [
+    "max_tokens 500 differs from the Nemotron concurrency curves (64) ⇒ not to be plotted side by side",
+    "statistics are labelled avg or p50 explicitly"
+  ]
+}

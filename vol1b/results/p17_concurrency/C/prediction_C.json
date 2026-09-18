@@ -1,0 +1,99 @@
+{
+  "experiment": "Vol.1-B · closed-loop concurrency with NVIDIA AIPerf · profile C · chat",
+  "written_at": "2026-09-15T18:11:46+0800",
+  "written_before": "the NIM container launch for this profile; p17_run_profile.sh refuses to start if this file or its .sha256 is missing or changed, or if the run directory exists",
+  "runs": "one main run; not repeated to obtain a different outcome",
+  "harness_sha256": {
+    "vol1b/scripts/p17_run_profile.sh": "c5239badbeaf015ff9239b6036a56d4522e7c2dbcfd97ea17222a9e26d979171",
+    "vol1b/scripts/p17_container.sh": "74ebf6381164d56bffc3cbe40c697638e7e640971f697e515e4c84e8f9bd3ce0",
+    "vol1b/scripts/p17_sweep.py": "9c6c5db7f71478a5417a9a21ec0bc1f7012e11faa33d1ede797d458e2ae21529",
+    "vol1b/scripts/p17_analyze.py": "98283e6f9f536ba542fde0a6a7c8707602b0ea312b2534140a9c3c754c02dbcc",
+    "vol1b/scripts/p17_build_datasets.py": "cb3a9567948bb37f1d28eee1a3a10f06526a86817e6fac1325481f67cfee22d5",
+    "vol1b/scripts/p17_calibrate_client.py": "11df658ebc82f25528f3a7ea5a7dd409b73b8acf3048af747b716f1f9e31622b"
+  },
+  "inputs_sha256": {
+    "calibration_verdict.json": "adf4d8854b00390955b0e3ad6b8c4f2917356ebc2ef976c78714743a2c1a1a1c",
+    "datasets_summary.json": "54f480f92d4ee0554065bf4043e888de60cb66bf7d21c7a2fa9ebd1acb53a932"
+  },
+  "stack": {
+    "model": "Llama 3.1 8B Instruct, served id meta/llama-3.1-8b-instruct",
+    "image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:2.0.12",
+    "index_digest": "sha256:d2c94c1d654c3e80b8bc08cc83298d2ba4e219dff41d1092555795edb93c6545",
+    "manifest_digest_amd64": "sha256:d99584e72ce523e961ec849baf86829303b5b7a1ad75d610d36786fef6e9a2e8",
+    "profile": "092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90 (vllm-bf16-tp1-pp1)",
+    "env": "NIM_MAX_MODEL_LEN=8192 · VLLM_USE_V2_MODEL_RUNNER=0 · all other NIM settings default · no Guardrails",
+    "max_num_seqs": "256 — not set by NIM (no override found in the image's NIM packages, manifests or environment), so vLLM's default applies: vllm/engine/arg_utils.py get_batch_defaults gives 256 for GPUs with < 70 GiB (OpenAI API server). Read inside the running container on 2026-09-15. Checked against the server's num_requests_running during the run.",
+    "max_num_batched_tokens": "2048 (same source)",
+    "kv_cache": "81,360 tokens, block size 16, prefix caching enabled, gpu_memory_utilization clamped by NIM to 0.8588 (desktop memory in use) — from the server's /metrics at READY in the calibration container; recorded again at READY for this run",
+    "gpu": "NVIDIA GeForce RTX 5090 32 GB, driver 591.86 / CUDA 13.1"
+  },
+  "tool": {
+    "name": "NVIDIA AIPerf",
+    "version": "0.11.0 (pip)",
+    "endpoint": "/v1/chat/completions, streaming",
+    "token_counts": "server-reported usage (--use-server-token-count); tokenizer files copied from the NIM model cache",
+    "definitions": "AIPerf's own: ITL excludes the first token; total output token throughput over the benchmark duration; not changed",
+    "instrument_check": {
+      "pass": true,
+      "basis": "judged on the agreement of ITL, e2e and the TTFT floor (min, and p50 in the 127.0.0.1 run). TTFT avg/p50 exceeded 20% in some client runs; this verdict is a human judgement written after seeing the data, not a pre-set statistic.",
+      "file": "calibration/calibration_verdict.json"
+    }
+  },
+  "shape": {
+    "name": "C · chat",
+    "isl": "synthetic, mean 200, stddev 50 tokens",
+    "osl": "mean 200, stddev 50 tokens (max_completion_tokens per request)",
+    "ignore_eos": true,
+    "source": "AIPerf synthetic prompts, seed 20260915 + concurrency"
+  },
+  "load": {
+    "mode": "closed loop, --concurrency N (a new request is issued as soon as one completes)",
+    "levels": [
+      1,
+      4,
+      16,
+      32,
+      64,
+      128,
+      256,
+      512
+    ],
+    "levels_note": "512 is one step above max_num_seqs 256",
+    "per_level": "--warmup-request-count N at concurrency N (excluded) · --benchmark-duration D · --benchmark-grace-period 0 (requests unfinished at D are not counted, so the drain tail is excluded) · D = min(600, max(60, 4 × previous level's p99 request latency × N / N_prev)) · completed < 3N flagged, not repeated",
+    "container": "one container for all levels of the main run; READY, then the first request is sent and discarded; server settings read at READY",
+    "sampling": "temperature 0 on every request"
+  },
+  "deviations_listed_not_absorbed": [
+    "synthetic prompt text from AIPerf's generator; prefix caching (server default) stays on",
+    "Docker Desktop port forwarding on Windows between client and server (same as all Vol.1 measurements)",
+    "server metrics window includes each level's warm-up requests",
+    "grace period 0: requests that are still running when the duration ends are dropped, which can under-count the slowest requests of a level",
+    "this measurement has no accuracy gate (synthetic input); it must not be placed next to MLPerf submissions"
+  ],
+  "analysis_rules": {
+    "preconditions_per_level": "AIPerf exit 0 with summary · 0 request errors · instrument check passed. If any fails, that level's SLO verdicts are null.",
+    "slo": {
+      "server": "TTFT p99 <= 2000 ms and ITL p99 <= 100 ms",
+      "interactive": "TTFT p99 <= 500 ms and ITL p99 <= 30 ms",
+      "source": "MLPerf Inference v5.1 Llama 3.1-8B"
+    },
+    "N_x": "largest measured concurrency such that it and every lower measured level pass SLO x; 0 if concurrency 1 fails; the largest passing level is also reported when not contiguous",
+    "throughput_saturation": "first level whose total output token throughput rises < 10% over the previous level",
+    "memory_ceiling": "first level with preemptions > 0, or requests waiting while running max is below both the level and max_num_seqs",
+    "batch_cap": "first level whose running max reaches max_num_seqs",
+    "program": "vol1b/scripts/p17_analyze.py (self-test 9 cases; 7 mutations each make a case fail)"
+  },
+  "predictions": {
+    "1_record": "record N_server, N_interactive (with total output tokens/s at N), the throughput saturation point, the memory ceiling level, the batch cap level and max_num_seqs for this profile. No direction is predicted.",
+    "3_positive_control": {
+      "claim": "N_server of profile C >= 50, the highest level of the earlier wave-style E6 test (on the grid: N_server >= 64)",
+      "if_not": "check the tool first; no conclusion about the server"
+    }
+  },
+  "outputs": [
+    "main/levels.jsonl (one line per level, written as each level ends)",
+    "main/cNNNN/ (AIPerf artifacts per level)",
+    "main/container/ (ctx, startup log, /metrics at READY, first request discarded)",
+    "main/analysis.json"
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "work_order": "20260913_裁決_D28_Vol2發表前補實驗_資料點規模與公開路徑_含Vol1陽性對照臂.md",
+  "arm": "P（Vol.1 陽性對照）",
+  "written_at": "2026-09-13T00:47:54+0800",
+  "rule": "D28 §1 · 啟動前寫檔，⛔ 不得事後調。臂 P 未通過 ⇒ 停下回報，不跑 S2/S3。",
+  "vol1_published": {
+    "avg_tps": 73.8,
+    "avg_ttft_ms": 221,
+    "avg_total_latency_ms": 4286,
+    "vram_mb": 31768,
+    "n": 300,
+    "source": "NV-benchmark/benchmark/results/e2_nim_vs_ollama.json（唯讀重算，與論文表一致）"
+  },
+  "pass_criteria_preregistered": {
+    "avg_tps_range": [
+      66.4,
+      81.2
+    ],
+    "avg_ttft_ms_range": [
+      177,
+      265
+    ],
+    "rule": "兩項皆須落在區間內才算通過；任一落外 ⇒ 立刻回報為結果（驅動／CUDA 世代回歸），⛔ 不調參配合"
+  },
+  "operational_definitions": {
+    "tps": "🔴 逐字沿用 Vol.1 run_benchmark.py：token_count = Σ len(delta.split()) ⇒ 實為『單字/秒』，非 token/秒。⛔ 不得改用 usage.completion_tokens，否則與 73.8 不可比",
+    "ttft": "第一個 SSE data 行的時間（即使該 chunk 只含 role，無 content）—— 同 Vol.1",
+    "params": "max_tokens=500 · stream=true · ⛔ 不設 temperature（用 NIM 預設，同 Vol.1）· 每題間 COOLDOWN 2 秒 · 3 輪 · 100 題",
+    "statistic": "與 Vol.1 比對只用 avg；同時輸出 p50/p95（D28 §1 的 avg≠p50 提醒）",
+    "vram": "每題後 nvidia-smi memory.used（同 Vol.1），回報取 max"
+  },
+  "config": {
+    "image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:1.13.1",
+    "NIM_MAX_MODEL_LEN": 8192,
+    "profile": "574eb0765118b2087b5fd6c8684a79e682bd03062f80343cfd9e2140ffa962cd（vllm-bf16-tp1-pp1）",
+    "profile_note": "🔴 Vol.1 DEPLOYMENT_NOTES 記的 4f904d57… 不存在於 1.13.1 的任何 profile 清單（D18 已查證）⇒ 用該版唯一 runnable 的 vLLM bf16 tp1。此為與 Vol.1 的一處已知差異",
+    "driver": "591.86 / CUDA 13.1（Vol.1 為 577.00 / CUDA 12.9）⇒ 本臂唯一刻意變動的變因"
+  },
+  "cc_prediction": "avg tps 落在 73–85（新驅動略快或持平）；avg TTFT 落在 190–240 ms；VRAM 與 31,768 MB 同量級。若 tps 顯著高於 81.2 而 TTFT 正常，我會判為『通過但有世代增益』並照實標，⛔ 不當作失敗。"
+}

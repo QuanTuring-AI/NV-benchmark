@@ -1,0 +1,63 @@
+{
+  "prediction_file": "results/e7/c/prediction_c.json",
+  "prediction_written_at": "2026-09-13T02:56:32+0800",
+  "checks": {
+    "A1_in_40_60": {
+      "value": 53.1,
+      "pass": true
+    },
+    "A2_in_40_60": {
+      "value": 55.0,
+      "pass": true
+    },
+    "A1_A2_rel_diff": {
+      "value": 0.0358,
+      "max": 0.1,
+      "pass": true
+    },
+    "B_in_180_270": {
+      "value": 753.7,
+      "pass": false,
+      "direction": "above upper bound"
+    },
+    "B_elevated_vs_A": {
+      "value_ratio": 13.9,
+      "pass": true
+    }
+  },
+  "verdict": "B 可用（A1≈A2，無漂移）· B 升高成立（×14）· 🔴 B 量級未落入預登 180–270（753.7，超出上界）⇒ 預登判定 FAIL",
+  "sensitivity_excluding_first_request": {
+    "A1": 40.6,
+    "B": 631.6,
+    "A2": 42.1,
+    "note": "事後敏感度，不改判定"
+  },
+  "cohabit_physical_evidence": {
+    "B_warmup_ollama_ps": "llama3.1:8b    46e0c10c039e    7.0 GB    100% GPU     16384      4 minutes from now",
+    "B_end_ollama_ps": "llama3.1:8b    46e0c10c039e    7.0 GB    100% GPU     16384      4 minutes from now",
+    "vram": {
+      "A1": 30425,
+      "B": 32040,
+      "after_unload": 25225,
+      "A2": 29565
+    }
+  },
+  "vol1_e2_reference": {
+    "nim_ttft_avg": 221.1,
+    "nim_ttft_p50": 225.8,
+    "nim_tps_words": 73.8,
+    "ollama_ttft_avg": 2875.5,
+    "ollama_tps_words": 10.1,
+    "vram_median": 31769,
+    "source": "NV-benchmark/benchmark/results/e2_nim_vs_ollama.json（唯讀）"
+  },
+  "ours_B": {
+    "nim_ttft_avg": 753.7,
+    "nim_ttft_p50": 624.4,
+    "nim_tps_words": 57.0,
+    "ollama_ttft_avg": 2794.3,
+    "ollama_tps_words": 57.7,
+    "vram_median": 32040
+  },
+  "written_at": "2026-09-13T03:15:20+0800"
+}

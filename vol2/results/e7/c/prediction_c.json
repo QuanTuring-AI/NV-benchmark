@@ -1,0 +1,71 @@
+{
+  "work_order": "20260913_裁決_D30_臂P判定FAIL但閘已達成_C不是選項是義務_221ms牽動已發表SOT.md",
+  "segment": "C · 同住假說檢驗（A1 → B → A2）",
+  "written_at": "2026-09-13T02:56:32+0800",
+  "rule": "D30 §2 · C 啟動前寫檔，⛔ 不得事後改",
+  "predictions_verbatim_D30": {
+    "B_ttft_avg_ms_range": [
+      180,
+      270
+    ],
+    "A1_ttft_avg_ms_range": [
+      40,
+      60
+    ],
+    "A2_ttft_avg_ms_range": [
+      40,
+      60
+    ],
+    "A1_A2_rel_diff_max": 0.1,
+    "if_B_not_elevated": "同住假說不成立，回報『機制未確立』，⛔ 不改寫成其他解釋",
+    "if_A1_ne_A2": "有漂移，B 的結果不可用，回報並停，⛔ 不挑順眼的 A 去比"
+  },
+  "design": {
+    "cells": [
+      "A1: NIM 單獨",
+      "B: Ollama llama3.1:8b 常駐 ＋ 每題交替呼叫（run_benchmark.py:205-234：NIM → sleep 2 → Ollama → sleep 2）",
+      "A2: 卸載 Ollama 模型，NIM 單獨"
+    ],
+    "container": "同一個 NIM 容器貫穿三格（單一變因＝Ollama 同住）；A1 與 A2 對照偵測容器狀態漂移",
+    "questions": "data/public/questions.json 每類前 6 題 ＝ 30 題（三格同一組、同順序）",
+    "subset_ids": [
+      "q021",
+      "q022",
+      "q023",
+      "q024",
+      "q025",
+      "q026",
+      "q001",
+      "q002",
+      "q003",
+      "q004",
+      "q005",
+      "q006",
+      "q041",
+      "q042",
+      "q043",
+      "q044",
+      "q045",
+      "q046",
+      "q081",
+      "q082",
+      "q083",
+      "q084",
+      "q085",
+      "q086",
+      "q061",
+      "q062",
+      "q063",
+      "q064",
+      "q065",
+      "q066"
+    ],
+    "per_cell": "30 請求 × 1 輪",
+    "payload": "🔴 逐字 Vol.1 E2：NIM {model, messages, max_tokens:500, stream:true}（⛔ 不加 stream_options，與臂 P 不同，為貼近 E2 條件）；Ollama {model:llama3.1:8b, messages, stream:true, options.num_predict:500}",
+    "metrics": "NIM TTFT avg（主）＋ p50/p95；tps（單字/秒，Vol.1 同式）；每請求後 VRAM（nvidia-smi）",
+    "cohabit_physical_evidence": "每格開始與結束記 nvidia-smi memory.used 與 `ollama ps`（PROCESSOR 欄 = GPU/CPU 分層比例）⇒ ⛔ 不靠『我啟動了 Ollama』這句話",
+    "B_warmup": "B 開始前先發 1 次 Ollama 請求（不計）使模型載入；A2 開始前以 keep_alive=0 卸載並確認 ollama ps 為空、VRAM 回落",
+    "llama_nim": "nvcr.io/nim/meta/llama-3.1-8b-instruct:1.13.1 · profile 574eb076… · NIM_MAX_MODEL_LEN=8192（同臂 P）"
+  },
+  "cc_prediction": "B 的 TTFT 升高但不確定能回到 180–270：Ollama 在 NIM 佔走 ~28.6 GB 後只能放部分層在 GPU，若大部分跑在 CPU，GPU 爭用可能不足以重現 221 ms。我的點估計 B ≈ 80–200 ms（信心低）。A1、A2 預期 45–55 ms。"
+}

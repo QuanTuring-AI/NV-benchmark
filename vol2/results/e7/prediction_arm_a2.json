@@ -1,0 +1,31 @@
+{
+  "work_order": "20260913_裁決_D28_Vol2發表前補實驗_資料點規模與公開路徑_含Vol1陽性對照臂.md",
+  "unblocked_by": "20260913_裁決_D30_臂P判定FAIL但閘已達成_C不是選項是義務_221ms牽動已發表SOT.md §6",
+  "written_at": "2026-09-13T03:05:29+08:00",
+  "gate": "D28 對 A1/A2 未設通過判準（只有臂 P 有）⇒ 本檔是 CC 預測，不是閘；落外照實報，⛔ 不調參配合",
+  "harness": "scripts/e7/e7_arm.py（臂 P 同一支）· 100Q × 3 輪 · max_tokens=500 · stream · 無 temperature · COOLDOWN 2s · tps=單字/秒（Vol.1 同式）· 併記 usage 真 token/s",
+  "harness_change_since_arm_p": "新增 content_chars / reasoning_chars 記錄欄（delta.reasoning_content 或 delta.reasoning 的字元數）· 僅記錄，不進 tps／TTFT 計算 · payload 未變",
+  "known_hazard": "🔴 推理模型：若推理內容走 delta.reasoning_content 而非 content，Vol.1 式『單字/秒』只數 content ⇒ 會嚴重低估，且與臂 P 的 83.2 不可比。以 true_tps（usage.completion_tokens）與 output_split 判讀；⛔ 不改計數式",
+  "arm": "A2（S3）",
+  "config": {
+    "image": "nvcr.io/nim/nvidia/nemotron-3-nano@sha256:ac9d1cefa7ad958a4ad9727871a85c89f79c0d907d78415433b0c83e1a072aa3",
+    "index_digest": "sha256:ac9d1cefa7ad958a4ad9727871a85c89f79c0d907d78415433b0c83e1a072aa3",
+    "manifest_digest_amd64": "sha256:ac9d1cefa7ad958a4ad9727871a85c89f79c0d907d78415433b0c83e1a072aa3",
+    "digest_note": "docker manifest inspect 回 application/vnd.oci.image.manifest.v1+json（單平台 manifest，非 index）⇒ 兩 digest 同值",
+    "profile": "1fba9ecfcfb4cde28d4ce3fd55c40bca89a5a613e25e98f057befe6a7e99eada",
+    "env": "全預設 · NIM_MAX_MODEL_LEN=4096 · 無 RELAX · CUDA graph 開"
+  },
+  "cc_prediction": {
+    "true_tps_avg": [
+      220,
+      300
+    ],
+    "ttft_avg_ms": [
+      30,
+      80
+    ],
+    "vram_mb_max": "~30,000",
+    "words_per_s": "低信心：Nemotron 3 Nano 推理預設開啟且 NIM 可能以 reasoning parser 拆欄 ⇒ 單字/秒可能遠低於 true_tps；我預期此風險在 A2 比 A1 高",
+    "basis": "D25 S3′ 單流 276.99 tok/s、TTFT p50 32.7 / p95 56.3 ms（max_tokens=64 · n=7）"
+  }
+}

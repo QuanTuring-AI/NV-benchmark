@@ -1,0 +1,338 @@
+{
+ "preconditions": {
+  "P1_no_errors": {
+   "errors": 0,
+   "pass": true
+  },
+  "P2_isolation_every_request": {
+   "violations": 0,
+   "first": [],
+   "pass": true
+  },
+  "P3_first_request_dropped": {
+   "dropped": {
+    "SN": "q088",
+    "SO": "q088",
+    "CN": "q088",
+    "CO": "q088"
+   },
+   "valid": {
+    "SN": 49,
+    "SO": 49,
+    "CN": 49,
+    "CO": 49
+   },
+   "pass": true
+  },
+  "P4_complete": {
+   "questions_per_series": {
+    "SN": 50,
+    "SO": 50,
+    "CN": 50,
+    "CO": 50
+   },
+   "rows_per_series": {
+    "SN": 50,
+    "SO": 50,
+    "CN": 50,
+    "CO": 50
+   },
+   "pass": true
+  }
+ },
+ "preconditions_pass": true,
+ "conclusions": {
+  "per_series": {
+   "SN": {
+    "ttft_ms": {
+     "n": 49,
+     "avg": 291.32,
+     "p50": 377.5,
+     "p95": 979.06
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "avg": 3924.0,
+     "p50": 5049.9,
+     "p95": 6077.1
+    },
+    "tps": {
+     "n": 49,
+     "avg": 79.3,
+     "p50": 84.2,
+     "p95": 97.72
+    },
+    "tps_usage": {
+     "n": 49,
+     "avg": 80.72,
+     "p50": 87.58,
+     "p95": 98.76
+    }
+   },
+   "SO": {
+    "ttft_ms": {
+     "n": 49,
+     "avg": 66.7,
+     "p50": 71.6,
+     "p95": 91.9
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "avg": 1345.17,
+     "p50": 1737.6,
+     "p95": 2174.82
+    },
+    "tps": {
+     "n": 49,
+     "avg": 201.6,
+     "p50": 225.9,
+     "p95": 239.28
+    },
+    "tps_usage": {
+     "n": 49,
+     "avg": 206.09,
+     "p50": 229.92,
+     "p95": 244.23
+    }
+   },
+   "CN": {
+    "ttft_ms": {
+     "n": 49,
+     "avg": 741.77,
+     "p50": 737.1,
+     "p95": 919.18
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "avg": 4216.94,
+     "p50": 5507.1,
+     "p95": 5946.56
+    },
+    "tps": {
+     "n": 49,
+     "avg": 68.76,
+     "p50": 82.6,
+     "p95": 87.76
+    },
+    "tps_usage": {
+     "n": 49,
+     "avg": 69.7,
+     "p50": 84.09,
+     "p95": 88.07
+    }
+   },
+   "CO": {
+    "ttft_ms": {
+     "n": 49,
+     "avg": 725.21,
+     "p50": 741.4,
+     "p95": 823.68
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "avg": 2014.54,
+     "p50": 2431.7,
+     "p95": 2875.66
+    },
+    "tps": {
+     "n": 49,
+     "avg": 125.7,
+     "p50": 162.9,
+     "p95": 180.76
+    },
+    "tps_usage": {
+     "n": 49,
+     "avg": 127.93,
+     "p50": 166.52,
+     "p95": 182.86
+    }
+   }
+  },
+  "coresidence_effect": {
+   "nim_C_over_alone": {
+    "ttft_ms": {
+     "n": 49,
+     "ratio_of_means": 2.5462,
+     "ci95": [
+      1.8834,
+      3.6906
+     ],
+     "median_per_question_ratio": 1.7846
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "ratio_of_means": 1.0747,
+     "ci95": [
+      1.0361,
+      1.1201
+     ],
+     "median_per_question_ratio": 1.0374
+    },
+    "tps": {
+     "n": 49,
+     "ratio_of_means": 0.867,
+     "ci95": [
+      0.7995,
+      0.9289
+     ],
+     "median_per_question_ratio": 0.9602
+    },
+    "tps_usage": {
+     "n": 49,
+     "ratio_of_means": 0.8636,
+     "ci95": [
+      0.7942,
+      0.9274
+     ],
+     "median_per_question_ratio": 0.9639
+    }
+   },
+   "ollama_C_over_alone": {
+    "ttft_ms": {
+     "n": 49,
+     "ratio_of_means": 10.8734,
+     "ci95": [
+      9.9545,
+      11.9811
+     ],
+     "median_per_question_ratio": 10.5561
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "ratio_of_means": 1.4976,
+     "ci95": [
+      1.4221,
+      1.6022
+     ],
+     "median_per_question_ratio": 1.4188
+    },
+    "tps": {
+     "n": 49,
+     "ratio_of_means": 0.6235,
+     "ci95": [
+      0.5697,
+      0.6736
+     ],
+     "median_per_question_ratio": 0.7047
+    },
+    "tps_usage": {
+     "n": 49,
+     "ratio_of_means": 0.6208,
+     "ci95": [
+      0.5661,
+      0.6715
+     ],
+     "median_per_question_ratio": 0.7048
+    }
+   }
+  },
+  "throughput_ratio_nim_over_ollama": {
+   "alone": {
+    "tps": {
+     "n": 49,
+     "ratio_of_means": 0.3934,
+     "ci95": [
+      0.3664,
+      0.4207
+     ],
+     "median_per_question_ratio": 0.402
+    },
+    "tps_usage": {
+     "n": 49,
+     "ratio_of_means": 0.3917,
+     "ci95": [
+      0.3646,
+      0.4193
+     ],
+     "median_per_question_ratio": 0.397
+    }
+   },
+   "co_resident": {
+    "tps": {
+     "n": 49,
+     "ratio_of_means": 0.547,
+     "ci95": [
+      0.5042,
+      0.6028
+     ],
+     "median_per_question_ratio": 0.4988
+    },
+    "tps_usage": {
+     "n": 49,
+     "ratio_of_means": 0.5449,
+     "ci95": [
+      0.5029,
+      0.5992
+     ],
+     "median_per_question_ratio": 0.4935
+    }
+   }
+  },
+  "output_length": {
+   "SN": {
+    "completion_tokens": {
+     "n": 49,
+     "avg": 343.1,
+     "p50": 485.0,
+     "p95": 500.0
+    },
+    "finish_reason": {
+     "length": 21,
+     "stop": 28
+    }
+   },
+   "SO": {
+    "completion_tokens": {
+     "n": 49,
+     "avg": 307.94,
+     "p50": 403.0,
+     "p95": 500.0
+    },
+    "finish_reason": {
+     "length": 20,
+     "stop": 29
+    }
+   },
+   "CN": {
+    "completion_tokens": {
+     "n": 49,
+     "avg": 340.92,
+     "p50": 479.0,
+     "p95": 500.0
+    },
+    "finish_reason": {
+     "length": 22,
+     "stop": 27
+    }
+   },
+   "CO": {
+    "completion_tokens": {
+     "n": 49,
+     "avg": 307.94,
+     "p50": 403.0,
+     "p95": 500.0
+    },
+    "finish_reason": {
+     "length": 20,
+     "stop": 29
+    }
+   }
+  },
+  "ollama_placement_gpu_share": {
+   "SO": {
+    "n": 49,
+    "avg": 1.0,
+    "p50": 1.0,
+    "p95": 1.0
+   },
+   "CO": {
+    "n": 49,
+    "avg": 1.0,
+    "p50": 1.0,
+    "p95": 1.0
+   }
+  },
+  "reading": "ratios are C / alone and NIM / Ollama as ratio of means over the questions valid in both series; the CI resamples questions. They describe this machine on this day and are not a replication of the Vol.1 figures, whose stack differs."
+ },
+ "rows": 200
+}

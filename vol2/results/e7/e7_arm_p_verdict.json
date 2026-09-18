@@ -1,0 +1,79 @@
+{
+ "arm": "P",
+ "verdict": "🔴 兩項預登判準皆未通過 —— 但方向皆為『更快』，且 TTFT 那一項的區間來源已查出受污染",
+ "preregistered": {
+  "written_at": "2026-09-13T00:47:54+0800",
+  "sha256": "5a6510ddf0bcd0f7c2caac64f7acebff32e3d4ba9fefea42b8a3e73d0000bb13",
+  "avg_tps_range": [
+   66.4,
+   81.2
+  ],
+  "avg_ttft_ms_range": [
+   177,
+   265
+  ]
+ },
+ "measured": {
+  "avg_tps_words": 83.2,
+  "p50": 86.5,
+  "p95": 88.8,
+  "avg_ttft_ms": 48.4,
+  "ttft_p50": 52.1,
+  "ttft_p95": 64.8,
+  "avg_latency_ms": 3985.7,
+  "vram_mb_max": 30498,
+  "n_ok": 300,
+  "n_error": 0,
+  "true_tokens_per_s_avg": 85.1
+ },
+ "vol1_published": {
+  "avg_tps": 73.8,
+  "avg_ttft_ms": 221,
+  "avg_total_latency_ms": 4286,
+  "vram_mb": 31768,
+  "n": 300,
+  "source": "NV-benchmark/benchmark/results/e2_nim_vs_ollama.json（唯讀重算，與論文表一致）"
+ },
+ "deltas_vs_vol1": {
+  "tps_pct": 12.7,
+  "ttft_pct": -78.1,
+  "latency_pct": -7.0,
+  "vram_mb": -1270
+ },
+ "root_cause_ttft": {
+  "finding": "Vol.1 內部就不一致：E2 nim TTFT avg 221 ms vs E3 nim TTFT avg 51 ms（同模型、同 NIM 1.13.1、同卡、同 streaming、同 max_tokens=500）",
+  "why": "E2 的主迴圈對每一題交替呼叫 NIM 與 Ollama（run_benchmark.py:205-214），兩引擎模型同時常駐：E2 的 nim 與 ollama 兩組紀錄的 vram_mb 中位數皆為 31,769 MB（NIM 單獨跑時我方量到 30,498 MB）",
+  "evidence": {
+   "e2_nim_ttft_avg": 221,
+   "e3_nim_ttft_avg": 51,
+   "our_arm_p_ttft_avg": 48.4,
+   "e2_nim_vram_p50": 31769,
+   "e2_ollama_vram_p50": 31769,
+   "our_vram_max": 30498,
+   "e2_ttft_by_round": [
+    219,
+    219,
+    225
+   ],
+   "note": "E2 TTFT 不隨輪次下降 ⇒ 非暖機效應"
+  },
+  "reading": "我方 48.4 ms 與 Vol.1『只有 NIM』那組（E3 的 51 ms）相差 5% ⇒ harness 與新驅動皆正常；預登區間的來源數字（221 ms）是在第二個推理引擎常駐下量的"
+ },
+ "root_cause_tps": {
+  "finding": "tps 不受同住影響：Vol.1 E2 與 E3 皆為 73.8 單字/秒；我方 83.2 ⇒ +12.7%，超出 ±10% 上界",
+  "candidate_causes": [
+   "driver 591.86 / CUDA 13.1（Vol.1 為 577.00 / 12.9）—— 本臂唯一刻意變動的變因",
+   "profile 差異：Vol.1 DEPLOYMENT_NOTES 記的 4f904d57… 不存在於 1.13.1 的 profile 清單（D18 已查證），我方用該版唯一 runnable 的 574eb076…",
+   "⛔ 未分離：本輪未做 driver 回退或 profile 對照，無法歸因"
+  ],
+  "not_explained_by": "回應長度：我方 avg latency 3,986 ms 短於 Vol.1 4,286 ms，completion_tokens avg 由 usage 併記（true tok/s 85.1）"
+ },
+ "generated_at": "2026-09-13T01:27:01",
+ "removed_before_publication": {
+  "field": "one top-level array field naming the reviewer it addressed",
+  "held": "three courses of action this repository's authors proposed to their reviewer after arm P missed its pre-registered interval: accept with a corrected comparison, re-run the arm, or add a co-residence reproduction arm to turn the inference into a measurement.",
+  "why_removed": "the field's own name, and its text, carried internal structure: the reviewing role and internal step labels. That is not measurement, so it is not published. No number in this file came from the field, and nothing else was changed. The field name is described here rather than quoted, because a note that explains a removal by repeating the removed string removes nothing.",
+  "outcome": "the third option was the one taken; it is the C experiment, published in results/e7/c/.",
+  "sha256_of_this_file_before_the_removal": "bcb74f3d273ce96ec0a48abb21459ce0562f40c075dca2bb853a26979b1c0998"
+ }
+}

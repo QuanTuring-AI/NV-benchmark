@@ -1,0 +1,460 @@
+{
+ "preconditions": {
+  "P1_no_errors": {
+   "errors": 0,
+   "pass": true
+  },
+  "P2_isolation_and_address_every_request": {
+   "violations": 0,
+   "first": [],
+   "pass": true
+  },
+  "P3_first_request_dropped": {
+   "dropped": {
+    "SN": "q088",
+    "SOL": "q088",
+    "SOH": "q088",
+    "CN": "q088",
+    "CO": "q088"
+   },
+   "valid": {
+    "SN": 49,
+    "SOL": 49,
+    "SOH": 49,
+    "CN": 49,
+    "CO": 49
+   },
+   "pass": true
+  },
+  "P4_complete": {
+   "questions_per_series": {
+    "SN": 50,
+    "SOL": 50,
+    "SOH": 50,
+    "CN": 50,
+    "CO": 50
+   },
+   "rows_per_series": {
+    "SN": 50,
+    "SOL": 50,
+    "SOH": 50,
+    "CN": 50,
+    "CO": 50
+   },
+   "pass": true
+  }
+ },
+ "preconditions_pass": true,
+ "conclusions": {
+  "per_series": {
+   "SN": {
+    "ttft_ms": {
+     "n": 49,
+     "avg": 38.88,
+     "p50": 35.9,
+     "p95": 74.32
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "avg": 3788.34,
+     "p50": 4974.4,
+     "p95": 5940.76
+    },
+    "tps": {
+     "n": 49,
+     "avg": 85.63,
+     "p50": 95.4,
+     "p95": 98.76
+    },
+    "tps_usage": {
+     "n": 49,
+     "avg": 87.24,
+     "p50": 96.47,
+     "p95": 99.09
+    }
+   },
+   "SOL": {
+    "ttft_ms": {
+     "n": 49,
+     "avg": 61.71,
+     "p50": 61.5,
+     "p95": 88.94
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "avg": 1378.25,
+     "p50": 1795.6,
+     "p95": 2212.86
+    },
+    "tps": {
+     "n": 49,
+     "avg": 198.78,
+     "p50": 224.1,
+     "p95": 239.72
+    },
+    "tps_usage": {
+     "n": 49,
+     "avg": 202.85,
+     "p50": 226.23,
+     "p95": 243.14
+    }
+   },
+   "SOH": {
+    "ttft_ms": {
+     "n": 49,
+     "avg": 2141.11,
+     "p50": 2118.9,
+     "p95": 2257.96
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "avg": 3459.26,
+     "p50": 3876.4,
+     "p95": 4310.9
+    },
+    "tps": {
+     "n": 49,
+     "avg": 76.35,
+     "p50": 104.2,
+     "p95": 119.16
+    },
+    "tps_usage": {
+     "n": 49,
+     "avg": 77.74,
+     "p50": 106.42,
+     "p95": 120.15
+    }
+   },
+   "CN": {
+    "ttft_ms": {
+     "n": 49,
+     "avg": 788.73,
+     "p50": 769.0,
+     "p95": 1036.5
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "avg": 7323.17,
+     "p50": 5690.5,
+     "p95": 20021.48
+    },
+    "tps": {
+     "n": 49,
+     "avg": 53.6,
+     "p50": 61.9,
+     "p95": 87.48
+    },
+    "tps_usage": {
+     "n": 49,
+     "avg": 54.32,
+     "p50": 62.57,
+     "p95": 87.87
+    }
+   },
+   "CO": {
+    "ttft_ms": {
+     "n": 49,
+     "avg": 749.42,
+     "p50": 746.8,
+     "p95": 879.5
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "avg": 2640.37,
+     "p50": 2447.9,
+     "p95": 6599.44
+    },
+    "tps": {
+     "n": 49,
+     "avg": 108.45,
+     "p50": 84.8,
+     "p95": 185.06
+    },
+    "tps_usage": {
+     "n": 49,
+     "avg": 110.32,
+     "p50": 85.77,
+     "p95": 186.11
+    }
+   }
+  },
+  "coresidence_effect": {
+   "nim_C_over_alone": {
+    "ttft_ms": {
+     "n": 49,
+     "ratio_of_means": 20.2875,
+     "ci95": [
+      17.77,
+      23.1777
+     ],
+     "median_per_question_ratio": 22.5238
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "ratio_of_means": 1.9331,
+     "ci95": [
+      1.5986,
+      2.2732
+     ],
+     "median_per_question_ratio": 1.5012
+    },
+    "tps": {
+     "n": 49,
+     "ratio_of_means": 0.626,
+     "ci95": [
+      0.548,
+      0.701
+     ],
+     "median_per_question_ratio": 0.6656
+    },
+    "tps_usage": {
+     "n": 49,
+     "ratio_of_means": 0.6226,
+     "ci95": [
+      0.5438,
+      0.6977
+     ],
+     "median_per_question_ratio": 0.6661
+    }
+   },
+   "ollama_C_over_alone_loopback": {
+    "ttft_ms": {
+     "n": 49,
+     "ratio_of_means": 12.1439,
+     "ci95": [
+      11.138,
+      13.3267
+     ],
+     "median_per_question_ratio": 12.3787
+    },
+    "total_latency_ms": {
+     "n": 49,
+     "ratio_of_means": 1.9157,
+     "ci95": [
+      1.6768,
+      2.2017
+     ],
+     "median_per_question_ratio": 2.2642
+    },
+    "tps": {
+     "n": 49,
+     "ratio_of_means": 0.5456,
+     "ci95": [
+      0.4794,
+      0.6053
+     ],
+     "median_per_question_ratio": 0.4369
+    },
+    "tps_usage": {
+     "n": 49,
+     "ratio_of_means": 0.5439,
+     "ci95": [
+      0.4774,
+      0.6036
+     ],
+     "median_per_question_ratio": 0.4369
+    }
+   }
+  },
+  "throughput_ratio_nim_over_ollama": {
+   "alone_loopback": {
+    "tps": {
+     "n": 49,
+     "ratio_of_means": 0.4308,
+     "ci95": [
+      0.406,
+      0.4555
+     ],
+     "median_per_question_ratio": 0.4248
+    },
+    "tps_usage": {
+     "n": 49,
+     "ratio_of_means": 0.4301,
+     "ci95": [
+      0.4052,
+      0.4552
+     ],
+     "median_per_question_ratio": 0.4248
+    }
+   },
+   "alone_localhost_vol1_path": {
+    "tps": {
+     "n": 49,
+     "ratio_of_means": 1.1215,
+     "ci95": [
+      0.9871,
+      1.3102
+     ],
+     "median_per_question_ratio": 0.8942
+    },
+    "tps_usage": {
+     "n": 49,
+     "ratio_of_means": 1.1222,
+     "ci95": [
+      0.9851,
+      1.3153
+     ],
+     "median_per_question_ratio": 0.8998
+    }
+   },
+   "co_resident": {
+    "tps": {
+     "n": 49,
+     "ratio_of_means": 0.4943,
+     "ci95": [
+      0.4449,
+      0.5505
+     ],
+     "median_per_question_ratio": 0.4836
+    },
+    "tps_usage": {
+     "n": 49,
+     "ratio_of_means": 0.4924,
+     "ci95": [
+      0.4433,
+      0.548
+     ],
+     "median_per_question_ratio": 0.4789
+    }
+   }
+  },
+  "address_delay_ollama_localhost_minus_loopback": {
+   "ttft_ms": {
+    "n": 49,
+    "mean": 2079.4,
+    "ci95": [
+     2060.6,
+     2099.1
+    ],
+    "median": 2059.9,
+    "min": 1962.2,
+    "max": 2306.6
+   },
+   "total_latency_ms": {
+    "n": 49,
+    "mean": 2081.0,
+    "ci95": [
+     2045.6,
+     2111.5
+    ],
+    "median": 2084.3,
+    "min": 1612.7,
+    "max": 2324.6
+   },
+   "tps_ratio_localhost_over_loopback": {
+    "n": 49,
+    "ratio_of_means": 0.3841,
+    "ci95": [
+     0.3392,
+     0.4252
+    ],
+    "median_per_question_ratio": 0.4588
+   },
+   "same_text_both_addresses": "21/49",
+   "by_order": {
+    "localhost_first": {
+     "n": 24,
+     "median_ttft_diff_ms": 2058.2
+    },
+    "loopback_first": {
+     "n": 25,
+     "median_ttft_diff_ms": 2065.3
+    }
+   }
+  },
+  "output_length": {
+   "SN": {
+    "completion_tokens": {
+     "n": 49,
+     "avg": 343.1,
+     "p50": 485.0,
+     "p95": 500.0
+    },
+    "finish_reason": {
+     "length": 21,
+     "stop": 28
+    }
+   },
+   "SOL": {
+    "completion_tokens": {
+     "n": 49,
+     "avg": 312.22,
+     "p50": 421.0,
+     "p95": 500.0
+    },
+    "finish_reason": {
+     "length": 19,
+     "stop": 30
+    }
+   },
+   "SOH": {
+    "completion_tokens": {
+     "n": 49,
+     "avg": 306.63,
+     "p50": 417.0,
+     "p95": 500.0
+    },
+    "finish_reason": {
+     "length": 19,
+     "stop": 30
+    }
+   },
+   "CN": {
+    "completion_tokens": {
+     "n": 49,
+     "avg": 340.92,
+     "p50": 479.0,
+     "p95": 500.0
+    },
+    "finish_reason": {
+     "length": 22,
+     "stop": 27
+    }
+   },
+   "CO": {
+    "completion_tokens": {
+     "n": 49,
+     "avg": 307.94,
+     "p50": 403.0,
+     "p95": 500.0
+    },
+    "finish_reason": {
+     "length": 20,
+     "stop": 29
+    }
+   }
+  },
+  "ollama_placement_gpu_share": {
+   "SOL": {
+    "n": 49,
+    "avg": 1.0,
+    "p50": 1.0,
+    "p95": 1.0
+   },
+   "SOH": {
+    "n": 49,
+    "avg": 1.0,
+    "p50": 1.0,
+    "p95": 1.0
+   },
+   "CO": {
+    "n": 49,
+    "avg": 1.0,
+    "p50": 1.0,
+    "p95": 1.0
+   }
+  },
+  "s_n_recovery": {
+   "gpu_used_before_mib": {
+    "n": 49,
+    "avg": 29536.27,
+    "p50": 29387.0,
+    "p95": 29923.8
+   },
+   "floor_mib": 29310,
+   "nim_alone_used_mib": 30310
+  },
+  "reading": "ratios are ratio of means over the questions valid in both series; the CI resamples questions. They describe this machine on this day and are not a replication of the Vol.1 figures, whose stack differs."
+ },
+ "rows": 250
+}

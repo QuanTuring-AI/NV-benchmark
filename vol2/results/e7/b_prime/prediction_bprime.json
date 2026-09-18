@@ -1,0 +1,176 @@
+{
+  "experiment": "B′ · one run · Ollama num_gpu from the VRAM ledger · does NIM TTFT return to Vol.1's order, and by which mechanism",
+  "written_at": "2026-09-14T11:31:22+0800",
+  "written_before": "the NIM container launch and any B′ request. run_bprime.sh refuses to start if this file or its .sha256 is missing or changed, or if a B′ result already exists.",
+  "runs": "exactly one. Whatever matrix cell results, num_gpu is not changed and the run is not repeated.",
+  "harness_sha256": {
+    "scripts/e7/bprime_cohabit.py": "bd046cd91c3265cf1f84110279f813a7d59196831d125b93f3e3343a73806db8",
+    "scripts/e7/bprime_verdict.py": "9b2070b1f53fb7db6b601418821d4196d5eada5b8a0d71c3eb54a610727339bc",
+    "scripts/e7/gpu_counters.ps1": "5f5b2ab69c1b1e089aaa2d91429346ad7b92cd06ccfc0a55eb6a374263fb97d6",
+    "scripts/e7/run_bprime.sh": "3d876829b2231e4e799597a5a4859a1c455babec9aae51a65b7ad234fccc0cb4"
+  },
+  "design": {
+    "num_gpu": 1,
+    "cells": [
+      "A1 · NIM alone",
+      "B′ · Ollama llama3.1:8b resident with options.num_gpu, alternating NIM → 2 s → Ollama → 2 s per question",
+      "A2 · Ollama unloaded (keep_alive 0, verified with `ollama ps`), NIM alone"
+    ],
+    "same_as_C": "same NIM image/profile/env (llama-3.1-8b-instruct:1.13.1 · profile 574eb076… · NIM_MAX_MODEL_LEN=8192), same 30 question ids in the same order (results/e7/c/prediction_c.json design.subset_ids), same Vol.1 E2 payloads, one container through all three cells",
+    "only_variable_vs_C": "options.num_gpu on every Ollama request (C used Ollama's default, which put 100% of the model on GPU)",
+    "not_changed": "no other Ollama option is set; Ollama chooses its own context (observed 16384 in C and in the precheck)",
+    "recorded_in_addition_without_changing_payload_or_timing": [
+      "NIM finish_reason from the stream",
+      "Ollama done_reason, eval_count, eval_duration, prompt_eval_count, load_duration",
+      "per-cell Windows GPU counter snapshots",
+      "background sampler every ~3 s: per-process dedicated/shared GPU memory, adapter totals, nvidia-smi, GPU engine utilization for the NIM and Ollama processes",
+      "`ollama ps` at cell start/end and after warm-up"
+    ],
+    "deviations_from_vol1_E2_listed_not_absorbed": [
+      "a background PowerShell counter sampler runs during all three cells (precheck: 0.8 s CPU per 13 s wall on 28 logical CPUs)",
+      "30-question subset, one round (as in C)",
+      "Ollama version 0.33.3 today; Vol.1's Ollama version was not recorded"
+    ]
+  },
+  "num_gpu_derivation": {
+    "share_mib": {
+      "value": 1344,
+      "formula": "Vol.1 E2 VRAM median 31,769 MiB (benchmark/results/e2_nim_vs_ollama.json, NIM and Ollama rows both, n=300 each) − NIM alone 30,425 MiB (results/e7/c/c_cohabit.json cell A1 vram p50, n=30)"
+    },
+    "method_used": "calibrated: largest num_gpu whose measured Ollama GPU footprint (nvidia-smi delta vs num_gpu=0, NIM not running) ≤ share",
+    "calibration": {
+      "file": "results/e7/b_prime/precheck/calibration_numgpu.jsonl",
+      "table": [
+        {
+          "num_gpu": 0,
+          "ollama_ps_processor": "100% CPU",
+          "nvidia_smi_delta_vs_num_gpu0_mib": 0,
+          "llama_server_dedicated_mib": 0.0
+        },
+        {
+          "num_gpu": 1,
+          "ollama_ps_processor": "90%/10% CPU/GPU",
+          "nvidia_smi_delta_vs_num_gpu0_mib": 1209,
+          "llama_server_dedicated_mib": 1218.2
+        },
+        {
+          "num_gpu": 2,
+          "ollama_ps_processor": "87%/13% CPU/GPU",
+          "nvidia_smi_delta_vs_num_gpu0_mib": 1463,
+          "llama_server_dedicated_mib": 1471.9
+        },
+        {
+          "num_gpu": 3,
+          "ollama_ps_processor": "84%/16% CPU/GPU",
+          "nvidia_smi_delta_vs_num_gpu0_mib": 1662,
+          "llama_server_dedicated_mib": 1667.6
+        },
+        {
+          "num_gpu": 4,
+          "ollama_ps_processor": "82%/18% CPU/GPU",
+          "nvidia_smi_delta_vs_num_gpu0_mib": 1888,
+          "llama_server_dedicated_mib": 1865.4
+        },
+        {
+          "num_gpu": 5,
+          "ollama_ps_processor": "79%/21% CPU/GPU",
+          "nvidia_smi_delta_vs_num_gpu0_mib": 2055,
+          "llama_server_dedicated_mib": 2061.1
+        },
+        {
+          "num_gpu": 6,
+          "ollama_ps_processor": "76%/24% CPU/GPU",
+          "nvidia_smi_delta_vs_num_gpu0_mib": 2251,
+          "llama_server_dedicated_mib": 2256.9
+        },
+        {
+          "num_gpu": 7,
+          "ollama_ps_processor": "74%/26% CPU/GPU",
+          "nvidia_smi_delta_vs_num_gpu0_mib": 2433,
+          "llama_server_dedicated_mib": 2438.6
+        }
+      ],
+      "cross_check": "nvidia-smi delta and llama-server dedicated counter agree within 20 MiB at every num_gpu"
+    },
+    "method_in_P02_not_used": {
+      "formula": "floor(share ÷ (per-layer weights + per-layer KV))",
+      "per_layer_from_tensor_list": "block weights avg 124.77 MiB (117.03/132.50) + KV f16 @16384 ctx 64.0 MiB = 188.77 MiB ⇒ floor(1344/188.77) = 7; exact cumulative last-N blocks: 6 blocks 1,163.53 MiB ≤ 1,344 < 7 blocks 1,344.56 MiB ⇒ 6",
+      "p02_rough": "blob 4,920,738,944 B ÷ 32 = 146.65 MiB + 64 KV ⇒ floor(1344/210.65) = 6",
+      "why_not_used": "precheck measured num_gpu=6 at 2,251 MiB (1.7× the share): the formula omits Ollama's fixed GPU compute buffer (~1.0 GB at num_gpu=1). It would not reproduce Vol.1's share, which is the question of the ticket."
+    },
+    "assumptions": [
+      "the desktop baseline during Vol.1 equals C's (C prelaunch 1,816 MiB). Consistency check: C A1 30,425 − 1,816 = 28,609 MiB ≈ the NIM container's own dedicated GPU memory measured today, 28,600.7 MiB (precheck2). Vol.1's desktop baseline was not recorded.",
+      "NIM-alone footprint today (30,425) equals Vol.1's; Vol.1 E1 recorded 31,070 MiB under driver 577.00 — with that value the share is 699 MiB and no num_gpu ≥ 1 fits (num_gpu=0)",
+      "Ollama's footprint with NIM present equals the footprint measured without NIM",
+      "Vol.1's Ollama version and context length were not recorded; its compute buffer and KV size may differ from today's",
+      "🔴 the Vol.1 total 31,769 MiB is 97.4% of the reported 32,607 MiB: a near-saturated total has little discriminating power, so the share derived from it is itself weak. If Vol.1 had system-memory fallback, Ollama's true GPU share then is unknown."
+    ]
+  },
+  "predictions": {
+    "prediction_1": {
+      "claim": "B′ Ollama tps avg (Vol.1 formula) in 7–14 (Vol.1 10.1 ±40%)",
+      "tests": "the shape is right"
+    },
+    "prediction_2": {
+      "claim": "B′ NIM TTFT avg in 180–270 ms (Vol.1 221)",
+      "tests": "the magnitude is right"
+    },
+    "independent": true
+  },
+  "verdict_rules": {
+    "validity_max_rel_diff": 0.1,
+    "pred1_ollama_tps": [
+      7,
+      14
+    ],
+    "pred2_nim_ttft_ms": [
+      180,
+      270
+    ],
+    "p02_matrix": {
+      "1✅ 2✅": "Vol.1 condition reproduced; 221 ms is the co-residence cost in that shape",
+      "1✅ 2❌": "shape right, magnitude not ⇒ a third factor (version? driver?); report as is, no guessing",
+      "1❌ 2✅": "coincidence; not counted as reproduction",
+      "1❌ 2❌": "the VRAM ledger cannot reproduce Vol.1's shape; record and stop"
+    },
+    "a1_gate": "A1 NIM TTFT avg in [30, 80] ms, else stop before loading Ollama",
+    "nim_process_identification": "largest dedicated growth idle→ready snapshot, ≥ 20000 MiB; otherwise the mechanism is unestablished",
+    "ollama_process_identification": "largest dedicated growth among processes named llama-server between A1 end and after warm-up",
+    "squeeze_mib": 1000,
+    "squeezed_definition": "NIM process dedicated median in B′ lower than in A1 by more than 1000 MiB, OR its shared median higher by more than 1000 MiB (sampler rows within each cell; cell start/end snapshots if no rows)",
+    "elevated_ratio": 2.0,
+    "elevated_definition": "B′ NIM TTFT avg ≥ 2 × max(A1, A2)",
+    "concurrent_util_pct": 5,
+    "min_concurrent_rows": 3,
+    "concurrent_definition": "in B′, sampler rows whose collection interval lies entirely inside a NIM request window; a row counts as Ollama-active if the Ollama process GPU engine utilization sum > 5%",
+    "noise_flag_mib": 500,
+    "noise_definition": "span (max−min) of the NIM process dedicated memory across A1 sampler rows; above 500 MiB the mechanism verdict is unestablished",
+    "p09_matrix": {
+      "compute_contention": "compute contention (footprint not squeezed, TTFT elevated)",
+      "memory_pressure": "memory pressure (footprint squeezed, TTFT elevated, no Ollama GPU activity inside NIM requests)",
+      "inseparable": "inseparable (footprint squeezed AND Ollama GPU activity inside NIM requests)",
+      "inseparable_insufficient_concurrency_evidence": "inseparable (squeezed and elevated, fewer than 3 sampler rows inside NIM requests)",
+      "neither": "neither (not squeezed, not elevated) — look elsewhere",
+      "squeezed_but_ttft_not_elevated": "footprint squeezed but TTFT not elevated"
+    },
+    "unestablished_sentence": "機制未確立（mechanism not established）. ⛔ Do not write that co-residence causes the TTFT rise."
+  },
+  "p09_required_sentence": "若三格的 NIM 足跡與 TTFT 走向無法分辨「算力競爭」與「記憶體壓力」，結論寫「機制未確立」。⛔ 不寫「同住造成 TTFT 上升」。",
+  "p09_note_on_design": "cells alternate NIM and Ollama requests, so the two engines are not generating at the same time by design; 'compute contention' here can only be residual (scheduling / context switching), which is why Ollama GPU activity inside NIM request windows is measured instead of assumed.",
+  "prechecks_before_freezing": {
+    "ollama_honors_num_gpu": "results/e7/b_prime/precheck/precheck_console.txt · num_gpu=6 → `76%/24% CPU/GPU`; num_gpu=0 → `100% CPU` (both directions) · context 16384",
+    "ollama_gpu_process": "Ollama's GPU memory is held by the runner process `llama-server`, not `ollama` (precheck snapshots)",
+    "nim_gpu_process": "results/e7/b_prime/precheck/precheck2_console.txt · NIM container alone: WSL2 worker process `vmwp` dedicated 28,600.7 MiB, shared 84 MiB ⇒ identification rule passes (growth ≥ 20000). No requests were sent during the prechecks.",
+    "mock_end_to_end": "harness and sampler invoked with the runner's exact command lines against a local HTTP/1.1 chunked mock (service URLs overridden only): 3 cells × 30 requests, 0 errors, 11 snapshots, 103 sampler rows, checkpoints and verdict produced; the A1 gate-fail path also exercised (rc 7, Ollama not loaded). Mechanism branches are covered by bprime_verdict.py --self-test (9 cases) and 4 mutations that each turn a case red.",
+    "sampler_cost_in_mock": "25.7 s CPU over 311 s wall on 28 logical CPUs"
+  },
+  "window_rule": "clean window = prelaunch nvidia-smi memory.used ≤ median of 5 idle samples (idle_baseline.txt) + 300 MiB and util ≤ 5%; recorded, not a gate",
+  "outputs": [
+    "results/e7/b_prime/bprime_cohabit.json (+ .partial.json checkpoints)",
+    "bprime_verdict.json",
+    "bprime_ctx_before.txt / bprime_ctx_after.txt / idle_baseline.txt",
+    "ollama_ps_{A1,B,A2}.txt",
+    "counters/*.json · counters/sampler.jsonl",
+    "logs/<run tag>/"
+  ]
+}

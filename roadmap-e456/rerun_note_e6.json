@@ -1,0 +1,27 @@
+{
+  "note": "E6 run 2 · same-design rerun",
+  "written_at": "2026-09-13T20:27:02+0800",
+  "written_before": "run 2 container launch",
+  "why": "run 1 (2026-09-13 16:50–17:05) measured all 5 levels with 0 failures, but the harness crashed while writing the result file (os.makedirs('') on a bare --out filename); all per-request data was lost.",
+  "prediction_file_unchanged": "prediction_e6.json sha256 b810cf27ccc70ab6a13a9fb726ebbbb76b83f32a1d9c16064b069a2829100fcd",
+  "degrees_of_freedom_changed": 0,
+  "changes_vs_run1": [
+    "result write: makedirs only when the output path has a directory part",
+    "checkpoint <out>.partial.json after every level"
+  ],
+  "unchanged": "questions, levels 1/4/16/32/50, max_tokens 500, per-request timing logic, image/profile/env, wave rule",
+  "run1_prelaunch_window": "1660 MiB, 2 % (not a clean window by the <1500 MiB rule)",
+  "run1_summary_verbatim": [
+    "c=  1 waves=100 req=100 fail=0 agg mean=81.3 (cv 0.0575) TTFT avg=38.0 p50=28.9 p95=55.2 ms · 2026-09-13T17:01:08+0800",
+    "c=  4 waves=25 req=100 fail=0 agg mean=230.34 (cv 0.3007) TTFT avg=55.9 p50=60.7 p95=70.7 ms · 2026-09-13T17:03:35+0800",
+    "c= 16 waves=7 req=112 fail=0 agg mean=795.07 (cv 0.3871) TTFT avg=113.0 p50=111.0 p95=158.4 ms · 2026-09-13T17:04:26+0800",
+    "c= 32 waves=4 req=128 fail=0 agg mean=1378.95 (cv 0.1992) TTFT avg=194.7 p50=202.8 p95=283.3 ms · 2026-09-13T17:05:03+0800",
+    "c= 50 waves=3 req=150 fail=0 agg mean=1935.53 (cv 0.0016) TTFT avg=261.9 p50=261.2 p95=369.9 ms · 2026-09-13T17:05:39+0800"
+  ],
+  "reporting_rule": "run 1 and run 2 are reported side by side; differences are run-to-run variation and are not hidden",
+  "must_answer_in_run2": [
+    "P1 by per-request tps avg (not agg mean)",
+    "c=50 CV 0.0016: whether most requests hit the 500-token cap; if not answerable, write 'still unexplained'"
+  ],
+  "run1_files": "roadmap-e456/run1/"
+}

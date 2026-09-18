@@ -1,0 +1,16 @@
+{
+ "note": "row-level reconciliation between the source run and the judge-isolation corpus; excluded_segments.json is bound by fixed_inputs_sha256 in both pre-registrations and is therefore left unmodified",
+ "source_run": "vol1b/results/p19_cell5/rows.jsonl (not committed: it holds full model answers)",
+ "source_run_rows": 408,
+ "covered_by_corpus": 316,
+ "excluded_segments_json_count": 89,
+ "discarded_first_request": 3,
+ "discarded_first_request_rows": [
+  "A:e3_clean_01#0",
+  "C:e3_clean_01#0",
+  "Cp:e3_clean_01#0"
+ ],
+ "discarded_first_request_note": "these rows carry warmup: true in the source run and p28_build_corpus.py drops warm-up rows before anything else. The first request after READY is systematically slow (TTFT 23,271 ms on the nim-only arm, against 20.6-45.3 ms for the same question in rounds 1-3); it is outside the scope excluded_segments.json records",
+ "overlap_between_covered_and_excluded": 0,
+ "check": "316 + 89 + 3 = 408"
+}

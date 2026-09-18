@@ -1,0 +1,164 @@
+{
+ "check": "P17 §1 instrument check: AIPerf 0.11.0 vs a plain requests client on the same 10 prompts, concurrency 1, OSL 200 with ignore_eos, temperature 0, same NIM container",
+ "rule": "same order of magnitude; a difference above 20% must be investigated (the rule does not name a statistic)",
+ "aiperf_values_ms": {
+  "ttft_avg": 30.47,
+  "ttft_p50": 17.86,
+  "ttft_min": 17.33,
+  "itl_avg": 10.58,
+  "e2e_avg": 2134.96,
+  "e2e_p50": 2125.0
+ },
+ "aiperf_ttft_per_request_ms": [
+  144.4,
+  17.7,
+  17.4,
+  18.3,
+  18.1,
+  18.0,
+  18.0,
+  17.3,
+  17.6,
+  17.7
+ ],
+ "clients": {
+  "requests_c1_n10": {
+   "connection": "new per request",
+   "url": "http://localhost:8000",
+   "values_ms": {
+    "ttft_avg": 43.8,
+    "ttft_p50": 26.32,
+    "ttft_min": 19.02,
+    "itl_avg": 10.55,
+    "e2e_avg": 2143.06,
+    "e2e_p50": 2127.26
+   },
+   "diff_vs_aiperf_pct": {
+    "ttft_avg": 43.8,
+    "ttft_p50": 47.4,
+    "ttft_min": 9.7,
+    "itl_avg": -0.2,
+    "e2e_avg": 0.4,
+    "e2e_p50": 0.1
+   },
+   "ttft_per_request_ms": [
+    189.6,
+    36.8,
+    20.7,
+    19.5,
+    19.0,
+    37.8,
+    19.3,
+    44.3,
+    19.1,
+    32.0
+   ]
+  },
+  "diag_requests_session_localhost": {
+   "connection": "session (reused)",
+   "url": "http://localhost:8000",
+   "values_ms": {
+    "ttft_avg": 68.74,
+    "ttft_p50": 32.95,
+    "ttft_min": 17.94,
+    "itl_avg": 10.31,
+    "e2e_avg": 2120.76,
+    "e2e_p50": 2078.9
+   },
+   "diff_vs_aiperf_pct": {
+    "ttft_avg": 125.6,
+    "ttft_p50": 84.5,
+    "ttft_min": 3.5,
+    "itl_avg": -2.5,
+    "e2e_avg": -0.7,
+    "e2e_p50": -2.2
+   },
+   "ttft_per_request_ms": [
+    266.9,
+    19.6,
+    34.1,
+    186.2,
+    38.8,
+    30.8,
+    31.7,
+    42.9,
+    18.4,
+    17.9
+   ]
+  },
+  "diag_requests_new_127": {
+   "connection": "new per request",
+   "url": "http://127.0.0.1:8000",
+   "values_ms": {
+    "ttft_avg": 24.45,
+    "ttft_p50": 18.0,
+    "ttft_min": 17.23,
+    "itl_avg": 10.12,
+    "e2e_avg": 2038.6,
+    "e2e_p50": 2033.28
+   },
+   "diff_vs_aiperf_pct": {
+    "ttft_avg": -19.7,
+    "ttft_p50": 0.8,
+    "ttft_min": -0.6,
+    "itl_avg": -4.3,
+    "e2e_avg": -4.5,
+    "e2e_p50": -4.3
+   },
+   "ttft_per_request_ms": [
+    50.3,
+    18.4,
+    34.5,
+    18.1,
+    17.9,
+    17.2,
+    35.1,
+    17.9,
+    17.8,
+    17.3
+   ]
+  },
+  "diag_requests_session_127": {
+   "connection": "session (reused)",
+   "url": "http://127.0.0.1:8000",
+   "values_ms": {
+    "ttft_avg": 26.48,
+    "ttft_p50": 23.42,
+    "ttft_min": 17.51,
+    "itl_avg": 10.14,
+    "e2e_avg": 2043.53,
+    "e2e_p50": 2044.11
+   },
+   "diff_vs_aiperf_pct": {
+    "ttft_avg": -13.1,
+    "ttft_p50": 31.2,
+    "ttft_min": 1.1,
+    "itl_avg": -4.2,
+    "e2e_avg": -4.3,
+    "e2e_p50": -3.8
+   },
+   "ttft_per_request_ms": [
+    36.9,
+    17.6,
+    42.5,
+    18.0,
+    17.9,
+    27.8,
+    17.5,
+    19.0,
+    36.3,
+    31.3
+   ]
+  }
+ },
+ "order": "AIPerf first, then the four client runs in the order listed; prefix caching is enabled on the server, so the client runs see a warm prefix cache for these prompts",
+ "findings": [
+  "ITL: all four client runs within 4.3% of AIPerf (-0.2% for the first run). Request latency (e2e): within 4.5%.",
+  "TTFT avg: +43.8% and +125.6% in the two localhost client runs (above the 20% rule, investigated); -19.7% and -13.1% in the two 127.0.0.1 runs. TTFT p50: +47.4%, +84.5%, +0.8%, +31.2%.",
+  "Investigation: per-request TTFT is bimodal in the client runs: most requests at 17-20 ms (AIPerf min 17.3, p50 17.9 ms) and some at 30-45 ms, plus a slow first request in every run (AIPerf 144 ms; clients 37-267 ms). The minimum TTFT agrees within 1.1% in three runs. The spread moves between runs regardless of connection reuse; 127.0.0.1 reduced it but did not remove it.",
+  "Reading: ITL, e2e and the TTFT floor agree; the TTFT differences are 15-25 ms added to some requests on the Python client side of this Windows host and a slow first request, small against the 500 ms and 2000 ms TTFT limits used in P17. At these absolute values (about 18 ms) a 20% rule is a 3.6 ms tolerance."
+ ],
+ "pass": true,
+ "pass_basis": "judged on the agreement of ITL, e2e and the TTFT floor (min, and p50 in the 127.0.0.1 run). TTFT avg/p50 exceeded 20% in some client runs; this verdict is a human judgement written after seeing the data, not a pre-set statistic.",
+ "decided_by": "NV-benchmark CC, 2026-09-15, before any P17 prediction file was written"
+}
