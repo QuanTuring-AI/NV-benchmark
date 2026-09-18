@@ -218,4 +218,4 @@ pre-registrations recorded thresholds and inputs but did not record the harness 
 Results from those runs are reproducible from the scripts as published, but the "script-as-registered" guarantee that later volumes
 carry does not apply to them. **The same applies to S6, and more strongly: its pre-registration records no digest of anything, and no
 `.sha256` sidecar was ever written for it, so that run has no hash chain at all.** For B′, the verdict script as registered is kept in `results/e7/b_prime/verdict_patch/` next to the
-patched version that produced the final verdict (see `PATCH_NOTE.md` there).
+patched version that produced the final verdict (see `PATCH_NOTE.md` there). One entry cannot be verified at all: the first P07 attempt's pre-registration (`results/p07_toolcall/attempt1_20260913_probe_stop/prediction_p07.json`) records a single digest computed over two scripts combined (`harness_sha256_of_toolcall_eval_py+tools_py`), and the published files do not record how the two were combined, so that digest cannot be recomputed on a clone. Every other binding in this repository can be.

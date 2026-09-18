@@ -52,3 +52,7 @@ This run's NIM was not clamped (`gpu_memory_utilization` 0.92, KV 97,328 tokens)
 was clamped to 0.86 (recorded in its startup log, which is not published; its KV size was not recorded; the section 8 run under the same clamp had 81,504 tokens). The line fitted
 here still matches the bridge's output self-check and answer-generation calls to within 0.4%, so the KV budget does not enter
 single-request latency in this comparison.
+
+## Verifying the hash chain on a clone
+
+Both pre-registrations (`prediction_p28.json`, `prediction_p28_v2.json`) and `corpus.sha256` record the digest of `corpus.json`. On any clone those three entries resolve to no file, and a checker will list them as unresolved. That is by design, not a broken chain: `corpus.json` holds full model answers (free text that cannot be reviewed line by line) and is kept out of the repository; the published artefact is its digest. The file is rebuilt with `scripts/p28_build_corpus.py` from the P19 run's `rows.jsonl` (kept out of the repository for the same reason), and a rebuilt copy must hash to the digest in `corpus.sha256` to be the input this section describes.

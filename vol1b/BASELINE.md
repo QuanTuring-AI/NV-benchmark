@@ -304,3 +304,25 @@ Read together with section 10: with the NIM-alone series recovered, co-resident 
 Also recorded (not pre-registered): the S-O blocks before and after the NIM phase differ little (S-OL TTFT 60.0 vs 63.3 ms avg, S-OH 2,131 vs 2,151). Co-resident NIM TTFT was 936 ms avg on the questions where Ollama had just been loaded and 647 ms where it was already loaded; the two S-N halves (after C, before C) were 33.5 and 44.5 ms. Response text: on every question the Ollama-alone arm sent first returned the same text as the co-resident Ollama request (49 of 49); the arm sent second, an immediate repeat of the same prompt, did so for 21 of 49, which is consistent with Ollama reusing the previous request's prompt cache — the address delay did not depend on the order (above). NIM returned the same text in S-N and C for 26 of 49, as in section 10. Vol.1's throughput formula counts whitespace-separated words as tokens (`benchmark/run_benchmark.py`); against the token counts the engines report, it reads 1.3–2.0% lower in each of the five series (S-N 85.63 against 87.24 tok/s), so that approximation does not change any ratio above by more than about 1%.
 
 What this does not show: what Vol.1's machine did when resolving `localhost` in March 2026, which was not recorded; anything about the stack Vol.1 used; whether the memory displacement is specific to Windows and WSL2; or behaviour under concurrency — every request here was sent alone. No published figure has been adjusted.
+
+## 12 · Closing out the Vol.1-A comparison — where each arm's generation was running
+
+This section closes the Vol.1-A NIM-versus-Ollama comparison. It adds no new claim about either engine; it records what the two arms of that ratio were doing, and states what remains unknown.
+
+Single-stream decoding reads the whole weight set once per generated token, so a measured generation rate implies an effective memory bandwidth of `tokens/s × weight bytes`. Applied to the published per-request data (`benchmark/results/e2_nim_vs_ollama.json`, unmodified), with TTFT removed so that only the generation phase is counted:
+
+| Arm | Generation rate (median, `tokens ÷ (total − TTFT)`) | Weights | Implied bandwidth | Share of this GPU's 1,792 GB/s |
+|---|---|---|---|---|
+| Vol.1-A, NIM (BF16, about 16.1 GB) | 83.9 tok/s | 16.1 GB | about 1,350 GB/s | **75%** |
+| Vol.1-A, Ollama (Q4, about 4.9 GB) | 12.3 tok/s | 4.9 GB | about 60 GB/s | **3.4%** |
+| This machine 2026-09-17, Ollama alone on the GPU (section 11, n=49) | 231.7 tok/s | 4.9 GB | about 1,135 GB/s | **63%** |
+| This machine 2026-09-18, Ollama on the GPU, control run (`results/ollama_cpu_control/`, n=3) | 213.9 tok/s | 4.9 GB | about 1,048 GB/s | **58%** |
+| This machine 2026-09-18, Ollama with the GPU disabled (`results/ollama_cpu_control/`, n=50; no request dropped, as pre-registered) | 11.27 tok/s | 4.9 GB | about 55 GB/s | **3.1%** |
+
+The last row is a pre-registered control run on the same machine, the same Ollama build and the same model, with `options.num_gpu` set to 0. Placement was read from the engine before and after every request: `size_vram` was 0 in all 100 readings on that arm, and equal to `size` in all 6 readings on the GPU arm that ran in the same session immediately before it; GPU memory in use during the control arm had a median of 1,120 MiB against 8,365 MiB during the GPU arm. Within that run the GPU arm generated 19 times faster than the disabled arm (20.6 times by the engine's own `eval` timings).
+
+The published Ollama arm's generation rate is within 9% of the rate measured here with the GPU disabled, and about 19 times below the rate measured here with the GPU in use; the two implied bandwidth shares, 3.4% and 3.1%, fall in the same place. **Why the published run behaved that way is not established.** That machine's state in March 2026 — GPU memory available to each process at the time, driver settings, the Ollama build — was not recorded, and this volume does not claim to know it.
+
+The 7.3× ratio that originally led Vol.1-A compared two arms whose generation rates, converted to effective memory bandwidth, sit at 75% and 3.4% of this card's peak — the denominator arm was not running at GPU speed. On the same card and model today, that engine generates at 231.7 tok/s in VRAM and at 11.27 tok/s when forced onto CPU. We do not know what the March 2026 machine was doing, and we do not claim to. The ratio therefore belongs to that configuration; this repository does not use Ollama as a comparison arm again.
+
+What this section does not show: what the March 2026 machine was doing; whether the same behaviour would occur on another operating system or driver; or anything about either engine's output quality, which was not measured here. No published figure has been adjusted, and no adjusted ratio is stated anywhere in this volume.
