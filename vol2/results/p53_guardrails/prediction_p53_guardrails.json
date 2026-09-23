@@ -1,0 +1,58 @@
+{
+  "experiment": "Vol.2 · NeMo Guardrails 0.23.0 on Nemotron Nano 9B v2 (NIM 1.12.2) and Nemotron 3 Nano (NIM 2.0.12): end-to-end overhead and rail cost, Vol.1-A E3 question set",
+  "written_at": "2026-09-23T00:30:40+0800",
+  "written_before": "the measured run. run_p53_guardrails.sh refuses to start if this file or its .sha256 is missing or changed, or if rows.jsonl exists.",
+  "runs": "one run",
+  "why": "Vol.2's module ladder is NIM x two model families x Guardrails 0.23.0; without this block the volume has two modules. The E9 result used the old stack and does not count.",
+  "stack": {
+    "guardrails": "nemoguardrails 0.23.0 in its own venv (the Vol.1-B worker, vol1b/scripts/gr_worker.py, one persistent event loop per worker)",
+    "rail_config": "Vol.1's benchmark/guardrails/config.yml with the model name substituted and top_p 0.9 added (as the Vol.1-B bridge did); the self-check prompts and their max_tokens 1024 are the library's defaults, not changed",
+    "A1": "nvidia-nemotron-nano-9b-v2:1.12.2, bf16, NIM_MAX_MODEL_LEN 8192, NIM_MAX_NUM_SEQS 32",
+    "A2": "nemotron-3-nano:2.0.12, NVFP4, NIM_MAX_MODEL_LEN 8192, NIM_PASSTHROUGH_ARGS --max-num-seqs 32",
+    "nim_only_payload": "Vol.1 E3 payload (max_tokens 500, temperature 0.0, stream) + top_p 0.9 + stream_options.include_usage"
+  },
+  "harness_sha256": {
+    "vol2/scripts/p53_guardrails.py": "20d2c82a8b275e8f15a2c7d2eeb71d2bb26d2d4c0c9d9755128fd7f72d5ff47c",
+    "vol2/scripts/p53_guardrails_analyze.py": "10c4f010c5abff4af96b506b3edce0610bf0cedd794cc1036809f9847c7965a6",
+    "vol2/scripts/run_p53_guardrails.sh": "a2cba92a5ac9560f3465e6b6eb2051b3e4b6d80f5aea19d9f96e19669adadf45",
+    "vol2/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+    "vol1b/scripts/bridge_2x2.py": "91f15c67a162ec64783126e6c323e94a2091bc47517ba5747e30667789757c9f",
+    "vol1b/scripts/gr_worker.py": "5caaee50427f2779d31f38a576448b050a5e98f8c09740216b3d198e18c6169c",
+    "vol1b/scripts/bridge_analyze.py": "be52e800e329ff8a140c940d0755c198a37e3077367f3241e1ba7529a24926fe",
+    "vol1b/scripts/prediction_guard.py": "05b735290b1e935b32e3ec5805f43f38f2101a47c8c5f9b1efdad6db852a9f83"
+  },
+  "fixed_inputs_sha256": {
+    "benchmark/e3_questions.json": "5d7eeeaa9408977e28366e7b31a6f01905695a0c8ce10a6c314fa40de4a1c3ea",
+    "benchmark/guardrails/config.yml": "87341b916ece9721370a797dd52d46ecb50db966b1ac642e716f911c8be6468d",
+    "vol2/scripts/guardrails_nothink/config.yml": "d6251ccb3217a44469f8166d7449bf682b30a698b63fb7e70c6f6dcd04fdcfb9"
+  },
+  "design": {
+    "cells": "per container arm, three request arms rotated per question: N (nim-only), G (Guardrails 0.23.0 with Vol.1's rail config verbatim), H (Guardrails 0.23.0 with E9's variant of the same config: identical prompts sent with a /no_think system message, vol2/scripts/guardrails_nothink/config.yml), 2 s after every request; 45 questions x 3 rounds; one warm-up request per request arm excluded. H is an addition beyond the four cells asked for: without it the G cell alone cannot separate the rail's cost from the judge's reasoning habit",
+    "two_quantities": "end-to-end wall-clock overhead (G/N on clean_passthrough, Vol.1-A's algorithm, includes the output-length effect) and rail cost (self_check_input / self_check_output call durations and tokens from rails.explain()); never mixed",
+    "reasoning": "both models reason by default; the judge prompts are sent as the library sends them; what comes back (verdict, empty content, truncation at 1024) is recorded per call and reported",
+    "branches": "if the worker cannot connect to a container's endpoint the G cell of that arm is skipped and the error recorded verbatim; if a G answer comes back empty it is counted, not repaired"
+  },
+  "analysis_rules": {
+    "preconditions": "per arm: P1 no errors and HTTP 200 on every N row · P2 135 N and 135 G rows, one per (question, round) · P3 one container up. Any failure -> that arm's conclusions null.",
+    "statistics": "clean_passthrough avg ratio (Vol.1-A algorithm); paired Σ(G)/Σ(N)-1 over questions passed in both arms with a 95% bootstrap CI over questions (5000 draws, seed 20260921)",
+    "program": "vol2/scripts/p53_guardrails_analyze.py (10 self-test cases; judge arms G and H analysed separately, each requiring 135 rows)"
+  },
+  "predictions": {
+    "basis": "Vol.1-B cell 4 (Llama 8B, NIM 2.0.12, GR 0.23.0): clean_passthrough +34.5% end to end, rail cost dominated by the output self-check at max_tokens 1024; Nemotron models reason by default. Harness test 2026-09-22 (A1, two clean questions, G only): the self_check_input judge returned 188-209 tokens per call (reasoning instead of yes/no) and the rail blocked both clean questions (refusal, 35 chars); G end-to-end was therefore faster than N (-60%) because a block skips the answer. That is why arm H exists; R1/R4 below were written before the test and are kept, and R1 is now expected to fail for G",
+    "R1": "end-to-end clean_passthrough overhead is above +25% on both arms (per judge arm; H expected to behave as Vol.1-B did, G expected to fail this by blocking)",
+    "R2": "at least one arm has G rows whose judge call hit 1024 tokens or returned an empty verdict (recorded count > 0)",
+    "R3": "adversarial true blocks under G are between 30 and 45 of 45 per round-set on both arms (this sample; not a model property)",
+    "R4": "false blocks on clean and edge questions are at most 5 of 90 per container arm under H; under G they are expected to be the majority",
+    "confidence": "R1 medium, R2 medium, R3 low, R4 low",
+    "reading": "a failed R is reported as failed; pass is P1-P3 per arm. Detection differences from Vol.1-A's 42/45 are sample differences and are not written as a comparison of models."
+  },
+  "outputs": [
+    "rows.jsonl (no response text; SHA-256 and length)",
+    "events.jsonl",
+    "analysis.json",
+    "gr_config_<arm>/config.yml",
+    "versions.txt",
+    "ctx.txt",
+    "logs/ (not published)"
+  ]
+}

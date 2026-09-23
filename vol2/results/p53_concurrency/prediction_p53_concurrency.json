@@ -1,0 +1,58 @@
+{
+  "experiment": "Vol.2 · concurrency · closed-loop AIPerf sweeps on Nemotron Nano 9B v2 (bf16, NIM 1.12.2) and Nemotron 3 Nano (NVFP4, NIM 2.0.12), two ISL/OSL profiles, both arms at max_num_seqs 32",
+  "written_at": "2026-09-23T00:31:37+0800",
+  "written_before": "the measured run. run_p53_concurrency.sh refuses to start if this file or its .sha256 is missing or changed, or if levels.jsonl exists.",
+  "runs": "one run per (arm, profile); the two highest levels are repeated once in a fresh container and both results are reported",
+  "answer_form": "per (arm, profile): the largest concurrency whose p99 TTFT and p99 ITL are inside the Server SLO and inside the Interactive SLO; the throughput saturation level; whether a level failing the Server SLO was reached. Not 'N requests with 0 failures'.",
+  "slo": {
+    "server": "p99 TTFT <= 2,000 ms and p99 TPOT <= 100 ms",
+    "interactive": "p99 TTFT <= 500 ms and p99 TPOT <= 30 ms",
+    "source": "MLPerf Inference v5.1, Llama 3.1-8B benchmark limits (MLCommons inference rules, server and interactive scenarios); applied here to different models as a fixed yardstick, not as a claim of MLPerf comparability"
+  },
+  "stack": {
+    "card": "NVIDIA GeForce RTX 5090, 32,607 MiB, driver 591.86",
+    "A1": "nvcr.io/nim/nvidia/nvidia-nemotron-nano-9b-v2:1.12.2, profile 5cf34bab... bf16, NIM_MAX_MODEL_LEN 8192, NIM_MAX_NUM_SEQS 32",
+    "A2": "nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12, profile 1fba9ecf... NVFP4, NIM_MAX_MODEL_LEN 8192, NIM_PASSTHROUGH_ARGS --max-num-seqs 32 (the variable that reaches the engine, vol2/results/p50_footprint_addendum2)",
+    "why_8192": "the RAG profile's ISL+OSL (up to about 4,350 tokens) does not fit 4096",
+    "tool": "AIPerf 0.11.0 (--streaming, --use-server-token-count, warm-up N requests excluded, benchmark-grace-period 0), tokenizer files copied from each model's NIM cache snapshot"
+  },
+  "harness_sha256": {
+    "vol2/scripts/p53_concurrency.py": "3858baaf99a7aa200c3c391b15cbcbf5c5e12fa8feb6fb2df11e2f89403dd7aa",
+    "vol2/scripts/p53_concurrency_analyze.py": "1ff619d590c19c88e7d1351dec1eb6b64c7f6946620f654423d58c9d7c84c6a1",
+    "vol2/scripts/run_p53_concurrency.sh": "57b54dedcc39979781446492fb282cbcb35092b5b89b19553e816661f816f63e",
+    "vol2/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+    "vol1b/scripts/prediction_guard.py": "05b735290b1e935b32e3ec5805f43f38f2101a47c8c5f9b1efdad6db852a9f83"
+  },
+  "design": {
+    "profiles": {
+      "C": "synthetic ISL 200±50 / OSL 200±50, ignore_eos, temperature 0",
+      "R": "synthetic ISL 3500±300 / OSL 500±50, ignore_eos, temperature 0"
+    },
+    "levels": "1, 2, 4, 8, 16, 32, 64 (one level above max_num_seqs, so queueing is visible); first level 60 s, later levels min(600, max(60, 4 x expected request time)) as in vol1b/scripts/p17_sweep.py; completed < 3N is flagged",
+    "calibration": "before each main sweep, one discarded warm-up request and then 10 requests at concurrency 1 through the harness's own streaming client, each on a new TCP connection (~200-token fixed prompt, ignore_eos, 200 output tokens, TTFT = arrival of the first streamed chunk carrying a choice, read chunk by chunk); AIPerf's c=1 ITL median must be within 20% of the client's median, and its TTFT median within 20% or within 15 ms (whichever is larger), or that sweep's conclusions are null. The 15 ms floor is a default, not confirmed by anyone. Why a new connection per request and why medians: four calibration attempts on 2026-09-22 reused one connection (requests.Session, then http.client with TCP_NODELAY) and measured 85-96 ms TTFT against AIPerf's 44-50 ms with ITL agreeing within 0.4-4%; the diagnosis of 2026-09-23 on the same server showed the first request on a fresh connection at 43-54 ms (AIPerf 46-57 ms on its own connection) and every later request on the same kept-alive connection at 83-99 ms, while curl reached the response headers in 6-8 ms. The mechanism was not identified; the condition is avoided and disclosed. A single cold first request (117-205 ms) moves a 10-request average by 10-15 ms, hence medians. A side measurement through the requests library (new connection per request, iter_lines 512-byte buffering) is recorded but not gated: it quantifies the client-side TTFT offset that the speed, answer and long-context tables carry",
+    "fresh_container": "after each main sweep the container is replaced and the two highest levels run again; both are reported side by side",
+    "no_guardrails": "the concurrency measurement does not go through Guardrails"
+  },
+  "analysis_rules": {
+    "preconditions": "P1 every level rc 0 with a summary and 0 request errors · P2 calibration medians within 20% (TTFT alternatively within 15 ms) · P3 max_num_seqs 32 on both arms (from the recorded container env). Any failure -> that sweep's conclusions null.",
+    "program": "vol2/scripts/p53_concurrency_analyze.py (9 self-test cases)"
+  },
+  "predictions": {
+    "basis": "harness test 2026-09-22 (A1, profile C, levels 1 and 4, 20-60 s): TTFT p99 53 and 100 ms, ITL avg 13.2-14.4 ms, throughput 75 and 268 tok/s, 0 errors; AIPerf c=1 TTFT avg 44-49 ms across five short runs of the same container configuration. single-stream: A1 72.9, A2 305 tok/s; KV at the footprint default budget; max_num_seqs 32 caps in-batch concurrency on both arms; P17 (Llama 8B bf16 on this card) reached the Server SLO ceiling between 128 and 256 on the C profile and far lower on R",
+    "R1": "on profile C both arms stay inside the Server SLO up to concurrency 32 and fail it at 64 (queueing beyond max_num_seqs)",
+    "R2": "on profile R the Server-SLO maximum is below 32 for A1 (TTFT of 3,500-token prefills at high concurrency) and at least as high for A2 as for A1",
+    "R3": "the Interactive-SLO maximum is at most 8 on profile R for both arms",
+    "R4": "A2's output token throughput at its saturation level is at least 2.5x A1's on profile C",
+    "R5": "the fresh-container repeats agree with the main sweep's top levels within 25% on output throughput",
+    "confidence": "R1 medium, R2 low, R3 low, R4 medium, R5 low (D25 saw 2.5-12x differences on another model)",
+    "reading": "a failed R is reported as failed; pass is P1-P3 per sweep. No sentence of the form 'serves N users' is produced here."
+  },
+  "outputs": [
+    "levels.jsonl",
+    "events.jsonl",
+    "analysis.json",
+    "versions.txt",
+    "ctx.txt",
+    "<arm>_<profile>_<container>/c<N>/ AIPerf artifacts (profile_export_aiperf.json kept; per-request exports are under the ignore rules)"
+  ]
+}

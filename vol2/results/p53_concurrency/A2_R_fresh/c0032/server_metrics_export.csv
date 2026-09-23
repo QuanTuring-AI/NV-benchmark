@@ -1,0 +1,113 @@
+# AIPerf Server Metrics Export (CSV)
+# aiperf_version: 0.11.0
+# schema_version: 1.0
+# benchmark_id: fa45749c258e
+# Note: Same benchmark_id and version appear in JSON and Parquet exports
+#
+Endpoint,Type,Metric,Unit,avg,min,max,std,p1,p5,p10,p25,p50,p75,p90,p95,p99,engine,model_name,reason,sleep_state,Description
+localhost:8000,gauge,process_max_fds,,1048576.0000,1048576.0000,1048576.0000,0.0000,1048576.0000,1048576.0000,1048576.0000,1048576.0000,1048576.0000,1048576.0000,1048576.0000,1048576.0000,1048576.0000,,,,,Maximum number of open file descriptors.
+localhost:8000,gauge,process_open_fds,,79.4696,48.0000,83.0000,2.8197,77.0000,77.0000,77.0000,79.0000,80.0000,81.0000,82.0000,82.0000,82.2000,,,,,Number of open file descriptors.
+localhost:8000,gauge,process_resident_memory_bytes,bytes,1870974817.5912,1868996608.0000,1872437248.0000,1158349.1834,1868996608.0000,1868996608.0000,1868996608.0000,1870143488.0000,1871290368.0000,1871978496.0000,1872207872.0000,1872437248.0000,1872437248.0000,,,,,Resident memory size in bytes.
+localhost:8000,gauge,process_start_time_seconds,seconds,1790104038.3700,1790104038.3700,1790104038.3700,0.0000,1790104038.3700,1790104038.3700,1790104038.3700,1790104038.3700,1790104038.3700,1790104038.3700,1790104038.3700,1790104038.3700,1790104038.3700,,,,,Start time of the process since unix epoch in seconds.
+localhost:8000,gauge,process_virtual_memory_bytes,bytes,98727960576.0000,98727960576.0000,98727960576.0000,0.0000,98727960576.0000,98727960576.0000,98727960576.0000,98727960576.0000,98727960576.0000,98727960576.0000,98727960576.0000,98727960576.0000,98727960576.0000,,,,,Virtual memory size in bytes.
+localhost:8000,gauge,vllm:kv_cache_usage_perc,ratio,0.2105,0.0134,0.2313,0.0351,0.0374,0.1404,0.2086,0.2152,0.2193,0.2233,0.2259,0.2273,0.2299,0,nvidia/nemotron-3-nano,,,KV-cache usage. 1 means 100 percent usage.
+localhost:8000,gauge,vllm:num_requests_running,requests,30.3315,2.0000,32.0000,4.9329,5.6000,21.0000,30.0000,31.0000,32.0000,32.0000,32.0000,32.0000,32.0000,0,nvidia/nemotron-3-nano,,,Number of requests in model execution batches.
+localhost:8000,gauge,vllm:num_requests_waiting,requests,1.2707,0.0000,28.0000,4.7678,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,11.0000,24.4000,0,nvidia/nemotron-3-nano,,,Number of requests waiting to be processed.
+localhost:8000,gauge,vllm:engine_sleep_state,,1.0000,1.0000,1.0000,0.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,1.0000,0,nvidia/nemotron-3-nano,,awake,Engine sleep state; awake = 0 means engine is sleeping; awake = 1 means engine is awake; weights_offloaded = 1 means sleep level 1; discard_all = 1 means sleep level 2.
+localhost:8000,gauge,vllm:engine_sleep_state,,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0,nvidia/nemotron-3-nano,,discard_all,Engine sleep state; awake = 0 means engine is sleeping; awake = 1 means engine is awake; weights_offloaded = 1 means sleep level 1; discard_all = 1 means sleep level 2.
+localhost:8000,gauge,vllm:engine_sleep_state,,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0,nvidia/nemotron-3-nano,,weights_offloaded,Engine sleep state; awake = 0 means engine is sleeping; awake = 1 means engine is awake; weights_offloaded = 1 means sleep level 1; discard_all = 1 means sleep level 2.
+localhost:8000,gauge,vllm:num_requests_waiting_by_reason,requests,1.2707,0.0000,28.0000,4.7678,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,1.0000,11.0000,24.4000,0,nvidia/nemotron-3-nano,capacity,,"Number of waiting requests by reason. Reason labels: 'capacity' = waiting for scheduling capacity; 'deferred' = deferred by transient constraints (LoRA budget, KV transfer, blocked status). Sum of all reasons equals vllm:num_requests_waiting."
+localhost:8000,gauge,vllm:num_requests_waiting_by_reason,requests,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0,nvidia/nemotron-3-nano,deferred,,"Number of waiting requests by reason. Reason labels: 'capacity' = waiting for scheduling capacity; 'deferred' = deferred by transient constraints (LoRA budget, KV transfer, blocked status). Sum of all reasons equals vllm:num_requests_waiting."
+
+Endpoint,Type,Metric,Unit,total,rate,rate_avg,rate_min,rate_max,rate_std,engine,finished_reason,model_name,source,generation,handler,method,status,Description
+localhost:8000,counter,process_cpu_seconds,seconds,7.2300,0.1203,,,,,,,,,,,,,Total user and system CPU time spent in seconds.
+localhost:8000,counter,http_requests,requests,184.0000,3.0612,,,,,,,,,,/v1/chat/completions,POST,2xx,"Total number of requests by method, status and handler."
+localhost:8000,counter,http_requests,requests,0.0000,0.0000,,,,,,,,,,/v1/models,GET,2xx,"Total number of requests by method, status and handler."
+localhost:8000,counter,python_gc_collections,,14.0000,0.2329,,,,,,,,,0,,,,Number of times this generation was collected
+localhost:8000,counter,python_gc_collections,,1.0000,0.0166,,,,,,,,,1,,,,Number of times this generation was collected
+localhost:8000,counter,python_gc_collections,,0.0000,0.0000,,,,,,,,,2,,,,Number of times this generation was collected
+localhost:8000,counter,python_gc_objects_collected,,0.0000,0.0000,,,,,,,,,0,,,,Objects collected during gc
+localhost:8000,counter,python_gc_objects_collected,,0.0000,0.0000,,,,,,,,,1,,,,Objects collected during gc
+localhost:8000,counter,python_gc_objects_collected,,0.0000,0.0000,,,,,,,,,2,,,,Objects collected during gc
+localhost:8000,counter,python_gc_objects_uncollectable,,0.0000,0.0000,,,,,,,,,0,,,,Uncollectable objects found during GC
+localhost:8000,counter,python_gc_objects_uncollectable,,0.0000,0.0000,,,,,,,,,1,,,,Uncollectable objects found during GC
+localhost:8000,counter,python_gc_objects_uncollectable,,0.0000,0.0000,,,,,,,,,2,,,,Uncollectable objects found during GC
+localhost:8000,counter,vllm:estimated_flops_per_gpu,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,Estimated number of floating point operations per GPU (for Model Flops Utilization calculations).
+localhost:8000,counter,vllm:estimated_read_bytes_per_gpu,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,Estimated number of bytes read from memory per GPU (for Model Flops Utilization calculations).
+localhost:8000,counter,vllm:estimated_write_bytes_per_gpu,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,Estimated number of bytes written to memory per GPU (for Model Flops Utilization calculations).
+localhost:8000,counter,vllm:external_prefix_cache_hits,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,"External prefix cache hits from KV connector cross-instance cache sharing, in terms of number of cached tokens."
+localhost:8000,counter,vllm:external_prefix_cache_queries,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,"External prefix cache queries from KV connector cross-instance cache sharing, in terms of number of queried tokens."
+localhost:8000,counter,vllm:generation_tokens,tokens,80419.0000,1337.9461,,,,,0,,nvidia/nemotron-3-nano,,,,,,Number of generation tokens processed.
+localhost:8000,counter,vllm:mm_cache_hits,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,"Multi-modal cache hits, in terms of number of cached items."
+localhost:8000,counter,vllm:mm_cache_queries,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,"Multi-modal cache queries, in terms of number of queried items."
+localhost:8000,counter,vllm:num_preemptions,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,Cumulative number of preemption from the engine.
+localhost:8000,counter,vllm:prefix_cache_hits,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,"Prefix cache hits, in terms of number of cached tokens."
+localhost:8000,counter,vllm:prefix_cache_queries,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,"Prefix cache queries, in terms of number of queried tokens."
+localhost:8000,counter,vllm:prompt_tokens,tokens,653832.0000,10877.9264,,,,,0,,nvidia/nemotron-3-nano,,,,,,Number of prefill tokens processed.
+localhost:8000,counter,vllm:prompt_tokens_cached,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,,,,,,Number of cached prompt tokens (local + external).
+localhost:8000,counter,vllm:prompt_tokens_by_source,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,external_kv_transfer,,,,,Number of prompt tokens by source.
+localhost:8000,counter,vllm:prompt_tokens_by_source,,0.0000,0.0000,,,,,0,,nvidia/nemotron-3-nano,local_cache_hit,,,,,Number of prompt tokens by source.
+localhost:8000,counter,vllm:prompt_tokens_by_source,,653832.0000,10877.9264,,,,,0,,nvidia/nemotron-3-nano,local_compute,,,,,Number of prompt tokens by source.
+localhost:8000,counter,vllm:request_success,requests,0.0000,0.0000,,,,,0,abort,nvidia/nemotron-3-nano,,,,,,Count of successfully processed requests.
+localhost:8000,counter,vllm:request_success,requests,0.0000,0.0000,,,,,0,error,nvidia/nemotron-3-nano,,,,,,Count of successfully processed requests.
+localhost:8000,counter,vllm:request_success,requests,152.0000,2.5289,,,,,0,length,nvidia/nemotron-3-nano,,,,,,Count of successfully processed requests.
+localhost:8000,counter,vllm:request_success,requests,0.0000,0.0000,,,,,0,repetition,nvidia/nemotron-3-nano,,,,,,Count of successfully processed requests.
+localhost:8000,counter,vllm:request_success,requests,0.0000,0.0000,,,,,0,stop,nvidia/nemotron-3-nano,,,,,,Count of successfully processed requests.
+
+Endpoint,Type,Metric,Unit,count,count_rate,sum,sum_rate,avg,p1_estimate,p5_estimate,p10_estimate,p25_estimate,p50_estimate,p75_estimate,p90_estimate,p95_estimate,p99_estimate,engine,model_name,handler,method,Description,buckets
+localhost:8000,histogram,http_request_duration_highr_seconds,seconds,184,3.0612,1951.3846,32.4656,10.6054,0.5590,2.3376,4.7786,9.3882,10.8613,13.1442,15.0501,15.6854,16.1937,,,,,Latency with many buckets but no API specific labels. Made for more accurate percentile calculations.,0.01=0;0.025=0;0.05=1;0.075=1;0.1=1;0.25=1;0.5=2;0.75=3;1.0=5;1.5=5;2.0=8;2.5=10;3.0=11;3.5=14;4.0=14;4.5=17;5.0=19;7.5=24;10.0=54;30.0=184;60.0=184;+Inf=184
+localhost:8000,histogram,http_request_duration_seconds,seconds,184,3.0612,1951.3846,32.4656,10.6054,0.5352,1.4610,2.4775,5.5269,10.6093,15.6917,18.7412,19.7577,20.5708,,,/v1/chat/completions,POST,Latency with only few buckets by handler. Made to be only used if aggregation by handler is important.,0.1=1;0.5=2;1.0=5;+Inf=184
+localhost:8000,histogram,http_request_duration_seconds,seconds,0,,,,,,,,,,,,,,,,/v1/models,GET,Latency with only few buckets by handler. Made to be only used if aggregation by handler is important.,0.1=0;0.5=0;1.0=0;+Inf=0
+localhost:8000,histogram,vllm:e2e_request_latency_seconds,seconds,152,2.5289,1791.4477,29.8047,11.7858,7.6784,8.5467,9.3823,10.2709,11.6145,13.3480,14.4613,14.8957,16.4442,0,nvidia/nemotron-3-nano,,,Histogram of e2e request latency in seconds.,0.3=0;0.5=0;0.8=0;1.0=0;1.5=0;2.0=0;2.5=0;5.0=0;10.0=26;15.0=144;20.0=152;30.0=152;40.0=152;50.0=152;60.0=152;120.0=152;240.0=152;480.0=152;960.0=152;1920.0=152;7680.0=152;+Inf=152
+localhost:8000,histogram,vllm:inter_token_latency_seconds,seconds,80238,1334.9348,1785.2466,29.7015,0.0222,0.0007,0.0108,0.0109,0.0112,0.0118,0.0124,0.0843,0.0983,0.1260,0,nvidia/nemotron-3-nano,,,Histogram of inter-token latency in seconds.,0.01=3623;0.025=70059;0.05=70120;0.075=70120;0.1=76758;0.15=80207;0.2=80238;0.3=80238;0.4=80238;0.5=80238;0.75=80238;1.0=80238;2.5=80238;5.0=80238;7.5=80238;10.0=80238;20.0=80238;40.0=80238;80.0=80238;+Inf=80238
+localhost:8000,histogram,vllm:iteration_tokens_total,tokens,2587,43.0404,734251.0000,12215.8725,283.8233,3.7093,32.0000,32.0000,32.0000,32.0000,32.0000,32.0000,2927.4145,4096.0000,0,nvidia/nemotron-3-nano,,,Histogram of number of tokens per engine_step.,1.0=23;8.0=33;16.0=39;32.0=2406;64.0=2406;128.0=2406;256.0=2406;512.0=2406;1024.0=2406;2048.0=2406;4096.0=2571;8192.0=2587;16384.0=2587;+Inf=2587
+localhost:8000,histogram,vllm:request_decode_time_seconds,seconds,152,2.5289,1650.4033,27.4581,10.8579,5.8286,6.6346,7.6420,9.5437,10.8733,12.5634,13.9190,14.3709,14.7323,0,nvidia/nemotron-3-nano,,,Histogram of time spent in DECODE phase for request.,0.3=0;0.5=0;0.8=0;1.0=0;1.5=0;2.0=0;2.5=0;5.0=0;10.0=43;15.0=151;20.0=152;30.0=152;40.0=152;50.0=152;60.0=152;120.0=152;240.0=152;480.0=152;960.0=152;1920.0=152;7680.0=152;+Inf=152
+localhost:8000,histogram,vllm:request_generation_tokens,tokens,152,2.5289,75784.0000,1260.8327,498.5789,373.4733,386.9014,403.6865,452.8323,500.0000,541.0465,594.9973,612.9808,627.3677,0,nvidia/nemotron-3-nano,,,Number of generation tokens processed.,1.0=0;2.0=0;5.0=0;10.0=0;20.0=0;50.0=0;100.0=0;200.0=0;500.0=74;1000.0=152;2000.0=152;5000.0=152;+Inf=152
+localhost:8000,histogram,vllm:request_inference_time_seconds,seconds,152,2.5289,1691.1525,28.1360,11.1260,6.1711,7.0084,8.0551,9.7932,11.1263,12.8397,14.0996,14.5196,14.9124,0,nvidia/nemotron-3-nano,,,Histogram of time spent in RUNNING phase for request.,0.3=0;0.5=0;0.8=0;1.0=0;1.5=0;2.0=0;2.5=0;5.0=0;10.0=40;15.0=150;20.0=152;30.0=152;40.0=152;50.0=152;60.0=152;120.0=152;240.0=152;480.0=152;960.0=152;1920.0=152;7680.0=152;+Inf=152
+localhost:8000,histogram,vllm:request_max_num_generation_tokens,tokens,152,2.5289,75784.0000,1260.8327,498.5789,373.4733,386.9014,403.6865,452.8323,500.0000,541.0465,594.9973,612.9808,627.3677,0,nvidia/nemotron-3-nano,,,Histogram of maximum number of requested generation tokens.,1.0=0;2.0=0;5.0=0;10.0=0;20.0=0;50.0=0;100.0=0;200.0=0;500.0=74;1000.0=152;2000.0=152;5000.0=152;+Inf=152
+localhost:8000,histogram,vllm:request_params_max_tokens,tokens,152,2.5289,75784.0000,1260.8327,498.5789,373.4733,386.9014,403.6865,452.8323,500.0000,541.0465,594.9973,612.9808,627.3677,0,nvidia/nemotron-3-nano,,,Histogram of the max_tokens request parameter.,1.0=0;2.0=0;5.0=0;10.0=0;20.0=0;50.0=0;100.0=0;200.0=0;500.0=74;1000.0=152;2000.0=152;5000.0=152;+Inf=152
+localhost:8000,histogram,vllm:request_params_n,,152,2.5289,152.0000,2.5289,1.0000,0.4132,0.4530,0.5026,0.6516,0.9000,1.0000,1.0000,1.0000,1.0000,0,nvidia/nemotron-3-nano,,,Histogram of the n request parameter.,1.0=152;2.0=152;5.0=152;10.0=152;20.0=152;+Inf=152
+localhost:8000,histogram,vllm:request_prefill_kv_computed_tokens,tokens,152,2.5289,548813.0000,9130.7055,3610.6118,2768.8444,2837.5601,2923.4548,3181.1387,3610.6118,4040.0850,4297.7689,4383.6636,4452.3793,0,nvidia/nemotron-3-nano,,,Histogram of new KV tokens computed during prefill (excluding cached tokens).,1.0=0;2.0=0;5.0=0;10.0=0;20.0=0;50.0=0;100.0=0;200.0=0;500.0=0;1000.0=0;2000.0=0;5000.0=152;+Inf=152
+localhost:8000,histogram,vllm:request_prefill_time_seconds,seconds,152,2.5289,40.7491,0.6780,0.2681,0.1184,0.1318,0.1484,0.1985,0.2621,0.3237,0.4040,0.4455,0.4788,0,nvidia/nemotron-3-nano,,,Histogram of time spent in PREFILL phase for request.,0.3=102;0.5=152;0.8=152;1.0=152;1.5=152;2.0=152;2.5=152;5.0=152;10.0=152;15.0=152;20.0=152;30.0=152;40.0=152;50.0=152;60.0=152;120.0=152;240.0=152;480.0=152;960.0=152;1920.0=152;7680.0=152;+Inf=152
+localhost:8000,histogram,vllm:request_prompt_tokens,tokens,152,2.5289,548813.0000,9130.7055,3610.6118,2768.8444,2837.5601,2923.4548,3181.1387,3610.6118,4040.0850,4297.7689,4383.6636,4452.3793,0,nvidia/nemotron-3-nano,,,Number of prefill tokens processed.,1.0=0;2.0=0;5.0=0;10.0=0;20.0=0;50.0=0;100.0=0;200.0=0;500.0=0;1000.0=0;2000.0=0;5000.0=152;+Inf=152
+localhost:8000,histogram,vllm:request_queue_time_seconds,seconds,152,2.5289,91.4851,1.5221,0.6019,0.0000,0.0005,0.0020,0.0066,0.0375,0.0999,2.4861,3.6540,6.0457,0,nvidia/nemotron-3-nano,,,Histogram of time spent in WAITING phase for request.,0.3=120;0.5=122;0.8=124;1.0=126;1.5=129;2.0=132;2.5=136;5.0=150;10.0=152;15.0=152;20.0=152;30.0=152;40.0=152;50.0=152;60.0=152;120.0=152;240.0=152;480.0=152;960.0=152;1920.0=152;7680.0=152;+Inf=152
+localhost:8000,histogram,vllm:request_time_per_output_token_seconds,seconds,152,2.5289,3.3056,0.0550,0.0217,0.0164,0.0169,0.0175,0.0194,0.0224,0.0241,0.0250,0.0250,0.0263,0,nvidia/nemotron-3-nano,,,Histogram of time_per_output_token_seconds per request.,0.01=0;0.025=147;0.05=152;0.075=152;0.1=152;0.15=152;0.2=152;0.3=152;0.4=152;0.5=152;0.75=152;1.0=152;2.5=152;5.0=152;7.5=152;10.0=152;20.0=152;40.0=152;80.0=152;+Inf=152
+localhost:8000,histogram,vllm:time_to_first_token_seconds,seconds,181,3.0113,131.6203,2.1898,0.7272,0.1776,0.1854,0.1951,0.2237,0.3003,0.4569,2.3985,3.7102,4.6631,0,nvidia/nemotron-3-nano,,,Histogram of time to first token in seconds.,0.001=0;0.005=0;0.01=0;0.02=0;0.04=0;0.06=0;0.08=0;0.1=0;0.25=69;0.5=140;0.75=152;1.0=154;2.5=163;5.0=181;7.5=181;10.0=181;20.0=181;40.0=181;80.0=181;160.0=181;640.0=181;2560.0=181;+Inf=181
+
+Endpoint,Metric,Key,Value,Description
+localhost:8000,python_info,implementation,CPython,Python platform information
+localhost:8000,python_info,major,3,Python platform information
+localhost:8000,python_info,minor,12,Python platform information
+localhost:8000,python_info,patchlevel,3,Python platform information
+localhost:8000,python_info,version,3.12.3,Python platform information
+localhost:8000,vllm:cache_config_info,_block_size_resolved,True,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,block_size,4176,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,cache_dtype,fp8_e4m3,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,calculate_kv_scales,False,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,enable_prefix_caching,False,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,engine,0,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,gpu_memory_utilization,0.92,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,is_attention_free,False,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,kv_cache_dtype_skip_layers,[],Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,kv_cache_max_concurrency,124.83333333333333,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,kv_cache_memory_bytes,None,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,kv_cache_size_tokens,1022634,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,kv_offloading_backend,native,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,kv_offloading_size,None,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,kv_sharing_fast_prefill,False,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,mamba_block_size,8192,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,mamba_cache_dtype,auto,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,mamba_cache_mode,none,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,mamba_page_size_padded,None,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,mamba_ssm_cache_dtype,float32,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,num_cpu_blocks,None,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,num_gpu_blocks,749,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,num_gpu_blocks_override,None,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,prefix_caching_hash_algo,sha256,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,prefix_match_unit,None,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,replayssm_buffer_len,16,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,skip_page_size_padded,None,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,sliding_window,None,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,use_replayssm,False,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,user_specified_block_size,False,Information of the LLMEngine CacheConfig
+localhost:8000,vllm:cache_config_info,user_specified_mamba_block_size,False,Information of the LLMEngine CacheConfig

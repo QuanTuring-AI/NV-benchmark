@@ -1,0 +1,31 @@
+{
+  "experiment": "Vol.2 · footprint addendum 2 · Nemotron 3 Nano (NVFP4) minimum budget with vLLM max_num_seqs 32 via NIM_PASSTHROUGH_ARGS",
+  "written_at": "2026-09-21T22:21:46+0800",
+  "written_before": "the run; the main footprint run and addendum 1 are complete and are not re-run",
+  "runs": "one run",
+  "why": "addendum 1 set NIM_MAX_BATCH_SIZE=32 and the engine still resolved max_num_seqs to 256 (its refusal named the same limit). In NIM 2.0.12 max_num_seqs is a per-profile engine argument; NIM_PASSTHROUGH_ARGS is the image's path for user engine arguments. If the value reaches the engine, the Mamba state cache shrinks from 256 to 32 sequences and the floor moves; if it does not, the sweep reproduces addendum 1 and that is the finding.",
+  "stack": "as the main run's A2, plus NIM_PASSTHROUGH_ARGS=\"--max-num-seqs 32\"",
+  "harness_sha256": {
+    "vol2/scripts/p50_footprint_addendum2.py": "58c208e115c9f5176e28ebaea013758d635e726012912fedade581e3e4acb39d",
+    "vol2/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+    "vol2/scripts/p50_footprint_analyze.py": "f02e87e4773c91efd60952e2a128a17d229a930054d984b07454a4576a0eed7c",
+    "vol2/scripts/run_p50_footprint_addendum2.sh": "99e4a67b45f86f3b3a241d660c5040e04a25bb4e4b70772e94c112d45c8cae4d"
+  },
+  "fixed_inputs_sha256": {
+    "benchmark/questions.json": "262f2339d55ec6b855f7b0180704bd225fdbc561ea37f902b99e1ab405add1f9"
+  },
+  "design": "identical sweep and probe to the main run; rows carry arm label A2S32 and are analysed under the A2 label; the startup log's engine-argument line is recorded so that the resolved max_num_seqs is visible",
+  "predictions": {
+    "basis": "main run: A2 floor 0.75 (Mamba blocks 213 at 0.725, 146 at 0.70, 256 needed); addendum 1: identical, the setting did not reach the engine; A1 with 32 sequences reached 0.70",
+    "R1": "the engine resolves max_num_seqs to 32 (visible in the startup log)",
+    "R2": "given R1, the smallest passing budget is at most 0.70 (22,825 MiB)",
+    "R3": "given R1, the first refusal below the floor is a KV-block refusal, not a Mamba-block refusal",
+    "confidence": "R1 low (the mechanism is read from the image's code, not documented), R2 medium given R1, R3 low",
+    "reading": "a failed R is reported as failed; pass is the main analyzer's P1-P3"
+  },
+  "outputs": [
+    "configs.jsonl",
+    "analysis.json",
+    "logs/ (not published)"
+  ]
+}
