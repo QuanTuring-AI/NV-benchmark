@@ -30,7 +30,12 @@ vol2/
 │   ├── p53_longctx.py · p53_longctx_analyze.py · p53_longctx_gen_prediction.py · run_p53_longctx.sh             # prompt-depth sweep, one container per depth
 │   ├── p53_longctx_addendum.py · p53_longctx_addendum_analyze.py · p53_longctx_addendum_gen_prediction.py · run_p53_longctx_addendum.sh   # the same on A2 (and A1 at 16k) with a 90 s warm-up phase
 │   ├── p53_guardrails.py · p53_guardrails_analyze.py · p53_guardrails_gen_prediction.py · run_p53_guardrails.sh   # NeMo Guardrails 0.23.0 on both arms (drives the Vol.1-B bridge harness)
-│   └── p53_guardrails_analyze_digest.py   # corrected guardrails analysis (block labels from response digests; written after the run, see its README)
+│   ├── p53_guardrails_analyze_digest.py   # corrected guardrails analysis (block labels from response digests; written after the run, see its README)
+│   ├── p55_concurrency_a2.py · p55_concurrency_a2_analyze.py · p55_concurrency_a2_gen_prediction.py · run_p55_concurrency_a2.sh   # A2 concurrency at max_num_seqs 64 / 128 / 256 (imports the second concurrency run's harness)
+│   ├── p55_capture_control.py · p55_capture_control_analyze.py · p55_capture_control_gen_prediction.py · run_p55_capture_control.sh   # A2 at cap 256 with only the CUDA-graph capture size lowered
+│   ├── p55_judge_thinking.py · p55_judge_thinking_analyze.py · p55_judge_thinking_gen_prediction.py · run_p55_judge_thinking.sh   # Nemotron 3 Nano judge with enable_thinking false: direct, then through Guardrails
+│   ├── p55_depth.py · p55_depth_analyze.py · p55_depth_gen_prediction.py · run_p55_depth.sh   # A1 CUDA-graph control and ~120k-token depth on both arms
+│   └── p55_a2_slow_phase.py   # A2's slow first phase after READY, from records on disk (no GPU)
 └── results/
     ├── e7/                 # E7 arm results + pre-registrations (+ c/ for C)
     ├── e8/                 # E8 reranker result
@@ -45,6 +50,12 @@ vol2/
     ├── p53_longctx/        # TTFT, generation rate and memory at READY at ~1k / 4k / 16k / 64k prompt tokens
     ├── p53_longctx_addendum/  # A2 re-measured at all depths after a warm-up phase (its first minute after READY is not steady state); A1 at 16k again
     ├── p53_guardrails/     # end-to-end overhead and rail cost of NeMo Guardrails 0.23.0 on both arms, E3 question set
+    ├── p55_concurrency_a2_256/ · _128/ · _064/   # A2 concurrency with the sequence cap raised: SLO ceilings, which pool binds, fresh-container repeats
+    ├── p55_capture_control/   # A2: the CUDA-graph capture size, not the cap, sets the rate at a fixed concurrency
+    ├── p55_judge_thinking/ # Nemotron 3 Nano as the self-check judge with reasoning switched off (two layers: direct, through Guardrails)
+    ├── p55_a1_capture/     # A1's rate step past 8k tokens: CUDA graphs off at ~4k and ~14k (attribution measured)
+    ├── p55_longctx_120k/   # both arms at ~120k prompt tokens
+    ├── p55_a2_slow_phase/  # A2's slow first phase after READY: what the records can and cannot say (no GPU)
     └── logs/               # pre-launch GPU context lines + NIM startup logs
 ```
 
@@ -77,6 +88,12 @@ Per-request raw rows (`*.rows.jsonl`) are not included.
 | **Long context** | Prompt depth ~1k / 4k / 16k / 64k tokens per arm, each depth in a container sized for it; TTFT, generation rate, memory at READY | `results/p53_longctx/README.md` · `requests.jsonl` · `events.jsonl` · `analysis.json` | `results/p53_longctx/prediction_p53_longctx.json` (+ `.sha256`) |
 | **Long context, addendum** | A2 at the four depths and A1 at 16k with discarded warm-up requests (≥ 90 s, ≥ 6) before the five measured ones; warm-up rows kept and marked | `results/p53_longctx_addendum/README.md` · `requests.jsonl` · `events.jsonl` · `analysis.json` | `results/p53_longctx_addendum/prediction_p53_longctx_addendum.json` (+ `.sha256`) |
 | **Guardrails** | NeMo Guardrails 0.23.0 on each arm: nim-only vs Vol.1's rail config vs the same config with a `/no_think` judge message, E3 question set, 3 rounds; end-to-end overhead and rail cost kept apart | `results/p53_guardrails/README.md` · `rows_public.jsonl` (no model text; judge replies as digests) · `events.jsonl` · `analysis.json` (frozen analyser; its block counts are wrong, see README) · `analysis_digest.json` (corrected) · `gr_config_*/` | `results/p53_guardrails/prediction_p53_guardrails.json` (+ `.sha256`) |
+| **Concurrency, cap raised** (P55) | A2 alone at `max_num_seqs` 64, 128 and 256 (the image default), same harness, profiles, SLOs and rules as the second run; levels to twice the cap; per-level vLLM gauges read to name the pool that binds | `results/p55_concurrency_a2_{256,128,064}/README.md` · `levels.jsonl` · `events.jsonl` · `analysis.json` · per-level AIPerf summaries and gauges | `results/p55_concurrency_a2_{256,128,064}/prediction_*.json` (+ `.sha256`) |
+| **CUDA-graph capture control** (P55, added) | A2 at cap 256, default capture size vs capture size 64, one session, profile C at c=1 / 16 / 32 | `results/p55_capture_control/README.md` · `levels.jsonl` · `events.jsonl` · `analysis.json` | `results/p55_capture_control/prediction_p55_capture_control.json` (+ `.sha256`) |
+| **Judge with reasoning off** (P55) | Nemotron 3 Nano judging Vol.1's self-check prompts with `chat_template_kwargs.enable_thinking = false`: straight to the NIM, then through Guardrails 0.23.0 (task-typed judge models) | `results/p55_judge_thinking/README.md` · `l1_calls.jsonl` · `rows_public.jsonl` (no model text) · `events.jsonl` · `analysis.json` · `gr_config_a2_j/` | `results/p55_judge_thinking/prediction_p55_judge_thinking.json` (+ `.sha256`) |
+| **A1 CUDA-graph control** (P55) | A1 at ~4k and ~14k tokens with CUDA graphs switched off (`NIM_DISABLE_CUDA_GRAPH`), and the capture-limit setting the image does not deliver | `results/p55_a1_capture/README.md` · `requests.jsonl` · `events.jsonl` · `analysis.json` | `results/p55_a1_capture/prediction_p55_a1_capture.json` (+ `.sha256`) |
+| **Long context, ~120k** (P55) | Both arms at ~120k prompt tokens (`NIM_MAX_MODEL_LEN` 131072) | `results/p55_longctx_120k/README.md` · `requests.jsonl` · `events.jsonl` · `analysis.json` · `analysis_ref_order_addendum_first.json` | `results/p55_longctx_120k/prediction_p55_longctx_120k.json` (+ `.sha256`) |
+| **A2 slow first phase** (P55, no GPU) | Request records and saved container logs of earlier runs read for a mechanism and a warm-up count | `results/p55_a2_slow_phase/README.md` · `slow_phase.json` | — (analysis of existing records) |
 
 **The speed table is not a single-variable comparison either.** A1 and A2 differ in architecture (dense / MoE), precision (bf16 / NVFP4 — the only precision each image can run on this card) and NIM version (1.12.2 / 2.0.12 — no common version exists, see `results/p50_availability/`). It compares two deployment options, each in its own best configuration on this card.
 

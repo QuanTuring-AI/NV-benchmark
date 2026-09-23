@@ -1,0 +1,60 @@
+{
+  "experiment": "Vol.2 · A1 (Nemotron Nano 9B v2, NIM 1.12.2): is its 38% generation-rate step past 8k prompt tokens the loss of CUDA graphs? Reverse test with one variable (NIM_DISABLE_CUDA_GRAPH) at ~3.8k and ~14k tokens, plus the forward attempt (raise the capture limit) recorded as not delivered",
+  "written_at": "2026-09-23T16:27:30+0800",
+  "written_before": "the measured run. run_p55_depth.sh (EXP=a1_capture) refuses to start if this file or its .sha256 is missing or changed, or if requests.jsonl exists.",
+  "runs": "one run, five conditions in order: a1_4k_default, a1_4k_eager, a1_16k_default, a1_16k_eager, a1_16k_capture",
+  "why": "p53_longctx and its addendum measured A1 at 71.7 / 71.6 tok/s at 1k / 4k and 44.7 / 45.8 at 16k and 44.4 at 57k: a step, then flat. Every A1 engine config dump reads \"max_seq_len_to_capture\": 8192, and the README attributed the step to decode running without CUDA graphs past that length. That attribution was an inference; P55 asks for a measurement.",
+  "what_the_image_allows": "the forward test (raise the capture limit to 32768) cannot reach this engine: NIM 1.12.2 builds the engine arguments itself (--async-engine-args JSON, entrypoints/launch.py) and reads a fixed set of NIM_* variables; NIM_PASSTHROUGH_ARGS is not among them, and a harness test with it set showed the config dump still at 8192. The only CUDA-graph variable the image reads is NIM_DISABLE_CUDA_GRAPH, mapped to enforce_eager (nim_llm_sdk/entrypoints/args.py:53). Hence the reverse test: remove graphs where the default uses them (~3.8k tokens) and where it does not (~14k).",
+  "conditions": {
+    "a1_4k_default": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_MAX_NUM_SEQS": "32"
+    },
+    "a1_4k_eager": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_MAX_NUM_SEQS": "32",
+      "NIM_DISABLE_CUDA_GRAPH": "1"
+    },
+    "a1_16k_default": {
+      "NIM_MAX_MODEL_LEN": "32768",
+      "NIM_MAX_NUM_SEQS": "32"
+    },
+    "a1_16k_eager": {
+      "NIM_MAX_MODEL_LEN": "32768",
+      "NIM_MAX_NUM_SEQS": "32",
+      "NIM_DISABLE_CUDA_GRAPH": "1"
+    },
+    "a1_16k_capture": {
+      "NIM_MAX_MODEL_LEN": "32768",
+      "NIM_MAX_NUM_SEQS": "32",
+      "NIM_PASSTHROUGH_ARGS": "--max-seq-len-to-capture 32768"
+    }
+  },
+  "attribution_rule": "reverse (the attribution of record): r4 = 4k eager/default, r16 = 16k eager/default generation-rate medians; r4 <= 0.75 and 0.90 <= r16 <= 1.10 -> 'measured: turning CUDA graphs off reproduces the step at 4k and changes nothing at 16k'; r4 >= 0.90 -> 'withdrawn: CUDA graphs do not explain the step'; otherwise 'partial'; any 2x2 condition failing its preconditions (including its engine config not showing the intended enforce_eager) -> 'unverified'. Forward: capture/default at 16k >= 1.40 'measured', <= 1.10 'withdrawn', else 'partial'; the capture setting absent from the engine config -> 'unverified' (expected)",
+  "note": "the eager and capture conditions are not A1's default configuration; they are control arms and do not replace A1's numbers",
+  "predictions": {
+    "basis": "harness tests on 2026-09-23 (2 measured requests each): a1_16k_default 52.5 tok/s, a1_16k_capture 46.4 with its config dump at 8192; a1_4k_eager tested for the eager read-back only. above; at 72 tok/s a decode step takes ~14 ms and at 45 tok/s ~22 ms, a constant per-step difference across 16k-57k, which is the signature of losing graph replay rather than of a state growing with context",
+    "R1": "a1_4k_default reproduces 68-76 tok/s and a1_16k_default 42-50 tok/s",
+    "R2": "the reverse verdict is 'measured' (4k eager lands near the 16k rate; 16k eager equals 16k default)",
+    "R3": "the forward attempt is 'unverified': the capture condition's engine config shows 8192",
+    "R4": "memory at READY is lower with graphs off by less than 1 GB (graph pools)",
+    "confidence": "R1 high, R2 medium, R3 high, R4 low",
+    "reading": "a failed R is reported as failed"
+  },
+  "harness_sha256": {
+    "vol2/scripts/p55_depth.py": "446062f812c2b119702bddaa5bd28139f850d780b64979dcd6e8419a25875720",
+    "vol2/scripts/p55_depth_analyze.py": "973502ba6480067b7036e67164c5c6bf0495cb258a8c53bfbb23d3e76a9d15fe",
+    "vol2/scripts/run_p55_depth.sh": "dec775cad5020d08f3f898f3565240716a9982773d7ab2ea582feee4f6ac3067",
+    "vol2/scripts/p53_longctx.py": "52f6089d66f61593db27332e77b138c4a8b24ad1d0ba9cbe97b19112945bfc65",
+    "vol2/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+    "vol1b/scripts/prediction_guard.py": "05b735290b1e935b32e3ec5805f43f38f2101a47c8c5f9b1efdad6db852a9f83"
+  },
+  "fixed_inputs_sha256": {
+    "benchmark/questions.json": "262f2339d55ec6b855f7b0180704bd225fdbc561ea37f902b99e1ab405add1f9"
+  },
+  "design_common": "one container per condition; warm-up at the measured depth: discarded requests until >= 60 s and >= 6 requests and, on A2, the last three generation rates within 5% and >= 180-220 tok/s (cap 25 requests / 600 s); A1 has shown no slow phase in any container and gets the minimum only; then five measured requests (offsets 0/13/26/39/52), max_tokens 256, temperature 0, top_p 0.9, 2 s apart; request, prompt builder and client exactly p53_longctx's (TTFT client-side through requests); memory and KV tokens at READY; the container's full log saved before removal",
+  "analysis_rules": {
+    "preconditions": "per condition, on the measured rows: P1 all HTTP 200 with usage · P2 prompt_tokens median within 25% of the target · P3 one container up at every request and, where a capture length or an eager setting is intended, the engine's own config dump in the startup log shows it. A condition that does not start is recorded with the engine's refusal as that arm's ceiling at that model length.",
+    "program": "vol2/scripts/p55_depth_analyze.py (12 self-test cases; five mutations of the attribution and precondition rules each fail one case); run on the harness tests' real rows before this file was written"
+  }
+}

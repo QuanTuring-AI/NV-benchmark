@@ -52,7 +52,7 @@ Six A2 completions hit the 4,096 cap, so A2's token count and total time are **l
 
 The speed run's 4.14× is a per-token rate. Per *answer*, A2 is about 2.9× faster on this sample (p50 7.3 s against 20.1 s), because it writes more tokens before it stops — 1.44× as many on average — and because six of its answers did not stop at all within 4,096 tokens. The external observation quoted in the pre-registration (that Nemotron 3 Nano's speed advantage is partly spent on longer reasoning) has the same shape here, on a different comparison model. Both numbers belong on the same table; neither replaces the other.
 
-What could not be measured: the split between reasoning and answer. Both images stream the whole generation as `content`, with no field and no marker separating the two, so "time to the first answer token" has no defined value on either arm. This run does not install a parser or change the image to obtain one (the work order's branch for that case); it reports the totals and says so. A reader who needs the split needs a request shape or an image that exposes it.
+What could not be measured: the split between reasoning and answer. Both images stream the whole generation as `content`, with no field and no marker separating the two, so "time to the first answer token" has no defined value on either arm. This run does not install a parser or change the image to obtain one; it reports the totals and says so. A reader who needs the split needs a request shape or an image that exposes it.
 
 TTFT here is client-side (the `requests` library, `iter_lines`), which on this host reads 10–20 ms above AIPerf's first-chunk time for the same server (`../p53_concurrency/README.md`, calibration); the figures are comparable with the speed run's, which used the same client, and not with the concurrency run's.
 
@@ -64,4 +64,4 @@ As `../p50_speed/README.md` (same images, profiles and settings) except `NIM_MAX
 
 ## Files
 
-`prediction_p53_answer.json` + `.sha256` · `requests.jsonl` (100 rows; response digests and lengths, no text) · `events.jsonl` (block starts with image, profile, env, GPU and cache records) · `analysis.json` · `ctx.txt` · `console.txt`. Harness `../../scripts/p53_answer.py` (imports the speed and footprint harnesses), analysis `../../scripts/p53_answer_analyze.py`, runner `../../scripts/run_p53_answer.sh`; their SHA-256 are in the pre-registration. `harness_test/` and `logs/` are not published.
+`prediction_p53_answer.json` + `.sha256` · `requests.jsonl` (100 rows; response digests and lengths, no text) · `events.jsonl` (block starts with image, profile, env, GPU and cache records) · `analysis.json` · `ctx.txt`. Harness `../../scripts/p53_answer.py` (imports the speed and footprint harnesses), analysis `../../scripts/p53_answer_analyze.py`, runner `../../scripts/run_p53_answer.sh`; their SHA-256 are in the pre-registration. `harness_test/`, `logs/` and the console output (`console.txt`) are not published.
