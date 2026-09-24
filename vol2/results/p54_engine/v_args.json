@@ -1,0 +1,144 @@
+{
+ "at": "2026-09-24T00:34:29+0800",
+ "n_env": {
+  "NIM_MODEL_PROFILE": "092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+  "NIM_MAX_MODEL_LEN": "8192",
+  "VLLM_USE_V2_MODEL_RUNNER": "0"
+ },
+ "n_dryrun_rc": 0,
+ "n_selected_profile": "092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+ "n_backend_args": [
+  "/opt/nim/.cache/tmp/nim_s1oy4kva",
+  "--middleware",
+  "nim_llm.features.middleware.NIMRedirectMiddleware",
+  "--middleware",
+  "nim_llm.features.request_id_middleware.RequestIdMiddleware",
+  "--tensor-parallel-size",
+  "1",
+  "--pipeline-parallel-size",
+  "1",
+  "--gpu-memory-utilization",
+  "0.92",
+  "--port",
+  "8001",
+  "--max-model-len",
+  "8192",
+  "--served-model-name",
+  "meta/llama-3.1-8b-instruct",
+  "--host",
+  "127.0.0.1"
+ ],
+ "v_args": [
+  "--tensor-parallel-size",
+  "1",
+  "--pipeline-parallel-size",
+  "1",
+  "--gpu-memory-utilization",
+  "0.92",
+  "--max-model-len",
+  "8192",
+  "--served-model-name",
+  "meta/llama-3.1-8b-instruct"
+ ],
+ "v_edits": [
+  {
+   "model_path": [
+    "/opt/nim/.cache/tmp/nim_s1oy4kva",
+    "/opt/nim/.cache/ngc/hub/models--nim--meta--llama-3.1-8b-instruct/snapshots/8c22764a7e3675c50d4c7c9a4edb474456022b16"
+   ]
+  },
+  {
+   "nim_middleware_dropped": "nim_llm.features.middleware.NIMRedirectMiddleware"
+  },
+  {
+   "nim_middleware_dropped": "nim_llm.features.request_id_middleware.RequestIdMiddleware"
+  },
+  {
+   "port_dropped": "8001"
+  },
+  {
+   "host_dropped": "127.0.0.1"
+  }
+ ],
+ "v_env": {
+  "VLLM_USE_V2_MODEL_RUNNER": "0"
+ },
+ "v_privacy_env": {
+  "VLLM_NO_USAGE_STATS": "1",
+  "DO_NOT_TRACK": "1"
+ },
+ "v_parity_env": {
+  "TORCHINDUCTOR_CACHE_DIR": "/root/.cache/torchinductor"
+ },
+ "n_resolved_config": {
+  "event": "nim_config_resolved",
+  "config": {
+   "data_parallel_size": {
+    "value": 1,
+    "source": "DEFAULT"
+   },
+   "enable_lora": {
+    "value": false,
+    "source": "PROFILE"
+   },
+   "expert_parallel_size": {
+    "value": 1,
+    "source": "DEFAULT"
+   },
+   "gpu_memory_utilization": {
+    "value": 0.92,
+    "source": "DEFAULT"
+   },
+   "max_model_len": {
+    "value": 8192,
+    "source": "ENV"
+   },
+   "model_tag": {
+    "value": "meta/llama-3.1-8b-instruct",
+    "source": "PROFILE"
+   },
+   "pipeline_parallel_size": {
+    "value": 1,
+    "source": "PROFILE",
+    "previous": {
+     "value": 1,
+     "source": "DEFAULT"
+    }
+   },
+   "port": {
+    "value": 8001,
+    "source": "ENV"
+   },
+   "served_model_name": {
+    "value": "meta/llama-3.1-8b-instruct",
+    "source": "ENV"
+   },
+   "tensor_parallel_size": {
+    "value": 1,
+    "source": "PROFILE",
+    "previous": {
+     "value": 1,
+     "source": "DEFAULT"
+    }
+   }
+  }
+ },
+ "ladder_result": {
+  "N": {
+   "step": 2,
+   "flags": [
+    "NIM_MODEL_PROFILE=092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+    "NIM_MAX_MODEL_LEN=8192",
+    "VLLM_USE_V2_MODEL_RUNNER=0"
+   ]
+  },
+  "V": {
+   "step": 2,
+   "flags": [
+    "VLLM_USE_V2_MODEL_RUNNER=0",
+    "--max-model-len",
+    "8192"
+   ]
+  }
+ }
+}

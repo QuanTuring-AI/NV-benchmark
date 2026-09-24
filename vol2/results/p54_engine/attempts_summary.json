@@ -1,0 +1,132 @@
+{
+ "arms": {
+  "N": {
+   "attempts_total": 3,
+   "attempts_to_first_ready": 3,
+   "reached_ready": true,
+   "settings_at_first_ready": [
+    "NIM_MODEL_PROFILE=092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+    "NIM_MAX_MODEL_LEN=8192",
+    "VLLM_USE_V2_MODEL_RUNNER=0"
+   ],
+   "settings_count_at_first_ready": 3,
+   "failed_attempts": [
+    {
+     "step": 0,
+     "settings": [
+      "NIM_MODEL_PROFILE=092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90"
+     ],
+     "result": "failed",
+     "reason": "container exited",
+     "first_error_line": "(EngineCore pid=211) RuntimeError: UVA is not available"
+    },
+    {
+     "step": 1,
+     "settings": [
+      "NIM_MODEL_PROFILE=092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+      "NIM_MAX_MODEL_LEN=8192"
+     ],
+     "result": "failed",
+     "reason": "container exited",
+     "first_error_line": "(EngineCore pid=211) RuntimeError: UVA is not available"
+    }
+   ],
+   "seconds_per_attempt": [
+    88.5,
+    88.7,
+    284.4
+   ]
+  },
+  "V": {
+   "attempts_total": 3,
+   "attempts_to_first_ready": 3,
+   "reached_ready": true,
+   "settings_at_first_ready": [
+    "VLLM_USE_V2_MODEL_RUNNER=0",
+    "--max-model-len",
+    "8192"
+   ],
+   "settings_count_at_first_ready": 2,
+   "failed_attempts": [
+    {
+     "step": 0,
+     "settings": [],
+     "result": "failed",
+     "reason": "container exited",
+     "first_error_line": "(EngineCore pid=72) RuntimeError: UVA is not available"
+    },
+    {
+     "step": 1,
+     "settings": [
+      "--max-model-len",
+      "8192"
+     ],
+     "result": "failed",
+     "reason": "container exited",
+     "first_error_line": "(EngineCore pid=72) RuntimeError: UVA is not available"
+    }
+   ],
+   "seconds_per_attempt": [
+    28.8,
+    28.6,
+    186.7
+   ]
+  }
+ },
+ "n_profile_pin_needed": true,
+ "n_auto_selected_profile": "c4789f7af56c770c1c88b73da666886365534d6980b6b922b41fd97036c77d73",
+ "measured_configuration": {
+  "N": {
+   "settings": [
+    "NIM_MODEL_PROFILE=092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+    "NIM_MAX_MODEL_LEN=8192",
+    "VLLM_USE_V2_MODEL_RUNNER=0"
+   ],
+   "count": 3
+  },
+  "V": {
+   "settings": [
+    "VLLM_USE_V2_MODEL_RUNNER=0",
+    "--tensor-parallel-size",
+    "1",
+    "--pipeline-parallel-size",
+    "1",
+    "--gpu-memory-utilization",
+    "0.92",
+    "--max-model-len",
+    "8192",
+    "--served-model-name",
+    "meta/llama-3.1-8b-instruct"
+   ],
+   "count": 6,
+   "not_counted_usage_statistics_off": {
+    "VLLM_NO_USAGE_STATS": "1",
+    "DO_NOT_TRACK": "1"
+   },
+   "not_counted_cache_parity": {
+    "TORCHINDUCTOR_CACHE_DIR": "/root/.cache/torchinductor"
+   }
+  },
+  "V_derivation": "NIM's own vLLM argument list (nim-serve --dry-run of N's measured configuration), model path and port edited only",
+  "V_edits": [
+   {
+    "model_path": [
+     "/opt/nim/.cache/tmp/nim_s1oy4kva",
+     "/opt/nim/.cache/ngc/hub/models--nim--meta--llama-3.1-8b-instruct/snapshots/8c22764a7e3675c50d4c7c9a4edb474456022b16"
+    ]
+   },
+   {
+    "nim_middleware_dropped": "nim_llm.features.middleware.NIMRedirectMiddleware"
+   },
+   {
+    "nim_middleware_dropped": "nim_llm.features.request_id_middleware.RequestIdMiddleware"
+   },
+   {
+    "port_dropped": "8001"
+   },
+   {
+    "host_dropped": "127.0.0.1"
+   }
+  ]
+ }
+}
