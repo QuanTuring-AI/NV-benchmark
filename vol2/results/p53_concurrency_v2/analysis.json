@@ -1,0 +1,1207 @@
+{
+ "sweeps": {
+  "A1|C|fresh": {
+   "arm": "A1",
+   "profile": "C",
+   "container": "fresh",
+   "preconditions": {
+    "P1_levels_clean_below_ceiling": {
+     "bad_levels": [],
+     "levels_after_crash": [],
+     "live_levels": [],
+     "engine_crash_at": 32,
+     "pass": false
+    },
+    "P2_instrument_calibrated": {
+     "pass": true,
+     "detail": {
+      "aiperf_c1_ttft_p50_ms": 49.407199999999996,
+      "own_ttft_p50_ms": 49.77,
+      "ttft_rel_diff": 0.007,
+      "aiperf_c1_itl_p50_ms": 13.262941428571429,
+      "own_itl_p50_ms": 13.377,
+      "itl_rel_diff": 0.009,
+      "own_n": 10,
+      "own_prompt_tokens_p50": 205.0,
+      "aiperf_c1_isl_avg": 231.65217391304347
+     }
+    },
+    "P3_max_num_seqs_32": {
+     "env": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_MAX_NUM_SEQS": "32"
+     },
+     "pass": true
+    }
+   },
+   "preconditions_pass": false,
+   "levels": [
+    {
+     "concurrency": 32,
+     "duration_s": 60,
+     "completed": null,
+     "completed_ge_3N": null,
+     "ttft_ms": {
+      "p50": null,
+      "p90": null,
+      "p99": null
+     },
+     "itl_ms": {
+      "p50": null,
+      "p90": null,
+      "p99": null
+     },
+     "output_tps": null,
+     "tps_per_user": null,
+     "isl_avg": null,
+     "osl_avg": null,
+     "errors": null,
+     "engine_dead": true,
+     "first_error": "{\"object\":\"error\",\"message\":\"Engine loop is not running. Inspect the stacktrace to find the original error: IndexError('pop from empty list').\",\"type\":\"InternalServerError\",\"param\":null,\"code\":500}"
+    }
+   ],
+   "conclusions": null
+  },
+  "A1|C|main": {
+   "arm": "A1",
+   "profile": "C",
+   "container": "main",
+   "preconditions": {
+    "P1_levels_clean_below_ceiling": {
+     "bad_levels": [],
+     "levels_after_crash": [],
+     "live_levels": [
+      1,
+      2,
+      4,
+      8,
+      16
+     ],
+     "engine_crash_at": 32,
+     "pass": true
+    },
+    "P2_instrument_calibrated": {
+     "pass": true,
+     "detail": {
+      "aiperf_c1_ttft_p50_ms": 49.407199999999996,
+      "own_ttft_p50_ms": 49.77,
+      "ttft_rel_diff": 0.007,
+      "aiperf_c1_itl_p50_ms": 13.262941428571429,
+      "own_itl_p50_ms": 13.377,
+      "itl_rel_diff": 0.009,
+      "own_n": 10,
+      "own_prompt_tokens_p50": 205.0,
+      "aiperf_c1_isl_avg": 231.65217391304347
+     }
+    },
+    "P3_max_num_seqs_32": {
+     "env": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_MAX_NUM_SEQS": "32"
+     },
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "levels": [
+    {
+     "concurrency": 1,
+     "duration_s": 60,
+     "completed": 23.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 49.407199999999996,
+      "p90": 63.770559999999996,
+      "p99": 69.53908
+     },
+     "itl_ms": {
+      "p50": 13.262941428571429,
+      "p90": 13.523069344573555,
+      "p99": 13.568549833333332
+     },
+     "output_tps": 74.01440311804566,
+     "tps_per_user": 75.3249905388735,
+     "isl_avg": 231.65217391304347,
+     "osl_avg": 189.7391304347826,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 2,
+     "duration_s": 60,
+     "completed": 45.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 55.784299999999995,
+      "p90": 66.23878,
+      "p99": 74.980376
+     },
+     "itl_ms": {
+      "p50": 13.286896226415093,
+      "p90": 13.694307130434783,
+      "p99": 13.88597267006456
+     },
+     "output_tps": 145.5601541882979,
+     "tps_per_user": 74.91245952021741,
+     "isl_avg": 200.9777777777778,
+     "osl_avg": 189.9111111111111,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 4,
+     "duration_s": 60,
+     "completed": 77.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 58.2543,
+      "p90": 74.61712,
+      "p99": 120.44373999999992
+     },
+     "itl_ms": {
+      "p50": 14.239632596685082,
+      "p90": 14.574875844569288,
+      "p99": 14.801117596428396
+     },
+     "output_tps": 271.3289348084492,
+     "tps_per_user": 70.01572537930961,
+     "isl_avg": 215.64935064935065,
+     "osl_avg": 210.2077922077922,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 8,
+     "duration_s": 60,
+     "completed": 138.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 56.939249999999994,
+      "p90": 80.17089999999997,
+      "p99": 334.458719
+     },
+     "itl_ms": {
+      "p50": 16.334393174755846,
+      "p90": 16.80290576503635,
+      "p99": 17.15759843901523
+     },
+     "output_tps": 466.4416239126673,
+     "tps_per_user": 61.26436010535242,
+     "isl_avg": 209.41304347826087,
+     "osl_avg": 202.1159420289855,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 16,
+     "duration_s": 60,
+     "completed": 250.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 57.2406,
+      "p90": 85.0525,
+      "p99": 434.115587
+     },
+     "itl_ms": {
+      "p50": 19.690458756613758,
+      "p90": 20.230160844699036,
+      "p99": 20.632360611561783
+     },
+     "output_tps": 776.8847390567853,
+     "tps_per_user": 51.114962883548785,
+     "isl_avg": 213.936,
+     "osl_avg": 186.212,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 32,
+     "duration_s": 60,
+     "completed": null,
+     "completed_ge_3N": null,
+     "ttft_ms": {
+      "p50": null,
+      "p90": null,
+      "p99": null
+     },
+     "itl_ms": {
+      "p50": null,
+      "p90": null,
+      "p99": null
+     },
+     "output_tps": null,
+     "tps_per_user": null,
+     "isl_avg": null,
+     "osl_avg": null,
+     "errors": null,
+     "engine_dead": true,
+     "first_error": "{\"object\":\"error\",\"message\":\"Engine loop is not running. Inspect the stacktrace to find the original error: IndexError('pop from empty list').\",\"type\":\"InternalServerError\",\"param\":null,\"code\":500}"
+    }
+   ],
+   "conclusions": {
+    "max_concurrency_within_server_slo": 16,
+    "max_concurrency_within_interactive_slo": 16,
+    "throughput_saturation_level": null,
+    "ceiling": "engine crash at c=32",
+    "engine_crash_at": 32,
+    "range": [
+     1,
+     16
+    ],
+    "max_num_seqs": 32,
+    "skipped_after_crash": [
+     64
+    ],
+    "slo_source": "MLPerf Inference v5.1 Llama 3.1-8B server (p99 TTFT 2,000 ms, p99 TPOT 100 ms) and interactive (500 ms, 30 ms)"
+   }
+  },
+  "A1|R|fresh": {
+   "arm": "A1",
+   "profile": "R",
+   "container": "fresh",
+   "preconditions": {
+    "P1_levels_clean_below_ceiling": {
+     "bad_levels": [],
+     "levels_after_crash": [],
+     "live_levels": [
+      32
+     ],
+     "engine_crash_at": 64,
+     "pass": true
+    },
+    "P2_instrument_calibrated": {
+     "pass": true,
+     "detail": {
+      "aiperf_c1_ttft_p50_ms": 318.92519999999996,
+      "own_ttft_p50_ms": 320.63,
+      "ttft_rel_diff": 0.005,
+      "aiperf_c1_itl_p50_ms": 13.124323919245649,
+      "own_itl_p50_ms": 13.481,
+      "itl_rel_diff": 0.026,
+      "own_n": 10,
+      "own_prompt_tokens_p50": 3295.0,
+      "aiperf_c1_isl_avg": 3462.0
+     }
+    },
+    "P3_max_num_seqs_32": {
+     "env": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_MAX_NUM_SEQS": "32"
+     },
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "levels": [
+    {
+     "concurrency": 32,
+     "duration_s": 60,
+     "completed": 51.0,
+     "completed_ge_3N": false,
+     "ttft_ms": {
+      "p50": 5045.6309,
+      "p90": 13379.9602,
+      "p99": 14714.72755
+     },
+     "itl_ms": {
+      "p50": 50.93505257936508,
+      "p90": 62.87811860068259,
+      "p99": 67.73450288246268
+     },
+     "output_tps": 417.49946596704103,
+     "tps_per_user": 20.46289703057673,
+     "isl_avg": 3598.4313725490197,
+     "osl_avg": 486.45098039215685,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 64,
+     "duration_s": 336,
+     "completed": null,
+     "completed_ge_3N": null,
+     "ttft_ms": {
+      "p50": null,
+      "p90": null,
+      "p99": null
+     },
+     "itl_ms": {
+      "p50": null,
+      "p90": null,
+      "p99": null
+     },
+     "output_tps": null,
+     "tps_per_user": null,
+     "isl_avg": null,
+     "osl_avg": null,
+     "errors": null,
+     "engine_dead": true,
+     "first_error": "{\"object\":\"error\",\"message\":\"Engine loop is not running. Inspect the stacktrace to find the original error: IndexError('pop from empty list').\",\"type\":\"InternalServerError\",\"param\":null,\"code\":500}"
+    }
+   ],
+   "conclusions": {
+    "max_concurrency_within_server_slo": 0,
+    "max_concurrency_within_interactive_slo": 0,
+    "throughput_saturation_level": null,
+    "ceiling": "engine crash at c=64 (Server SLO already failed at c=32)",
+    "engine_crash_at": 64,
+    "range": [
+     32,
+     32
+    ],
+    "max_num_seqs": 32,
+    "skipped_after_crash": [],
+    "slo_source": "MLPerf Inference v5.1 Llama 3.1-8B server (p99 TTFT 2,000 ms, p99 TPOT 100 ms) and interactive (500 ms, 30 ms)"
+   }
+  },
+  "A1|R|main": {
+   "arm": "A1",
+   "profile": "R",
+   "container": "main",
+   "preconditions": {
+    "P1_levels_clean_below_ceiling": {
+     "bad_levels": [],
+     "levels_after_crash": [],
+     "live_levels": [
+      1,
+      2,
+      4,
+      8,
+      16
+     ],
+     "engine_crash_at": 32,
+     "pass": true
+    },
+    "P2_instrument_calibrated": {
+     "pass": true,
+     "detail": {
+      "aiperf_c1_ttft_p50_ms": 318.92519999999996,
+      "own_ttft_p50_ms": 320.63,
+      "ttft_rel_diff": 0.005,
+      "aiperf_c1_itl_p50_ms": 13.124323919245649,
+      "own_itl_p50_ms": 13.481,
+      "itl_rel_diff": 0.026,
+      "own_n": 10,
+      "own_prompt_tokens_p50": 3295.0,
+      "aiperf_c1_isl_avg": 3462.0
+     }
+    },
+    "P3_max_num_seqs_32": {
+     "env": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_MAX_NUM_SEQS": "32"
+     },
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "levels": [
+    {
+     "concurrency": 1,
+     "duration_s": 60,
+     "completed": 8.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 318.92519999999996,
+      "p90": 346.57464999999996,
+      "p99": 350.325355
+     },
+     "itl_ms": {
+      "p50": 13.124323919245649,
+      "p90": 13.175080463472344,
+      "p99": 13.187786393286009
+     },
+     "output_tps": 72.58775195118059,
+     "tps_per_user": 76.22903317081716,
+     "isl_avg": 3462.0,
+     "osl_avg": 490.5,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 2,
+     "duration_s": 60,
+     "completed": 16.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 333.93084999999996,
+      "p90": 400.8222,
+      "p99": 630.5720599999999
+     },
+     "itl_ms": {
+      "p50": 13.537482473789698,
+      "p90": 13.700200500592418,
+      "p99": 13.912866427602395
+     },
+     "output_tps": 136.534935559644,
+     "tps_per_user": 73.94434551212763,
+     "isl_avg": 3518.0625,
+     "osl_avg": 504.75,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 4,
+     "duration_s": 64,
+     "completed": 28.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 343.58805,
+      "p90": 811.44049,
+      "p99": 1415.054899
+     },
+     "itl_ms": {
+      "p50": 15.673563844517084,
+      "p90": 16.106336411543978,
+      "p99": 16.213727818417425
+     },
+     "output_tps": 234.05685488547928,
+     "tps_per_user": 63.96190660582552,
+     "isl_avg": 3502.964285714286,
+     "osl_avg": 508.89285714285717,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 8,
+     "duration_s": 80,
+     "completed": 58.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 351.05559999999997,
+      "p90": 836.0439800000025,
+      "p99": 2507.112976
+     },
+     "itl_ms": {
+      "p50": 19.600019237329438,
+      "p90": 20.482574090058478,
+      "p99": 20.85452526403835
+     },
+     "output_tps": 365.1567403098449,
+     "tps_per_user": 51.02903526485906,
+     "isl_avg": 3511.1724137931033,
+     "osl_avg": 499.41379310344826,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 16,
+     "duration_s": 105,
+     "completed": 110.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 426.6636,
+      "p90": 2003.6409199999998,
+      "p99": 5434.274043999998
+     },
+     "itl_ms": {
+      "p50": 28.011490118823446,
+      "p90": 31.313037217574646,
+      "p99": 33.385482061834864
+     },
+     "output_tps": 513.5584169271516,
+     "tps_per_user": 36.44623156352037,
+     "isl_avg": 3531.4636363636364,
+     "osl_avg": 488.2909090909091,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 32,
+     "duration_s": 155,
+     "completed": null,
+     "completed_ge_3N": null,
+     "ttft_ms": {
+      "p50": null,
+      "p90": null,
+      "p99": null
+     },
+     "itl_ms": {
+      "p50": null,
+      "p90": null,
+      "p99": null
+     },
+     "output_tps": null,
+     "tps_per_user": null,
+     "isl_avg": null,
+     "osl_avg": null,
+     "errors": null,
+     "engine_dead": true,
+     "first_error": "{\"object\":\"error\",\"message\":\"Engine loop is not running. Inspect the stacktrace to find the original error: IndexError('pop from empty list').\",\"type\":\"InternalServerError\",\"param\":null,\"code\":500}"
+    }
+   ],
+   "conclusions": {
+    "max_concurrency_within_server_slo": 4,
+    "max_concurrency_within_interactive_slo": 1,
+    "throughput_saturation_level": null,
+    "ceiling": "engine crash at c=32 (Server SLO already failed at c=8)",
+    "engine_crash_at": 32,
+    "range": [
+     1,
+     16
+    ],
+    "max_num_seqs": 32,
+    "skipped_after_crash": [
+     64
+    ],
+    "slo_source": "MLPerf Inference v5.1 Llama 3.1-8B server (p99 TTFT 2,000 ms, p99 TPOT 100 ms) and interactive (500 ms, 30 ms)"
+   }
+  },
+  "A2|C|fresh": {
+   "arm": "A2",
+   "profile": "C",
+   "container": "fresh",
+   "preconditions": {
+    "P1_levels_clean_below_ceiling": {
+     "bad_levels": [],
+     "levels_after_crash": [],
+     "live_levels": [
+      32,
+      64
+     ],
+     "engine_crash_at": null,
+     "pass": true
+    },
+    "P2_instrument_calibrated": {
+     "pass": true,
+     "detail": {
+      "aiperf_c1_ttft_p50_ms": 71.5319,
+      "own_ttft_p50_ms": 85.28,
+      "ttft_rel_diff": 0.161,
+      "aiperf_c1_itl_p50_ms": 3.131309774389641,
+      "own_itl_p50_ms": 3.181,
+      "itl_rel_diff": 0.016,
+      "own_n": 10,
+      "own_prompt_tokens_p50": 209.0,
+      "aiperf_c1_isl_avg": 222.8139534883721
+     }
+    },
+    "P3_max_num_seqs_32": {
+     "env": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_PASSTHROUGH_ARGS": "--max-num-seqs 32"
+     },
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "levels": [
+    {
+     "concurrency": 32,
+     "duration_s": 60,
+     "completed": 461.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 114.0514,
+      "p90": 198.5574,
+      "p99": 381.68322
+     },
+     "itl_ms": {
+      "p50": 19.5542100591716,
+      "p90": 21.330531460674155,
+      "p99": 22.94519272321428
+     },
+     "output_tps": 1527.1333519127834,
+     "tps_per_user": 51.97772032135919,
+     "isl_avg": 232.48373101952276,
+     "osl_avg": 198.77223427331887,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 64,
+     "duration_s": 60,
+     "completed": 468.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 4088.48875,
+      "p90": 4375.98273,
+      "p99": 4603.556423999999
+     },
+     "itl_ms": {
+      "p50": 20.55612809519442,
+      "p90": 21.674445841121493,
+      "p99": 22.93268614456592
+     },
+     "output_tps": 1485.2661006862547,
+     "tps_per_user": 49.889699115431426,
+     "isl_avg": 217.6965811965812,
+     "osl_avg": 190.1153846153846,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    }
+   ],
+   "conclusions": {
+    "max_concurrency_within_server_slo": 32,
+    "max_concurrency_within_interactive_slo": 32,
+    "throughput_saturation_level": 32,
+    "ceiling": "reached at c=64",
+    "engine_crash_at": null,
+    "range": [
+     32,
+     64
+    ],
+    "max_num_seqs": 32,
+    "skipped_after_crash": null,
+    "slo_source": "MLPerf Inference v5.1 Llama 3.1-8B server (p99 TTFT 2,000 ms, p99 TPOT 100 ms) and interactive (500 ms, 30 ms)"
+   }
+  },
+  "A2|C|main": {
+   "arm": "A2",
+   "profile": "C",
+   "container": "main",
+   "preconditions": {
+    "P1_levels_clean_below_ceiling": {
+     "bad_levels": [],
+     "levels_after_crash": [],
+     "live_levels": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64
+     ],
+     "engine_crash_at": null,
+     "pass": true
+    },
+    "P2_instrument_calibrated": {
+     "pass": true,
+     "detail": {
+      "aiperf_c1_ttft_p50_ms": 71.5319,
+      "own_ttft_p50_ms": 85.28,
+      "ttft_rel_diff": 0.161,
+      "aiperf_c1_itl_p50_ms": 3.131309774389641,
+      "own_itl_p50_ms": 3.181,
+      "itl_rel_diff": 0.016,
+      "own_n": 10,
+      "own_prompt_tokens_p50": 209.0,
+      "aiperf_c1_isl_avg": 222.8139534883721
+     }
+    },
+    "P3_max_num_seqs_32": {
+     "env": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_PASSTHROUGH_ARGS": "--max-num-seqs 32"
+     },
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "levels": [
+    {
+     "concurrency": 1,
+     "duration_s": 60,
+     "completed": 86.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 71.5319,
+      "p90": 76.85374999999999,
+      "p99": 94.36347500000015
+     },
+     "itl_ms": {
+      "p50": 3.131309774389641,
+      "p90": 3.1424503300033897,
+      "p99": 3.23077470505618
+     },
+     "output_tps": 285.2595733112803,
+     "tps_per_user": 319.3109417919663,
+     "isl_avg": 222.8139534883721,
+     "osl_avg": 199.01162790697674,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 2,
+     "duration_s": 60,
+     "completed": 128.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 82.02335,
+      "p90": 95.52472999999999,
+      "p99": 144.652729
+     },
+     "itl_ms": {
+      "p50": 4.290681292860024,
+      "p90": 4.480927974941725,
+      "p99": 4.74902562110511
+     },
+     "output_tps": 422.16361485179516,
+     "tps_per_user": 234.8159151962408,
+     "isl_avg": 210.4375,
+     "osl_avg": 197.3203125,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 4,
+     "duration_s": 60,
+     "completed": 184.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 84.59429999999999,
+      "p90": 112.01888000000004,
+      "p99": 157.11099
+     },
+     "itl_ms": {
+      "p50": 5.7486751060385295,
+      "p90": 6.184387715632959,
+      "p99": 6.598287654829398
+     },
+     "output_tps": 639.6906532291144,
+     "tps_per_user": 173.9593192306066,
+     "isl_avg": 218.5,
+     "osl_avg": 207.9836956521739,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 8,
+     "duration_s": 60,
+     "completed": 260.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 90.19019999999999,
+      "p90": 155.11854,
+      "p99": 174.425821
+     },
+     "itl_ms": {
+      "p50": 8.508629988514778,
+      "p90": 9.11018525562519,
+      "p99": 9.606765031030742
+     },
+     "output_tps": 877.1434153674973,
+     "tps_per_user": 118.21455304476737,
+     "isl_avg": 212.38846153846154,
+     "osl_avg": 202.2153846153846,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 16,
+     "duration_s": 60,
+     "completed": 366.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 98.1186,
+      "p90": 174.25725,
+      "p99": 223.82855999999998
+     },
+     "itl_ms": {
+      "p50": 13.26227214549613,
+      "p90": 14.3165844017094,
+      "p99": 15.109065573274965
+     },
+     "output_tps": 1134.4643662754868,
+     "tps_per_user": 76.65062591053116,
+     "isl_avg": 216.9863387978142,
+     "osl_avg": 185.88251366120218,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 32,
+     "duration_s": 60,
+     "completed": 464.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 116.2665,
+      "p90": 191.57084,
+      "p99": 378.67742
+     },
+     "itl_ms": {
+      "p50": 19.40097904285099,
+      "p90": 21.034196628466713,
+      "p99": 22.175209571759094
+     },
+     "output_tps": 1540.0141861606965,
+     "tps_per_user": 52.55877959067761,
+     "isl_avg": 232.5,
+     "osl_avg": 198.73275862068965,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 64,
+     "duration_s": 60,
+     "completed": 470.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 4037.5211999999997,
+      "p90": 4268.9592,
+      "p99": 4606.758707
+     },
+     "itl_ms": {
+      "p50": 20.415441834355093,
+      "p90": 21.601462394456973,
+      "p99": 22.4123610703125
+     },
+     "output_tps": 1490.0050819226701,
+     "tps_per_user": 50.01775077855302,
+     "isl_avg": 217.7340425531915,
+     "osl_avg": 190.14893617021278,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    }
+   ],
+   "conclusions": {
+    "max_concurrency_within_server_slo": 32,
+    "max_concurrency_within_interactive_slo": 32,
+    "throughput_saturation_level": 32,
+    "ceiling": "reached at c=64",
+    "engine_crash_at": null,
+    "range": [
+     1,
+     64
+    ],
+    "max_num_seqs": 32,
+    "skipped_after_crash": null,
+    "slo_source": "MLPerf Inference v5.1 Llama 3.1-8B server (p99 TTFT 2,000 ms, p99 TPOT 100 ms) and interactive (500 ms, 30 ms)"
+   }
+  },
+  "A2|R|fresh": {
+   "arm": "A2",
+   "profile": "R",
+   "container": "fresh",
+   "preconditions": {
+    "P1_levels_clean_below_ceiling": {
+     "bad_levels": [],
+     "levels_after_crash": [],
+     "live_levels": [
+      32,
+      64
+     ],
+     "engine_crash_at": null,
+     "pass": true
+    },
+    "P2_instrument_calibrated": {
+     "pass": true,
+     "detail": {
+      "aiperf_c1_ttft_p50_ms": 144.06085,
+      "own_ttft_p50_ms": 156.66,
+      "ttft_rel_diff": 0.08,
+      "aiperf_c1_itl_p50_ms": 3.137062271109228,
+      "own_itl_p50_ms": 3.176,
+      "itl_rel_diff": 0.012,
+      "own_n": 10,
+      "own_prompt_tokens_p50": 3299.0,
+      "aiperf_c1_isl_avg": 3587.8529411764707
+     }
+    },
+    "P3_max_num_seqs_32": {
+     "env": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_PASSTHROUGH_ARGS": "--max-num-seqs 32"
+     },
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "levels": [
+    {
+     "concurrency": 32,
+     "duration_s": 60,
+     "completed": 169.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 266.3138,
+      "p90": 2262.5422800000024,
+      "p99": 4246.930287999999
+     },
+     "itl_ms": {
+      "p50": 19.480715846994535,
+      "p90": 21.330128584418453,
+      "p99": 23.31347034188034
+     },
+     "output_tps": 1410.0374836195263,
+     "tps_per_user": 52.045372111286,
+     "isl_avg": 3616.4615384615386,
+     "osl_avg": 497.0887573964497,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 64,
+     "duration_s": 117,
+     "completed": 354.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 10184.4044,
+      "p90": 10790.09107,
+      "p99": 14166.028321999991
+     },
+     "itl_ms": {
+      "p50": 19.933524715799198,
+      "p90": 21.209098466361038,
+      "p99": 22.102900401170796
+     },
+     "output_tps": 1488.0903915858441,
+     "tps_per_user": 50.60167110982227,
+     "isl_avg": 3524.728813559322,
+     "osl_avg": 490.85593220338984,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    }
+   ],
+   "conclusions": {
+    "max_concurrency_within_server_slo": 0,
+    "max_concurrency_within_interactive_slo": 0,
+    "throughput_saturation_level": null,
+    "ceiling": "reached at c=32",
+    "engine_crash_at": null,
+    "range": [
+     32,
+     64
+    ],
+    "max_num_seqs": 32,
+    "skipped_after_crash": null,
+    "slo_source": "MLPerf Inference v5.1 Llama 3.1-8B server (p99 TTFT 2,000 ms, p99 TPOT 100 ms) and interactive (500 ms, 30 ms)"
+   }
+  },
+  "A2|R|main": {
+   "arm": "A2",
+   "profile": "R",
+   "container": "main",
+   "preconditions": {
+    "P1_levels_clean_below_ceiling": {
+     "bad_levels": [],
+     "levels_after_crash": [],
+     "live_levels": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64
+     ],
+     "engine_crash_at": null,
+     "pass": true
+    },
+    "P2_instrument_calibrated": {
+     "pass": true,
+     "detail": {
+      "aiperf_c1_ttft_p50_ms": 144.06085,
+      "own_ttft_p50_ms": 156.66,
+      "ttft_rel_diff": 0.08,
+      "aiperf_c1_itl_p50_ms": 3.137062271109228,
+      "own_itl_p50_ms": 3.176,
+      "itl_rel_diff": 0.012,
+      "own_n": 10,
+      "own_prompt_tokens_p50": 3299.0,
+      "aiperf_c1_isl_avg": 3587.8529411764707
+     }
+    },
+    "P3_max_num_seqs_32": {
+     "env": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_PASSTHROUGH_ARGS": "--max-num-seqs 32"
+     },
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "levels": [
+    {
+     "concurrency": 1,
+     "duration_s": 60,
+     "completed": 34.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 144.06085,
+      "p90": 163.57403,
+      "p99": 234.48585900000003
+     },
+     "itl_ms": {
+      "p50": 3.137062271109228,
+      "p90": 3.146116325373134,
+      "p99": 3.1612652427423655
+     },
+     "output_tps": 288.89232464689917,
+     "tps_per_user": 318.6942662405578,
+     "isl_avg": 3587.8529411764707,
+     "osl_avg": 494.52941176470586,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 2,
+     "duration_s": 60,
+     "completed": 52.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 163.00039999999998,
+      "p90": 223.07047,
+      "p99": 327.1612320000001
+     },
+     "itl_ms": {
+      "p50": 4.258440747439254,
+      "p90": 4.395748423930743,
+      "p99": 4.583400753655608
+     },
+     "output_tps": 429.7177213994896,
+     "tps_per_user": 235.382151931792,
+     "isl_avg": 3420.980769230769,
+     "osl_avg": 493.21153846153845,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 4,
+     "duration_s": 60,
+     "completed": 76.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 165.1109,
+      "p90": 236.9124,
+      "p99": 491.67415
+     },
+     "itl_ms": {
+      "p50": 5.68651394676009,
+      "p90": 5.861705161109029,
+      "p99": 6.006532780440328
+     },
+     "output_tps": 654.5785556170384,
+     "tps_per_user": 176.49109476016142,
+     "isl_avg": 3529.1973684210525,
+     "osl_avg": 510.82894736842104,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 8,
+     "duration_s": 60,
+     "completed": 103.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 182.0583,
+      "p90": 301.5148,
+      "p99": 1003.1310720000006
+     },
+     "itl_ms": {
+      "p50": 8.370988128772636,
+      "p90": 8.756400277135048,
+      "p99": 8.997883987706278
+     },
+     "output_tps": 883.4882240267013,
+     "tps_per_user": 119.54435372973894,
+     "isl_avg": 3485.3106796116504,
+     "osl_avg": 502.09708737864077,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 16,
+     "duration_s": 60,
+     "completed": 141.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 248.53799999999998,
+      "p90": 474.26529999999997,
+      "p99": 2097.2348999999995
+     },
+     "itl_ms": {
+      "p50": 12.65295944333996,
+      "p90": 13.754328464419475,
+      "p99": 14.770683227811672
+     },
+     "output_tps": 1150.3175777624087,
+     "tps_per_user": 80.23815112452743,
+     "isl_avg": 3523.822695035461,
+     "osl_avg": 486.9929078014184,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 32,
+     "duration_s": 65,
+     "completed": 188.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 260.87325,
+      "p90": 2154.5390000000007,
+      "p99": 4520.757399999999
+     },
+     "itl_ms": {
+      "p50": 19.32824699052915,
+      "p90": 20.530852339944552,
+      "p99": 21.619087351785712
+     },
+     "output_tps": 1461.4516249950545,
+     "tps_per_user": 52.51268030273591,
+     "isl_avg": 3607.755319148936,
+     "osl_avg": 499.59574468085106,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    },
+    {
+     "concurrency": 64,
+     "duration_s": 113,
+     "completed": 337.0,
+     "completed_ge_3N": true,
+     "ttft_ms": {
+      "p50": 10253.7658,
+      "p90": 10952.88904,
+      "p99": 14454.467039999998
+     },
+     "itl_ms": {
+      "p50": 20.15092627865961,
+      "p90": 21.421149033514798,
+      "p99": 23.151905017184923
+     },
+     "output_tps": 1464.3251965647896,
+     "tps_per_user": 50.22931741570476,
+     "isl_avg": 3525.507418397626,
+     "osl_avg": 490.7833827893175,
+     "errors": null,
+     "engine_dead": false,
+     "first_error": null
+    }
+   ],
+   "conclusions": {
+    "max_concurrency_within_server_slo": 8,
+    "max_concurrency_within_interactive_slo": 4,
+    "throughput_saturation_level": 32,
+    "ceiling": "reached at c=16",
+    "engine_crash_at": null,
+    "range": [
+     1,
+     64
+    ],
+    "max_num_seqs": 32,
+    "skipped_after_crash": null,
+    "slo_source": "MLPerf Inference v5.1 Llama 3.1-8B server (p99 TTFT 2,000 ms, p99 TPOT 100 ms) and interactive (500 ms, 30 ms)"
+   }
+  }
+ },
+ "all_preconditions_pass": false
+}

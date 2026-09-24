@@ -1,0 +1,245 @@
+{
+ "preconditions": {
+  "P1_default_row_per_arm": {
+   "arms": {
+    "A1": true,
+    "A2": true,
+    "A2FP8": true
+   },
+   "pass": true
+  },
+  "P2_ready_rows_complete": {
+   "violations": [],
+   "pass": true
+  },
+  "P3_probe_ids": {
+   "violations": [],
+   "pass": true
+  }
+ },
+ "preconditions_pass": true,
+ "rows": 15,
+ "conclusions": {
+  "per_arm": {
+   "A1": {
+    "image": "nvcr.io/nim/nvidia/nvidia-nemotron-nano-9b-v2:1.12.2",
+    "profile": "5cf34bab34141258d0cc836c66684642d3e3f32b4daaa2008e48bd289d6bc84b",
+    "precision": "bf16",
+    "card_total_mib": 32607,
+    "starts": 7,
+    "default_started": true,
+    "default_viable": true,
+    "default_level": {
+     "ready_used_mib": 29420,
+     "before_used_mib": 490,
+     "delta_ready_mib": 28930,
+     "gpu_memory_utilization_effective": null,
+     "kv_tokens": 435036,
+     "num_gpu_blocks": null,
+     "kvcache_percent": null,
+     "budget_mib": null,
+     "weights_log": [
+      "Loading weights took 177.15 seconds",
+      "Model loading took 16.5842 GiB and 177.314381 seconds"
+     ],
+     "clamp_log": [],
+     "gmu_log": [],
+     "kv_tokens_source": "log: Maximum concurrency x NIM_MAX_MODEL_LEN",
+     "kv_log": []
+    },
+    "default_failure": null,
+    "min_viable": {
+     "ready_used_mib": 22909,
+     "before_used_mib": 534,
+     "delta_ready_mib": 22375,
+     "gpu_memory_utilization_effective": null,
+     "kv_tokens": 17695,
+     "num_gpu_blocks": null,
+     "kvcache_percent": 0.7,
+     "budget_mib": 22825,
+     "weights_log": [
+      "Loading weights took 166.02 seconds",
+      "Model loading took 16.5842 GiB and 166.180130 seconds"
+     ],
+     "clamp_log": [],
+     "gmu_log": [],
+     "kv_tokens_source": "log: Maximum concurrency x NIM_MAX_MODEL_LEN",
+     "kv_log": []
+    },
+    "bound_reached": true,
+    "first_failure": 0.675,
+    "first_failure_reason": "startup error (see log)",
+    "sweep": [
+     {
+      "pct": null,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 29420,
+      "kv_tokens": 435036
+     },
+     {
+      "pct": 0.85,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 27790,
+      "kv_tokens": 330711
+     },
+     {
+      "pct": 0.8,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 26164,
+      "kv_tokens": 226386
+     },
+     {
+      "pct": 0.75,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 24539,
+      "kv_tokens": 122020
+     },
+     {
+      "pct": 0.7,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 22909,
+      "kv_tokens": 17695
+     },
+     {
+      "pct": 0.675,
+      "ready": false,
+      "viable": false,
+      "ready_used_mib": null,
+      "kv_tokens": null
+     },
+     {
+      "pct": 0.65,
+      "ready": false,
+      "viable": false,
+      "ready_used_mib": null,
+      "kv_tokens": null
+     }
+    ]
+   },
+   "A2": {
+    "image": "nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12",
+    "profile": "1fba9ecfcfb4cde28d4ce3fd55c40bca89a5a613e25e98f057befe6a7e99eada",
+    "precision": "nvfp4",
+    "card_total_mib": 32607,
+    "starts": 6,
+    "default_started": true,
+    "default_viable": true,
+    "default_level": {
+     "ready_used_mib": 31468,
+     "before_used_mib": 536,
+     "delta_ready_mib": 30932,
+     "gpu_memory_utilization_effective": "0.92",
+     "kv_tokens": 3002368,
+     "num_gpu_blocks": "733",
+     "kvcache_percent": null,
+     "budget_mib": null,
+     "weights_log": [],
+     "clamp_log": [],
+     "gmu_log": [],
+     "kv_tokens_source": "metrics: num_gpu_blocks x block_size",
+     "kv_log": []
+    },
+    "default_failure": null,
+    "min_viable": {
+     "ready_used_mib": 25972,
+     "before_used_mib": 137,
+     "delta_ready_mib": 25835,
+     "gpu_memory_utilization_effective": "0.75",
+     "kv_tokens": 1146880,
+     "num_gpu_blocks": "280",
+     "kvcache_percent": 0.75,
+     "budget_mib": 24455,
+     "weights_log": [],
+     "clamp_log": [],
+     "gmu_log": [],
+     "kv_tokens_source": "metrics: num_gpu_blocks x block_size",
+     "kv_log": []
+    },
+    "bound_reached": true,
+    "first_failure": 0.725,
+    "first_failure_reason": "startup error (see log)",
+    "sweep": [
+     {
+      "pct": null,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 31468,
+      "kv_tokens": 3002368
+     },
+     {
+      "pct": 0.85,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 29195,
+      "kv_tokens": 2236416
+     },
+     {
+      "pct": 0.8,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 27570,
+      "kv_tokens": 1691648
+     },
+     {
+      "pct": 0.75,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 25972,
+      "kv_tokens": 1146880
+     },
+     {
+      "pct": 0.725,
+      "ready": false,
+      "viable": false,
+      "ready_used_mib": null,
+      "kv_tokens": null
+     },
+     {
+      "pct": 0.7,
+      "ready": false,
+      "viable": false,
+      "ready_used_mib": null,
+      "kv_tokens": null
+     }
+    ]
+   },
+   "A2FP8": {
+    "image": "nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12",
+    "profile": "8c91cce84b9b032ff4af489cb1a20395e223af35623010df9155390ab2284b7a",
+    "precision": "fp8",
+    "card_total_mib": 32607,
+    "starts": 2,
+    "default_started": false,
+    "default_viable": false,
+    "default_level": null,
+    "default_failure": "not ready within 1200s",
+    "min_viable": null,
+    "bound_reached": false,
+    "first_failure": 0.85,
+    "first_failure_reason": "startup error (see log)",
+    "sweep": [
+     {
+      "pct": null,
+      "ready": false,
+      "viable": false,
+      "ready_used_mib": null,
+      "kv_tokens": null
+     },
+     {
+      "pct": 0.85,
+      "ready": false,
+      "viable": false,
+      "ready_used_mib": null,
+      "kv_tokens": null
+     }
+    ]
+   }
+  },
+  "reading": "budget_mib is the engine's allowed share of the card; delta_ready_mib is what nvidia-smi saw the container add. The minimum requirement of a model at this context length lies between the smallest passing budget and the largest failing one; it is not a single number."
+ }
+}

@@ -1,0 +1,313 @@
+{
+ "preconditions": {
+  "P1_no_errors_usage_present": {
+   "violations": 0,
+   "pass": true
+  },
+  "P2_arm_matches_container": {
+   "violations": 0,
+   "first": [],
+   "pass": true
+  },
+  "P3_complete_and_alternating": {
+   "rows_per_arm": {
+    "A1": 50,
+    "A2": 50
+   },
+   "blocks": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "pass": true
+  }
+ },
+ "preconditions_pass": true,
+ "rows": 100,
+ "conclusions": {
+  "arm_health": {
+   "A1": {
+    "generation_rate_p50": 71.09,
+    "bytes_per_token": 17776454656,
+    "effective_bandwidth_gb_s": 1263.7,
+    "share_of_peak": 0.7052,
+    "pass": true
+   },
+   "A2": {
+    "generation_rate_p50": 298.94,
+    "bytes_per_token": 3590938272,
+    "effective_bandwidth_gb_s": 1073.5,
+    "share_of_peak": 0.599,
+    "pass": true
+   }
+  },
+  "validity": true,
+  "per_arm": {
+   "A1": {
+    "ttft_ms": {
+     "n": 50,
+     "avg": 66.05,
+     "p50": 60.9,
+     "p95": 75.9,
+     "min": 42.0,
+     "max": 272.2
+    },
+    "total_latency_ms": {
+     "n": 50,
+     "avg": 19813.76,
+     "p50": 20102.0,
+     "p95": 39185.3,
+     "min": 2293.7,
+     "max": 47235.4
+    },
+    "tps_vol1_words": {
+     "n": 50,
+     "avg": 68.48,
+     "p50": 69.1,
+     "p95": 70.7,
+     "min": 62.1,
+     "max": 71.5
+    },
+    "tps_usage": {
+     "n": 50,
+     "avg": 70.53,
+     "p50": 70.84,
+     "p95": 71.53,
+     "min": 66.66,
+     "max": 71.83
+    },
+    "generation_rate": {
+     "n": 50,
+     "avg": 70.97,
+     "p50": 71.09,
+     "p95": 72.04,
+     "min": 67.71,
+     "max": 72.36
+    },
+    "completion_tokens": {
+     "n": 50,
+     "avg": 1404.6,
+     "p50": 1420.5,
+     "p95": 2779,
+     "min": 155,
+     "max": 3378
+    },
+    "prompt_tokens": {
+     "n": 50,
+     "avg": 36.48,
+     "p50": 30.0,
+     "p95": 73,
+     "min": 18,
+     "max": 99
+    },
+    "finish_reason": {
+     "stop": 50
+    },
+    "by_block": {
+     "0": {
+      "generation_rate_p50": 71.34,
+      "ttft_p50": 62.0
+     },
+     "2": {
+      "generation_rate_p50": 70.89,
+      "ttft_p50": 60.5
+     }
+    }
+   },
+   "A2": {
+    "ttft_ms": {
+     "n": 50,
+     "avg": 42.68,
+     "p50": 37.8,
+     "p95": 60.2,
+     "min": 30.3,
+     "max": 62.5
+    },
+    "total_latency_ms": {
+     "n": 50,
+     "avg": 6796.27,
+     "p50": 7314.0,
+     "p95": 13736.4,
+     "min": 278.7,
+     "max": 13832.2
+    },
+    "tps_vol1_words": {
+     "n": 50,
+     "avg": 272.09,
+     "p50": 279.3,
+     "p95": 292.7,
+     "min": 175.8,
+     "max": 293.8
+    },
+    "tps_usage": {
+     "n": 50,
+     "avg": 287.17,
+     "p50": 296.73,
+     "p95": 300.37,
+     "min": 182.99,
+     "max": 300.64
+    },
+    "generation_rate": {
+     "n": 50,
+     "avg": 294.46,
+     "p50": 298.94,
+     "p95": 305.09,
+     "min": 226.06,
+     "max": 306.49
+    },
+    "completion_tokens": {
+     "n": 50,
+     "avg": 2017.12,
+     "p50": 2144.5,
+     "p95": 4096,
+     "min": 51,
+     "max": 4096
+    },
+    "prompt_tokens": {
+     "n": 50,
+     "avg": 40.48,
+     "p50": 34.0,
+     "p95": 77,
+     "min": 22,
+     "max": 103
+    },
+    "finish_reason": {
+     "length": 6,
+     "stop": 44
+    },
+    "by_block": {
+     "1": {
+      "generation_rate_p50": 297.5,
+      "ttft_p50": 41.4
+     },
+     "3": {
+      "generation_rate_p50": 299.32,
+      "ttft_p50": 33.3
+     }
+    }
+   }
+  },
+  "A2_over_A1": {
+   "generation_rate": {
+    "n": 50,
+    "ratio_of_means": 4.1493,
+    "ci95": [
+     4.0895,
+     4.1978
+    ],
+    "median_per_question_ratio": 4.2005
+   },
+   "tps_usage": {
+    "n": 50,
+    "ratio_of_means": 4.0717,
+    "ci95": [
+     3.9804,
+     4.1416
+    ],
+    "median_per_question_ratio": 4.1714
+   },
+   "ttft_ms": {
+    "n": 50,
+    "ratio_of_means": 0.6462,
+    "ci95": [
+     0.5356,
+     0.765
+    ],
+    "median_per_question_ratio": 0.7021
+   },
+   "total_latency_ms": {
+    "n": 50,
+    "ratio_of_means": 0.343,
+    "ci95": [
+     0.3066,
+     0.3774
+    ],
+    "median_per_question_ratio": 0.3089
+   },
+   "completion_tokens": {
+    "n": 50,
+    "ratio_of_means": 1.4361,
+    "ci95": [
+     1.2813,
+     1.5822
+    ],
+    "median_per_question_ratio": 1.2999
+   }
+  },
+  "reading": "two deployment options, each in its own NIM image and version, each at the only precision that fits this card; not a single-variable comparison. Ratios are ratio of means over questions with a CI over questions. The total-latency ratio, not the generation-rate ratio, is the answer to 'how much faster is a question answered'; the two differ by the ratio of tokens each model spends per question.",
+  "answer": {
+   "A1": {
+    "max_tokens": [
+     4096
+    ],
+    "total_latency_ms": {
+     "n": 50,
+     "avg": 19813.76,
+     "p50": 20102.0,
+     "p95": 39185.3,
+     "min": 2293.7,
+     "max": 47235.4
+    },
+    "completion_tokens": {
+     "n": 50,
+     "avg": 1404.6,
+     "p50": 1420.5,
+     "p95": 2779,
+     "min": 155,
+     "max": 3378
+    },
+    "truncated_at_max_tokens": 0,
+    "finish_reason": {
+     "stop": 50
+    },
+    "reasoning_channel": [
+     "none"
+    ],
+    "rows_with_split": 0,
+    "reasoning_chars": null,
+    "answer_chars": null,
+    "time_to_first_answer_ms": {
+     "n": 0
+    },
+    "answer_empty": 0
+   },
+   "A2": {
+    "max_tokens": [
+     4096
+    ],
+    "total_latency_ms": {
+     "n": 50,
+     "avg": 6796.27,
+     "p50": 7314.0,
+     "p95": 13736.4,
+     "min": 278.7,
+     "max": 13832.2
+    },
+    "completion_tokens": {
+     "n": 50,
+     "avg": 2017.12,
+     "p50": 2144.5,
+     "p95": 4096,
+     "min": 51,
+     "max": 4096
+    },
+    "truncated_at_max_tokens": 6,
+    "finish_reason": {
+     "length": 6,
+     "stop": 44
+    },
+    "reasoning_channel": [
+     "none"
+    ],
+    "rows_with_split": 0,
+    "reasoning_chars": null,
+    "answer_chars": null,
+    "time_to_first_answer_ms": {
+     "n": 0
+    },
+    "answer_empty": 0
+   }
+  }
+ }
+}

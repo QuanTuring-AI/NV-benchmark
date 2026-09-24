@@ -1,0 +1,127 @@
+{
+ "preconditions": {
+  "P1_default_row_per_arm": {
+   "arms": {
+    "A2": true
+   },
+   "pass": true
+  },
+  "P2_ready_rows_complete": {
+   "violations": [],
+   "pass": true
+  },
+  "P3_probe_ids": {
+   "violations": [],
+   "pass": true
+  }
+ },
+ "preconditions_pass": true,
+ "rows": 8,
+ "conclusions": {
+  "per_arm": {
+   "A2": {
+    "image": "nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12",
+    "profile": "1fba9ecfcfb4cde28d4ce3fd55c40bca89a5a613e25e98f057befe6a7e99eada",
+    "precision": "nvfp4",
+    "card_total_mib": 32607,
+    "starts": 8,
+    "default_started": true,
+    "default_viable": true,
+    "default_level": {
+     "ready_used_mib": 29850,
+     "before_used_mib": 339,
+     "delta_ready_mib": 29511,
+     "gpu_memory_utilization_effective": "0.92",
+     "kv_tokens": 3067904,
+     "num_gpu_blocks": "749",
+     "kvcache_percent": null,
+     "budget_mib": null,
+     "weights_log": [],
+     "clamp_log": [],
+     "gmu_log": [],
+     "kv_tokens_source": "metrics: num_gpu_blocks x block_size",
+     "kv_log": []
+    },
+    "default_failure": null,
+    "min_viable": {
+     "ready_used_mib": 21872,
+     "before_used_mib": 353,
+     "delta_ready_mib": 21519,
+     "gpu_memory_utilization_effective": "0.65",
+     "kv_tokens": 163840,
+     "num_gpu_blocks": "40",
+     "kvcache_percent": 0.65,
+     "budget_mib": 21195,
+     "weights_log": [],
+     "clamp_log": [],
+     "gmu_log": [],
+     "kv_tokens_source": "metrics: num_gpu_blocks x block_size",
+     "kv_log": []
+    },
+    "bound_reached": true,
+    "first_failure": 0.625,
+    "first_failure_reason": "startup error (see log)",
+    "sweep": [
+     {
+      "pct": null,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 29850,
+      "kv_tokens": 3067904
+     },
+     {
+      "pct": 0.85,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 28400,
+      "kv_tokens": 2347008
+     },
+     {
+      "pct": 0.8,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 26766,
+      "kv_tokens": 1802240
+     },
+     {
+      "pct": 0.75,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 25134,
+      "kv_tokens": 1257472
+     },
+     {
+      "pct": 0.7,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 23520,
+      "kv_tokens": 667648
+     },
+     {
+      "pct": 0.65,
+      "ready": true,
+      "viable": true,
+      "ready_used_mib": 21872,
+      "kv_tokens": 163840
+     },
+     {
+      "pct": 0.625,
+      "ready": false,
+      "viable": false,
+      "ready_used_mib": null,
+      "kv_tokens": null
+     },
+     {
+      "pct": 0.6,
+      "ready": false,
+      "viable": false,
+      "ready_used_mib": null,
+      "kv_tokens": null
+     }
+    ]
+   }
+  },
+  "reading": "budget_mib is the engine's allowed share of the card; delta_ready_mib is what nvidia-smi saw the container add. The minimum requirement of a model at this context length lies between the smallest passing budget and the largest failing one; it is not a single number."
+ },
+ "note": "rows carry arm_as_run = A2S32 (NIM_PASSTHROUGH_ARGS=--max-num-seqs 32); analysed under the A2 label"
+}

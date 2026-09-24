@@ -1,0 +1,46 @@
+{
+  "experiment": "Vol.2 · answer completion · the speed table's two arms and 50 questions at max_tokens 4096: time and tokens to answer a question, reasoning vs answer split",
+  "written_at": "2026-09-23T00:30:40+0800",
+  "written_before": "the measured run. run_p53_answer.sh refuses to start if this file or its .sha256, or the sample or its .sha256, is missing or changed, or if requests.jsonl exists.",
+  "runs": "one run",
+  "why": "p50_speed measures generation rate but 79 of its 100 completions hit max_tokens 500, so it cannot say how long a question takes or how many tokens the model spends before the answer; both models reason by default. This run raises the cap to 4096 and records the reasoning channel when the image exposes one.",
+  "relation_to_p50_speed": "same arms, images, profiles, sample, block order, payload and analyzer preconditions; two differences, both recorded: max_tokens 4096 (the point of the run) and NIM_MAX_MODEL_LEN 8192 on both containers, because a 4096-token completion cannot fit beside any prompt inside 4096 (the harness test at 4096 returned HTTP 400 on every request). A1 keeps NIM_MAX_NUM_SEQS 32 and A2 its default, as in p50_speed.",
+  "harness_sha256": {
+    "vol2/scripts/p53_answer.py": "afee88bea15ce17d2d38e3079223464025406ab5bc298cae5b3b5cbc6970cecf",
+    "vol2/scripts/p53_answer_analyze.py": "ff1d5b8228e6d0c71e03644b454a06e5745a69c19d8a3eed9c9b8b912492f208",
+    "vol2/scripts/run_p53_answer.sh": "760aa3b572cf17fd93a8f01bbe35228882c469fe130089e429f07a99c7b54427",
+    "vol2/scripts/p50_speed.py": "505e3cb0e95a20dc3cef0296532419e6c6dddf447dffa6b5060a55d2fdc285f6",
+    "vol2/scripts/p50_speed_analyze.py": "18c4d881c18a389a47259dacf472bf7bce41bcabf6ec4c1ddcc8a820f5afaea6",
+    "vol2/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+    "vol1b/scripts/prediction_guard.py": "05b735290b1e935b32e3ec5805f43f38f2101a47c8c5f9b1efdad6db852a9f83"
+  },
+  "fixed_inputs_sha256": {
+    "vol1b/results/p20_coresidence/sample.json": "001e6ddebd3a64445b90e660704cac0e4562d9a4abc84edcab2bd5295cd9b1b2",
+    "benchmark/questions.json": "262f2339d55ec6b855f7b0180704bd225fdbc561ea37f902b99e1ab405add1f9"
+  },
+  "design": {
+    "reasoning_split": "per delta the harness records reasoning_content (or reasoning) separately from content, and looks for <think>...</think> in content; the row records which channel appeared. If neither appears the totals are reported without a split and the report says so.",
+    "records": "per request TTFT, time to the first answer token when reasoning came first, total latency, engine prompt/completion tokens, finish_reason, reasoning and answer character counts, empty-answer flag"
+  },
+  "analysis_rules": {
+    "preconditions": "p50_speed_analyze P1-P3 and its arm-health gate (same bytes per token)",
+    "added": "per arm: total latency, completion tokens, truncation count at 4096, reasoning channel, reasoning/answer chars, time to first answer, empty answers; A2/A1 paired ratios of total latency and completion tokens beside the generation-rate ratio",
+    "program": "vol2/scripts/p53_answer_analyze.py (7 self-test cases on top of p50_speed_analyze's 13)"
+  },
+  "predictions": {
+    "basis": "p50_speed: A1 72.9 and A2 305.1 tok/s generation, 42/50 and 37/50 completions cut at 500; external report (P52) that Nemotron 3 Nano spends about twice the reasoning tokens of a comparison model; harness test 2026-09-21/22 at NIM_MAX_MODEL_LEN 8192 on the three harness-test questions (not in the sample): every completion ended with stop, A1 948-1,762 and A2 1,578-2,525 completion tokens, A2/A1 total latency 0.40, completion tokens 1.67, and NEITHER image exposed a reasoning channel (no reasoning_content field, no <think> markers: the reasoning is inline in content). R4 below was written before that test and is expected to fail; it is kept as written. The earlier test at NIM_MAX_MODEL_LEN 4096 returned HTTP 400 on every request",
+    "R1": "A2 total latency per question is below A1's, but by less than the generation-rate ratio: A2/A1 total latency between 0.35 and 0.8 (generation-rate ratio about 0.24)",
+    "R2": "A2 spends more completion tokens per question than A1: A2/A1 completion tokens between 1.1 and 2.5",
+    "R3": "truncation at 4096 falls below 10% of completions on both arms",
+    "R4": "the reasoning channel is exposed as a separate field (reasoning_content) on at least one arm",
+    "confidence": "R1 medium, R2 low, R3 medium, R4 low",
+    "reading": "a failed R is reported as failed; pass is P1-P3 plus the health gate"
+  },
+  "outputs": [
+    "requests.jsonl",
+    "events.jsonl",
+    "analysis.json",
+    "ctx.txt",
+    "logs/ (not published)"
+  ]
+}

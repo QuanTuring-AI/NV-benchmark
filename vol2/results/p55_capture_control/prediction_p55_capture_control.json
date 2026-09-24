@@ -1,0 +1,42 @@
+{
+  "experiment": "Vol.2 · A2 (Nemotron 3 Nano, NIM 2.0.12, NVFP4) · at cap 256 and a fixed concurrency, does lowering only the CUDA-graph capture size to what cap 32 implies slow the engine? Two containers in one run, profile C, levels 1, 16, 32",
+  "written_at": "2026-09-23T22:37:51+0800",
+  "written_before": "the measured run. run_p55_capture_control.sh refuses to start if this file or its .sha256 is missing or changed, or if levels.jsonl exists.",
+  "why": "p55_concurrency_a2_{256,128} and p53_concurrency_v2 (cap 32) measured profile C at the same concurrency with rates rising with the cap: c=32 1,540 / 1,738 / 2,238 tok/s, p50 ITL 19.4 / 17.5 / 13.6 ms at caps 32 / 128 / 256 (cap 64, run later: 1,130); c=1 equal (283-300). vLLM 0.27.1 sets the largest CUDA-graph capture size to min(2 x max_num_seqs, 512) tokens (vllm/config/vllm.py _set_cudagraph_sizes); the startup logs captured 11 / 35 / 51 mixed prefill-decode sizes and 7 / 19 / 35 decode sizes at caps 32 / 128 / 256. A step with a 200-token prompt joining ~30 decodes (~230 tokens) is above the cap-32 capture limit (64) and below the cap-256 one (512). Main and fresh containers of one configuration differed by up to 31% at c=64 in the same sweeps, so the reference is measured in this run, back to back, and only the capture size changes. A harness test on 2026-09-23 22:25 (condition s256_cg064, c=1, 20 s) showed the setting reaches the engine (11 mixed and 11 decode sizes captured) and the analyser reading it from real rows. Added by the lab without a ticket (same question as P55 G1, under 30 minutes of GPU), reported as an autonomous addition.",
+  "conditions": {
+    "s256_default": {
+      "NIM_MAX_MODEL_LEN": "8192"
+    },
+    "s256_cg064": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "NIM_PASSTHROUGH_ARGS": "--max-cudagraph-capture-size 64"
+    }
+  },
+  "order": "s256_default first, then s256_cg064",
+  "not_run": "the reverse direction (cap 32 with the cap-256 capture size): kept under the 30-minute limit for an addition without a ticket",
+  "as_p55_concurrency_a2": "image, profile, NIM_MAX_MODEL_LEN, AIPerf flags, discarded 120 s warm-up level, calibration, engine-death detection, level durations, log saving: imported unchanged (p53_concurrency_v2.py). Levels 1, 16, 32; main container only (no fresh repeat: levels at or below the cap-32 value, where main and fresh agreed within 3.5% in p53_concurrency_v2)",
+  "note": "control arms, not A2's configuration; they do not replace any concurrency result",
+  "analysis_rules": {
+    "program": "vol2/scripts/p55_capture_control_analyze.py (8 self-test cases; mutations of the verdict thresholds and the capture rule each fail one case; run on the harness test's real rows)",
+    "preconditions": "per condition: P1 every measured level clean; P2 calibration max(20 ms, 20%) TTFT and 20% ITL at c=1; P3 the startup log's mixed prefill-decode capture count equals the setting's (default at cap 256 -> 51, 64 -> 11)",
+    "verdict": "r = s256_cg064 / s256_default, output tok/s at c=32, both from this run (r16 at c=16 beside it). measured: r <= 0.85; withdrawn: r >= 0.95; partial otherwise; unverified if a precondition fails"
+  },
+  "predictions": {
+    "basis": "the three sweeps above; A1's CUDA-graph control (p55_a1_capture) found removing graphs costs 31% per decode step at ~4k tokens on that engine",
+    "R1": "both conditions apply the capture setting (P3 holds)",
+    "R2": "verdict 'measured': r <= 0.85 (the capture size alone moves c=32 toward the cap-32 rate)",
+    "R3": "at c=1 the two conditions are within 5% of each other (single stream is inside every capture list)",
+    "R4": "s256_default at c=32 is within 15% of the sweep's 2,238 tok/s",
+    "confidence": "R1 high, R2 medium, R3 high, R4 medium",
+    "reading": "a failed R is reported as failed"
+  },
+  "harness_sha256": {
+    "vol2/scripts/p55_capture_control.py": "29bc86fb933843a0e211e58612c821bc3a482544a23a70d5d3288dfc64b73c80",
+    "vol2/scripts/p55_capture_control_analyze.py": "2a86d016239f5b9c397744089ed89435eadae78e49611856987a0780e4bb0349",
+    "vol2/scripts/run_p55_capture_control.sh": "43089ced75f8b2e0f77b2f7b5cbd4e222adf52d390d85363efb6a46408581d63",
+    "vol2/scripts/p53_concurrency_v2.py": "f7eabd113b8deeec2bdb554632eeafb8d41441039335d96cca8f420f522c6dba",
+    "vol2/scripts/p53_concurrency.py": "3858baaf99a7aa200c3c391b15cbcbf5c5e12fa8feb6fb2df11e2f89403dd7aa",
+    "vol2/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+    "vol1b/scripts/prediction_guard.py": "05b735290b1e935b32e3ec5805f43f38f2101a47c8c5f9b1efdad6db852a9f83"
+  }
+}

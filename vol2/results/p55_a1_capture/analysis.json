@@ -1,0 +1,283 @@
+{
+ "conditions": {
+  "a1_16k_capture": {
+   "started": true,
+   "arm": "A1",
+   "env": {
+    "NIM_MAX_MODEL_LEN": "32768",
+    "NIM_MAX_NUM_SEQS": "32",
+    "NIM_PASSTHROUGH_ARGS": "--max-seq-len-to-capture 32768"
+   },
+   "preconditions": {
+    "P1": {
+     "violations": [],
+     "pass": true
+    },
+    "P2_depth_within_25pct": {
+     "prompt_tokens_p50": 14213,
+     "target": 16384,
+     "pass": true
+    },
+    "P3_one_container_and_config": {
+     "one_container": true,
+     "capture_expected": 32768,
+     "capture_in_engine_config": [
+      8192
+     ],
+     "eager_expected": null,
+     "eager_in_engine_config": [
+      false,
+      false
+     ],
+     "pass": false
+    }
+   },
+   "preconditions_pass": false,
+   "n": 5,
+   "prompt_tokens_p50": 14213,
+   "ttft_ms_p50": 1340.9,
+   "generation_tps_p50": 51.49,
+   "completion_tokens_p50": 256,
+   "finish_reason": {
+    "length": 5
+   },
+   "gpu_ready_mib": 23264,
+   "kv_tokens": 53412,
+   "seconds_to_ready": 214.0,
+   "warmup": {
+    "n": 8,
+    "seconds": 69.8,
+    "stabilized": true,
+    "first_rate": 54.21,
+    "last_rate": 54.4,
+    "first_ttft_ms": 1879.1
+   }
+  },
+  "a1_16k_default": {
+   "started": true,
+   "arm": "A1",
+   "env": {
+    "NIM_MAX_MODEL_LEN": "32768",
+    "NIM_MAX_NUM_SEQS": "32"
+   },
+   "preconditions": {
+    "P1": {
+     "violations": [],
+     "pass": true
+    },
+    "P2_depth_within_25pct": {
+     "prompt_tokens_p50": 14213,
+     "target": 16384,
+     "pass": true
+    },
+    "P3_one_container_and_config": {
+     "one_container": true,
+     "capture_expected": null,
+     "capture_in_engine_config": [
+      8192
+     ],
+     "eager_expected": false,
+     "eager_in_engine_config": [
+      false,
+      false
+     ],
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "n": 5,
+   "prompt_tokens_p50": 14213,
+   "ttft_ms_p50": 1341.2,
+   "generation_tps_p50": 55.74,
+   "completion_tokens_p50": 256,
+   "finish_reason": {
+    "length": 5
+   },
+   "gpu_ready_mib": 23264,
+   "kv_tokens": 53412,
+   "seconds_to_ready": 201.7,
+   "warmup": {
+    "n": 8,
+    "seconds": 68.5,
+    "stabilized": true,
+    "first_rate": 55.82,
+    "last_rate": 53.91,
+    "first_ttft_ms": 1869.1
+   }
+  },
+  "a1_16k_eager": {
+   "started": true,
+   "arm": "A1",
+   "env": {
+    "NIM_MAX_MODEL_LEN": "32768",
+    "NIM_MAX_NUM_SEQS": "32",
+    "NIM_DISABLE_CUDA_GRAPH": "1"
+   },
+   "preconditions": {
+    "P1": {
+     "violations": [],
+     "pass": true
+    },
+    "P2_depth_within_25pct": {
+     "prompt_tokens_p50": 14213,
+     "target": 16384,
+     "pass": true
+    },
+    "P3_one_container_and_config": {
+     "one_container": true,
+     "capture_expected": null,
+     "capture_in_engine_config": [
+      8192
+     ],
+     "eager_expected": true,
+     "eager_in_engine_config": [
+      true,
+      true
+     ],
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "n": 5,
+   "prompt_tokens_p50": 14213,
+   "ttft_ms_p50": 1322.2,
+   "generation_tps_p50": 51.72,
+   "completion_tokens_p50": 256,
+   "finish_reason": {
+    "length": 5
+   },
+   "gpu_ready_mib": 23190,
+   "kv_tokens": 53412,
+   "seconds_to_ready": 180.9,
+   "warmup": {
+    "n": 6,
+    "seconds": 63.3,
+    "stabilized": true,
+    "first_rate": 42.19,
+    "last_rate": 51.76,
+    "first_ttft_ms": 12191.8
+   }
+  },
+  "a1_4k_default": {
+   "started": true,
+   "arm": "A1",
+   "env": {
+    "NIM_MAX_MODEL_LEN": "8192",
+    "NIM_MAX_NUM_SEQS": "32"
+   },
+   "preconditions": {
+    "P1": {
+     "violations": [],
+     "pass": true
+    },
+    "P2_depth_within_25pct": {
+     "prompt_tokens_p50": 3769,
+     "target": 4096,
+     "pass": true
+    },
+    "P3_one_container_and_config": {
+     "one_container": true,
+     "capture_expected": null,
+     "capture_in_engine_config": [
+      8192
+     ],
+     "eager_expected": false,
+     "eager_in_engine_config": [
+      false,
+      false
+     ],
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "n": 5,
+   "prompt_tokens_p50": 3769,
+   "ttft_ms_p50": 390.6,
+   "generation_tps_p50": 76.41,
+   "completion_tokens_p50": 256,
+   "finish_reason": {
+    "length": 5
+   },
+   "gpu_ready_mib": 28404,
+   "kv_tokens": 382976,
+   "seconds_to_ready": 225.5,
+   "warmup": {
+    "n": 10,
+    "seconds": 62.0,
+    "stabilized": true,
+    "first_rate": 77.61,
+    "last_rate": 76.61,
+    "first_ttft_ms": 1069.2
+   }
+  },
+  "a1_4k_eager": {
+   "started": true,
+   "arm": "A1",
+   "env": {
+    "NIM_MAX_MODEL_LEN": "8192",
+    "NIM_MAX_NUM_SEQS": "32",
+    "NIM_DISABLE_CUDA_GRAPH": "1"
+   },
+   "preconditions": {
+    "P1": {
+     "violations": [],
+     "pass": true
+    },
+    "P2_depth_within_25pct": {
+     "prompt_tokens_p50": 3769,
+     "target": 4096,
+     "pass": true
+    },
+    "P3_one_container_and_config": {
+     "one_container": true,
+     "capture_expected": null,
+     "capture_in_engine_config": [
+      8192
+     ],
+     "eager_expected": true,
+     "eager_in_engine_config": [
+      true,
+      true
+     ],
+     "pass": true
+    }
+   },
+   "preconditions_pass": true,
+   "n": 5,
+   "prompt_tokens_p50": 3769,
+   "ttft_ms_p50": 422.9,
+   "generation_tps_p50": 52.32,
+   "completion_tokens_p50": 256,
+   "finish_reason": {
+    "length": 5
+   },
+   "gpu_ready_mib": 28330,
+   "kv_tokens": 382976,
+   "seconds_to_ready": 169.3,
+   "warmup": {
+    "n": 7,
+    "seconds": 67.6,
+    "stabilized": true,
+    "first_rate": 45.37,
+    "last_rate": 53.12,
+    "first_ttft_ms": 12564.0
+   }
+  }
+ },
+ "all_preconditions_pass": false,
+ "capture_attribution": {
+  "verdict": "unverified: preconditions failed (see P3: the setting may not have reached the engine)"
+ },
+ "eager_attribution": {
+  "tps": {
+   "4k_default": 76.41,
+   "4k_eager": 52.32,
+   "16k_default": 55.74,
+   "16k_eager": 51.72
+  },
+  "r4_eager_over_default": 0.685,
+  "r16_eager_over_default": 0.928,
+  "eager_4k_over_default_16k": 0.939,
+  "verdict": "measured: turning CUDA graphs off reproduces the step at 4k and changes nothing at 16k"
+ }
+}

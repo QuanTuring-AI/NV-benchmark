@@ -1,0 +1,223 @@
+{
+ "preconditions": {
+  "P1_no_errors_usage_present": {
+   "violations": 0,
+   "pass": true
+  },
+  "P2_arm_matches_container": {
+   "violations": 0,
+   "first": [],
+   "pass": true
+  },
+  "P3_complete_and_alternating": {
+   "rows_per_arm": {
+    "A1": 50,
+    "A2": 50
+   },
+   "blocks": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "pass": true
+  }
+ },
+ "preconditions_pass": true,
+ "rows": 100,
+ "conclusions": {
+  "arm_health": {
+   "A1": {
+    "generation_rate_p50": 72.94,
+    "bytes_per_token": 17776454656,
+    "effective_bandwidth_gb_s": 1296.6,
+    "share_of_peak": 0.7236,
+    "pass": true
+   },
+   "A2": {
+    "generation_rate_p50": 305.07,
+    "bytes_per_token": 3590938272,
+    "effective_bandwidth_gb_s": 1095.5,
+    "share_of_peak": 0.6113,
+    "pass": true
+   }
+  },
+  "validity": true,
+  "per_arm": {
+   "A1": {
+    "ttft_ms": {
+     "n": 50,
+     "avg": 61.77,
+     "p50": 52.05,
+     "p95": 80.6,
+     "min": 41.3,
+     "max": 259.8
+    },
+    "total_latency_ms": {
+     "n": 50,
+     "avg": 6513.16,
+     "p50": 6855.1,
+     "p95": 7064.8,
+     "min": 2278.1,
+     "max": 7279.8
+    },
+    "tps_vol1_words": {
+     "n": 50,
+     "avg": 71.16,
+     "p50": 71.55,
+     "p95": 74.0,
+     "min": 64.6,
+     "max": 74.5
+    },
+    "tps_usage": {
+     "n": 50,
+     "avg": 72.3,
+     "p50": 72.37,
+     "p95": 74.29,
+     "min": 68.04,
+     "max": 75.16
+    },
+    "generation_rate": {
+     "n": 50,
+     "avg": 73.04,
+     "p50": 72.94,
+     "p95": 74.77,
+     "min": 69.66,
+     "max": 75.68
+    },
+    "completion_tokens": {
+     "n": 50,
+     "avg": 471.42,
+     "p50": 500.0,
+     "p95": 500,
+     "min": 155,
+     "max": 500
+    },
+    "prompt_tokens": {
+     "n": 50,
+     "avg": 36.48,
+     "p50": 30.0,
+     "p95": 73,
+     "min": 18,
+     "max": 99
+    },
+    "finish_reason": {
+     "length": 42,
+     "stop": 8
+    },
+    "by_block": {
+     "0": {
+      "generation_rate_p50": 72.97,
+      "ttft_p50": 45.9
+     },
+     "2": {
+      "generation_rate_p50": 72.91,
+      "ttft_p50": 54.8
+     }
+    }
+   },
+   "A2": {
+    "ttft_ms": {
+     "n": 50,
+     "avg": 43.35,
+     "p50": 40.75,
+     "p95": 61.5,
+     "min": 31.2,
+     "max": 62.2
+    },
+    "total_latency_ms": {
+     "n": 50,
+     "avg": 1415.08,
+     "p50": 1658.5,
+     "p95": 1751.6,
+     "min": 248.9,
+     "max": 1804.4
+    },
+    "tps_vol1_words": {
+     "n": 50,
+     "avg": 279.64,
+     "p50": 282.4,
+     "p95": 297.8,
+     "min": 211.4,
+     "max": 301.6
+    },
+    "tps_usage": {
+     "n": 50,
+     "avg": 290.14,
+     "p50": 292.84,
+     "p95": 308.28,
+     "min": 232.17,
+     "max": 311.64
+    },
+    "generation_rate": {
+     "n": 50,
+     "avg": 302.22,
+     "p50": 305.07,
+     "p95": 318.77,
+     "min": 249.39,
+     "max": 323.98
+    },
+    "completion_tokens": {
+     "n": 50,
+     "avg": 416.02,
+     "p50": 500.0,
+     "p95": 500,
+     "min": 67,
+     "max": 500
+    },
+    "prompt_tokens": {
+     "n": 50,
+     "avg": 40.48,
+     "p50": 34.0,
+     "p95": 77,
+     "min": 22,
+     "max": 103
+    },
+    "finish_reason": {
+     "length": 37,
+     "stop": 13
+    },
+    "by_block": {
+     "1": {
+      "generation_rate_p50": 311.43,
+      "ttft_p50": 48.7
+     },
+     "3": {
+      "generation_rate_p50": 298.7,
+      "ttft_p50": 34.5
+     }
+    }
+   }
+  },
+  "A2_over_A1": {
+   "generation_rate": {
+    "n": 50,
+    "ratio_of_means": 4.138,
+    "ci95": [
+     4.0767,
+     4.1926
+    ],
+    "median_per_question_ratio": 4.1702
+   },
+   "tps_usage": {
+    "n": 50,
+    "ratio_of_means": 4.0131,
+    "ci95": [
+     3.946,
+     4.0733
+    ],
+    "median_per_question_ratio": 4.0474
+   },
+   "ttft_ms": {
+    "n": 50,
+    "ratio_of_means": 0.7017,
+    "ci95": [
+     0.5832,
+     0.8336
+    ],
+    "median_per_question_ratio": 0.7623
+   }
+  },
+  "reading": "two deployment options, each in its own NIM image and version, each at the only precision that fits this card; not a single-variable comparison. Ratios are ratio of means over questions with a CI over questions."
+ }
+}

@@ -1,0 +1,67 @@
+{
+  "queried_at": "2026-09-21 (+0800)",
+  "card": {"name": "NVIDIA GeForce RTX 5090", "memory_mib": 32607, "driver": "591.86", "peak_bandwidth_gb_s": 1792},
+  "models": {
+    "A1": {
+      "repository": "nvcr.io/nim/nvidia/nvidia-nemotron-nano-9b-v2",
+      "resolving_tags": {"1.12.2": "sha256:a2f4a5aefe7dd0ff29bfd8d7081ce4977337d1b12081361af7b6283ff9a406b2", "latest": "sha256:a2f4a5aefe7dd0ff29bfd8d7081ce4977337d1b12081361af7b6283ff9a406b2"},
+      "probed_absent_tags": ["2", "2.0", "2.0.1", "2.0.2", "2.0.3", "2.0.4", "2.0.5", "2.0.6", "2.0.7", "2.0.8", "2.0.9", "2.0.10", "2.0.11", "2.0.12", "2.0.13", "1.12.3", "1.13", "1.13.0", "1.14", "1.14.0"],
+      "nim_version": {"label_com_nvidia_nim_version": "1.12.2", "env_INFERENCE_MICROSERVICE_LLM_NIM_VERSION": ""},
+      "profiles_on_this_card": [
+        {"precision": "bf16", "tp": 1, "id": "5cf34bab34141258d0cc836c66684642d3e3f32b4daaa2008e48bd289d6bc84b", "classification": "runnable"},
+        {"precision": "bf16", "tp": 2, "id": "ac77e07c803a4023755b098bdcf76e17e4e94755fe7053f4c3ac95be0453d1bc", "classification": "incompatible"}
+      ],
+      "architecture": "hybrid Mamba-2 + MLP with four attention layers (dense)",
+      "parameters_total": "9B",
+      "weight_bytes_measured": 17776492512,
+      "weight_bytes_source": "safetensors in NIM cache snapshot v1.2.2-ga (bf16)"
+    },
+    "A2": {
+      "repository": "nvcr.io/nim/nvidia/nemotron-3-nano",
+      "resolving_tags": {"2.0.10": "sha256:c3b0108e9fb5a5fe7e2e8ade7ab77bdb1d7e08c6c94089d7b158ad8a2d22faf9", "2.0.11": "sha256:1eaec4777123bc19eb045d819fa32e242d1ed758cbc2766ac2e428a059ee6f4c", "2.0.12": "sha256:bd38d2d5438950b49427ee41944ee04f84cd38383265add8df2230480539e6f9", "2.0.13": "sha256:31e60afd3f0e03a18dd8443ab0fe2d124c8ba053cbf42aa112237c7c345d1408", "latest": "sha256:31e60afd3f0e03a18dd8443ab0fe2d124c8ba053cbf42aa112237c7c345d1408"},
+      "tag_2.0.12_amd64_manifest": "sha256:ac9d1cefa7ad958a4ad9727871a85c89f79c0d907d78415433b0c83e1a072aa3",
+      "local_image_is": "tag 2.0.12 (amd64 manifest)",
+      "nim_version": {"label_com_nvidia_nim_version": "2.0.12", "env_INFERENCE_MICROSERVICE_LLM_NIM_VERSION": "2.0.12", "base_image": "vllm/vllm-openai:v0.27.1-ubuntu2404"},
+      "profiles_on_this_card": [
+        {"precision": "nvfp4", "tp": 1, "id": "1fba9ecfcfb4cde28d4ce3fd55c40bca89a5a613e25e98f057befe6a7e99eada", "requires_gb": 21, "fits": true},
+        {"precision": "fp8", "tp": 1, "id": "8c91cce84b9b032ff4af489cb1a20395e223af35623010df9155390ab2284b7a", "requires_gb": 34, "fits": false},
+        {"precision": "bf16", "tp": 1, "id": "352d88f8021d0ce396a61d10e929d1d4b45f75038b593595d0d92f80a398a032", "requires_gb": 63, "fits": false}
+      ],
+      "architecture": "hybrid Mamba-2 + MoE; 23 Mamba/MoE layers + 6 attention layers; 128 routed experts + 1 shared",
+      "parameters_total": "30B",
+      "parameters_active_per_token": {"ngc_container_page": "3.5B", "nvfp4_model_card": "3.5B", "nemotron_qad_research_page": "~3B"},
+      "experts_active_per_token": {"nvfp4_model_card": 6, "ngc_container_page": "5 + 1 shared"},
+      "weight_bytes_measured": 19342796720,
+      "weight_bytes_source": "safetensors in NIM cache snapshot hf-nvfp4-bd1ffb1 (NVFP4); bf16 and fp8 snapshots are refs only, no weights downloaded"
+    },
+    "reference_llama_3_1_8b": {
+      "repository": "nvcr.io/nim/meta/llama-3.1-8b-instruct",
+      "resolving_tags": {"2.0.12": "sha256:d2c94c1d654c3e80b8bc08cc83298d2ba4e219dff41d1092555795edb93c6545", "2.0.13": "sha256:9d6faef811583204d33124f1339ddea77e8fa2706d530ab115e51dbf4eb9e493"},
+      "profiles_on_this_card": [
+        {"precision": "bf16", "tp": 1, "id": "092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90", "requires_gb": 33, "note": "image suggests --max-model-len=82688 to reduce to >=27 GB"},
+        {"precision": "fp8", "tp": 1, "id": "c4789f7af56c770c1c88b73da666886365534d6980b6b922b41fd97036c77d73", "requires_gb": 27},
+        {"precision": "nvfp4", "tp": 1, "id": "a28963301b18077db3454d5eb21f5678304936c5a425ddc552443de1f5449f2a", "requires_gb": 24}
+      ],
+      "weight_bytes_measured": 16060556376,
+      "weight_bytes_source": "safetensors in NIM cache snapshot 8c22764a… (bf16)"
+    }
+  },
+  "common_nim_version_A1_A2": null,
+  "profiles_listing_state": "desktop held 2,807-2,814 MiB; NIM 2.0.12 reported the GPU as non-free and classed all profiles as low-memory; requirement figures are the image's own",
+  "registry_tags_list_note": "nvcr.io /v2/<repo>/tags/list returned one page and omitted tags that resolve directly (A2 and reference 2.0.10-2.0.13); absence is established only by direct tag resolution",
+  "dgx_spark": {
+    "distributor_quotation_2026_05_26": {"cpu": "20-core Arm: 10 Cortex-X925 + 10 Cortex-A725", "memory": "128 GB LPDDR5x unified", "storage": "4 TB NVMe M.2", "gpu": "Blackwell", "psu_w": 170, "bandwidth": null},
+    "nvidia_product_page_2026_09_21": {"superchip": "NVIDIA GB10 Grace Blackwell", "cpu": "20-core Arm: 10 Cortex-X925 + 10 Cortex-A725", "memory": "128 GB LPDDR5x coherent unified", "bandwidth_gb_s": 273, "storage": "4 TB NVMe M.2 self-encrypting", "ai_performance": "up to 1 PFLOP FP4", "inference_params_max": "200B", "finetune_params_max": "70B"},
+    "bandwidth_ratio_to_rtx5090": 0.152
+  },
+  "nemo_retriever_images": {
+    "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2": ["1", "1.1", "latest"],
+    "nvcr.io/nim/nvidia/llama-nemotron-rerank-500m-v2": ["1", "1.1", "latest"],
+    "nvcr.io/nim/nvidia/llama-3.2-nv-rerankqa-1b-v2": ["1", "1.3", "1.3.0", "1.3.1", "1.4", "1.4.0", "1.5", "1.5.0", "1.7", "1.7.0", "1.8", "1.8.0", "latest"],
+    "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2": ["1", "1.13", "1.13.0", "latest"],
+    "nvcr.io/nim/nvidia/llama-3.2-nv-embedqa-1b-v2": ["1", "1.3", "1.3.0", "1.3.1", "1.4.0-rtx", "1.4.1-rtx", "1.5", "1.5.0", "1.5.1", "1.6", "1.6.0", "1.9", "1.9.0", "1.10", "1.10.0", "1.10.1", "latest"],
+    "all_resolve_with_current_credential": true,
+    "negative_control": {"nim/nvidia/no-such-repo-zzz": "HTTP 401 / denied"},
+    "positive_control": "nvcr.io/nim/meta/llama-3.1-8b-instruct:2.0.12 resolves"
+  }
+}
