@@ -1,0 +1,12 @@
+{
+ "harness_tests": [
+  "p59_20260925T013157 (O-Q4, N-FP8, O-FP16, O-Q4-def)",
+  "p59_20260925T020932 (O-Q4, N-BF16, after the fixes)"
+ ],
+ "summary": "Two harness tests on 2026-09-25 (levels 1 and 8, 20 s, main containers only). NUM_PARALLEL at context 8,192: O-Q4 64 killed (runner sized 524,288 context tokens), 32 loaded 27%/73% CPU/GPU, 16 loaded 100% GPU; O-FP16 64 killed, 32 42%/58%, 16 9%/91%, 8 100% GPU; O-Q4-def: Ollama chose 1 (runner log). Single-stream decode at c=1 (1000 / p50 ITL): O-Q4 199-208, O-Q4-def 199, O-FP16 82, N-FP8 156, N-BF16 90 tok/s; every arm passed both gates. Found and fixed before this file was written: (1) AIPerf sends max_completion_tokens, which Ollama 0.34.4 ignores - Ollama arms generated to end-of-sequence (C median 315-397 tokens against 200); --use-legacy-max-tokens added on every arm, after which O-Q4's C median was 191-201; (2) the detector's positive control was the first long prefill after load (15.6 s), so a discarded prompt now precedes it (then 608 -> 114 ms on O-Q4, 294 -> 28 ms on N-BF16; calibration-form pairs 1.03 and 0.99); (3) calibration failed on two Ollama profiles on TTFT alone (ITL within 2%): Ollama's c=1 TTFT is bimodal (about 135 or 230-300 ms) and the test levels held 6-9 requests; calibration now has 20 measured requests with prompts at the profiles' means (201 and 3,500 tokens), after which all four calibrations of the second test passed. The gate itself (max(20 ms, 20%) TTFT, 20% ITL) is unchanged. In the second test the crossing rule returned 'between 1 and 8' on C for N-BF16 vs O-Q4 (two levels only).",
+ "harness_changes_after_the_tests": [
+  "--use-legacy-max-tokens on every AIPerf level",
+  "discarded warm prompt before the prefix-cache detector",
+  "calibration 20 requests, prompt lengths at the profile means"
+ ]
+}

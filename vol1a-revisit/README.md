@@ -59,6 +59,10 @@ Vol.1-B (`../vol1b/BASELINE.md`, section 12) showed that in Vol.1-A's E2 the com
 
 **If it was resident**, the direction is known and the size is not: NIM-only latency would carry the co-residence cost in the denominator, so the published `+2.1%` would understate the rail's relative overhead. No corrected figure is computed here. The Vol.1-B re-measurement of the rail on NIM 2.0.12 alone on the card (`../vol1b/BASELINE.md`) does not depend on this question.
 
+## D · Several users at once: NIM against Ollama (`results/p59_nim_value/`)
+
+A single-user comparison cannot stand for a serving engine; this run adds the concurrent half. Llama 3.1 8B on this card, five configurations at 1, 8, 16, 32, 64 and 128 concurrent requests: NIM 2.0.12 bf16 and fp8, and Ollama 0.34.4 with the 4-bit model (slots tuned, and left to Ollama) and the 16-bit model. On the chat profile, Ollama's 4-bit model decodes fastest for one user. NIM answers first. From 8 users on, NIM leads on total throughput and on each user's end-to-end speed. NIM keeps the MLPerf server SLO to 128 users; no Ollama configuration keeps it past one. At comparable precision the two engines are close for one user and part as soon as users overlap: the single-user gap is precision, the multi-user gap is the engine. Scope: NIM's profiles on this card are vLLM only; speed and capacity only, answer quality not compared. Details, crossing points, predictions and what is not settled: `results/p59_nim_value/README.md`.
+
 ## Files
 
-`../vol2/results/p54_engine/` (pre-registration, stack record, start attempts, single-stream and concurrency runs, analyses). Harness `../vol2/scripts/p54_engine.py`; analysis `../vol2/scripts/p54_single_analyze.py`, `p54_conc_analyze.py`, `p54_attempts_analyze.py`; runner `../vol2/scripts/run_p54_engine.sh`.
+`../vol2/results/p54_engine/` (pre-registration, stack record, start attempts, single-stream and concurrency runs, analyses) · `results/p59_nim_value/` (section D). Harness `../vol2/scripts/p54_engine.py`; analysis `../vol2/scripts/p54_single_analyze.py`, `p54_conc_analyze.py`, `p54_attempts_analyze.py`; runner `../vol2/scripts/run_p54_engine.sh`.
