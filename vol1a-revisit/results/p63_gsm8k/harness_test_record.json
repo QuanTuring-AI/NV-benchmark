@@ -1,0 +1,6 @@
+{
+ "tests": [
+  "p63g (O-Q4 then N-BF16, 3 items, 2026-09-27 00:10-00:23)"
+ ],
+ "summary": "One harness test before this file was written (O-Q4 then N-BF16, the first 3 GSM8K items, run main only). Every request carried max_tokens 1024 in the proxy's record on both arms (max_tokens_seen [1024]); every item joined (3 / 3, no shared prompts); health O-Q4 0.557, N-BF16 0.833; the recompute check reproduced analysis.json from the published files and its negative control changed it. The N-BF16 item that repeated a sentence until 256 tokens in P62's harness test (item 2) again reached the cap at 1024. The analyser's mutation check (six rules broken one at a time) first showed that removing the template offset failed no case; the self-test prompts were shortened (400 against 375 tokens) so that it does."
+}

@@ -1,4 +1,4 @@
-# Vol.2 — Evidence Index
+# Vol.3 (formerly Vol.2; directory `vol2/`) — Evidence Index
 
 > **Vol.1 lives in [`../benchmark/`](../benchmark/)** (question sets, harness, results). It is published evidence and is not modified here.
 > This directory holds the Vol.2 harness and results. This file is an **index**: which file belongs to which experiment, where its measurement boundary is recorded, and how data points are counted. This README contains measurement boundaries for data in this directory. It does not contain conclusions from unpublished work. **This index covers Vol.2 evidence. That volume is not published.**

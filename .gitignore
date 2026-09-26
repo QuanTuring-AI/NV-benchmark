@@ -89,3 +89,18 @@ vol2/results/p07_toolcall/probe_arm_a1.json
 vol2/results/s6/prediction_s6.json
 vol2/results/p07_toolcall/prediction_p07.json
 vol2/results/p07_toolcall/prediction_p07.sha256
+
+# --- Process files (2026-09-26, P62 section 1) ---------------------------------
+# Enumerated from the working tree and ruled by shape, not by file name.
+# Controls after editing (both must hold):
+#   git check-ignore -v vol1a-revisit/results/p59_nim_value/N-BF16_C_main/c0001/profile_export_aiperf.csv  -> one line (positive)
+#   git check-ignore -v vol1a-revisit/results/p59_nim_value/N-BF16_C_main/c0001/profile_export_aiperf.json -> nothing  (negative)
+# AIPerf's CSV copies of a level's summary and server metrics (the JSON beside each is kept)
+profile_export_aiperf.csv
+server_metrics_export.csv
+# run-chain scripts, their console captures and stop flags, kept dot-named next to the results they produced
+**/results/**/.*
+# raw run events: they list the desktop processes holding a GPU context, with personal paths; events_public.jsonl is published
+vol1a-revisit/results/*/events.jsonl
+# answer-quality runs: full model output, lm-eval's logged samples, the proxy's records
+vol1a-revisit/results/*/raw/

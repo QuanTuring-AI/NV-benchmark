@@ -1,0 +1,8 @@
+{
+ "written_at_note": "written before the pre-registration, after two harness tests (N-FP8 only, levels 1 and 8, 20 s)",
+ "tests": [
+  "p62r_20260926T155317",
+  "p62r_20260926T162721"
+ ],
+ "summary": "Two harness tests before this file was written, N-FP8 only (main container, levels 1 and 8 of 20 s). The counter-based detector worked in both: the repeated ~3,500-token prompt showed 3,520 of 3,532 queried tokens as hits (99.7%), two nonce-led prompts 32 of 3,537 (0.9%, the chat template's shared preamble, two 16-token blocks); every calibration request 32 hit tokens (0.9%); every level 0.5%. The R calibration failed in both tests as in P59 (AIPerf p50 TTFT 215 and 218 ms against the harness's own 161 and 153 ms; inter-token latency agreed within 1%), with no prefix-cache hits. The second test (after the server-side readings were added) placed the gap on the server: the server's own mean TTFT was 136 ms (median over the 20 calibration requests; prefill 129 ms) for the harness's prompts of 3,501 client tokens, and 211 ms for AIPerf's c=1 requests (AIPerf's own reading 212 ms). Both prompt sets are about 3,500 tokens; they differ in content (the harness repeats one sentence after a nonce; AIPerf samples a text corpus). Why the server takes longer on AIPerf's prompts is not determined. Changes made after the tests: the server-side readings and the secondary table (both reported, neither a gate)."
+}

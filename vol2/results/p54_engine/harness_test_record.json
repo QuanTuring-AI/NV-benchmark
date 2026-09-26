@@ -1,0 +1,66 @@
+{
+ "harness_tests": [
+  "p54_20260923T231411",
+  "p54_20260923T233544"
+ ],
+ "n_backend_args": [
+  "/opt/nim/.cache/tmp/nim_riznliky",
+  "--middleware",
+  "nim_llm.features.middleware.NIMRedirectMiddleware",
+  "--middleware",
+  "nim_llm.features.request_id_middleware.RequestIdMiddleware",
+  "--tensor-parallel-size",
+  "1",
+  "--pipeline-parallel-size",
+  "1",
+  "--gpu-memory-utilization",
+  "0.92",
+  "--port",
+  "8001",
+  "--max-model-len",
+  "8192",
+  "--served-model-name",
+  "meta/llama-3.1-8b-instruct",
+  "--host",
+  "127.0.0.1"
+ ],
+ "v_args": [
+  "--tensor-parallel-size",
+  "1",
+  "--pipeline-parallel-size",
+  "1",
+  "--gpu-memory-utilization",
+  "0.92",
+  "--max-model-len",
+  "8192",
+  "--served-model-name",
+  "meta/llama-3.1-8b-instruct"
+ ],
+ "v_edits": [
+  {
+   "model_path": [
+    "/opt/nim/.cache/tmp/nim_riznliky",
+    "/opt/nim/.cache/ngc/hub/models--nim--meta--llama-3.1-8b-instruct/snapshots/8c22764a7e3675c50d4c7c9a4edb474456022b16"
+   ]
+  },
+  {
+   "nim_middleware_dropped": "nim_llm.features.middleware.NIMRedirectMiddleware"
+  },
+  {
+   "nim_middleware_dropped": "nim_llm.features.request_id_middleware.RequestIdMiddleware"
+  },
+  {
+   "port_dropped": "8001"
+  },
+  {
+   "host_dropped": "127.0.0.1"
+  }
+ ],
+ "summary": "2026-09-23 23:14-00:12, test mode (single: 3 questions over 4 blocks; conc: profile C, c=1 and 2). Attempts: NIM's own dry-run with nothing set selects profile c4789f7a... (vllm-fp8-tp1-pp1), so the bf16 pin is part of every N step; N steps 0 and 1 and V steps 0 and 1 fail with 'RuntimeError: UVA is not available'; both reach a serving start on step 2 (N: profile pin, NIM_MAX_MODEL_LEN 8192, VLLM_USE_V2_MODEL_RUNNER=0; V: --max-model-len 8192, VLLM_USE_V2_MODEL_RUNNER=0). The first derived V argument list carried NIM's two '--middleware nim_llm.*' entries, which cannot load in the upstream image; the harness was changed to drop them (listed edit) before any V start with that list. Single stream (3 rows per arm): generation 99.8 (N) and 99.7 (V) tok/s, 89% of peak on both; completion tokens identical per question (438, 573, 466). KV at READY: N 97,328 tokens, V 107,728. Graph sizes captured: 51 mixed / 35 decode on every start (max_num_seqs 256). Concurrency c=1,2: all preconditions held on both arms; calibration within the 20 ms floor (V 17.0 vs 27.1 ms).",
+ "harness_changes_after_the_test": [
+  "digest check: docker template 'join' replaced by 'json' (docker rejected join on RepoDigests)",
+  "stack: snapshot hashed inside a container through the shared mount (Windows cannot open the container-written links)",
+  "V argument list: NIM middlewares dropped; max_num_seqs label from vLLM's default when neither arm sets it; captured graph sizes recorded per start",
+  "attempts summary: a vLLM option and its value count as one setting"
+ ]
+}
