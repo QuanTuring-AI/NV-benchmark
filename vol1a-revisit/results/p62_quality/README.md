@@ -96,6 +96,19 @@ On GSM8K and IFEval the reference disagrees with itself on more items than the �
 - Correctness differs on 6.75% of items, and only 25.4% of the outputs are identical.
 - The individual answers change with concurrency; the accuracy does not move measurably.
 
+## Two gate definitions were wrong, and P63 replaces them for GSM8K (added 2026-09-27)
+
+The ticket that defined this run has since ruled that two of its gates were **wrong as defined**. The execution was not at fault. This run's pre-registration, `analysis.json` and tables above stay as they were.
+
+- **G2b ("length" below 1%)** mixed two different things. One is a truncated prompt, which G2a checks separately and which passed on every item. The other is an output that reaches the cap. That is the model's behaviour, and it is part of the score: with lm-eval's default cap of 256 tokens, even the reference reached it on 3.2% of GSM8K items.
+- **The noise floor ("correctness differs on at most 2% of items between two runs of the reference")** tested a total that the paired interval already contains. The question an equivalence test has to answer first is different: can it call a configuration equal to itself? Using this run's own numbers, N-BF16 against itself gives:
+  - GSM8K [−0.30, +1.67] pp, inside ±2;
+  - IFEval [−2.77, +1.29] pp, outside ±2.
+
+**GSM8K** was measured again as P63 (`../p63_gsm8k/`), under a new pre-registration. The cap is 1024 tokens, and outputs that reach it are scored as the model's answer. N-BF16 against itself is the positive control that the ±2 pp verdicts require.
+
+**IFEval is descriptive only in this volume and is not re-run.** With n = 541, the reference against itself spans [−2.77, +1.29] pp, which is already wider than ±2. At this size the task cannot support a ±2 pp verdict.
+
 ## Reading
 
 - **MMLU** (every gate passed, noise floor 1.0%): **N-FP8, O-FP16 and O-Q4 are each within ±2 pp of N-BF16.** The faster configurations show no measurable accuracy loss on this task.
