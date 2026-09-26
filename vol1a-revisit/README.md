@@ -1,6 +1,46 @@
-# Vol.1-A revisit · the same engine, run two ways
+# Vol.1 (renewed 2026-09) · 7.4× at 128 concurrent users: what NIM buys you on one RTX 5090
+*For one user the 4-bit build is faster. From 4 users on NIM leads; at 128 it delivers 7.4× the throughput — 13.6× at matched precision — and still holds the server SLO. Both arms healthy this time.*
 
-Vol.1-A (`benchmark/`, published 2026-03-31) is not changed by anything here. This directory holds the write-up of a revisit that asks a narrower question than Vol.1-A's E2 did: on one card, one model, one set of weight files and one precision, what does the NIM container's pre-selected configuration amount to against the same inference engine started by hand? The measurements live in `../vol2/results/p54_engine/`; the section of record is in `../vol2/BASELINE.md`.
+## 0 · Headline
+
+Llama 3.1 8B Instruct on one RTX 5090. The concurrency results use synthetic chat requests (200 tokens in, 200 out) and the MLPerf v5.1 Llama 3.1-8B SLOs. Every arm passed its health gate.
+
+1. **For one user, NIM is the engine it contains.** NIM 2.0.12 and upstream vLLM 0.27.1 (the build inside it) ran the same weight files at the same precision. They wrote the same 50 answers byte for byte at the same speed: rate ratio 0.990 [0.963, 1.020]. → §A
+2. **For one user, precision decides the speed.** The 4-bit build reads fewer bytes per token and decodes faster than a 16-bit one. At comparable 16-bit precision, NIM bf16 and 16-bit Ollama differ by 1.10× in total throughput for one user. → §D · `results/p59_nim_value/`
+3. **From 4 concurrent requests on, NIM leads on total throughput and on each user's speed, and the lead grows with load.**
+   - The crossing lies between 2 and 4 concurrent requests.
+   - At 8 requests the lead is 3.5×: 607 vs 175 tok/s total, and 77 vs 24 tok/s per user end to end.
+   - At 128 requests it is 7.4×.
+   - All against the fastest 4-bit configuration we could build with Ollama (16 slots). → §D · `results/p62_levels/` · `results/p59_nim_value/`
+4. **NIM kept the MLPerf v5.1 server SLO up to 128 concurrent requests.** In the same sweep (1, 8, 16, 32, 64 and 128 concurrent requests), none of the Ollama configurations we tested kept it beyond 1. → `results/p59_nim_value/`
+5. **At comparable precision, the single-user gap is precision and the multi-user gap is the engine.** 16-bit Ollama and bf16 NIM serve 79 vs 87 tok/s for one user, and 402 vs 5,458 at 128. → `results/p59_nim_value/`
+6. **General-knowledge accuracy held. On multi-step math the 4-bit build lost measurably, and FP8's loss could not be separated from zero.**
+   - MMLU (2,850-question sample): FP8, 16-bit Ollama and 4-bit were all within ±2 points of bf16 NIM.
+   - GSM8K: the 4-bit build scored −2.4 points (95% CI −4.4 to −0.5) and FP8 −1.5 points (CI −3.1 to 0.0).
+   - Serving 32 requests at once did not change FP8's GSM8K accuracy measurably.
+
+   → §E · `results/p62_quality/` · `results/p63_gsm8k/`
+7. **NIM's own profile choice on this card is FP8.**
+   - Speed: it was the fastest configuration at every concurrency level, 151 vs 87 tok/s for one user and 8,713 vs 5,458 at 128.
+   - Accuracy: 1.5 points lower on GSM8K (95% CI −3.1 to 0.0), and within ±2 points on MMLU.
+
+   → §D · §E
+8. **NeMo Guardrails 0.23.0 blocks the same prompts as 0.21.0** (42/45 adversarial, 0/90 false blocks on this set), but asks the judge for up to 1,024 tokens instead of 3. That one default costs about 1.5 s per request, and setting it back is one line. → `../vol1b/BASELINE.md` §2, §8
+
+| Concurrent requests | NIM bf16 ÷ 4-bit (16 slots), total | NIM FP8 ÷ 4-bit, total | NIM bf16 ÷ 16-bit, total (matched precision) | NIM bf16 ÷ 4-bit, per-user end-to-end |
+|---|---|---|---|---|
+| 1 | 0.51 | 0.88 | 1.10 | 0.51 |
+| 8 | 3.5 | 6.3 | 1.9 | 3.2 |
+| 16 | 2.0 | 3.6 | 2.9 | 1.9 |
+| 32 | 3.0 | 5.1 | 5.8 | 2.8 |
+| 64 | 5.1 | 8.0 | 9.4 | 4.1 |
+| **128** | **7.4** (5,458 / 741) | **11.8** (8,713 / 741) | **13.6** (5,458 / 402) | **4.1** (45 / 11) |
+
+> Every ratio above is a division of two cells in `results/p59_nim_value/README.md`. At 128 concurrent requests NIM was still inside the MLPerf server SLO; the Ollama arms had left it at 8, so the ratios above 8 compare a configuration that is serving with one that is queueing. A ratio is a function of concurrency, not a property of an engine, and is quoted only with the concurrency, the precision of both arms, the input shape (synthetic chat, 200 in / 200 out) and whether the SLO held.
+
+## Scope
+
+Vol.1 as first published (2026-03) is `../benchmark/` and is not changed by anything here; this directory is the renewed Vol.1. This directory holds the write-up of a revisit that asks a narrower question than Vol.1-A's E2 did: on one card, one model, one set of weight files and one precision, what does the NIM container's pre-selected configuration amount to against the same inference engine started by hand? The measurements live in `../vol2/results/p54_engine/`; the section of record is in `../vol2/BASELINE.md`.
 
 **Codes.** P54, P59, P62 and P63 (and the Q1–Q4 inside P62) are this lab's run identifiers: one per measurement request, numbered in order. They appear in directory, script and pre-registration names so that a file can be traced to the run that produced it. They carry no other meaning, and each run's README states what it measured.
 
