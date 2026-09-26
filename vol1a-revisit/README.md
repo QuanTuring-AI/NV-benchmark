@@ -61,8 +61,37 @@ Vol.1-B (`../vol1b/BASELINE.md`, section 12) showed that in Vol.1-A's E2 the com
 
 ## D · Several users at once: NIM against Ollama (`results/p59_nim_value/`)
 
-A single-user comparison cannot stand for a serving engine; this run adds the concurrent half. Llama 3.1 8B on this card, five configurations at 1, 8, 16, 32, 64 and 128 concurrent requests: NIM 2.0.12 bf16 and fp8, and Ollama 0.34.4 with the 4-bit model (slots tuned, and left to Ollama) and the 16-bit model. On the chat profile, Ollama's 4-bit model decodes fastest for one user. NIM answers first. From 8 users on, NIM leads on total throughput and on each user's end-to-end speed. NIM keeps the MLPerf server SLO to 128 users; no Ollama configuration keeps it past one. At comparable precision the two engines are close for one user and part as soon as users overlap: the single-user gap is precision, the multi-user gap is the engine. Scope: NIM's profiles on this card are vLLM only; speed and capacity only, answer quality not compared. Details, crossing points, predictions and what is not settled: `results/p59_nim_value/README.md`.
+A single-user comparison cannot stand for a serving engine; this run adds the concurrent half. Llama 3.1 8B on this card, five configurations at 1, 8, 16, 32, 64 and 128 concurrent requests: NIM 2.0.12 bf16 and fp8, and Ollama 0.34.4 with the 4-bit model (slots tuned, and left to Ollama) and the 16-bit model. On the chat profile, Ollama's 4-bit model decodes fastest for one user. NIM answers first. From 8 users on, NIM leads on total throughput and on each user's end-to-end speed. NIM keeps the MLPerf server SLO to 128 users; no Ollama configuration keeps it past one. At comparable precision the two engines are close for one user and part as soon as users overlap: the single-user gap is precision, the multi-user gap is the engine. Scope: NIM's profiles on this card are vLLM only. This section covers speed and capacity; answer quality is in section E. Details, crossing points, predictions and what is not settled: `results/p59_nim_value/README.md`.
+
+**Three follow-ups (P62, 2026-09-26).**
+
+- **Where the chat-profile curves cross** (`results/p62_levels/`). Measured at 2 and 4 concurrent requests, with 1 and 8 in the same session, for all five configurations. The N-BF16 vs O-Q4 crossing lies **between 2 and 4**, on both total and per-user throughput. At 2 requests O-Q4 serves 183 tok/s in total and N-BF16 173; at 4 they serve 188 and 335 (`analysis.json` → `crossings`, `levels.<arm>|C|main`). Every anchor is within 0.955–1.146 of P59.
+- **O-Q4's flat total** (same directory, `q4`). With 16 slots, O-Q4's total stays at 175–188 tok/s from 1 to 9 concurrent requests, reaches 243 at 12 and 656 at 16. Up to *c* requests decode at the same moment the whole way (8 at once for 63% of the c=8 level), and every `ollama ps` sample shows 100% GPU. The pre-registered explanation, a batch-size limit of 8 that would put the step between 8 and 9, failed. Why the total stays flat cannot be determined from this run.
+- **The RAG profile for the NIM arms, with prefix-cache reuse counted on the server** (`results/p62_rag/`). The positive control (the same prompt twice) fired on all four containers at 99.5–99.9%; no calibration request showed more than 0.9%.
+  - **N-BF16:** calibration passes, and the server SLO holds at 1 concurrent request (p99 TTFT 353 ms), not at 8 (2,229 ms) (`rag.N-BF16.conclusion`).
+  - **N-FP8:** the conclusion stays **null**. Its calibration failed again without any prefix-cache hit. The server's own TTFT histogram places the gap in the server: 138 ms for the harness's prompts against 220 ms for AIPerf's prompts of the same length, and AIPerf agrees with the server. The FP8 arm's prefill time depends on the prompt content (BF16's does not: 309 against 302 ms), for a reason this run cannot see (`server_side_reading`).
+
+## E · Answer quality: is the faster configuration faster because it answers worse? (`results/p62_quality/`)
+
+lm-evaluation-harness 0.4.13 was run against the four configurations: N-BF16, N-FP8, O-Q4 (`ollama show`: Q4_K_M) and O-FP16. It used the same task configuration and request bodies on every arm (0 request-hash mismatches over every item).
+
+Task sets:
+- GSM8K `gsm8k_cot_llama`: all 1,319 items.
+- IFEval: all 541 items.
+- MMLU `mmlu_llama`: a seeded 50 × 57 sample (2,850 items).
+
+The comparison is item by item against N-BF16, with a pre-registered equivalence bound of ±2 pp.
+
+- **MMLU (every gate passed; noise floor 1.0%): each faster configuration is within ±2 pp of N-BF16.** Paired differences with 95% intervals: N-FP8 −0.04 [−0.81, +0.74], O-FP16 +0.11 [−0.53, +0.74], O-Q4 −0.25 [−1.23, +0.74] (`analysis.json` → `paired_vs_ref.<arm>|mmlu`). Accuracies are 68.9, 68.9, 69.1 and 68.7% (`cells.<arm>|mmlu.accuracy_pct`).
+- **GSM8K and IFEval carry no conclusion.** On every arm, 2.0–3.3% of outputs reached the task's output cap. The pre-registered gate allows under 1%, so the cells are null (`cells.*.g2.length_share`). N-BF16 run twice at temperature 0 also changed its correctness on 3.26% (GSM8K) and 5.55% (IFEval) of items. That is more than the ±2 pp bound can separate, so the bound is void there and was not widened (`noise_floor`). The accuracies as measured are kept but are not conclusions:
+  - GSM8K: 84.2 / 84.1 / 84.2 / 82.6%.
+  - IFEval: 75.8 / 75.4 / 76.0 / 73.9%.
+- **Concurrency does not move accuracy measurably.** N-FP8 on GSM8K scored 84.38% at 1 concurrent request, 84.08% at 8 and 84.61% at 32. c=32 against c=1 is +0.23 pp [−1.21, +1.59], McNemar p 0.83, although only 25% of the answers were identical (`concurrency_fp8_gsm8k`).
+- **Scorer controls** passed on all three tasks before any model output: reference answers score 100%, permuted answers score chance (`g1_scorer_controls.json`).
+- **Publication.** Only per-item machine fields are published, and `analysis.json` recomputes from them byte for byte (`recompute_check.txt`). A post-run correction of the join between lm-eval's samples and the proxy records (MMLU contains three pairs of identical prompts) is disclosed in that README.
+
+Details, gates, predictions: `results/p62_quality/README.md`.
 
 ## Files
 
-`../vol2/results/p54_engine/` (pre-registration, stack record, start attempts, single-stream and concurrency runs, analyses) · `results/p59_nim_value/` (section D). Harness `../vol2/scripts/p54_engine.py`; analysis `../vol2/scripts/p54_single_analyze.py`, `p54_conc_analyze.py`, `p54_attempts_analyze.py`; runner `../vol2/scripts/run_p54_engine.sh`.
+`../vol2/results/p54_engine/` (pre-registration, stack record, start attempts, single-stream and concurrency runs, analyses) · `results/p59_nim_value/` (section D) · `results/p62_levels/`, `results/p62_rag/` (section D, follow-ups) · `results/p62_quality/` (section E). P62 harnesses, analysers and runners: `scripts/p62_*.py`, `scripts/run_p62_*.sh`. Harness `../vol2/scripts/p54_engine.py`; analysis `../vol2/scripts/p54_single_analyze.py`, `p54_conc_analyze.py`, `p54_attempts_analyze.py`; runner `../vol2/scripts/run_p54_engine.sh`.

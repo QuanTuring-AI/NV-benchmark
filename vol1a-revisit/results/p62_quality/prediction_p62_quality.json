@@ -1,0 +1,163 @@
+{
+  "experiment": "Vol.1-A revisit, P62 Q1 · Llama 3.1 8B Instruct on one RTX 5090 · answer quality of the four configurations whose speed P59 measured (N-BF16, N-FP8, O-Q4, O-FP16) on three public task sets: GSM8K (all 1,319), IFEval (all 541) and a 2,850-item MMLU sample (50 from each of 57 subjects). The question: is the faster configuration faster because it answers worse?",
+  "written_at": "2026-09-26T16:52:17+0800",
+  "written_before": "the measured run's first container. run_p62_quality.sh refuses to start if this file or its .sha256 is missing or changed, or if items/ exists.",
+  "scope": "Answer quality on these three task sets with this tool, task version and prompt format, at temperature 0. The absolute accuracies depend on the prompt format (the same model's GSM8K accuracy moves by several points between prompt formats), so they are not set beside other publications' numbers as a result; the comparison is between arms, item by item. Nothing here says anything about speed.",
+  "tool": {
+    "lm_evaluation_harness": "0.4.13 (pinned; the venv's package list is kept in logs/lmeval_venv_freeze.txt)",
+    "pinned_packages": [
+      "aiohttp==3.14.3",
+      "datasets==5.0.1",
+      "immutabledict==4.3.1",
+      "langdetect==1.0.9",
+      "lm_eval==0.4.13",
+      "nltk==3.10.3",
+      "torch==2.14.0+cpu",
+      "transformers==5.17.0"
+    ],
+    "backend": "local-chat-completions through a logging proxy on 127.0.0.1 (vol1a-revisit/scripts/p62_quality.py), chat template applied by each server, few-shot examples as multi-turn chat, concurrency 8 (lm-eval num_concurrent), max_retries 3, timeout 1,800 s",
+    "tasks": {
+      "gsm8k_cot_llama": "8-shot, generation until the task's stop strings (the backend sends the first four) or 256 tokens (lm-eval's default; the task sets none), primary metric exact match with the strict-match filter ('The final answer is N'); flexible-extract also recorded",
+      "ifeval": "0-shot, up to 1,280 tokens, primary metric prompt-level strict accuracy; prompt-level loose and both instruction-level accuracies recorded",
+      "mmlu_llama": "5-shot, the task's assistant prefix 'The best answer is', up to 10 tokens, stop '.', exact match (strict_match filter); restricted to mmlu_sample_ids.json"
+    },
+    "request_fields": "the backend sends max_tokens (not max_completion_tokens), temperature 0 (IFEval sets 0.0; the other two send the backend default 0), seed 1234 and the stop list; for MMLU the request also carries continue_final_message=true and add_generation_prompt=false (see mmlu_prefix)",
+    "mmlu_prefix": "mmlu_llama ends every prompt with an assistant message 'The best answer is'. Sent as is, vLLM closes that message and opens a new assistant turn; Ollama continues it. The two fields make vLLM continue it as Ollama does. They are sent to every arm, so the request bodies stay identical (G4). Shown in the harness test: see harness_test.",
+    "mmlu_sample": {
+      "file": "vol1a-revisit/results/p62_quality/mmlu_sample_ids.json",
+      "sha256": "8adc9a7103c6557f97c34ef10050857310c369e50d397d42966989b5ff28835f",
+      "rule": "random.Random(f'20260926:{subject}').sample(range(n_test_items), 50) per mmlu_llama subject, sorted"
+    }
+  },
+  "arms": {
+    "N-BF16": "NIM 2.0.12, profile 092ed421 (vllm-bf16), NIM_MAX_MODEL_LEN 8192, VLLM_USE_V2_MODEL_RUNNER=0 -- the reference",
+    "N-FP8": "NIM 2.0.12, profile c4789f7a (vllm-fp8, the profile NIM selects on this card when nothing is set), same settings",
+    "O-Q4": "ollama/ollama:latest (0.34.4), llama3.1:8b (manifest 46e0c10c039e), OLLAMA_CONTEXT_LENGTH 8192, OLLAMA_NUM_PARALLEL 16 (P59); its quantization is recorded from `ollama show`, not assumed",
+    "O-FP16": "ollama/ollama:latest, llama3.1:8b-instruct-fp16 (manifest 4aacac419454), OLLAMA_CONTEXT_LENGTH 8192, OLLAMA_NUM_PARALLEL 8 (P59)",
+    "order": "O-Q4 -> N-BF16 -> O-FP16 -> N-FP8; per arm GSM8K, IFEval, MMLU; then N-BF16's repeat of all three (noise floor), N-FP8's GSM8K at concurrency 1 and 32",
+    "note": "FP16 and bf16 are both 16-bit formats with different ranges: 'comparable precision', not 'the same precision'"
+  },
+  "extra_runs": {
+    "noise_floor": "N-BF16 runs all three task sets twice in the same container (the ticket asks for GSM8K; IFEval and MMLU are added so that each task has its own noise floor)",
+    "concurrency": "N-FP8 runs GSM8K at concurrency 1 and 32 in addition to its concurrency-8 run"
+  },
+  "gates": {
+    "G1": "scorer controls, run through lm-eval's own pipeline with a stand-in model before this file was written (no GPU, no model): values below. Rule: GSM8K positive 1.0 and negative <= 0.05; MMLU positive 1.0 and negative 0.15-0.35; IFEval constructed positive 1.0 and both negatives <= 0.30. A failed G1 makes every cell of that task null.",
+    "G1_measured": {
+      "gsm8k_negative": {
+        "coincidental_equal_references": 18,
+        "items": 1319,
+        "strict_match": 0.013646702047005308
+      },
+      "gsm8k_positive": {
+        "flexible_extract": 1.0,
+        "items": 1319,
+        "strict_match": 1.0
+      },
+      "ifeval_negative_empty": {
+        "items": 541,
+        "non_eligible_items": 428,
+        "note": "all prompts answered with an empty string except the eligible ones in this same pass; the eligible ones are scored separately below",
+        "prompt_level_strict": 0.2088724584103512,
+        "prompt_level_strict_non_eligible": 0.0
+      },
+      "ifeval_negative_permuted": {
+        "items": 113,
+        "prompt_level_strict": 0.02654867256637168
+      },
+      "ifeval_positive_constructed": {
+        "by_instruction_type": {
+          "change_case:english_capital": [
+            11,
+            11
+          ],
+          "change_case:english_lowercase": [
+            13,
+            13
+          ],
+          "detectable_content:postscript": [
+            13,
+            13
+          ],
+          "detectable_format:json_format": [
+            8,
+            8
+          ],
+          "detectable_format:title": [
+            13,
+            13
+          ],
+          "keywords:existence": [
+            8,
+            8
+          ],
+          "punctuation:no_comma": [
+            16,
+            16
+          ],
+          "startend:end_checker": [
+            17,
+            17
+          ],
+          "startend:quotation": [
+            14,
+            14
+          ]
+        },
+        "items": 113,
+        "prompt_level_strict": 1.0
+      },
+      "lm_eval_version": "0.4.13",
+      "mmlu_negative": {
+        "coincidental_equal_references": 707,
+        "exact_match": 0.2480701754385965,
+        "items": 2850
+      },
+      "mmlu_positive": {
+        "exact_match": 1.0,
+        "items": 2850
+      },
+      "seed": 20260926
+    },
+    "G2": "per arm and task, every item's server prompt-token count within +-5% of N-BF16's for the same item after removing the arm's constant template offset (N-BF16 minus the arm for the one-word probe message; NIM arms 0), and finish_reason 'length' on < 1% of items; else that cell is null",
+    "G3": "the arm's residency (Ollama `ollama ps` 100% GPU; NIM CUDA graphs captured) and P59's health gate (decode rate at c=1 from 20 own-client calibration requests x bytes per token / 1,792 GB/s >= 0.40); else every cell of that arm is null",
+    "G4": "every item's request sha256 (request body without 'model') equal to N-BF16's, same item set; else that cell is null",
+    "join": "every item joined to exactly one proxy record by the sha of its messages, with the proxy's output text equal to lm-eval's; else that cell is null"
+  },
+  "statistics": {
+    "program": "vol1a-revisit/scripts/p62_quality_analyze.py (13 self-test cases), reading only the published files",
+    "per_cell": "accuracy with a Wilson 95% interval",
+    "paired": "arm minus N-BF16 over the same items: difference in pp, paired bootstrap 95% interval (10,000 resamples, fixed seed), exact McNemar p",
+    "equivalence": "bound +-2 pp for all three tasks: interval inside -> 'within'; entirely beyond -> 'outside'; otherwise 'undetermined'. Null if either cell is null or the task's noise floor (share of items whose correctness differs between N-BF16's two runs) exceeds 2 pp; the bound is not changed.",
+    "sensitivity": "reported, never a verdict: the paired comparison over the items where neither arm's output ended with finish_reason 'length' (the output cap); a model that loops until the cap is not a truncated prompt, but G2 counts it as the ticket defines G2",
+    "concurrency": "N-FP8 GSM8K c=1 vs c=32 (and each against c=8): accuracies, paired interval, McNemar p, correctness agreement, identical-output share"
+  },
+  "public_content": "per item: task, item id, correct, the extracted answer (GSM8K the number the filter took, MMLU the letter or '[other]', IFEval one boolean per instruction), request / messages / output sha256, output length in characters, server prompt and completion tokens, finish_reason. Output text stays in the local process files. analysis.json is recomputed from the published files alone after the run and must match byte for byte (recompute_check.txt).",
+  "harness_test": "Four harness tests before this file was written. Test 2 found: (1) lm-eval logs a chat request's context as [[context], generation settings], so the join by messages sha failed on every item; the unwrapping was fixed and the saved test data re-joined offline 6/6 on GSM8K and IFEval with identical output text; (2) test mode passed MMLU sample ids for 6 subjects only, and lm-eval runs any subject missing from the dict in full (13,152 items ran); test mode now lists every subject (the measured run lists all 57, as bound in mmlu_sample_ids.json); (3) the proxy opened a new upstream connection per request and ran out of local ports on Ollama (407 of 3,528 requests failed with WinError 10048 and were retried by lm-eval); it now keeps one upstream connection per handler thread. From the 13,152 NIM MMLU requests of that test: every output was a single letter continuing the assistant prefix (' A' to ' D'), finish_reason stop, with continue_final_message=true and add_generation_prompt=false accepted by NIM 2.0.12; Ollama's 3,121 successful requests also answered with one letter. Prompt tokens: NIM counted exactly 25 more than Ollama on every item compared (6 GSM8K, 6 IFEval, 3,109 MMLU), the same 25 as the one-word probe (36 against 11): a constant chat-template difference. `ollama show` reported O-Q4's quantization as Q4_K_M. Test 3 was contaminated: the stopped test 2's process (the venv launcher and its child) was still running and kept sending requests to the new O-Q4 container (health read 0.074, the proxy saw 0 GSM8K requests); both processes were stopped, the container removed, and test 3 discarded. Test 4 (clean, 3 items per task): O-Q4 health 0.531, N-BF16 0.801; every item joined (3 / 3 / 57 per arm), request sha256 identical between the arms on every item (G4), prompt tokens within 0% after the 25-token offset (G2 part a); one N-BF16 GSM8K item reached the 256-token cap by repeating a sentence (finish_reason length), which fails G2 part b for that cell in the test; the recompute check reproduced analysis.json byte for byte from the published files and its negative control changed it. Added after the tests: a sensitivity reading (the paired comparison over items where neither arm hit the output cap), reported and never a verdict. The G1 scorer controls ran once, before any model output, while the Q2/Q4 run was on the GPU (CPU only).",
+  "predictions": {
+    "basis": "third-party measurements of this model: FP8 weights keep about 99% of bf16's accuracy, 4-bit integer weights about 98.7% (arXiv 2411.02355); llama.cpp quantization of this model is studied in arXiv 2601.14277. These set expectations only; they are not arms.",
+    "Q1-1": "N-FP8 minus N-BF16 within +-1 pp (point estimate) on each of the three tasks",
+    "Q1-2": "O-FP16 minus N-BF16 within +-1 pp on each task",
+    "Q1-3": "O-Q4 minus N-BF16 no lower than -3 pp on each task",
+    "Q1-4": "N-BF16 GSM8K strict-match accuracy between 78% and 88%",
+    "Q1-5": "noise floor (N-BF16 run twice): correctness differs on <= 2% of items on each task",
+    "Q1-6": "N-FP8 GSM8K: c=1 and c=32 accuracies within 1 pp of each other, with fewer than 100% identical outputs",
+    "Q1-7": "every arm passes G2, G3 and G4 on every task",
+    "Q1-8": "`ollama show` reports O-Q4's quantization as Q4_K_M (the harness test already showed it)",
+    "Q1-9": "GSM8K finish_reason 'length' below 1% on every arm (the harness test had 1 of 3 N-BF16 items at the 256-token cap; this is the prediction most at risk of nulling GSM8K cells through G2)",
+    "confidence": "Q1-1 medium, Q1-2 medium, Q1-3 medium, Q1-4 medium, Q1-5 low, Q1-6 medium, Q1-7 low, Q1-8 high, Q1-9 low",
+    "reading_of_predictions": "a failed prediction is reported as failed; nothing is re-run to chase a result"
+  },
+  "harness_sha256": {
+    "vol1a-revisit/scripts/p62_quality.py": "8e1f814ef907e5b6c96abc5ca79c2006d0f6d6f1aa87531125b5916db90abc19",
+    "vol1a-revisit/scripts/p62_quality_analyze.py": "46f563485af32a0fe603126aaa3a5c743d36413f37b73577c9d19f161087b47e",
+    "vol1a-revisit/scripts/p62_quality_postrun.py": "3130f9cb1c040690d368b83507a77cd5c9f829cbdb79fa91fc00df3db813598a",
+    "vol1a-revisit/scripts/p62_scorer_controls.py": "925bb3d0b087778186ed69ded9c85d1df942afc2aae61a18d0d55cace735fe2d",
+    "vol1a-revisit/scripts/p62_mmlu_sample.py": "67f7d6c6ff912e4f88b3741ce7f448505cc547e064ec497212204a8601840fd3",
+    "vol1a-revisit/scripts/run_p62_quality.sh": "4ff00cb868f94cfb8645831127ee2ada92d88cb3e880dad4d1c0789c6a8fc415",
+    "vol1a-revisit/scripts/p59_nim_value.py": "4f0867273e47723680907494f6b3e79924e720b1c82f81591c6b16fe4c9acec5",
+    "vol2/scripts/p54_engine.py": "9a9944603e5ada74df1ee4addffbc6111540e4b80fca490ef1e6038e4aa626c4",
+    "vol1a-revisit/results/p62_quality/g1_scorer_controls.json": "92b5caea1ceb91d617b153f3079e7ea5de22543bbb551735643e4dd967780402",
+    "vol1b/scripts/prediction_guard.py": "05b735290b1e935b32e3ec5805f43f38f2101a47c8c5f9b1efdad6db852a9f83"
+  }
+}
