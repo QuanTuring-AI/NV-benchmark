@@ -1,0 +1,81 @@
+{
+  "experiment": "Vol.1 (renewed), P70 · the 128-request headline re-checked in a window with no other GPU load: Llama 3.1 8B Instruct on one RTX 5090, P59's four configurations (NIM 2.0.12 bf16 and fp8, Ollama 4-bit and fp16), profile C (200 / 200 tokens), 1, 32 and 128 concurrent requests.",
+  "written_at": "2026-09-27T20:58:07+0800",
+  "written_before": "the first measured cell. run_p70.sh refuses to start if this file or its .sha256 is missing or changed, or if levels.jsonl exists.",
+  "why": "P59, the source of the Vol.1 headline (128 concurrent requests: NIM bf16 5,458 tok/s against the 4-bit Ollama build's 741, 7.4x), ran on 2026-09-25 from 02:32 to 06:44 with other load on the desktop GPU: its levels ended at 3-23% utilization (median 5) and 45-70 W before they started, where a window with no other load ends at 0% (tools/g8_gate.py). The arms ran one after another, 30-60 minutes apart, so the background need not have been the same for both, nor have cost both the same share. The decision to re-measure is made from that fingerprint, before any clean number is seen.",
+  "scope": "Profile C only, three levels, main containers. P59's harness is imported unchanged. This run changes no published file.",
+  "stack": {
+    "nim_image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:2.0.12, image id sha256:d2c94c1d654c3e80b8bc08cc83298d2ba4e219dff41d1092555795edb93c6545 (as P59)",
+    "ollama_image": "ollama/ollama:latest, image id sha256:8262851b2846b87c649eddf3e76beb270c52f4d1bc94559f47efde16b0841551 (as P59), Ollama 0.34.4",
+    "nim_profiles": {
+      "N-BF16": "092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+      "N-FP8": "c4789f7af56c770c1c88b73da666886365534d6980b6b922b41fd97036c77d73"
+    },
+    "ollama_models": {
+      "O-Q4": "llama3.1:8b",
+      "O-FP16": "llama3.1:8b-instruct-fp16"
+    },
+    "ollama_num_parallel": {
+      "O-Q4": 16,
+      "O-FP16": 8,
+      "source": "P59's fitted values (events_public.jsonl container_start env), set directly instead of re-fitting"
+    },
+    "context": 8192,
+    "nim_env": {
+      "NIM_MAX_MODEL_LEN": "8192",
+      "VLLM_USE_V2_MODEL_RUNNER": "0"
+    },
+    "driver": "591.86",
+    "aiperf": "0.11.0"
+  },
+  "design": {
+    "order": "one container per configuration: N-BF16 -> O-Q4 -> N-FP8 -> O-FP16, each running c = 1, 32, 128 in turn",
+    "why_not_interleaved_by_c": "interleaving by c needs twelve container starts (six NIM loads of several minutes each) instead of four; every cell is gated by G8 immediately before it, which is what interleaving would protect against",
+    "per_container": "isolation check, prefix-cache detector, discarded 120 s warm-up at c=1 (seed 20260925 + 9000), calibration (20 requests), as P59",
+    "per_cell": "G8 (10 s at 1 Hz; util p50 <= 2 % and power p50 <= 45 W; retry every 60 s up to 15 min, else the cell is null); AIPerf C profile, 60 s, seed 20260925 + c, as P59; then the no-overwrite check (tools/overwrite_gate.py): tracked files unchanged and new files only under this run's directory, else the run stops and the cell is void",
+    "g8_positive_control": "once, in the first NIM container after calibration: G8 sampled while 4 streams decode on the engine; it must not pass",
+    "differences_from_p59_by_cell": "in P59 each container ran 1, 8, 16, 32, 64, 128 (and profile R after C); here 1, 32, 128. The Ollama slot counts are set to P59's fitted values instead of being re-fitted. Nothing else differs (images, profiles, models, context, AIPerf command, seeds, durations)."
+  },
+  "gates": {
+    "arm": "P59's (p59_analyze.py): residency (Ollama 100% GPU; NIM CUDA graphs captured) and health (decode rate at c=1 x bytes per token / 1,792 GB/s >= 0.40)",
+    "cell": "P59's cell checks plus G8 passed before it and the no-overwrite check passed after it"
+  },
+  "p59_values": {
+    "total_tps_at_128": {
+      "N-BF16": 5457.872739734501,
+      "O-Q4": 741.0549637573281,
+      "N-FP8": 8712.62763655729,
+      "O-FP16": 401.71567092932446
+    },
+    "N-BF16/O-Q4_at_128": 7.365,
+    "N-FP8/O-Q4_at_128": 11.757,
+    "N-BF16/O-FP16_at_128": 13.586,
+    "N-BF16/O-Q4_at_1": 0.505,
+    "source": "vol1a-revisit/results/p59_nim_value/analysis.json"
+  },
+  "predictions": {
+    "R1": "N-BF16 / O-Q4 total tok/s at 128 within 6.7-8.1 (7.4 +- 10%)",
+    "R2": "N-FP8 / O-Q4 and N-BF16 / O-FP16 at 128 each within P59's value +- 10%",
+    "R3": "at 1 request the 4-bit build is still faster than NIM bf16 (P59: N-BF16 / O-Q4 = 0.505)",
+    "R4": "each cell's total tok/s is reported beside P59's same cell; no statement of the form 'the background slowed X by Y%' is made",
+    "reading_of_predictions": "a failed prediction is reported as failed; nothing is re-run to chase a result"
+  },
+  "analysis_rules": {
+    "program": "vol1a-revisit/scripts/p70_analyze.py (10 self-test cases; each of 8 mutations -- the band, the tolerance, the G8, overwrite, arm-gate and P59 cell-check joins, a ratio's direction, R3's direction -- makes at least one fail), reading only the published files and P59's analysis.json"
+  },
+  "harness_sha256": {
+    "vol1a-revisit/scripts/p70_clean_recheck.py": "5f7e72827bb88e7e4d9608a5fa136b3f24d122d56e28191bbbcd1c6c84008260",
+    "vol1a-revisit/scripts/p70_analyze.py": "79464e647a7cec68f018af03786a20edf423d485da27f06a314fa6b06a35affb",
+    "vol1a-revisit/scripts/run_p70.sh": "7c34cc7b5f5fb3883774c9e78ce5e15150b0930ea0c3cd114b3d2bcca0ad214b",
+    "vol1a-revisit/scripts/p59_nim_value.py": "4f0867273e47723680907494f6b3e79924e720b1c82f81591c6b16fe4c9acec5",
+    "vol1a-revisit/scripts/p59_analyze.py": "153899fc2f691e46f5a05d23a3deeb14093acf4f0178653cc8e69470f56e31a5",
+    "vol2/scripts/p53_concurrency.py": "3858baaf99a7aa200c3c391b15cbcbf5c5e12fa8feb6fb2df11e2f89403dd7aa",
+    "vol2/scripts/p54_engine.py": "9a9944603e5ada74df1ee4addffbc6111540e4b80fca490ef1e6038e4aa626c4",
+    "vol1b/scripts/prediction_guard.py": "05b735290b1e935b32e3ec5805f43f38f2101a47c8c5f9b1efdad6db852a9f83",
+    "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb",
+    "tools/overwrite_gate.py": "e4d0a7ef16da29849bea9a36c826b6c4146e1888a071e989e41641c40a139d32"
+  },
+  "fixed_inputs_sha256": {
+    "vol1a-revisit/results/p59_nim_value/analysis.json": "b614702c0264218cb3dc4b15cffa5b05dcc5ff85ee1bcc37da5c6148a497231b"
+  }
+}
