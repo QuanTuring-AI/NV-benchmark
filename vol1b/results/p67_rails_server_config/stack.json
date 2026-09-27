@@ -1,0 +1,204 @@
+{
+ "nim": {
+  "image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:2.0.12",
+  "image_id": "sha256:d2c94c1d654c3e80b8bc08cc83298d2ba4e219dff41d1092555795edb93c6545",
+  "profile": "092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+  "env": {
+   "NIM_MAX_MODEL_LEN": "8192",
+   "VLLM_USE_V2_MODEL_RUNNER": "0"
+  },
+  "source": "vol1a-revisit/scripts/p59_nim_value.py (ARMS N-BF16, NIM_ENV) via vol2/scripts/p54_engine.py, the same launcher as P66; image id from docker image inspect (versions.txt)"
+ },
+ "guardrails": {
+  "nemoguardrails": "0.23.0",
+  "httpx": "0.28.1",
+  "uvicorn": "0.54.0",
+  "h11": "0.16.0",
+  "fastapi": "0.141.1",
+  "starlette": "1.7.0",
+  "environment": "gr0230srv, the P66 environment, unchanged (vol1b/results/p66_rails_under_load/guardrails_venv_freeze.txt, sha256 c649fb2bf93e4e0199dc9286dde278b60fc23896b8eb0bb3a1d8c7f28e3c1fb3); versions read at run time (versions.txt)",
+  "server": "vol1b/scripts/p67_gr_server.py: P66's server (vol1b/scripts/p66_gr_server.py = the CLI's `server` with --default-config-id, host 127.0.0.1, log level info) with uvicorn's `workers` and `timeout_keep_alive` exposed. Every P67 server, W1K5 included, runs it; P66 ran p66_gr_server.py.",
+  "differences_from_p66_server": [
+   "the app is the import string p67_gr_app:app (uvicorn needs one for workers > 1); each worker sets the deployment type, rails_config_path and the default config id itself at import",
+   "one ASGI wrapper adds two response headers, x-p67-worker-pid and x-p67-config-sha256",
+   "the HTTP protocol is p67_gr_app:CountedH11, uvicorn's h11 protocol with two log lines (a keep-alive close; a connection lost with an exception) and no change in behaviour",
+   "the access-log line carries the worker's pid"
+  ],
+  "http_protocol_in_this_environment": "h11 (httptools is not installed, so uvicorn's `auto` picks h11 in P66 as well)",
+  "config_selection": "--default-config-id semantics (server/api.py:506-507 uses app.default_config_id when the request names no config), set in every worker at import; checked per worker by G2 before the levels (the adversarial item blocked, the clean one passed with 3 LLM calls, each response carrying its worker's pid and config sha256)",
+  "usage_stats": "NEMO_GUARDRAILS_NO_USAGE_STATS=1 on every server, as P66",
+  "verbose_logging": "the server builds its rails with LLMRails(config, verbose=True) (nemoguardrails/server/api.py:396 and :693), so every request's events and prompts are written to the server log at level info. This is 0.23.0's server as shipped, the same in P66 and P67 and not a factor here; the logs stay local (they hold prompt text).",
+  "llm_framework": "default, the library's own OpenAI-compatible client (as P66)"
+ },
+ "server_factors": {
+  "W": {
+   "values": [
+    1,
+    4
+   ],
+   "source": "uvicorn.run(workers=...) (uvicorn/main.py:526); default 1",
+   "rule": "4, or min(4, physical cores - 2) if the host has fewer than 6 physical cores",
+   "host_physical_cores": 20,
+   "host_logical_cores": 28,
+   "host_source": "psutil.cpu_count(logical=False / True), versions.txt of the harness tests",
+   "chosen": 4,
+   "w8_branch": "if R3 W4K75 at c=128 is server_bound: R3 W8K75 at c=128 once (variant w8); 8 <= 20 - 2"
+  },
+  "K": {
+   "values": [
+    5,
+    75
+   ],
+   "unit": "seconds",
+   "source": "uvicorn Config(timeout_keep_alive=5) (uvicorn/config.py:234); the idle keep-alive connection is closed by H11Protocol.timeout_keep_alive_handler (uvicorn/protocols/http/h11_impl.py:359)"
+  },
+  "windows_workers": "on Windows uvicorn's workers are spawned processes that share one listening socket. In the harness tests several workers calling listen() at the same moment failed with WinError 10022 and uvicorn's supervisor started replacements (uvicorn/supervisors/multiprocess.py keep_subprocess_alive). The harness therefore waits until all W workers answer on fresh connections, each pid a descendant of the server it started, and counts the restarts per server start (events)."
+ },
+ "client_pool": {
+  "max_connections": 1000,
+  "max_keepalive_connections": 100,
+  "source": "nemoguardrails/llm/clients/constants.py:20 DEFAULT_CONNECTION_LIMITS, used by llm/clients/base.py:127 when no http_client is passed; read at run time by run_p66.sh (versions.txt)",
+  "note": "above every concurrency level (128), so no pool-raised variant is run"
+ },
+ "iorails_admission_queue": {
+  "present_in_0_23_0": true,
+  "enabled": false,
+  "NONSTREAM_QUEUE_DEPTH": 256,
+  "NONSTREAM_MAX_CONCURRENCY": 256,
+  "source": "nemoguardrails/guardrails/iorails.py:80-81; enabled only when NEMO_GUARDRAILS_IORAILS_ENGINE is true/1 (nemoguardrails/__init__.py:48), which the harness removes from every server's environment"
+ },
+ "configs": {
+  "default": {
+   "sha256": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+   "same_bytes_as": "vol1b/results/p66_rails_under_load/configs/default/config.yml"
+  },
+  "mt3": {
+   "sha256": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+   "same_bytes_as": "vol1b/results/p66_rails_under_load/configs/mt3/config.yml"
+  },
+  "passthrough": {
+   "sha256": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f",
+   "derived": "the default config's bytes up to its `# Self-check rails` comment: the same models section, no rails, no prompts",
+   "same_bytes_as": "vol1b/results/p66_rails_under_load/configs/passthrough/config.yml"
+  }
+ },
+ "request_parameters_through_the_server": "max_tokens, temperature and top_p from the request body go to the main generation call (server/api.py chat_completion -> llm_params); the self-check calls use the task's own max_tokens (library/self_check/*/actions.py). The request schema has no ignore_eos, so no arm is sent one.",
+ "prefix_cache": {
+  "kv_block_tokens": 16,
+  "source": "vllm:cache_config_info block_size 16, vol1b/results/p66_rails_under_load/N/c0032/server_metrics_export.json (the same image and profile)"
+ },
+ "p66_anchor_cells": "vol1b/results/p66_rails_under_load/analysis.json cells N|32, N|64, N|128, R3|32, R3|64, R3|128 (G7)",
+ "workers_observed": {
+  "source": "events_public.jsonl server_start records (P67_WORKER lines printed by each worker at import; pids from the x-p67-worker-pid response header)",
+  "by_server_start": {
+   "R1024_W1K5": {
+    "workers": 1,
+    "keep_alive_s": 5,
+    "config": "default",
+    "config_sha256_expected": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+    "workers_answering": {
+     "51756": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d"
+    },
+    "g2_pass": true,
+    "uvicorn_listen_winerror_10022_restarts": 0,
+    "seconds_to_all_workers": 4.4
+   },
+   "R1024_W4K75": {
+    "workers": 4,
+    "keep_alive_s": 75,
+    "config": "default",
+    "config_sha256_expected": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+    "workers_answering": {
+     "47144": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+     "48440": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+     "48756": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+     "6888": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d"
+    },
+    "g2_pass": true,
+    "uvicorn_listen_winerror_10022_restarts": 0,
+    "seconds_to_all_workers": 14.2
+   },
+   "R1024_W1K75": {
+    "workers": 1,
+    "keep_alive_s": 75,
+    "config": "default",
+    "config_sha256_expected": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+    "workers_answering": {
+     "41868": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d"
+    },
+    "g2_pass": true,
+    "uvicorn_listen_winerror_10022_restarts": 0,
+    "seconds_to_all_workers": 2.1
+   },
+   "R1024_W4K5": {
+    "workers": 4,
+    "keep_alive_s": 5,
+    "config": "default",
+    "config_sha256_expected": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+    "workers_answering": {
+     "4560": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+     "58136": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+     "58684": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+     "61236": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d"
+    },
+    "g2_pass": true,
+    "uvicorn_listen_winerror_10022_restarts": 0,
+    "seconds_to_all_workers": 2.1
+   },
+   "R3_W1K5": {
+    "workers": 1,
+    "keep_alive_s": 5,
+    "config": "mt3",
+    "config_sha256_expected": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+    "workers_answering": {
+     "45744": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278"
+    },
+    "g2_pass": true,
+    "uvicorn_listen_winerror_10022_restarts": 0,
+    "seconds_to_all_workers": 1.6
+   },
+   "R3_W4K75": {
+    "workers": 4,
+    "keep_alive_s": 75,
+    "config": "mt3",
+    "config_sha256_expected": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+    "workers_answering": {
+     "44636": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+     "52668": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+     "55276": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+     "8704": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278"
+    },
+    "g2_pass": true,
+    "uvicorn_listen_winerror_10022_restarts": 0,
+    "seconds_to_all_workers": 1.6
+   },
+   "P_W4K75": {
+    "workers": 4,
+    "keep_alive_s": 75,
+    "config": "passthrough",
+    "config_sha256_expected": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f",
+    "workers_answering": {
+     "21396": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f",
+     "27808": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f",
+     "48184": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f",
+     "49096": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f"
+    },
+    "g2_pass": true,
+    "uvicorn_listen_winerror_10022_restarts": 0,
+    "seconds_to_all_workers": 2.1
+   },
+   "P_W1K5": {
+    "workers": 1,
+    "keep_alive_s": 5,
+    "config": "passthrough",
+    "config_sha256_expected": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f",
+    "workers_answering": {
+     "42508": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f"
+    },
+    "g2_pass": true,
+    "uvicorn_listen_winerror_10022_restarts": 0,
+    "seconds_to_all_workers": 1.6
+   }
+  }
+ }
+}

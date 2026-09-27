@@ -343,3 +343,16 @@ Pre-registered, all four arms' gates passed. Two cells are null for connection e
 - **Detection does not change under load.** On the E3 set, both rails configurations block 42 / 45 adversarial items with 0 / 90 false blocks, alone and under 128 concurrent requests. 0 of 135 verdicts flip; the item missed is `e3_adv_04` (section 6).
 
 Tables, gates, predictions and what the run does not show are in `results/p66_rails_under_load/README.md`.
+
+## 14 · The Guardrails server's own limits: worker processes and keep-alive (run 2026-09-27; `results/p67_rails_server_config/`)
+
+Section 13 left two things at 64 and 128 concurrent requests that it could not separate from the rails' cost: the rails arms' server process at one full core at 128, and connection errors above 1% on the default rails. This run kept section 13's NIM container, configs and load and changed only the Guardrails server: 1 or 4 uvicorn worker processes, and a keep-alive timeout of 5 s (uvicorn's default) or 75 s.
+
+Pre-registered; every per-worker probe passed and no cell is null. The anchor gate against section 13 failed: the same server configuration was 8–22% faster on the rails with `max_tokens: 3` than in section 13 (NIM directly: 4–5%), with the same load per request. So this run is not compared with section 13; the comparisons below are inside the run.
+
+- **One server process is a limit at 128 with `max_tokens: 3`, and four workers remove it.** With one process the rails reach 1,809 tok/s at 128 (no gain over 64) with the process at one full core; with four workers they reach 2,301 tok/s and no process stays at a full core. That is 0.58 of direct NIM's throughput at 128, against 0.46 with one process.
+- **The connection errors needed both one process and a 5 s keep-alive.** On the default rails, errors occurred only in that combination (0.94% at 64, 0.47% at 128); a 75 s keep-alive or four workers each removed them.
+- **The server without rails costs nothing** at either setting (1.01–1.06 of NIM's throughput).
+- **Detection does not change with the server's configuration.** On four workers under 128 concurrent requests the default rails block 42 / 45 with 0 / 90 false blocks; 0 of 135 verdicts differ from section 13's default rails alone.
+
+Tables, gates, predictions and what the run does not show are in `results/p67_rails_server_config/README.md`.
