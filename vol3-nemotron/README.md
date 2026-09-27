@@ -1,4 +1,4 @@
-# Vol.3 (formerly Vol.2; directory `vol2/`) — Evidence Index
+# Vol.3 (formerly Vol.2; directory `vol3-nemotron/`) — Evidence Index
 
 > **Vol.1 lives in [`../benchmark/`](../benchmark/)** (question sets, harness, results). It is published evidence and is not modified here.
 > This directory holds the Vol.2 harness and results. This file is an **index**: which file belongs to which experiment, where its measurement boundary is recorded, and how data points are counted. This README contains measurement boundaries for data in this directory. It does not contain conclusions from unpublished work. **This index covers Vol.2 evidence. That volume is not published.**
@@ -8,7 +8,7 @@
 ## Layout
 
 ```
-vol2/
+vol3-nemotron/
 ├── README.md
 ├── data/README.md          # pointer only — question sets are Vol.1's, not copied
 ├── scripts/
@@ -260,7 +260,7 @@ SciFact is fetched at run time from `mteb/scifact` (E8) or read from a local cop
 
 ## Running the scripts
 
-Scripts resolve paths relative to `vol2/` and read question sets from `../benchmark/`. Machine-specific locations come from environment variables:
+Scripts resolve paths relative to `vol3-nemotron/` and read question sets from `../benchmark/`. Machine-specific locations come from environment variables:
 
 | Variable | Used by | Meaning |
 |---|---|---|

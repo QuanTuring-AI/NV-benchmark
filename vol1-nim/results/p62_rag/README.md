@@ -6,8 +6,8 @@ This run counts reuse on the server, with vLLM's `vllm:prefix_cache_queries` and
 
 **Pre-registration and harness.**
 - The pre-registration is `prediction_p62_rag.json`, frozen 2026-09-26T16:39:13+0800 after two harness tests, which are disclosed in `harness_test_record.json` and in its `harness_test` field. It was scanned before its sidecar was written (`prediction_scan.txt`, with a planted-control rescan). The first container started at 16:52:58.
-- The harness is `vol1a-revisit/scripts/p62_rag.py`, which imports P59's harness unchanged and adds the counter reads.
-- The analysis is `vol1a-revisit/scripts/p62_rag_analyze.py`: P59's frozen analysis program plus the counter rules.
+- The harness is `vol1-nim/scripts/p62_rag.py`, which imports P59's harness unchanged and adds the counter reads.
+- The analysis is `vol1-nim/scripts/p62_rag_analyze.py`: P59's frozen analysis program plus the counter rules.
 - **Profile R:** 3,500 ± 300 input tokens, 500 ± 50 output tokens. AIPerf 0.11.0 closed loop, levels 1, 8, 16, 32, 64, 128 at 60 s each, then a fresh container for 64 and 128.
 - **Arms:** N-BF16 (profile `092ed421…`) and N-FP8 (profile `c4789f7a…`), both NIM 2.0.12 with `NIM_MAX_MODEL_LEN` 8192.
 

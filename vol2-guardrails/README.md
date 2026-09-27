@@ -1,4 +1,4 @@
-# Vol.2 (formerly Vol.1-B; directory `vol1b/`) · NeMo Guardrails 0.23.0 on NIM 2.0.12: the same verdicts, a 16× cheaper judge with one line
+# Vol.2 (formerly Vol.1-B; directory `vol2-guardrails/`) · NeMo Guardrails 0.23.0 on NIM 2.0.12: the same verdicts, a 16× cheaper judge with one line
 *Upgrading the rails cost about 1.5 s per request by default; the detection did not change; one config line takes the cost back. The old ratio is closed as an account, not a claim.*
 The measurements, their boundaries and their results are in [`BASELINE.md`](BASELINE.md). Harnesses are in `scripts/`, results in `results/`.
 

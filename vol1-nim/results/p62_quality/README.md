@@ -19,7 +19,7 @@ All four run Llama 3.1 8B Instruct with context 8,192 on one RTX 5090. FP16 and 
 
 ## How it was measured
 
-**Tool.** lm-evaluation-harness **0.4.13** (package list: `lmeval_venv_freeze.txt`) with backend `local-chat-completions`. It runs from `vol1a-revisit/scripts/p62_quality.py` through lm-eval's Python API, with each server applying its own chat template and few-shot examples sent as multi-turn chat. Concurrency is 8. A logging proxy on `127.0.0.1` sits between lm-eval and each server.
+**Tool.** lm-evaluation-harness **0.4.13** (package list: `lmeval_venv_freeze.txt`) with backend `local-chat-completions`. It runs from `vol1-nim/scripts/p62_quality.py` through lm-eval's Python API, with each server applying its own chat template and few-shot examples sent as multi-turn chat. Concurrency is 8. A logging proxy on `127.0.0.1` sits between lm-eval and each server.
 
 | Task (lm-eval name) | Items | Settings (as sent, `events_public.jsonl` → `task_run.gen_settings_seen`) | Primary metric |
 |---|---|---|---|
@@ -121,13 +121,13 @@ The ticket that defined this run has since ruled that two of its gates were **wr
 
 The MMLU sample holds 3 pairs of items with byte-identical prompts: the same question appears twice in a subject's test split (college physics 30 / 77 and 43 / 90, public relations 56 / 106). The harness joined each item to its proxy record by the sha256 of the messages. For both items of a pair it took the last record. Where the two answers to one prompt differed, one item carried the other's output hash: N-BF16 and O-Q4, college physics 43, one item each. That fails the join rule.
 
-`vol1a-revisit/scripts/p62_quality_rejoin.py` was written after the run and applies the pre-registered rule correctly: among the records with the item's messages, the one whose output equals lm-eval's own response for that item. It changed only those two items' `output_sha` (`join_corrections.json`). Correctness and extracted answers come from lm-eval and did not change. The harness's own join figures are kept in `events_public.jsonl` as `join_as_run`, next to the corrected `join`. The harness, analyser and post-run programs bound in the pre-registration are unchanged.
+`vol1-nim/scripts/p62_quality_rejoin.py` was written after the run and applies the pre-registered rule correctly: among the records with the item's messages, the one whose output equals lm-eval's own response for that item. It changed only those two items' `output_sha` (`join_corrections.json`). Correctness and extracted answers come from lm-eval and did not change. The harness's own join figures are kept in `events_public.jsonl` as `join_as_run`, next to the corrected `join`. The harness, analyser and post-run programs bound in the pre-registration are unchanged.
 
 Two answers to the same prompt at temperature 0 differed on N-BF16 and on O-Q4. This is the same nondeterminism the noise floor measures.
 
 ## Recompute check (acceptance 7)
 
-`recompute_check.txt`: `python vol1a-revisit/scripts/p62_quality_analyze.py <dir>` was run on (a) this directory and (b) a copy holding only the published inputs: `items/`, `events_public.jsonl`, `g1_scorer_controls.json` and `mmlu_sample_ids.json`.
+`recompute_check.txt`: `python vol1-nim/scripts/p62_quality_analyze.py <dir>` was run on (a) this directory and (b) a copy holding only the published inputs: `items/`, `events_public.jsonl`, `g1_scorer_controls.json` and `mmlu_sample_ids.json`.
 - The two `analysis.json` files are byte-identical, and the diff output is empty.
 - Negative control: one item's `correct` was flipped in a third copy, and the result changed.
 

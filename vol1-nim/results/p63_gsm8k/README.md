@@ -12,7 +12,7 @@ This is a new measurement under a new pre-registration, not P62's data re-scored
 - The pre-registration is `prediction_p63_gsm8k.json`, frozen 2026-09-27T00:24:15+0800 after one harness test (`harness_test_record.json`). It was scanned before its sidecar was written (`prediction_scan.txt`, with a planted-control rescan). The first container started at 00:24:59.
 - Scope: answer quality on GSM8K (`gsm8k_cot_llama`, all 1,319 items) with lm-eval 0.4.13. The tool (package list `lmeval_venv_freeze.txt`, unchanged since P62), prompt format, 8-shot multi-turn chat, concurrency 8 and temperature 0 are all as in P62. The comparison is between arms, item by item. Absolute accuracies depend on the prompt format and are not set beside other publications' numbers.
 
-**What changed from P62.** Harness `vol1a-revisit/scripts/p63_gsm8k.py`, which imports P62's harness unchanged:
+**What changed from P62.** Harness `vol1-nim/scripts/p63_gsm8k.py`, which imports P62's harness unchanged:
 1. lm-eval `gen_kwargs` `max_gen_toks=1024`. **Every request of every run carried `max_tokens` 1024**, per the proxy's own record (`analysis.json` → `runs.*.max_tokens_seen` = `[1024]`, 5 of 5 runs).
 2. Each item is joined to its proxy record by lm-eval's own response, not only by prompt. This is P62's post-run correction, applied from the start; GSM8K has no repeated prompts, and every item joined in every run.
 
@@ -77,7 +77,7 @@ Accuracy % (strict-match exact match) with its Wilson 95% interval, and the shar
 
 ## Recompute check
 
-`recompute_check.txt`: `python vol1a-revisit/scripts/p63_gsm8k_analyze.py <dir>` was run on this directory and on a copy holding only `items/`, `events_public.jsonl` and `g1_scorer_controls.json`.
+`recompute_check.txt`: `python vol1-nim/scripts/p63_gsm8k_analyze.py <dir>` was run on this directory and on a copy holding only `items/`, `events_public.jsonl` and `g1_scorer_controls.json`.
 - The two `analysis.json` files are byte-identical, and the diff output is empty.
 - Flipping one item's `correct` in a third copy changes the result.
 

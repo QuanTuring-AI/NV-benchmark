@@ -121,7 +121,7 @@ None of R1–R5 is evaluated under this run's rules (conclusions null). Against 
 
 ## De-identified fields in the AIPerf outputs
 
-As Vol.1-B did (`../../../vol1b/results/p17_concurrency/README.md`), the local user-home prefix that AIPerf records — the tokenizer path in `profile_export_aiperf.json` and `server_metrics_export.json`, `run_info.cli_command`, and each entry of the `command` list in `levels.jsonl` — is replaced by `<HOME>` before publication; no other byte changes. `deidentification_ledger.json` lists every file with the SHA-256 of the original and of the de-identified content (48 files, 195 replacements); the originals are kept outside the repository. `analysis.json` does not read any of the replaced fields. AIPerf's per-level console output, per-request exports, logs and the run's console output (`console.txt`) are not published.
+As Vol.1-B did (`../../../vol2-guardrails/results/p17_concurrency/README.md`), the local user-home prefix that AIPerf records — the tokenizer path in `profile_export_aiperf.json` and `server_metrics_export.json`, `run_info.cli_command`, and each entry of the `command` list in `levels.jsonl` — is replaced by `<HOME>` before publication; no other byte changes. `deidentification_ledger.json` lists every file with the SHA-256 of the original and of the de-identified content (48 files, 195 replacements); the originals are kept outside the repository. `analysis.json` does not read any of the replaced fields. AIPerf's per-level console output, per-request exports, logs and the run's console output (`console.txt`) are not published.
 
 ## Files
 

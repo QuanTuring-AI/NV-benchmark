@@ -114,7 +114,7 @@ Vol.1's rail config assumes a judge that answers yes or no directly. Nemotron re
 
 This is a precision *availability* table, not a precision ladder: each model has exactly one executable precision on a 32 GB card, and that is the result.
 
-## G · Vol.1-A revisit: NIM against the engine it contains (`results/p54_engine/`; written up in `../vol1a-revisit/README.md`)
+## G · Vol.1-A revisit: NIM against the engine it contains (`results/p54_engine/`; written up in `../vol1-nim/README.md`)
 
 Llama 3.1 8B Instruct, bf16, one RTX 5090, the same weight files. **N** is NIM 2.0.12 (profile `092ed421…`, `NIM_MAX_MODEL_LEN` 8192, `VLLM_USE_V2_MODEL_RUNNER=0`). **V** is upstream vLLM 0.27.1: the same build commit as the engine inside N, started with NIM's own resolved vLLM argument list. The only edits to that list are the model path, NIM's internal port and host, and its two server-layer middlewares. Pre-registered; every difference that could not be aligned is listed there, including the KV cache each engine sizes for itself at start (97,328 / 107,728 tokens).
 
@@ -127,7 +127,7 @@ Llama 3.1 8B Instruct, bf16, one RTX 5090, the same weight files. **N** is NIM 2
 | RAG profile | null: the harness's calibration prompt hits the prefix cache (P2); level tables published | null: one disconnected request at c=256 (P1) |
 | Settings to the first serving start · in the measured configuration | 3 (bf16 profile, context length, V1 runner) · 3 | 2 (context length, V1 runner) · 6 |
 
-On this card and precision the two arms are the same engine within the run-to-run spread, down to the text they write. The pre-registered ratio V over N is 0.990 [0.963, 1.020] for generation rate and 1.012 [1.004, 1.019] for answer time. On this host (Docker Desktop on WSL2), NIM selects its FP8 profile when nothing is set, and both engines' default model runner fails with `UVA is not available`. The 7.3× of Vol.1-A belongs to that configuration: two engines, two precisions, one arm largely outside GPU memory (`../vol1b/BASELINE.md`, section 12).
+On this card and precision the two arms are the same engine within the run-to-run spread, down to the text they write. The pre-registered ratio V over N is 0.990 [0.963, 1.020] for generation rate and 1.012 [1.004, 1.019] for answer time. On this host (Docker Desktop on WSL2), NIM selects its FP8 profile when nothing is set, and both engines' default model runner fails with `UVA is not available`. The 7.3× of Vol.1-A belongs to that configuration: two engines, two precisions, one arm largely outside GPU memory (`../vol2-guardrails/BASELINE.md`, section 12).
 
 ## What this volume does not do
 

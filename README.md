@@ -26,15 +26,15 @@ Measurements of NVIDIA's inference stack on one workstation GPU. The stack cover
 
 Every number that leaves this repository is quoted with its measurement boundary: model, versions, precision, concurrency, input shape and statistic.
 
-Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md). It is kept exactly as published and is not modified. The comparison that led it is closed out, as an account of how it was measured, in [`vol1b/BASELINE.md`](vol1b/BASELINE.md) §12.
+Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md). It is kept exactly as published and is not modified. The comparison that led it is closed out, as an account of how it was measured, in [`vol2-guardrails/BASELINE.md`](vol2-guardrails/BASELINE.md) §12.
 
 ## The series
 
 | Volume | Formerly | Question | Directory | Status |
 |---|---|---|---|---|
-| **Vol.1 (renewed 2026-09)** | Vol.1-A, re-measured and merged | Does NIM change one user's speed? Where does serving start to pay? Does answer quality hold? | [`vol1a-revisit/`](vol1a-revisit/README.md) (first edition: [`benchmark/`](benchmark/), frozen) | this release |
-| **Vol.2** | Vol.1-B | NeMo Guardrails 0.23.0 on NIM 2.0.12: what the upgrade costs and how to take it back | [`vol1b/`](vol1b/README.md) | data published 2026-09-19 |
-| **Vol.3** | Vol.2 | Two Nemotron deployment options on 32 GB | [`vol2/`](vol2/README.md) | data published 2026-09-25; write-up to follow |
+| **Vol.1 (renewed 2026-09)** | Vol.1-A, re-measured and merged | Does NIM change one user's speed? Where does serving start to pay? Does answer quality hold? | [`vol1-nim/`](vol1-nim/README.md) (first edition: [`benchmark/`](benchmark/), frozen) | this release |
+| **Vol.2** | Vol.1-B | NeMo Guardrails 0.23.0 on NIM 2.0.12: what the upgrade costs and how to take it back | [`vol2-guardrails/`](vol2-guardrails/README.md) | data published 2026-09-19 |
+| **Vol.3** | Vol.2 | Two Nemotron deployment options on 32 GB | [`vol3-nemotron/`](vol3-nemotron/README.md) | data published 2026-09-25; write-up to follow |
 | Vol.4–5 | — | NeMo Retriever and Nemotron as judge in a RAG system | not yet created | planned |
 
 *We renumber volumes, not directories. Directory names predate the renumbering of 2026-09-27 and are kept as they are: pre-registrations bind file paths by SHA-256, and renaming would break those chains.*
@@ -43,31 +43,31 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 
 Llama 3.1 8B Instruct, one RTX 5090, synthetic chat requests (200 tokens in, 200 out), MLPerf server SLO. Each line links to its table.
 
-- **One user: NIM is the engine it contains.** NIM 2.0.12 and upstream vLLM 0.27.1 ran the same bf16 weights. At temperature 0 they wrote 50 of 50 answers byte-identical, at a generation-rate ratio of 0.990 [0.963, 1.020]. → [`vol1a-revisit/README.md` §A](vol1a-revisit/README.md)
-- **For one user the 4-bit build is faster; NIM leads from 4 on.** Against the fastest 4-bit configuration we could build with Ollama (16 slots), NIM bf16's total throughput overtakes it between 2 and 4 concurrent requests. → [§D](vol1a-revisit/README.md) · [`results/p62_levels/`](vol1a-revisit/results/p62_levels/README.md)
+- **One user: NIM is the engine it contains.** NIM 2.0.12 and upstream vLLM 0.27.1 ran the same bf16 weights. At temperature 0 they wrote 50 of 50 answers byte-identical, at a generation-rate ratio of 0.990 [0.963, 1.020]. → [`vol1-nim/README.md` §A](vol1-nim/README.md)
+- **For one user the 4-bit build is faster; NIM leads from 4 on.** Against the fastest 4-bit configuration we could build with Ollama (16 slots), NIM bf16's total throughput overtakes it between 2 and 4 concurrent requests. → [§D](vol1-nim/README.md) · [`results/p62_levels/`](vol1-nim/results/p62_levels/README.md)
 - **At 128 concurrent requests, NIM delivers:**
   - 7.4× the 4-bit build's total throughput with NIM bf16;
   - 11.8× with NIM's own FP8 choice;
   - 13.6× at matched 16-bit precision.
 
-  NIM was still inside the server SLO at 128. In the same sweep (1, 8, 16, 32, 64 and 128 concurrent requests) the Ollama configurations were outside it from 8 on. → [`vol1a-revisit/README.md` §0](vol1a-revisit/README.md) · [`results/p59_nim_value/`](vol1a-revisit/results/p59_nim_value/README.md)
+  NIM was still inside the server SLO at 128. In the same sweep (1, 8, 16, 32, 64 and 128 concurrent requests) the Ollama configurations were outside it from 8 on. → [`vol1-nim/README.md` §0](vol1-nim/README.md) · [`results/p59_nim_value/`](vol1-nim/results/p59_nim_value/README.md)
 - **Answer quality.**
   - MMLU (2,850-item sample): every faster configuration is within ±2 pp of NIM bf16.
   - GSM8K: the 4-bit build −2.43 pp [−4.40, −0.53]; NIM FP8 −1.52 pp [−3.11, 0.00]. Both are undetermined against ±2 pp.
 
-  → [§E](vol1a-revisit/README.md) · [`results/p63_gsm8k/`](vol1a-revisit/results/p63_gsm8k/README.md)
+  → [§E](vol1-nim/README.md) · [`results/p63_gsm8k/`](vol1-nim/results/p63_gsm8k/README.md)
 - **Guardrails (Vol.2).**
   - NeMo Guardrails 0.23.0 detects the same attacks as 0.21.0: 42 / 45, with 0 / 90 false blocks.
   - It costs +1,515 ms per request by default.
   - One config line (`max_tokens: 3` on the self-check) brings each judge call from a median 970 ms to 60 ms, and the two judges' verdicts agree on 115 / 115 texts.
 
-  → [`vol1b/BASELINE.md`](vol1b/BASELINE.md) §2, §8, §9
+  → [`vol2-guardrails/BASELINE.md`](vol2-guardrails/BASELINE.md) §2, §8, §9
 - **Nemotron (Vol.3).**
   - Fit: both deployment options fit the 32 GB card (22,909 / 25,972 MiB in use at their smallest passing budgets).
   - Speed: the MoE option generates 4.14× faster per token and finishes an answer about 2.9× sooner.
   - Concurrency: on the chat profile it stays inside the server SLO up to 128 concurrent requests, where the dense option's engine crashes at 32.
 
-  → [`vol2/BASELINE.md`](vol2/BASELINE.md) §A–§C
+  → [`vol3-nemotron/BASELINE.md`](vol3-nemotron/BASELINE.md) §A–§C
 
 ## How to read a number here
 
@@ -89,11 +89,11 @@ Llama 3.1 8B Instruct, one RTX 5090, synthetic chat requests (200 tokens in, 200
 
 | Topic | Where |
 |---|---|
-| Pin the profile. On this card NIM 2.0.12 selects its FP8 profile when nothing is set, and for these models it offers vLLM profiles only. | [`vol1a-revisit/README.md` §B](vol1a-revisit/README.md) · [`vol2/results/p50_availability/`](vol2/results/p50_availability/README.md) |
-| `VLLM_USE_V2_MODEL_RUNNER=0` on Docker Desktop / WSL2 (the default runner fails with "UVA is not available") | [`vol1a-revisit/README.md` §B](vol1a-revisit/README.md) |
+| Pin the profile. On this card NIM 2.0.12 selects its FP8 profile when nothing is set, and for these models it offers vLLM profiles only. | [`vol1-nim/README.md` §B](vol1-nim/README.md) · [`vol3-nemotron/results/p50_availability/`](vol3-nemotron/results/p50_availability/README.md) |
+| `VLLM_USE_V2_MODEL_RUNNER=0` on Docker Desktop / WSL2 (the default runner fails with "UVA is not available") | [`vol1-nim/README.md` §B](vol1-nim/README.md) |
 | `NIM_MAX_MODEL_LEN=8192` (the default context does not leave room for the KV cache) | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) §3 |
 | NGC key without a trailing space · PowerShell single-line commands · Windows console encoding (cp950) with multilingual output | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) §4–§6 |
-| NeMo Guardrails self-check prompts | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) (Guardrails section) · [`vol1b/BASELINE.md`](vol1b/BASELINE.md) §8–§9 |
+| NeMo Guardrails self-check prompts | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) (Guardrails section) · [`vol2-guardrails/BASELINE.md`](vol2-guardrails/BASELINE.md) §8–§9 |
 
 `DEPLOYMENT_NOTES.md` records the stack of March 2026 and is kept as published. The current stack is NIM 2.0.12 on driver 591.86.
 

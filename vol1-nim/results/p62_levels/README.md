@@ -6,9 +6,9 @@ P59 also left an oddity. O-Q4, with 16 slots, served no more at 8 concurrent req
 
 **Pre-registration and harness.**
 - The pre-registration is `prediction_p62_levels.json`, frozen 2026-09-26T14:52:44+0800 after a harness test and scanned before its sidecar was written (`prediction_scan.txt`, with a planted-control rescan). The first container started at 14:53:31.
-- The harness is `vol1a-revisit/scripts/p62_levels.py`, which imports P59's harness unchanged: images, models, context 8,192, isolation check, prefix-cache detector, discarded 120 s warm-up, 20-request calibration, 60 s levels and `--use-legacy-max-tokens`.
+- The harness is `vol1-nim/scripts/p62_levels.py`, which imports P59's harness unchanged: images, models, context 8,192, isolation check, prefix-cache detector, discarded 120 s warm-up, 20-request calibration, 60 s levels and `--use-legacy-max-tokens`.
 - Slot counts are the ones P59 found: O-Q4 16, O-FP16 8, O-Q4-def not set.
-- The analysis is `vol1a-revisit/scripts/p62_levels_analyze.py`, which runs P59's frozen analysis program on these files.
+- The analysis is `vol1-nim/scripts/p62_levels_analyze.py`, which runs P59's frozen analysis program on these files.
 - c=9 was added to the ticket's 4, 8, 12, 16 to test one hypothesis (below). `ollama ps` was sampled about every 1.3 s, not every second, because each sample is a `docker exec`.
 - The G1 scorer controls of Q1 (CPU only) ran during this run's O-Q4 arm.
 
