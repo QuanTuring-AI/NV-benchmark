@@ -326,3 +326,20 @@ The published Ollama arm's generation rate is within 9% of the rate measured her
 The 7.3× ratio that originally led Vol.1-A compared two arms whose generation rates, converted to effective memory bandwidth, sit at 75% and 3.4% of this card's peak — the denominator arm was not running at GPU speed. On the same card and model today, that engine generates at 231.7 tok/s in VRAM and at 11.27 tok/s when forced onto CPU. We do not know what the March 2026 machine was doing, and we do not claim to. The ratio therefore belongs to that configuration; this repository does not use Ollama as a comparison arm again.
 
 What this section does not show: what the March 2026 machine was doing; whether the same behaviour would occur on another operating system or driver; or anything about either engine's output quality, which was not measured here. No published figure has been adjusted, and no adjusted ratio is stated anywhere in this volume.
+
+## 13 · Rails under load — four entry points at 1–128 concurrent requests (run 2026-09-27; `results/p66_rails_under_load/`)
+
+Section 4 left the rails' ceiling unmeasured. The same NIM container served four entry points at 1, 8, 16, 32, 64 and 128 concurrent synthetic chat requests (200 ± 50 in, 200 ± 50 out, non-streaming):
+- NIM directly;
+- a Guardrails 0.23.0 server with no rails;
+- the cell ⑤ rails (self-check `max_tokens: 3`);
+- the cell ④ rails (0.23.0's default).
+
+Pre-registered, all four arms' gates passed. Two cells are null for connection errors above 1%: the default rails at 64 and 128.
+
+- **The server alone costs nothing measurable:** 0.98–1.02 of NIM's total throughput at every level.
+- **The one line takes back 1.6–1.7× the throughput at every level from 1 to 32** (1.70, 1.64, 1.58, 1.59).
+- **With the one line, the rails keep 0.93 of NIM's throughput at 1 request, 0.70 at 32 and 0.42 at 128.** Each request makes three NIM calls.
+- **Detection does not change under load.** On the E3 set, both rails configurations block 42 / 45 adversarial items with 0 / 90 false blocks, alone and under 128 concurrent requests. 0 of 135 verdicts flip; the item missed is `e3_adv_04` (section 6).
+
+Tables, gates, predictions and what the run does not show are in `results/p66_rails_under_load/README.md`.
