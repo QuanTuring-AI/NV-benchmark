@@ -1,6 +1,8 @@
 # Vol.1 (renewed 2026-09) · 7.4× at 128 concurrent users: what NIM buys you on one RTX 5090
 *For one user the 4-bit build is faster. From 4 users on NIM leads; at 128 it delivers 7.4× the throughput — 13.6× at matched precision — and still holds the server SLO. Both arms healthy this time.*
 
+> **Reproduce:** `git checkout vol1-nim-published`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
+
 ## 0 · Headline
 
 Llama 3.1 8B Instruct on one RTX 5090. The concurrency results use synthetic chat requests (200 tokens in, 200 out) and the MLPerf v5.1 Llama 3.1-8B SLOs. Every arm passed its health gate.

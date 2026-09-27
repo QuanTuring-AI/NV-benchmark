@@ -1,4 +1,6 @@
-# Vol.3 (formerly Vol.2; directory `vol3-nemotron/`) — Evidence Index
+# Vol.3 — Evidence Index
+
+> **Reproduce:** `git checkout vol3-nemotron-published`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
 
 > **Vol.1 lives in [`../benchmark/`](../benchmark/)** (question sets, harness, results). It is published evidence and is not modified here.
 > This directory holds the Vol.2 harness and results. This file is an **index**: which file belongs to which experiment, where its measurement boundary is recorded, and how data points are counted. This README contains measurement boundaries for data in this directory. It does not contain conclusions from unpublished work. **This index covers Vol.2 evidence. That volume is not published.**

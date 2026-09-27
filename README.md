@@ -30,14 +30,28 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 
 ## The series
 
-| Volume | Formerly | Question | Directory | Status |
-|---|---|---|---|---|
-| **Vol.1 (renewed 2026-09)** | Vol.1-A, re-measured and merged | Does NIM change one user's speed? Where does serving start to pay? Does answer quality hold? | [`vol1-nim/`](vol1-nim/README.md) (first edition: [`benchmark/`](benchmark/), frozen) | this release |
-| **Vol.2** | Vol.1-B | NeMo Guardrails 0.23.0 on NIM 2.0.12: what the upgrade costs and how to take it back | [`vol2-guardrails/`](vol2-guardrails/README.md) | data published 2026-09-19 |
-| **Vol.3** | Vol.2 | Two Nemotron deployment options on 32 GB | [`vol3-nemotron/`](vol3-nemotron/README.md) | data published 2026-09-25; write-up to follow |
-| Vol.4–5 | — | NeMo Retriever and Nemotron as judge in a RAG system | not yet created | planned |
+| Volume | Question | Directory | Status |
+|---|---|---|---|
+| **Vol.1 (renewed 2026-09)** | Does NIM change one user's speed? Where does serving start to pay? Does answer quality hold? | [`vol1-nim/`](vol1-nim/README.md) | this release |
+| **Vol.2** | NeMo Guardrails 0.23.0 on NIM 2.0.12: what the upgrade costs and how to take it back | [`vol2-guardrails/`](vol2-guardrails/README.md) | data published 2026-09-19 |
+| **Vol.3** | Two Nemotron deployment options on 32 GB | [`vol3-nemotron/`](vol3-nemotron/README.md) | data published 2026-09-25; write-up to follow |
+| Vol.4–5 | NeMo Retriever and Nemotron as judge in a RAG system | not yet created | planned |
+| Vol.1 · March 2026 original (archived) | NIM against Ollama, and NeMo Guardrails' latency, as first published | [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) | frozen |
 
-*We renumber volumes, not directories. Directory names predate the renumbering of 2026-09-27 and are kept as they are: pre-registrations bind file paths by SHA-256, and renaming would break those chains.*
+*Directories were renamed on 2026-09-28 to match the volume numbers. Files written before that date, including frozen pre-registrations, name the old paths; [`PATH_MAP.md`](PATH_MAP.md) maps every one. The hash chain does not depend on today's paths: `python tools/bound_files.py --history` checks each binding in the commit where its pre-registration was frozen.*
+
+### Tags
+
+| Tag | Volume | Commit | Note |
+|---|---|---|---|
+| `vol1-nim-published` | Vol.1 (renewed) | `3efa794` | rerun Vol.1 here |
+| `vol2-guardrails-published` | Vol.2 | `3efa794` | rerun Vol.2 here |
+| `vol3-nemotron-published` | Vol.3 | `e4f0ec5` | rerun Vol.3 here |
+| `vol1-revisit-published` | Vol.1 (renewed) | `f6b73b2` | kept as first pushed |
+| `vol1b-published` | Vol.2, when it was called Vol.1-B | `40dfce0` | kept as first pushed |
+| `vol2-published` | **Vol.3**, when it was called Vol.2 | `e4f0ec5` | kept as first pushed; the name predates the renumbering |
+
+Each tag points to the last commit before the rename that holds its volume's runs, so every path in those runs is correct there.
 
 ## Headline results (Vol.1)
 
@@ -82,8 +96,9 @@ Llama 3.1 8B Instruct, one RTX 5090, synthetic chat requests (200 tokens in, 200
 ## Reproduce
 
 1. Clone with `git -c core.autocrlf=false clone …`. SHA-bound files are stored byte for byte (`.gitattributes`).
-2. Verify the hash chain: `python tools/bound_files.py` lists every file a pre-registration or sidecar binds, and whether each one matches.
+2. Verify the hash chain: `python tools/bound_files.py --history` lists every file a pre-registration or sidecar binds and checks each one in the commit where its pre-registration was frozen; it also reports whether the file at today's path is the same blob.
 3. Each results directory's README gives its harness, runner and environment variables. The analysers run on the published files alone.
+4. To rerun a harness byte for byte, check out its volume's tag (above). Frozen harnesses import each other by the paths they were written with, and those paths exist only at the tag.
 
 ## Deployment notes (RTX 5090)
 
