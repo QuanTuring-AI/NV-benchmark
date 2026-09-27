@@ -195,3 +195,7 @@ Flipping one Part D verdict changes it. AIPerf's summaries and `levels.jsonl` ha
 | `<server>/c<nnnn>/profile_export_aiperf.json` | AIPerf's per-level summary (de-identified) |
 
 Not published (local process files): response texts, AIPerf's per-request and raw exports, request inputs, server logs (they hold prompt text) and raw events.
+
+## Note added 2026-09-28: other GPU load during the first levels
+
+The levels from 15:32 to 15:52 (N at 32, 64 and 128; R1024 W1K5 and W4K75 at 64 and 128), the start of the Part D pass that followed them (15:52, the game until about 16:00), and two later levels (R1024 W4K5's warm-up at 16:39, P W1K5 at 64 at 17:04) ended with the desktop GPU at 3–19% utilization. The user confirms a game until about 16:00. The levels from 16:31 on (R1024 W1K75, R1024 W4K5 at 64 and 128, R3 W1K5 and W4K75, P W4K75) ended at 0–2%. The contaminated levels were repeated in `../p69_clean_rerun/`. There the Guardrails server spent two to three times as much CPU on the same work as here, so the repeat does not give clean replacements for the server-side levels. The within-run comparisons above that use only levels from 16:31 on (R3 W1K5 against R3 W4K75; P W4K75) are not affected. Every comparison that uses a level from 15:32–15:52 or 17:04 carries the other load.

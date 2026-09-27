@@ -356,3 +356,13 @@ Pre-registered; every per-worker probe passed and no cell is null. The anchor ga
 - **Detection does not change with the server's configuration.** On four workers under 128 concurrent requests the default rails block 42 / 45 with 0 / 90 false blocks; 0 of 135 verdicts differ from section 13's default rails alone.
 
 Tables, gates, predictions and what the run does not show are in `results/p67_rails_server_config/README.md`.
+
+## 15 · Other GPU load during sections 13 and 14, and what the repeat found (runs 2026-09-27 / 28; `results/p69_clean_rerun/`)
+
+Some of the levels behind sections 13 and 14 ran while the desktop GPU carried other load: P66's N, P and R3 arms and P67's first levels, 33 levels found by a fixed rule (`contamination_marks.jsonl`). They were repeated with the GPU checked idle before every level.
+
+- **NIM directly: 5–12% faster than in the contaminated windows**, at every level. The two runs' N levels agree within 0.4%.
+- **Everything through the Guardrails server: slower, and more so under load.** In the repeat the server process spent two to three times as much CPU on the same work (for example, 21% of a core for 630 tok/s where P66 used 6% for 587). The GPU was idle; the host's state was not checked, and the cause is not determined.
+- **So the repeat does not replace section 13's or 14's server-side numbers.** Those stay as measured, with the note in each results README. In the repeat's own window, R3 ÷ R1024 at 1, 8, 16 and 32 is 1.74, 1.60, 1.48 and 1.23. The fall under load cannot be attributed to the rails while the server itself was slower.
+
+Tables and predictions are in `results/p69_clean_rerun/README.md`.

@@ -124,3 +124,7 @@ Vol.1 E3 set (`../../../benchmark/e3_questions.json`, read only): 15 adversarial
 | `<arm>/c<nnnn>/profile_export_aiperf.json` | AIPerf's per-level summary (de-identified) |
 
 Not published (local process files): response texts, AIPerf's per-request and raw exports, request inputs, server logs and raw events.
+
+## Note added 2026-09-28: other GPU load during the N, P and R3 arms
+
+The N, P and R3 arms (11:04–11:53) ran while the desktop GPU carried other load: every one of their levels ended at 5–12% utilization, where the clean R1024 arm (12:52–13:21) ended at 0. The user confirms it. So in the ratio table above, R3 ÷ R1024 has its numerator from a contaminated window and its denominator from a clean one. Those levels were repeated in `../p69_clean_rerun/`. The repeat found the host itself in a different state: the Guardrails server spent two to three times as much CPU on the same work. So it does not give clean replacements for the server-side levels. The tables here are left as they were measured; read them with this note.
