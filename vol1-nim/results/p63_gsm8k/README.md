@@ -1,4 +1,4 @@
-# Vol.1-A revisit · P63 · GSM8K on the four configurations with the generation cap at 1024 (run 2026-09-27, 00:24–01:11)
+# Vol.1 (renewed) · P63 · GSM8K on the four configurations with the generation cap at 1024 (run 2026-09-27, 00:24–01:11)
 
 **Why.** P62's GSM8K cells came out null under two gates that were defined wrongly (see `../p62_quality/README.md`):
 - The first was "output reached the cap in under 1% of items". With lm-eval's default cap of 256 tokens, even the reference reached it on 3.2% of items.

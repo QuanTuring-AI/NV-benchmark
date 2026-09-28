@@ -1,4 +1,4 @@
-# Vol.1-A revisit · P62 Q3 · the RAG profile for the two NIM arms, with prefix-cache reuse read from the server (run 2026-09-26, 16:52–17:58)
+# Vol.1 (renewed) · P62 Q3 · the RAG profile for the two NIM arms, with prefix-cache reuse read from the server (run 2026-09-26, 16:52–17:58)
 
 **Why.** P54's RAG profile is null: its warm-up level and its c=1 level shared a seed, so the same prompts were served twice and the engine reused their cached prefixes. P59 removed every shared prompt by design, but it checked reuse through time to first token only. Its N-FP8 RAG calibration then failed (AIPerf p50 TTFT 208 ms against the harness's own 156 ms), and P59 had no way to tell whether a cached prefix was involved.
 

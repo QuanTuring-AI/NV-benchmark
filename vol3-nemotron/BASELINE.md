@@ -1,6 +1,6 @@
-# Vol.2 · BASELINE
+# Vol.3 · BASELINE
 
-Vol.2 measures two NVIDIA NIM deployment options on one RTX 5090 (32,607 MiB, driver 591.86): **A1** Nemotron Nano 9B v2 (hybrid Mamba-2 + MLP, dense, bf16, NIM 1.12.2) and **A2** Nemotron 3 Nano (hybrid Mamba-2 + MoE, 30B total / 3.5B active, NVFP4, NIM 2.0.12). No common NIM version exists for the two models (`results/p50_availability/`), and each runs at the only precision its image can execute on this card; every table therefore carries model, precision, NIM version, `max_num_seqs` and `max_tokens` per row, and nothing in this volume is a single-variable comparison. The methods and gates are Vol.1-B's (pre-registration frozen before each run, positive controls, preconditions that null the conclusions, the arm-health gate before any ratio); the numbers are new. Llama 3.1 8B appears only where an earlier record or the MLPerf benchmark name is quoted; the Vol.1 non-NIM runtime does not appear.
+Vol.3 measures two NVIDIA NIM deployment options on one RTX 5090 (32,607 MiB, driver 591.86): **A1** Nemotron Nano 9B v2 (hybrid Mamba-2 + MLP, dense, bf16, NIM 1.12.2) and **A2** Nemotron 3 Nano (hybrid Mamba-2 + MoE, 30B total / 3.5B active, NVFP4, NIM 2.0.12). No common NIM version exists for the two models (`results/p50_availability/`), and each runs at the only precision its image can execute on this card; every table therefore carries model, precision, NIM version, `max_num_seqs` and `max_tokens` per row, and nothing in this volume is a single-variable comparison. The methods and gates are Vol.2's (pre-registration frozen before each run, positive controls, preconditions that null the conclusions, the arm-health gate before any ratio); the numbers are new. Llama 3.1 8B appears only where an earlier record or the MLPerf benchmark name is quoted; the Vol.1 non-NIM runtime does not appear.
 
 Each section names its run directory; every run directory holds the frozen pre-registration, the raw rows and the analysis, and a README with the full boundary.
 
@@ -83,17 +83,17 @@ A1's generation rate steps down 38% between 4k and 16k and is then flat to 57k: 
 
 ## E · What Guardrails costs — NeMo Guardrails 0.23.0 on both arms (`results/p53_guardrails/`)
 
-Vol.1-A's 45 E3 questions × 3 rounds, three request arms rotated per question in one container per arm: nim-only, the rail with Vol.1's config verbatim (G), and the rail with E9's `/no_think` judge message (H). Both arms `NIM_MAX_MODEL_LEN` 8192, `max_num_seqs` 32, `max_tokens` 500. 810 rows; all preconditions held. Block labels re-derived from response digests (`analysis_digest.json`; the frozen analyser's text-based predicate saw none, see the README).
+The March 2026 Vol.1's 45 E3 questions × 3 rounds, three request arms rotated per question in one container per arm: nim-only, the rail with Vol.1's config verbatim (G), and the rail with E9's `/no_think` judge message (H). Both arms `NIM_MAX_MODEL_LEN` 8192, `max_num_seqs` 32, `max_tokens` 500. 810 rows; all preconditions held. Block labels re-derived from response digests (`analysis_digest.json`; the frozen analyser's text-based predicate saw none, see the README).
 
 | | A1 · bf16 · 1.12.2 · seqs 32 · `max_tokens` 500 | A2 · NVFP4 · 2.0.12 · seqs 32 · `max_tokens` 500 |
 |---|---|---|
 | Rail with Vol.1's config (G): true blocks, clean / edge / adversarial | **60/60 · 30/30 · 45/45** — the judge answers with 214 tokens of reasoning (2.9 s), the parser reads it as unsafe | **60/60 · 30/30 · 45/45** — 79 tokens (415 ms) |
 | Rail with the `/no_think` judge (H) | **0/60 · 0/30 · 45/45** — one-word verdicts (3 and 5 tokens) | 60/60 · 30/30 · 45/45 — the message has no effect on this model's judge (78 tokens) |
-| End-to-end clean_passthrough overhead (Vol.1-A algorithm) | H: **−0.2%** avg; paired −0.25% [−0.49%, −0.02%] over 30 questions | not measurable: no rail row answered |
+| End-to-end clean_passthrough overhead (March 2026 Vol.1 algorithm) | H: **−0.2%** avg; paired −0.25% [−0.49%, −0.02%] over 30 questions | not measurable: no rail row answered |
 | Rail cost per request (judge calls alone) | H: input check 113 ms / 3 tokens · output check 135 ms / 5 tokens ≈ 250 ms, 3.6% of a 500-token answer | input check 415–426 ms / 78–79 tokens, then a refusal |
 | Judge calls at the 1,024-token budget · empty verdicts | 0 · 0 | 0 · 0 |
 
-The stack runs end to end on both arms. What the library's default self-check prompts get back from a reasoning-by-default model is a paragraph, and the rail treats a paragraph as a block, on every question; the −53% and −77% "overheads" the frozen analyser prints for those cells are the cost of a refusal, not of an answer. On A1 the `/no_think` judge restores one-word verdicts and the rail behaves as on Llama in Vol.1-B (45/45 adversarial, 0/90 false blocks on this sample); the end-to-end overhead is nil because both nim-only and the rail's answer run to the 500-token cap, so there is no output-length effect, and the rail's non-streamed answer call is about 300 ms faster than the streamed request. On A2 the request shape that yields a one-word verdict from its judge was not found within the two pre-registered configs, so the Vol.1 rail config cannot be used with Nemotron 3 Nano as published.
+The stack runs end to end on both arms. What the library's default self-check prompts get back from a reasoning-by-default model is a paragraph, and the rail treats a paragraph as a block, on every question; the −53% and −77% "overheads" the frozen analyser prints for those cells are the cost of a refusal, not of an answer. On A1 the `/no_think` judge restores one-word verdicts and the rail behaves as on Llama in Vol.2 (45/45 adversarial, 0/90 false blocks on this sample); the end-to-end overhead is nil because both nim-only and the rail's answer run to the 500-token cap, so there is no output-length effect, and the rail's non-streamed answer call is about 300 ms faster than the streamed request. On A2 the request shape that yields a one-word verdict from its judge was not found within the two pre-registered configs, so the Vol.1 rail config cannot be used with Nemotron 3 Nano as published.
 
 **The A2 judge with its reasoning switched off** (`results/p55_judge_thinking/`, P55). Nemotron 3 Nano's switch is `chat_template_kwargs: {enable_thinking: false}`, not `/no_think`. Guardrails 0.23.0 delivers it to the two judge calls alone when they are given task-typed models (`self_check_input`, `self_check_output`) carrying that parameter; the answer model keeps reasoning on. No Guardrails code was changed.
 
@@ -103,7 +103,7 @@ The stack runs end to end on both arms. What the library's default self-check pr
 | verdicts / true blocks: clean · edge · adversarial | input check yes on 0 · 0 · 45 of 60 · 30 · 45 | blocked 0/60 · 0/30 · **45/45** |
 | end-to-end clean_passthrough overhead | — | **+16.8%** [+16.2%, +17.4%] (1,698 → 1,983 ms; no output-length effect: both arms' answers run to the cap) |
 
-Vol.1's rail config assumes a judge that answers yes or no directly. Nemotron reasons by default, and the two generations switch it off differently. With the right switch each Nemotron judge behaves as the Llama judge did in Vol.1-B on this question set: A1 at about 250 ms of rail cost, A2 at about 200 ms. When quoting E, use `analysis_digest.json` in `results/p53_guardrails/` (a post-run analyser, disclosed) and `results/p55_judge_thinking/`.
+Vol.1's rail config assumes a judge that answers yes or no directly. Nemotron reasons by default, and the two generations switch it off differently. With the right switch each Nemotron judge behaves as the Llama judge did in Vol.2 on this question set: A1 at about 250 ms of rail cost, A2 at about 200 ms. When quoting E, use `analysis_digest.json` in `results/p53_guardrails/` (a post-run analyser, disclosed) and `results/p55_judge_thinking/`.
 
 ## F · Which precisions this card can run — precision availability (`results/p50_availability/`, `results/p50_footprint/`)
 
@@ -114,7 +114,7 @@ Vol.1's rail config assumes a judge that answers yes or no directly. Nemotron re
 
 This is a precision *availability* table, not a precision ladder: each model has exactly one executable precision on a 32 GB card, and that is the result.
 
-## G · Vol.1-A revisit: NIM against the engine it contains (`results/p54_engine/`; written up in `../vol1-nim/README.md`)
+## G · Vol.1 (renewed): NIM against the engine it contains (`results/p54_engine/`; written up in `../vol1-nim/README.md`)
 
 Llama 3.1 8B Instruct, bf16, one RTX 5090, the same weight files. **N** is NIM 2.0.12 (profile `092ed421…`, `NIM_MAX_MODEL_LEN` 8192, `VLLM_USE_V2_MODEL_RUNNER=0`). **V** is upstream vLLM 0.27.1: the same build commit as the engine inside N, started with NIM's own resolved vLLM argument list. The only edits to that list are the model path, NIM's internal port and host, and its two server-layer middlewares. Pre-registered; every difference that could not be aligned is listed there, including the KV cache each engine sizes for itself at start (97,328 / 107,728 tokens).
 
@@ -127,7 +127,7 @@ Llama 3.1 8B Instruct, bf16, one RTX 5090, the same weight files. **N** is NIM 2
 | RAG profile | null: the harness's calibration prompt hits the prefix cache (P2); level tables published | null: one disconnected request at c=256 (P1) |
 | Settings to the first serving start · in the measured configuration | 3 (bf16 profile, context length, V1 runner) · 3 | 2 (context length, V1 runner) · 6 |
 
-On this card and precision the two arms are the same engine within the run-to-run spread, down to the text they write. The pre-registered ratio V over N is 0.990 [0.963, 1.020] for generation rate and 1.012 [1.004, 1.019] for answer time. On this host (Docker Desktop on WSL2), NIM selects its FP8 profile when nothing is set, and both engines' default model runner fails with `UVA is not available`. The 7.3× of Vol.1-A belongs to that configuration: two engines, two precisions, one arm largely outside GPU memory (`../vol2-guardrails/BASELINE.md`, section 12).
+On this card and precision the two arms are the same engine within the run-to-run spread, down to the text they write. The pre-registered ratio V over N is 0.990 [0.963, 1.020] for generation rate and 1.012 [1.004, 1.019] for answer time. On this host (Docker Desktop on WSL2), NIM selects its FP8 profile when nothing is set, and both engines' default model runner fails with `UVA is not available`. The 7.3× of the March 2026 Vol.1 belongs to that configuration: two engines, two precisions, one arm largely outside GPU memory (`../vol2-guardrails/BASELINE.md`, section 12).
 
 ## What this volume does not do
 

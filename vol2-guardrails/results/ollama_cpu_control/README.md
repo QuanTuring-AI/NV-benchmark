@@ -1,6 +1,6 @@
 # Ollama CPU control
 
-This is the final Ollama measurement in this repository; it exists to close out the Vol.1-A comparison, not to open a new one.
+This is the final Ollama measurement in this repository; it exists to close out the March 2026 Vol.1 comparison, not to open a new one.
 
 It measures, in one run on one machine, the generation rate of the same Ollama model with none of it in GPU memory (**CPU**, `options.num_gpu = 0`) and with all of it in GPU memory (**G**, default placement). It does not reproduce any earlier machine state.
 

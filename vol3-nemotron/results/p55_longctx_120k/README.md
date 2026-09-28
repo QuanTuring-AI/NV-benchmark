@@ -1,4 +1,4 @@
-# Vol.2 · long context at ~120k prompt tokens on both arms (run 2026-09-23, 17:29–17:46)
+# Vol.3 · long context at ~120k prompt tokens on both arms (run 2026-09-23, 17:29–17:46)
 
 **Question.** `../p53_longctx/` stopped at 57k prompt tokens because of its character budget, not because of a limit. The external DGX Spark measurement of Nemotron 3 Nano runs to 100k context. This run adds one point at ~120k on each arm, so the shape can be compared over that range. Only the shape is compared; absolute values from another machine and stack are never set side by side. Pre-registration `prediction_p55_longctx_120k.json`, frozen 2026-09-23T16:27:31+0800 after a harness test (its basis discloses that test's numbers; the prediction ranges were written before it) and scanned before its sidecar was written (`prediction_scan.txt`); first request 17:35:52.
 

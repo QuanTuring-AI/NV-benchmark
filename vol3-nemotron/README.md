@@ -3,7 +3,7 @@
 > **Reproduce:** `git checkout vol3-nemotron-published`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
 
 > **Vol.1 lives in [`../benchmark/`](../benchmark/)** (question sets, harness, results). It is published evidence and is not modified here.
-> This directory holds the Vol.2 harness and results. This file is an **index**: which file belongs to which experiment, where its measurement boundary is recorded, and how data points are counted. This README contains measurement boundaries for data in this directory. It does not contain conclusions from unpublished work. **This index covers Vol.2 evidence. That volume is not published.**
+> This directory holds the Vol.3 harness and results. This file is an **index**: which file belongs to which experiment, where its measurement boundary is recorded, and how data points are counted. This README contains measurement boundaries for data in this directory. It does not contain conclusions from unpublished work. **This index covers Vol.3 evidence. That volume is not published.**
 
 ---
 
@@ -31,7 +31,7 @@ vol3-nemotron/
 │   ├── p53_concurrency_v2.py · p53_concurrency_v2_analyze.py · p53_concurrency_v2_gen_prediction.py · run_p53_concurrency_v2.sh   # second run: warm-up level before calibration, profile-matched calibration prompt, engine death as ceiling
 │   ├── p53_longctx.py · p53_longctx_analyze.py · p53_longctx_gen_prediction.py · run_p53_longctx.sh             # prompt-depth sweep, one container per depth
 │   ├── p53_longctx_addendum.py · p53_longctx_addendum_analyze.py · p53_longctx_addendum_gen_prediction.py · run_p53_longctx_addendum.sh   # the same on A2 (and A1 at 16k) with a 90 s warm-up phase
-│   ├── p53_guardrails.py · p53_guardrails_analyze.py · p53_guardrails_gen_prediction.py · run_p53_guardrails.sh   # NeMo Guardrails 0.23.0 on both arms (drives the Vol.1-B bridge harness)
+│   ├── p53_guardrails.py · p53_guardrails_analyze.py · p53_guardrails_gen_prediction.py · run_p53_guardrails.sh   # NeMo Guardrails 0.23.0 on both arms (drives the Vol.2 bridge harness)
 │   ├── p53_guardrails_analyze_digest.py   # corrected guardrails analysis (block labels from response digests; written after the run, see its README)
 │   ├── p55_concurrency_a2.py · p55_concurrency_a2_analyze.py · p55_concurrency_a2_gen_prediction.py · run_p55_concurrency_a2.sh   # A2 concurrency at max_num_seqs 64 / 128 / 256 (imports the second concurrency run's harness)
 │   ├── p55_capture_control.py · p55_capture_control_analyze.py · p55_capture_control_gen_prediction.py · run_p55_capture_control.sh   # A2 at cap 256 with only the CUDA-graph capture size lowered
@@ -152,7 +152,7 @@ The other pre-registrations ship with a `.sha256` file written at registration t
 | Long context — 5 requests × 4 depths × 2 arms (`p53_longctx`) | 40 | ✅ single-request |
 | Long context addendum — 5 measured requests × 5 (arm, depth) cells (`p53_longctx_addendum`; 68 warm-up rows recorded, not counted) | 25 | ✅ single-request |
 | Guardrails — 45 questions × 3 rounds × 3 request arms × 2 container arms (`p53_guardrails`) | 810 | ✅ (270 nim-only single-request rows + 540 rail rows) |
-| **Single-request latency points, Vol.2 P50/P53** | **1,075** | |
+| **Single-request latency points, Vol.3 P50/P53** | **1,075** | |
 | Concurrency, first run — AIPerf closed-loop requests completed over 36 levels (`p53_concurrency`) | 4,995 | ❌ different unit (closed-loop levels; conclusions null) |
 | Concurrency, second run — completed over 33 levels (+ 576 in discarded warm-up levels) (`p53_concurrency_v2`) | 5,145 | ❌ different unit (closed-loop levels) |
 | Footprint — container starts (`p50_footprint` 15, addenda 6 + 8) | 29 | ❌ different unit |
@@ -271,7 +271,7 @@ Scripts resolve paths relative to `vol3-nemotron/` and read question sets from `
 | `GR0230_PY` | `scripts/e9/run_e9.sh` | python of an isolated venv with `nemoguardrails==0.23.0` |
 | `NGC_ENV_FILE` · `NIM_CACHE_DIR` | `scripts/run_p50_*.sh` · `scripts/run_p53_*.sh` | as above (the P50/P53 harnesses start their own containers) |
 | `AIPERF` · `TOKENIZER_ROOT` | `scripts/run_p53_concurrency.sh` · `scripts/run_p53_concurrency_v2.sh` | the `aiperf` executable (0.11.0) and a directory holding each model's tokenizer files under `a1/` and `a2/` |
-| `GR023_PY` | `scripts/run_p53_guardrails.sh` | python of an isolated venv with `nemoguardrails==0.23.0` (the Vol.1-B worker) |
+| `GR023_PY` | `scripts/run_p53_guardrails.sh` | python of an isolated venv with `nemoguardrails==0.23.0` (the Vol.2 worker) |
 
 See [`../DEPLOYMENT_NOTES.md`](../DEPLOYMENT_NOTES.md) for RTX 5090 deployment notes.
 

@@ -1,4 +1,4 @@
-# Vol.2 · A2 concurrency at an intermediate sequence cap, `max_num_seqs` 128 (run 2026-09-23, 19:44–21:07)
+# Vol.3 · A2 concurrency at an intermediate sequence cap, `max_num_seqs` 128 (run 2026-09-23, 19:44–21:07)
 
 **Question.** The same sweep as `../p55_concurrency_a2_256/` with the cap set to 128 (`NIM_PASSTHROUGH_ARGS "--max-num-seqs 128"`), an intermediate state between the 32 that `../p53_concurrency_v2/` shared with A1 and the image default 256. The point is to measure the shape between those two rather than to interpolate it. Pre-registration `prediction_p55_concurrency_a2_128.json`, frozen 2026-09-23T16:27:29+0800 and scanned before its sidecar was written (`prediction_scan.txt`); first request (the warm-up level) 19:50:27.
 

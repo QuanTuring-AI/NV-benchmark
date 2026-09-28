@@ -1,4 +1,4 @@
-# Vol.1-A revisit · NIM 2.0.12 and upstream vLLM 0.27.1 on the same Llama 3.1 8B bf16 weights (run 2026-09-24, 00:13–05:05)
+# Vol.1 (renewed) · NIM 2.0.12 and upstream vLLM 0.27.1 on the same Llama 3.1 8B bf16 weights (run 2026-09-24, 00:13–05:05)
 
 **Question.** NIM 2.0.12 contains vLLM 0.27.1 (same build commit, same torch, CUDA, flashinfer, triton and transformers; `stack.json`). What does NIM's pre-selected configuration amount to, set against the same engine started by hand, on one card, one model, one set of weight files and one precision? Items: **A** single stream (generation rate, time to first token, time to a complete answer) and concurrency within the SLOs of `../p53_concurrency_v2/`; **B** how many settings each arm needs to reach a serving start. The write-up is in `../../../vol1-nim/README.md`. Pre-registration `prediction_p54_engine.json`, frozen 2026-09-24T00:12:58+0800 after harness tests (disclosed in `harness_test_record.json` and the basis) and scanned before its sidecar was written (`prediction_scan.txt`, with a planted-control rescan); first container 00:13:34 (the stack stage, CPU only), first GPU start 00:20:08.
 
@@ -16,7 +16,7 @@
 
 ## A · Single stream (`single/`)
 
-Four alternating blocks, N, V, N, V, on the 50 questions of the Vol.1-B sample (positions 0–24, then 25–49). p53_answer's request: `max_tokens` 4096, temperature 0, top_p 0.9, streaming with usage, 2 s between requests. Per block: a discarded "Hello" and three discarded questions. 00:40–01:06. **All preconditions held** (no errors, the served model of each block, 50 rows per arm alternating, one container up and it is the block's own, the six labels on every row).
+Four alternating blocks, N, V, N, V, on the 50 questions of the Vol.2 sample (positions 0–24, then 25–49). p53_answer's request: `max_tokens` 4096, temperature 0, top_p 0.9, streaming with usage, 2 s between requests. Per block: a discarded "Hello" and three discarded questions. 00:40–01:06. **All preconditions held** (no errors, the served model of each block, 50 rows per arm alternating, one container up and it is the block's own, the six labels on every row).
 
 | | N | V | V over N, ratio of means [95% CI over questions] |
 |---|---|---|---|

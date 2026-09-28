@@ -1,4 +1,4 @@
-# Vol.1-A revisit · what NIM is worth on this card once several people use it at the same time (run 2026-09-25, 02:29–06:51)
+# Vol.1 (renewed) · what NIM is worth on this card once several people use it at the same time (run 2026-09-25, 02:29–06:51)
 
 **A single-user comparison cannot stand for a serving engine. This run adds the concurrent half.** Earlier single-stream measurements put Ollama's 4-bit Llama ahead of NIM's bf16 on this card. That is what a bandwidth-bound decoder does when it reads fewer bytes per token. A serving engine's advantage, if it has one, lies in serving many requests at once (continuous batching, a paged KV cache), and the Ollama side of that had never been measured. Pre-registration `prediction_p59_nim_value.json`, frozen 2026-09-25T02:29:04+0800 after two harness tests (disclosed in `harness_test_record.json` and the basis) and scanned before its sidecar was written (`prediction_scan.txt`, with a planted-control rescan); first container 02:29:39.
 
@@ -23,7 +23,7 @@ One RTX 5090 (32,607 MiB, 1,792 GB/s, driver 591.86), Docker Desktop on WSL2, on
 **Checks that held on every arm.**
 
 - **Residency:** Ollama `ollama ps` showed 100% GPU; NIM captured its CUDA graphs.
-- **Health:** decode rate at c=1 × bytes per token as a share of 1,792 GB/s was O-Q4 53.9%, O-Q4-def 58.1%, O-FP16 75.1%, N-BF16 79.0% and N-FP8 77.5%, all above the 40% gate. No arm ran from system memory, which is the failure behind Vol.1-A's single ratio.
+- **Health:** decode rate at c=1 × bytes per token as a share of 1,792 GB/s was O-Q4 53.9%, O-Q4-def 58.1%, O-FP16 75.1%, N-BF16 79.0% and N-FP8 77.5%, all above the 40% gate. No arm ran from system memory, which is the failure behind the March 2026 Vol.1's single ratio.
 - **Prefix cache:** the detector passed on all 10 containers. Its positive control fired on every one: the same prompt sent twice was served from cache.
 - **Calibration** held on every arm and profile except N-FP8 on R (below).
 - **No prompt was truncated** at context 8,192. On the harness's own 3,500-token requests the server counted 1.003–1.010 of the client's prompt tokens on every arm (`truncation_evidence.json`).
@@ -45,13 +45,13 @@ Main containers. Each cell gives total tok/s · end-to-end speed per user (tok/s
 
 **Alone with one user, Ollama's 4-bit model generates faster; NIM answers first.** O-Q4 decodes at 196 tok/s against N-BF16's 88. N-BF16's first token comes in 39 ms against 184 ms.
 
-**From 8 concurrent users on, NIM leads on both total throughput and each user's speed.** At 8 users N-BF16 serves 607 tok/s and every user sees 77 tok/s with a p99 first token of 148 ms. O-Q4 serves 175 tok/s; each user sees 24 tok/s and waits up to 5 s for a first token.
+**From 8 concurrent requests on, NIM leads on both total throughput and each user's speed.** At 8 requests N-BF16 serves 607 tok/s and every user sees 77 tok/s with a p99 first token of 148 ms. O-Q4 serves 175 tok/s; each user sees 24 tok/s and waits up to 5 s for a first token.
 
 At 128 users N-BF16 still meets the server SLO (1.8 s p99 first token, 5,458 tok/s). Every Ollama arm has requests waiting 32–58 s for a first token. No Ollama arm met the server SLO beyond one user; the first-token time is what fails.
 
 **Ollama's total throughput stops growing at its slot count.** O-Q4 reaches about 750 tok/s at 32 users and stays there. O-FP16 stays at about 400 tok/s from 16 users on. O-Q4-def, with one slot, serves about 195 tok/s at every level: one user at a time, the rest in the queue.
 
-**Engine or precision? Comparable precision, same card:** O-FP16 and N-BF16 are close alone (79 against 87 tok/s total; 84 against 88 tok/s decode). They separate as soon as there are concurrent users: 317 against 607 tok/s at 8, and 402 against 5,458 at 128. On this card the single-user gap between Ollama and NIM comes from precision, and the multi-user gap comes from the engine.
+**Engine or precision? Comparable precision, same card:** O-FP16 and N-BF16 are close alone (79 against 87 tok/s total; 84 against 88 tok/s decode). They separate as soon as there are concurrent requests: 317 against 607 tok/s at 8, and 402 against 5,458 at 128. On this card the single-user gap between Ollama and NIM comes from precision, and the multi-user gap comes from the engine.
 
 **NIM's own FP8 choice:** N-FP8 is ahead of N-BF16 at every level: 151 against 87 tok/s alone, 8,713 against 5,458 at 128. It keeps the interactive SLO up to 64 users instead of 16.
 

@@ -1,6 +1,6 @@
-# Vol.1-B · BASELINE
+# Vol.2 · BASELINE
 
-Vol.1-B repeats the published Vol.1 guardrails-overhead experiment (E3) with the model, harness logic, question set
+Vol.2 repeats the published Vol.1 guardrails-overhead experiment (E3) with the model, harness logic, question set
 and rail configuration held fixed, and moves the two NVIDIA components forward one axis at a time:
 
 |  | NeMo Guardrails **0.21.0** | NeMo Guardrails **0.23.0** |
@@ -25,7 +25,7 @@ NVIDIA GeForce RTX 5090 32 GB · driver 577.00 / CUDA 12.9 · `nvcr.io/nim/meta/
 | edge_case | 5,958 ms | 5,959 ms | +1 ms (~0%) | 100% pass-through |
 | adversarial_input | 707 ms | 301 ms | -406 ms (-57.4%) | 93.3% detection |
 
-This section is permanent. It is not overwritten, and Vol.1-B values are never subtracted from it and quoted as a single number.
+This section is permanent. It is not overwritten, and Vol.2 values are never subtracted from it and quoted as a single number.
 
 ---
 
@@ -98,15 +98,15 @@ Differences between ① and ③, or between ② and ④, are **not** read as "th
 
 | # | Vol.1 harness property | Known since | Effect on the published figure |
 |---|---|---|---|
-| a | No token usage recorded | Vol.1-B run | The +2.1% cannot be split into rail cost and output-length effect (item 9) |
-| b | E2 ran NIM and Ollama alternately on the same GPU | Vol.2 B′ (2026-09-14) | E2's NIM TTFT of 221 ms is a co-residence figure (§5). **E3 was not co-resident**: `benchmark/run_e3_guardrails.py` calls NIM only, and E3's nim-only TTFT averages 51.3 ms (135 requests), the same as a NIM-alone container today (50.0 ms) and a quarter of the co-resident E2 value; E3 also started 7 h after E2 ended |
-| c | A new asyncio event loop per Guardrails call | Vol.1-B mock test | No retries were seen with 0.21.0 in the mock; effect on the real server not measured, expected small |
+| a | No token usage recorded | Vol.2 run | The +2.1% cannot be split into rail cost and output-length effect (item 9) |
+| b | E2 ran NIM and Ollama alternately on the same GPU | Vol.3 B′ (2026-09-14) | E2's NIM TTFT of 221 ms is a co-residence figure (§5). **E3 was not co-resident**: `benchmark/run_e3_guardrails.py` calls NIM only, and E3's nim-only TTFT averages 51.3 ms (135 requests), the same as a NIM-alone container today (50.0 ms) and a quarter of the co-resident E2 value; E3 also started 7 h after E2 ended |
+| c | A new asyncio event loop per Guardrails call | Vol.2 mock test | No retries were seen with 0.21.0 in the mock; effect on the real server not measured, expected small |
 
 ---
 
 ## 4 · Applicability
 
-- From Vol.1-B on, **cell ④ is the baseline** for Llama 3.1 8B with NIM and NeMo Guardrails in this repository.
+- From Vol.2 on, **cell ④ is the baseline** for Llama 3.1 8B with NIM and NeMo Guardrails in this repository.
 - §1 stays as published. The two baselines are shown side by side with their stacks, never as one subtracted number.
 - Cell ① was run on the Vol.1 stack under the §3 differences. It is **not** a reproduction of Vol.1: ① differs from Vol.1 in items 3–8.
 - These results cover sequential single requests (one at a time, 2 s cooldown). They say nothing about behaviour under concurrent load.
@@ -120,7 +120,7 @@ Differences between ① and ③, or between ② and ④, are **not** read as "th
 |---|---|---|
 | Vol.1 E2 NIM avg TTFT | **221 ms** | NIM 1.13.1, 100 questions × 3 rounds (Vol.1 E2 set) ([`benchmark/report/e2_report.md`](../benchmark/report/e2_report.md)). **NIM and Ollama requests alternated per question on the same GPU**, 2 s apart ([`benchmark/run_benchmark.py`](../benchmark/run_benchmark.py), main loop), so Ollama's model stayed loaded next to NIM |
 | Same image, NIM alone vs NIM with Ollama resident | **67.6 ms** (NIM alone, before) · **219.2 ms** (Ollama resident) · **57.1 ms** (NIM alone, after Ollama was unloaded) | NIM 1.13.1, profile `574eb076…`, 30 E2 questions, one container, 2026-09-14 ([`vol3-nemotron/results/e7/b_prime/`](../vol3-nemotron/results/e7/b_prime/)). ⚠️ That run's own validity gate (the two NIM-alone cells within 10%) **failed** (16.8%): the first request after startup took 579.4 ms and was counted. Read its `READ_ME_FIRST.md` first. |
-| Vol.1-B nim-only avg TTFT | **50.0 ms** (①②, NIM 1.13.1) · **48.1 ms** (③④, NIM 2.0.12) | NIM alone on the GPU · Vol.1 **E3** question set, which is not the E2 set · warm-up excluded |
+| Vol.2 nim-only avg TTFT | **50.0 ms** (①②, NIM 1.13.1) · **48.1 ms** (③④, NIM 2.0.12) | NIM alone on the GPU · Vol.1 **E3** question set, which is not the E2 set · warm-up excluded |
 
 These rows use different question sets and GPU residency. No ratio between them is stated in this volume. The mechanism behind the higher TTFT with Ollama resident is **not established**: in the 2026-09-14 run, NIM's GPU memory footprint did not move, and Ollama was not seen using the GPU during NIM requests (small n).
 
@@ -305,16 +305,16 @@ Also recorded (not pre-registered): the S-O blocks before and after the NIM phas
 
 What this does not show: what Vol.1's machine did when resolving `localhost` in March 2026, which was not recorded; anything about the stack Vol.1 used; whether the memory displacement is specific to Windows and WSL2; or behaviour under concurrency — every request here was sent alone. No published figure has been adjusted.
 
-## 12 · Closing out the Vol.1-A comparison — where each arm's generation was running
+## 12 · Closing out the March 2026 Vol.1 comparison — where each arm's generation was running
 
-This section closes the Vol.1-A NIM-versus-Ollama comparison. It adds no new claim about either engine; it records what the two arms of that ratio were doing, and states what remains unknown.
+This section closes the March 2026 Vol.1 NIM-versus-Ollama comparison. It adds no new claim about either engine; it records what the two arms of that ratio were doing, and states what remains unknown.
 
 Single-stream decoding reads the whole weight set once per generated token, so a measured generation rate implies an effective memory bandwidth of `tokens/s × weight bytes`. Applied to the published per-request data (`benchmark/results/e2_nim_vs_ollama.json`, unmodified), with TTFT removed so that only the generation phase is counted:
 
 | Arm | Generation rate (median, `tokens ÷ (total − TTFT)`) | Weights | Implied bandwidth | Share of this GPU's 1,792 GB/s |
 |---|---|---|---|---|
-| Vol.1-A, NIM (BF16, about 16.1 GB) | 83.9 tok/s | 16.1 GB | about 1,350 GB/s | **75%** |
-| Vol.1-A, Ollama (Q4, about 4.9 GB) | 12.3 tok/s | 4.9 GB | about 60 GB/s | **3.4%** |
+| March 2026 Vol.1, NIM (BF16, about 16.1 GB) | 83.9 tok/s | 16.1 GB | about 1,350 GB/s | **75%** |
+| March 2026 Vol.1, Ollama (Q4, about 4.9 GB) | 12.3 tok/s | 4.9 GB | about 60 GB/s | **3.4%** |
 | This machine 2026-09-17, Ollama alone on the GPU (section 11, n=49) | 231.7 tok/s | 4.9 GB | about 1,135 GB/s | **63%** |
 | This machine 2026-09-18, Ollama on the GPU, control run (`results/ollama_cpu_control/`, n=3) | 213.9 tok/s | 4.9 GB | about 1,048 GB/s | **58%** |
 | This machine 2026-09-18, Ollama with the GPU disabled (`results/ollama_cpu_control/`, n=50; no request dropped, as pre-registered) | 11.27 tok/s | 4.9 GB | about 55 GB/s | **3.1%** |
@@ -323,7 +323,7 @@ The last row is a pre-registered control run on the same machine, the same Ollam
 
 The published Ollama arm's generation rate is within 9% of the rate measured here with the GPU disabled, and about 19 times below the rate measured here with the GPU in use; the two implied bandwidth shares, 3.4% and 3.1%, fall in the same place. **Why the published run behaved that way is not established.** That machine's state in March 2026 — GPU memory available to each process at the time, driver settings, the Ollama build — was not recorded, and this volume does not claim to know it.
 
-The 7.3× ratio that originally led Vol.1-A compared two arms whose generation rates, converted to effective memory bandwidth, sit at 75% and 3.4% of this card's peak — the denominator arm was not running at GPU speed. On the same card and model today, that engine generates at 231.7 tok/s in VRAM and at 11.27 tok/s when forced onto CPU. We do not know what the March 2026 machine was doing, and we do not claim to. The ratio therefore belongs to that configuration; this repository does not use Ollama as a comparison arm again.
+The 7.3× ratio that originally led the March 2026 Vol.1 compared two arms whose generation rates, converted to effective memory bandwidth, sit at 75% and 3.4% of this card's peak — the denominator arm was not running at GPU speed. On the same card and model today, that engine generates at 231.7 tok/s in VRAM and at 11.27 tok/s when forced onto CPU. We do not know what the March 2026 machine was doing, and we do not claim to. The ratio therefore belongs to that configuration; this repository does not use Ollama as a comparison arm again.
 
 What this section does not show: what the March 2026 machine was doing; whether the same behaviour would occur on another operating system or driver; or anything about either engine's output quality, which was not measured here. No published figure has been adjusted, and no adjusted ratio is stated anywhere in this volume.
 

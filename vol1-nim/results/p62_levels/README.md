@@ -1,4 +1,4 @@
-# Vol.1-A revisit · P62 Q2 + Q4 · the chat profile at 1, 2, 4 and 8 concurrent requests, and where Ollama 4-bit stops being flat (run 2026-09-26, 14:53–15:53)
+# Vol.1 (renewed) · P62 Q2 + Q4 · the chat profile at 1, 2, 4 and 8 concurrent requests, and where Ollama 4-bit stops being flat (run 2026-09-26, 14:53–15:53)
 
 **Why.** P59 measured 1, 8, 16, 32, 64 and 128 concurrent requests. On the chat profile, N-BF16 was behind Ollama 4-bit (O-Q4) at 1 and ahead at 8, so the crossing could only be placed "between 1 and 8". Q2 adds 2 and 4 on all five P59 configurations, with 1 and 8 in the same session as anchors.
 

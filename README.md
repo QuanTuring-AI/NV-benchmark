@@ -1,6 +1,6 @@
 <div align="center">
 
-# 7.4× at 128 concurrent users: what NIM buys you on one RTX 5090
+# 7.4× at 128 concurrent requests: what NIM buys you on one RTX 5090
 
 ### QuanTuring · NV-benchmark · Llama 3.1 8B and Nemotron on a single RTX 5090 (Blackwell, sm_120)
 
@@ -44,12 +44,12 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 
 | Tag | Volume | Commit | Note |
 |---|---|---|---|
-| `vol1-nim-published` | Vol.1 (renewed) | `3efa794` | rerun Vol.1 here |
+| `vol1-nim-published` | Vol.1 | `3efa794` | rerun Vol.1 here |
 | `vol2-guardrails-published` | Vol.2 | `3efa794` | rerun Vol.2 here |
 | `vol3-nemotron-published` | Vol.3 | `e4f0ec5` | rerun Vol.3 here |
-| `vol1-revisit-published` | Vol.1 (renewed) | `f6b73b2` | kept as first pushed |
-| `vol1b-published` | Vol.2, when it was called Vol.1-B | `40dfce0` | kept as first pushed |
-| `vol2-published` | **Vol.3**, when it was called Vol.2 | `e4f0ec5` | kept as first pushed; the name predates the renumbering |
+| `vol1-revisit-published` | Vol.1 | `f6b73b2` | first push; tag name predates the directory rename |
+| `vol1b-published` | Vol.2 | `40dfce0` | first push; tag name predates the directory rename |
+| `vol2-published` | Vol.3 | `e4f0ec5` | first push; tag name predates the directory rename |
 
 Each tag points to the last commit before the rename that holds its volume's runs, so every path in those runs is correct there.
 
@@ -61,10 +61,12 @@ Llama 3.1 8B Instruct, one RTX 5090, synthetic chat requests (200 tokens in, 200
 - **For one user the 4-bit build is faster; NIM leads from 4 on.** Against the fastest 4-bit configuration we could build with Ollama (16 slots), NIM bf16's total throughput overtakes it between 2 and 4 concurrent requests. → [§D](vol1-nim/README.md) · [`results/p62_levels/`](vol1-nim/results/p62_levels/README.md)
 - **At 128 concurrent requests, NIM delivers:**
   - 7.4× the 4-bit build's total throughput with NIM bf16;
-  - 11.8× with NIM's own FP8 choice;
+  - 11.8× with NIM's own FP8 choice (*FP8 figures are from the 25 September run; a clean-window recheck is pending*);
   - 13.6× at matched 16-bit precision.
 
   NIM was still inside the server SLO at 128. In the same sweep (1, 8, 16, 32, 64 and 128 concurrent requests) the Ollama configurations were outside it from 8 on. → [`vol1-nim/README.md` §0](vol1-nim/README.md) · [`results/p59_nim_value/`](vol1-nim/results/p59_nim_value/README.md)
+
+  *A clean-window recheck on 27 September reproduced these ratios within 6% (7.7× and 13.7× at 128 concurrent requests); absolute throughput was 3–13% higher in every cell it measured.* → [`results/p70_clean_recheck/`](vol1-nim/results/p70_clean_recheck/README.md)
 - **Answer quality.**
   - MMLU (2,850-item sample): every faster configuration is within ±2 pp of NIM bf16.
   - GSM8K: the 4-bit build −2.43 pp [−4.40, −0.53]; NIM FP8 −1.52 pp [−3.11, 0.00]. Both are undetermined against ±2 pp.

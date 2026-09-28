@@ -1,4 +1,4 @@
-# Vol.1-A revisit · P62 Q1 · answer quality of the four configurations whose speed P59 measured (run 2026-09-26, 17:59–19:58)
+# Vol.1 (renewed) · P62 Q1 · answer quality of the four configurations whose speed P59 measured (run 2026-09-26, 17:59–19:58)
 
 **The question.** P59 and Q2 found NIM's FP8 profile the fastest configuration at every concurrency level on this card, and Ollama's 4-bit model the fastest for a single user. Is either faster because it answers worse?
 

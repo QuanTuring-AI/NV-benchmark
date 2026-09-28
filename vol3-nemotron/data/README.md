@@ -1,6 +1,6 @@
-# Vol.2 data
+# Vol.3 data
 
-Vol.2 reuses Vol.1's public question sets. They are **not copied** here:
+Vol.3 reuses Vol.1's public question sets. They are **not copied** here:
 
 | File | Used by | SHA-256 |
 |---|---|---|

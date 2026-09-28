@@ -1,4 +1,4 @@
-# Vol.1-B · judge isolation (P28) — what is here
+# Vol.2 · judge isolation (P28) — what is here
 
 The same stored answer texts judged by two output judges that differ in one line of the rails config: **J1024** (the cell ④
 config; `max_tokens` unset, so the library default 1024 applies) and **J3** (the same file plus `max_tokens: 3` on the two

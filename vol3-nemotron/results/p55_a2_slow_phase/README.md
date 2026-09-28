@@ -1,4 +1,4 @@
-# Vol.2 · A2's slow first phase after READY: what the records on disk can and cannot say (no GPU run)
+# Vol.3 · A2's slow first phase after READY: what the records on disk can and cannot say (no GPU run)
 
 **Question.** Nemotron 3 Nano (A2, NIM 2.0.12, NVFP4) sometimes serves its first requests after READY at roughly half its steady rate. Is there a mechanism in the container's own logs, and how many warm-up requests does a deployment need? This is an analysis of records that already exist; no container was started for it. Program: `../../scripts/p55_a2_slow_phase.py` → `slow_phase.json`.
 

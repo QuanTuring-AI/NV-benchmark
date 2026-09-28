@@ -1,4 +1,4 @@
-# Vol.1-B · closed-loop concurrency (P17) — what is here and how to rebuild what is not
+# Vol.2 · closed-loop concurrency (P17) — what is here and how to rebuild what is not
 
 Three request shapes, one NIM container each (Llama 3.1 8B Instruct, NIM 2.0.12, no Guardrails), swept with NVIDIA AIPerf 0.11.0 at
 concurrency 1 · 4 · 16 · 32 · 64 · 128 · 256 · 512 and judged against the MLPerf Inference v5.1 Llama 3.1-8B latency objectives (p99).
