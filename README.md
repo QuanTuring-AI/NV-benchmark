@@ -33,12 +33,12 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 | Volume | Question | Directory | Status |
 |---|---|---|---|
 | **Vol.1 (renewed 2026-09)** | Does NIM change one user's speed? Where does serving start to pay? Does answer quality hold? | [`vol1-nim/`](vol1-nim/README.md) | this release |
-| **Vol.2** | NeMo Guardrails 0.23.0 on NIM 2.0.12: what the upgrade costs and how to take it back | [`vol2-guardrails/`](vol2-guardrails/README.md) | data published 2026-09-19 |
+| **Vol.2** | NeMo Guardrails 0.23.0 on NIM 2.0.12: what the upgrade costs and how to take it back | [`vol2-guardrails/`](vol2-guardrails/README.md) | data published 2026-09-19; write-up to follow |
 | **Vol.3** | Two Nemotron deployment options on 32 GB | [`vol3-nemotron/`](vol3-nemotron/README.md) | data published 2026-09-25; write-up to follow |
 | Vol.4–5 | NeMo Retriever and Nemotron as judge in a RAG system | not yet created | planned |
 | Vol.1 · March 2026 original (archived) | NIM against Ollama, and NeMo Guardrails' latency, as first published | [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) | frozen |
 
-*Directories were renamed on 2026-09-28 to match the volume numbers. Files written before that date, including frozen pre-registrations, name the old paths; [`PATH_MAP.md`](PATH_MAP.md) maps every one. The hash chain does not depend on today's paths: `python tools/bound_files.py --history` checks each binding in the commit where its pre-registration was frozen.*
+*Directories were renamed on 2026-09-28 to match the volume numbers: [`PATH_MAP.md`](PATH_MAP.md) maps every old path, and [`CHANGELOG.md`](CHANGELOG.md) records the change.*
 
 ### Tags
 
@@ -47,11 +47,10 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 | `vol1-nim-published` | Vol.1 | `3efa794` | rerun Vol.1 here |
 | `vol2-guardrails-published` | Vol.2 | `3efa794` | rerun Vol.2 here |
 | `vol3-nemotron-published` | Vol.3 | `e4f0ec5` | rerun Vol.3 here |
-| `vol1-revisit-published` | Vol.1 | `f6b73b2` | first push; tag name predates the directory rename |
-| `vol1b-published` | Vol.2 | `40dfce0` | first push; tag name predates the directory rename |
-| `vol2-published` | Vol.3 | `e4f0ec5` | first push; tag name predates the directory rename |
 
 Each tag points to the last commit before the rename that holds its volume's runs, so every path in those runs is correct there.
+
+*Earlier tags and every change to this repository: [`CHANGELOG.md`](CHANGELOG.md).*
 
 ## Headline results (Vol.1)
 

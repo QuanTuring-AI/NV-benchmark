@@ -9,8 +9,10 @@ This file lists where each volume's evidence lives and which NVIDIA component ea
 
 | Volume | Status | Evidence directory | Index |
 |---|---|---|---|
+| **Vol.1 (renewed 2026-09)** · NIM on RTX 5090: single user, serving, answer quality | Published 2026-09-27 | [`vol1-nim/`](vol1-nim/) | [`vol1-nim/README.md`](vol1-nim/README.md) |
 | **Vol.1** · NIM vs Ollama on RTX 5090 | Published 2026-03-31 · [forum thread 365275](https://forums.developer.nvidia.com/t/nim-vs-ollama-on-rtx-5090-7-3x-faster-inference-nemo-guardrails-at-2-1-overhead-870-data-points/365275) | [`benchmark/`](benchmark/) | [`benchmark/README.md`](benchmark/README.md) |
-| **Vol.3** | Not yet published · evidence being assembled | [`vol3-nemotron/`](vol3-nemotron/) | [`vol3-nemotron/README.md`](vol3-nemotron/README.md) |
+| **Vol.2** · NeMo Guardrails 0.23.0 on NIM 2.0.12 | Data published 2026-09-19 · write-up to follow | [`vol2-guardrails/`](vol2-guardrails/) | [`vol2-guardrails/README.md`](vol2-guardrails/README.md) |
+| **Vol.3** · Two Nemotron deployment options on 32 GB | Data published 2026-09-25 · write-up to follow | [`vol3-nemotron/`](vol3-nemotron/) | [`vol3-nemotron/README.md`](vol3-nemotron/README.md) |
 | Follow-ups to Vol.1's planned E4–E6 | See [`ROADMAP_STATUS.md`](ROADMAP_STATUS.md) | [`roadmap-e456/`](roadmap-e456/) | — |
 
 ---
@@ -43,13 +45,17 @@ E8 uses no NVIDIA component. It is listed because it belongs to Vol.3's evidence
 NV-benchmark/
 ├── README.md             # repository landing page
 ├── SERIES.md             # this file
+├── CHANGELOG.md          # every change to this repository, and the tags from earlier pushes
+├── PATH_MAP.md           # old path → new path for the 2026-09-28 directory rename
 ├── ROADMAP_STATUS.md     # what happened to Vol.1's planned experiments
 ├── DEPLOYMENT_NOTES.md   # 🔒 fixed path — linked from the published Vol.1 post
 ├── LICENSE
 ├── requirements.txt · docker-compose.yml · progress.json · scripts/   # Vol.1-period files
 ├── benchmark/            # 🔒 Vol.1 evidence — fixed path, published content unchanged
 ├── roadmap-e456/         # Follow-up experiments for Vol.1's planned E4–E6
-└── vol3-nemotron/                 # Vol.3 evidence
+├── vol1-nim/             # Vol.1 (renewed) evidence
+├── vol2-guardrails/      # Vol.2 evidence
+└── vol3-nemotron/        # Vol.3 evidence
     ├── README.md         # index: file → experiment · measurement boundary · data-point ledger
     ├── data/             # pointers to question sets (not copies)
     ├── scripts/          # harness
@@ -58,7 +64,7 @@ NV-benchmark/
 
 Rules for adding to this repo:
 
-1. **A new volume gets a new top-level directory** (`vol4-…/`, …) with the same four parts as `vol3-nemotron/`. Earlier volumes are never moved.
+1. **A new volume gets a new top-level directory** (`vol4-…/`, …) with the same four parts as `vol3-nemotron/`. Earlier volumes are not moved again (the one rename, on 2026-09-28, is recorded in [`CHANGELOG.md`](CHANGELOG.md)).
    **Exception: follow-ups to a published volume's stated plans get their own directory named after that plan** (today: `roadmap-e456/` for Vol.1's E4–E6). They complete an earlier volume's commitments rather than start a new volume, so filing them under a later volume would blur which volume the evidence belongs to.
 2. **Paths linked from anything published are fixed.** Today these are `DEPLOYMENT_NOTES.md` and `benchmark/`.
 3. **Published files are not edited.** Corrections and later status go in a new, dated file (for example `ROADMAP_STATUS.md` or a volume README's correction record).
