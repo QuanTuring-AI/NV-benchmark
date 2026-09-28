@@ -1,0 +1,232 @@
+{
+  "experiment": "Vol.2 (directory vol1b/), P67 · the Guardrails server's own limits separated from the rails' cost: NeMo Guardrails 0.23.0 served with W = 1 or 4 uvicorn worker processes and a keep-alive timeout K of 5 s (uvicorn's default) or 75 s, in front of Llama 3.1 8B Instruct on NIM 2.0.12 (bf16) on one RTX 5090, at 32, 64 and 128 concurrent requests; and the rails' detection under 128 concurrent requests on four workers.",
+  "written_at": "2026-09-27T15:26:22+0800",
+  "written_before": "the measured run's first container. run_p67.sh refuses to start if this file or its .sha256 is missing or changed, or if levels.jsonl exists.",
+  "why": "In P66 two things could not be told apart at 64 and 128 concurrent requests. (1) R3 gained 18% from 32 to 128 (1,350 -> 1,590 tok/s) while both rails arms were flagged server_bound at 128 (one core >= 95% for 11-12 s in a row), so part of 'the rails keep 42% of direct NIM at 128' may be the one Python process of the server. (2) R1024 at 64 and 128 had 20 connection errors each (ServerDisconnectedError / ConnectionResetError 10054, 0.01-0.5 s after sending, no HTTP status); one untested explanation is uvicorn closing idle keep-alive connections after 5 s while the client reuses them. Both point at the server's configuration, not at the rails.",
+  "scope": "Only the Guardrails server's worker count and keep-alive timeout change; NIM, the configs, the load and the Part D set are P66's. Non-streaming requests, self-check rails, one RTX 5090. Windows host: uvicorn's workers share one listening socket (stack.json server_factors.windows_workers).",
+  "stack": {
+    "nim": {
+      "image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:2.0.12",
+      "image_id": "sha256:d2c94c1d654c3e80b8bc08cc83298d2ba4e219dff41d1092555795edb93c6545",
+      "profile": "092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+      "env": {
+        "NIM_MAX_MODEL_LEN": "8192",
+        "VLLM_USE_V2_MODEL_RUNNER": "0"
+      },
+      "source": "vol1a-revisit/scripts/p59_nim_value.py (ARMS N-BF16, NIM_ENV) via vol2/scripts/p54_engine.py, the same launcher as P66; image id from docker image inspect (versions.txt)"
+    },
+    "guardrails": {
+      "nemoguardrails": "0.23.0",
+      "httpx": "0.28.1",
+      "uvicorn": "0.54.0",
+      "h11": "0.16.0",
+      "fastapi": "0.141.1",
+      "starlette": "1.7.0",
+      "environment": "gr0230srv, the P66 environment, unchanged (vol1b/results/p66_rails_under_load/guardrails_venv_freeze.txt, sha256 c649fb2bf93e4e0199dc9286dde278b60fc23896b8eb0bb3a1d8c7f28e3c1fb3); versions read at run time (versions.txt)",
+      "server": "vol1b/scripts/p67_gr_server.py: P66's server (vol1b/scripts/p66_gr_server.py = the CLI's `server` with --default-config-id, host 127.0.0.1, log level info) with uvicorn's `workers` and `timeout_keep_alive` exposed. Every P67 server, W1K5 included, runs it; P66 ran p66_gr_server.py.",
+      "differences_from_p66_server": [
+        "the app is the import string p67_gr_app:app (uvicorn needs one for workers > 1); each worker sets the deployment type, rails_config_path and the default config id itself at import",
+        "one ASGI wrapper adds two response headers, x-p67-worker-pid and x-p67-config-sha256",
+        "the HTTP protocol is p67_gr_app:CountedH11, uvicorn's h11 protocol with two log lines (a keep-alive close; a connection lost with an exception) and no change in behaviour",
+        "the access-log line carries the worker's pid"
+      ],
+      "http_protocol_in_this_environment": "h11 (httptools is not installed, so uvicorn's `auto` picks h11 in P66 as well)",
+      "config_selection": "--default-config-id semantics (server/api.py:506-507 uses app.default_config_id when the request names no config), set in every worker at import; checked per worker by G2 before the levels (the adversarial item blocked, the clean one passed with 3 LLM calls, each response carrying its worker's pid and config sha256)",
+      "usage_stats": "NEMO_GUARDRAILS_NO_USAGE_STATS=1 on every server, as P66",
+      "verbose_logging": "the server builds its rails with LLMRails(config, verbose=True) (nemoguardrails/server/api.py:396 and :693), so every request's events and prompts are written to the server log at level info. This is 0.23.0's server as shipped, the same in P66 and P67 and not a factor here; the logs stay local (they hold prompt text).",
+      "llm_framework": "default, the library's own OpenAI-compatible client (as P66)"
+    },
+    "server_factors": {
+      "W": {
+        "values": [
+          1,
+          4
+        ],
+        "source": "uvicorn.run(workers=...) (uvicorn/main.py:526); default 1",
+        "rule": "4, or min(4, physical cores - 2) if the host has fewer than 6 physical cores",
+        "host_physical_cores": 20,
+        "host_logical_cores": 28,
+        "host_source": "psutil.cpu_count(logical=False / True), versions.txt of the harness tests",
+        "chosen": 4,
+        "w8_branch": "if R3 W4K75 at c=128 is server_bound: R3 W8K75 at c=128 once (variant w8); 8 <= 20 - 2"
+      },
+      "K": {
+        "values": [
+          5,
+          75
+        ],
+        "unit": "seconds",
+        "source": "uvicorn Config(timeout_keep_alive=5) (uvicorn/config.py:234); the idle keep-alive connection is closed by H11Protocol.timeout_keep_alive_handler (uvicorn/protocols/http/h11_impl.py:359)"
+      },
+      "windows_workers": "on Windows uvicorn's workers are spawned processes that share one listening socket. In the harness tests several workers calling listen() at the same moment failed with WinError 10022 and uvicorn's supervisor started replacements (uvicorn/supervisors/multiprocess.py keep_subprocess_alive). The harness therefore waits until all W workers answer on fresh connections, each pid a descendant of the server it started, and counts the restarts per server start (events)."
+    },
+    "client_pool": {
+      "max_connections": 1000,
+      "max_keepalive_connections": 100,
+      "source": "nemoguardrails/llm/clients/constants.py:20 DEFAULT_CONNECTION_LIMITS, used by llm/clients/base.py:127 when no http_client is passed; read at run time by run_p66.sh (versions.txt)",
+      "note": "above every concurrency level (128), so no pool-raised variant is run"
+    },
+    "iorails_admission_queue": {
+      "present_in_0_23_0": true,
+      "enabled": false,
+      "NONSTREAM_QUEUE_DEPTH": 256,
+      "NONSTREAM_MAX_CONCURRENCY": 256,
+      "source": "nemoguardrails/guardrails/iorails.py:80-81; enabled only when NEMO_GUARDRAILS_IORAILS_ENGINE is true/1 (nemoguardrails/__init__.py:48), which the harness removes from every server's environment"
+    },
+    "configs": {
+      "default": {
+        "sha256": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+        "same_bytes_as": "vol1b/results/p66_rails_under_load/configs/default/config.yml"
+      },
+      "mt3": {
+        "sha256": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+        "same_bytes_as": "vol1b/results/p66_rails_under_load/configs/mt3/config.yml"
+      },
+      "passthrough": {
+        "sha256": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f",
+        "derived": "the default config's bytes up to its `# Self-check rails` comment: the same models section, no rails, no prompts",
+        "same_bytes_as": "vol1b/results/p66_rails_under_load/configs/passthrough/config.yml"
+      }
+    },
+    "request_parameters_through_the_server": "max_tokens, temperature and top_p from the request body go to the main generation call (server/api.py chat_completion -> llm_params); the self-check calls use the task's own max_tokens (library/self_check/*/actions.py). The request schema has no ignore_eos, so no arm is sent one.",
+    "prefix_cache": {
+      "kv_block_tokens": 16,
+      "source": "vllm:cache_config_info block_size 16, vol1b/results/p66_rails_under_load/N/c0032/server_metrics_export.json (the same image and profile)"
+    },
+    "p66_anchor_cells": "vol1b/results/p66_rails_under_load/analysis.json cells N|32, N|64, N|128, R3|32, R3|64, R3|128 (G7)"
+  },
+  "plan": {
+    "order": [
+      "N c 32 64 128",
+      "R1024 W1K5 c 64 128",
+      "R1024 W4K75 c 64 128, then Part D",
+      "R1024 W1K75 c 64 128",
+      "R1024 W4K5 c 64 128",
+      "R3 W1K5 c 32 64 128",
+      "R3 W4K75 c 32 64 128 (then the w8 branch if it applies)",
+      "P W4K75 c 64 128",
+      "P W1K5 c 64 128"
+    ],
+    "cells": 21,
+    "one_nim_container": true,
+    "server_restart_per_config": true,
+    "per_server_start": "port checked free; all W workers must answer (fresh connections, 64 at a time) with pids that descend from the started server; G2 per worker; prefix calibration on N and P; one discarded warm-up level (c=8, 100 requests, seed 20260927 + 9000); 30 s between server configs"
+  },
+  "load": "P66's, unchanged: AIPerf 0.11.0 closed loop, non-streaming, synthetic chat 200 +- 50 tokens in / 200 +- 50 out (max_tokens drawn per request), temperature 0, no ignore_eos on any arm, requests = conversations = max(10 c, 200) per level, seed 20260927 + c (so each level's payloads are P66's), no per-level warm-up, 10 s between levels",
+  "part_d": "after R1024 W4K75's levels, on the same server: benchmark/e3_questions.json (15 adversarial, 30 passable) x 3 rounds while AIPerf keeps 128 concurrent chat requests on it (started 30 s before); condition label c128_W4K75. Kept per request: item, round, blocked, judge completion tokens (server call log), latency, response sha256 and length. Compared with P66's R1024 c1 verdicts on the same (item, round).",
+  "gates": {
+    "G1": "NIM health as P66 (decode rate at c=1 x 16.06 GB / 1,792 GB/s >= 0.60); else every cell null",
+    "G2": "per server start: every worker answered an adversarial and a clean E3 item. Rails: adversarial blocked with 1 LLM call, clean passed with 3. P: neither blocked, 1 LLM call each. Every response carries the expected config sha256; each probe round's NIM request delta equals the LLM calls the responses report. Not all W workers answering is a G2 failure. Else that start's cells null.",
+    "G3": "server CPU per process at 1 Hz; one process >= 95% for >= 10 s in a row -> cell flagged server_bound (kept). For W1 the one server process is the one that counts, as in P66.",
+    "G4": "client pool 1,000 (stack.json) >= every level",
+    "G5": "each level's request payloads (AIPerf inputs.json, sha256 over all payloads) identical across every cell at that concurrency; else those cells null",
+    "G6": "errors <= 1% of requests; else the cell null (its error rate is still reported and used in the R1024 2 x 2 error table)",
+    "G7": "anchor: N at 32 / 64 / 128 and R3 W1K5 at 32 / 64 / 128 within +-5% of P66's same cells (total tok/s, vol1b/results/p66_rails_under_load/analysis.json). Any of the six outside or missing -> every comparison with P66 null; comparisons inside this run are made as usual."
+  },
+  "analysis_rules": {
+    "program": "vol1b/scripts/p67_analyze.py (16 self-test cases; each of 17 mutations of a gate, flag, bound, band, sign or direction makes at least one case fail), reading only the published files",
+    "cells": "label x concurrency; total output tok/s, latency p50 / p99, per-user tok/s, error rate and types, requests per worker, keep-alive closes and connections lost (server log slice of the level), server CPU per process",
+    "r1024_2x2": "at 64 and 128: error rate and total tok/s for W1K5, W1K75, W4K5, W4K75; simple effects: K75 - K5 at each W and W4 - W1 at each K (error rate, percentage points); tok/s ratios for both cells usable",
+    "ratios": "per server config (W1K5, W4K75) and concurrency: R3 / R1024, R3 / N, P / N, R1024 / N on total tok/s, N from this run",
+    "head_table": "P66's 64 and 128 rows beside this run's W4K75 rows, each with W, K, server_bound and error rate; the ratio to P66's same arm only when G7 passes",
+    "prefix_thresholds": {
+      "N": {
+        "template_fixed_prefix_tokens": 16.0,
+        "kv_block_tokens": 16,
+        "mean_prompt_tokens_per_nim_request": 231.45,
+        "threshold": 0.1383,
+        "sources": {
+          "template_fixed_prefix_tokens": "prefix-cache hits of the second calibration request (vol1b/results/p67_rails_server_config/harness_test/p67_20260927T151347/logs/events.jsonl, server_start N)",
+          "kv_block_tokens": "stack.json prefix_cache",
+          "mean_prompt_tokens_per_nim_request": "vol1b/results/p66_rails_under_load/levels.jsonl, N c=32: prompt_tokens / request_success"
+        },
+        "calibration_requests": [
+          {
+            "request": 1,
+            "http_status": 200,
+            "prompt_tokens": 46.0,
+            "prefix_cache_queries": 46.0,
+            "prefix_cache_hits": 16.0,
+            "nim_requests": 1.0
+          },
+          {
+            "request": 2,
+            "http_status": 200,
+            "prompt_tokens": 49.0,
+            "prefix_cache_queries": 49.0,
+            "prefix_cache_hits": 16.0,
+            "nim_requests": 1.0
+          }
+        ]
+      },
+      "P": {
+        "template_fixed_prefix_tokens": 80.0,
+        "kv_block_tokens": 16,
+        "mean_prompt_tokens_per_nim_request": 294.45,
+        "threshold": 0.326,
+        "sources": {
+          "template_fixed_prefix_tokens": "prefix-cache hits of the second calibration request (vol1b/results/p67_rails_server_config/harness_test/p67_20260927T151347/logs/events.jsonl, server_start P)",
+          "kv_block_tokens": "stack.json prefix_cache",
+          "mean_prompt_tokens_per_nim_request": "vol1b/results/p66_rails_under_load/levels.jsonl, P c=32: prompt_tokens / request_success"
+        },
+        "calibration_requests": [
+          {
+            "request": 1,
+            "http_status": 200,
+            "prompt_tokens": 109.0,
+            "prefix_cache_queries": 109.0,
+            "prefix_cache_hits": 16.0,
+            "nim_requests": 1.0
+          },
+          {
+            "request": 2,
+            "http_status": 200,
+            "prompt_tokens": 112.0,
+            "prefix_cache_queries": 112.0,
+            "prefix_cache_hits": 80.0,
+            "nim_requests": 1.0
+          }
+        ]
+      }
+    },
+    "prefix_rule": "adopted for this run: flag prefix_hits on N and P only when the hit share exceeds (one 16-token KV block + the template's fixed prefix) / mean prompt tokens, the fixed prefix measured before freezing (replaces P66's fixed 2%)"
+  },
+  "branches": {
+    "w8": "if R3 W4K75 at c=128 is server_bound: R3 W8K75 at c=128 once (variant w8), then nothing more",
+    "k75_errors_not_lower": "reported as is; the server-side counts per level (uvicorn keep-alive closes, connections lost with the exception type) are the record of who closed; R1024's affected cells stay null under G6",
+    "default_config_id_not_in_effect_with_workers": "G2 per worker detects it; the fallback would be a config_id in the body with G5 relaxed to 'identical except config_id' -- not needed if G2 passes",
+    "g7_fails": "the run is completed and reported; only comparisons with P66 are null; nothing is re-run"
+  },
+  "harness_test": "Two harness tests before this file was written, both through run_p67.sh with TEST=1. Before them, a probe outside the harness found that (1) on Windows several of uvicorn's worker processes calling listen() on the shared socket at the same moment fail with WinError 10022 and are restarted by uvicorn's supervisor, so for a few seconds after the first answer not every worker is serving; (2) a server left from an aborted probe still held the port and a new server bound it too (SO_REUSEADDR on Windows), so requests reached the old one. The harness therefore refuses to start a server while the port has a listener, waits until all W workers answer on fresh connections, and accepts only pids that descend from the server it started. Test 1: NIM health 0.826; four workers answered on P W4K75 and R1024 W4K75 (6 and 2 start-up restarts) and eight on R3 W8K75 (0); G2 passed on every worker (rails: adversarial blocked with 1 LLM call, clean passed with 3; P: 1 and 1), and in every probe round the NIM request delta equalled the LLM calls the responses reported; requests spread over all workers at c=8; the Part D rows carried verdicts and judge tokens; the port was free 4 s after each stop. It also showed that both calibration prompts began with the same word, which added a shared block to the measured template prefix on N (32 tokens instead of 16); the prompts were replaced by two with no common leading word. Test 2: NIM health 0.832; W1 servers (P W1K5, R1024 W1K5) answered with one worker, G2 passed; the calibration measured a fixed template prefix of 16 tokens on N and 80 on P (these are the values frozen in analysis_rules.prefix_thresholds); uvicorn's keep-alive closes were counted during R1024 W1K5's warm-up (3).",
+  "predictions": {
+    "source": "set with the run's design, before any P67 measurement",
+    "R1": "N anchors: each of N at 32, 64, 128 within 5% of P66's same cell",
+    "R2": "R1024 errors: K75 brings the error rate to <= 0.5% at 64 and 128 on both W, and W does not matter (|W4 - W1| <= 0.5 pp at each K and level)",
+    "R3": "W4 removes server_bound from the rails cells at c=128 (R3 W4K75, R1024 W4K75, R1024 W4K5), and R3 W4K75's total tok/s at 128 is above R3 W1K5's",
+    "R4": "under W4K75, R3 / R1024 at 64 and 128 is within 1.5-1.8 (the band of 1-32 in P66)",
+    "R5": "Part D c128_W4K75: 42/45 blocked, 0/90 false blocks, 0 of 135 verdicts flip against P66's R1024 c1",
+    "confidence": "R1 high (same image, profile and settings; P66's N cells had no errors). R2 medium: the keep-alive explanation was never tested. R3 medium on the flag, low on the throughput: with the rails each client request makes about 3 NIM calls and about 4.3 times the prompt tokens of N (P66 c=128: 1,314,990 vs 303,193), so NIM may be the limit once the server is not. R4 low. R5 medium: greedy decoding under batching is not bit-deterministic.",
+    "reading_of_predictions": "a failed prediction is reported as failed; nothing is re-run to chase a result"
+  },
+  "harness_sha256": {
+    "vol1b/scripts/p67_rails_server_config.py": "8b995b10a14df9989541be3f07030f257b77fb5aa02b854cccebf37a6ff8772b",
+    "vol1b/scripts/p67_gr_server.py": "3e67cda441e1bb2659a16cc13de884e63ae68d59aba348f0b1a6d488631700df",
+    "vol1b/scripts/p67_gr_app.py": "003a0db490efc940e4eb385971777d7b72a702094782e98b07e69b2d01b844f8",
+    "vol1b/scripts/p67_analyze.py": "3cd577ec2b359d6a8ff0cca9bd38f483571b3a67e7556231a7a001be728a721f",
+    "vol1b/scripts/p67_postrun.py": "74ade7db66b5f50df2cadfe48c16611d8bacab8c965f1d85b8682eb2651fafd2",
+    "vol1b/scripts/run_p67.sh": "8178dea4ff56d36090b8d4c642cc943ce9d07c76a94ac3a6a185bb66d464c437",
+    "vol1b/scripts/p66_rails_under_load.py": "80b17c540f57619e01e5d73218d1c3d765dd55055c45bed865f3af54395eedb9",
+    "vol1a-revisit/scripts/p59_nim_value.py": "4f0867273e47723680907494f6b3e79924e720b1c82f81591c6b16fe4c9acec5",
+    "vol2/scripts/p54_engine.py": "9a9944603e5ada74df1ee4addffbc6111540e4b80fca490ef1e6038e4aa626c4",
+    "vol1b/scripts/prediction_guard.py": "05b735290b1e935b32e3ec5805f43f38f2101a47c8c5f9b1efdad6db852a9f83",
+    "vol1b/results/p67_rails_server_config/configs/default/config.yml": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+    "vol1b/results/p67_rails_server_config/configs/mt3/config.yml": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+    "vol1b/results/p67_rails_server_config/configs/passthrough/config.yml": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f",
+    "benchmark/e3_questions.json": "5d7eeeaa9408977e28366e7b31a6f01905695a0c8ce10a6c314fa40de4a1c3ea"
+  },
+  "fixed_inputs_sha256": {
+    "vol1b/results/p66_rails_under_load/analysis.json": "6993ddc8402f655f40822325b97d7384d8ac1c9a3c572a3da9874227662ef6e8",
+    "vol1b/results/p66_rails_under_load/part_d_verdicts.jsonl": "2c65ec234f88cb082d4b7d565f37f7f974a4b7a9766376fa843e1bfe42e6afe6",
+    "vol1b/results/p66_rails_under_load/levels.jsonl": "7b44e9893d5682e4a407f5709949ac2c7c32de0422fce7223d08af7dec8e61fb"
+  }
+}

@@ -1,0 +1,501 @@
+{
+  "experiment": "Vol.2, P69 · the P66 and P67 levels that ran with other load on the desktop GPU, measured again in a clean window: Llama 3.1 8B Instruct on NIM 2.0.12 (bf16), NeMo Guardrails 0.23.0 servers as P66 / P67, synthetic chat 200 / 200, non-streaming.",
+  "written_at": "2026-09-28T03:56:41+0800",
+  "written_before": "the first re-run level. run_p69.sh refuses to start if this file or its .sha256 is missing or changed, or if levels.jsonl exists.",
+  "why": "P66's N, P and R3 arms (morning of 2026-09-27) and P67's first levels (15:32-15:52, and two later levels) ended with the GPU at 3-19% utilization, where a window with no other load ends at 0% (P66's R1024 arm, 12:52-13:21). The user confirms GPU use on the desktop in those windows. In P66 the headline ratio R3 / R1024 has its numerator from such a window and its denominator from a clean one. The decision to re-run is made now, from the contamination, before any clean result is seen: the contamination is the reason, not a number.",
+  "rerun_rule": "every level record of P66's and P67's levels.jsonl with gpu_end.util_pct > 2 (warm-up levels included) is repeated with the same arm, server configuration, concurrency, request count and seed",
+  "rerun_list": {
+    "cells": 33,
+    "by_run": {
+      "P66": 21,
+      "P67": 12
+    },
+    "items": [
+      {
+        "run": "P66",
+        "label": "N",
+        "concurrency": 8,
+        "warmup": true,
+        "original_start": "2026-09-27T11:04:42+0800",
+        "gpu_end_util_pct": 7
+      },
+      {
+        "run": "P66",
+        "label": "N",
+        "concurrency": 1,
+        "warmup": false,
+        "original_start": "2026-09-27T11:05:39+0800",
+        "gpu_end_util_pct": 9
+      },
+      {
+        "run": "P66",
+        "label": "N",
+        "concurrency": 8,
+        "warmup": false,
+        "original_start": "2026-09-27T11:13:14+0800",
+        "gpu_end_util_pct": 9
+      },
+      {
+        "run": "P66",
+        "label": "N",
+        "concurrency": 16,
+        "warmup": false,
+        "original_start": "2026-09-27T11:14:39+0800",
+        "gpu_end_util_pct": 7
+      },
+      {
+        "run": "P66",
+        "label": "N",
+        "concurrency": 32,
+        "warmup": false,
+        "original_start": "2026-09-27T11:15:37+0800",
+        "gpu_end_util_pct": 10
+      },
+      {
+        "run": "P66",
+        "label": "N",
+        "concurrency": 64,
+        "warmup": false,
+        "original_start": "2026-09-27T11:16:32+0800",
+        "gpu_end_util_pct": 10
+      },
+      {
+        "run": "P66",
+        "label": "N",
+        "concurrency": 128,
+        "warmup": false,
+        "original_start": "2026-09-27T11:17:36+0800",
+        "gpu_end_util_pct": 8
+      },
+      {
+        "run": "P66",
+        "label": "P",
+        "concurrency": 8,
+        "warmup": true,
+        "original_start": "2026-09-27T11:19:47+0800",
+        "gpu_end_util_pct": 8
+      },
+      {
+        "run": "P66",
+        "label": "P",
+        "concurrency": 1,
+        "warmup": false,
+        "original_start": "2026-09-27T11:20:42+0800",
+        "gpu_end_util_pct": 6
+      },
+      {
+        "run": "P66",
+        "label": "P",
+        "concurrency": 8,
+        "warmup": false,
+        "original_start": "2026-09-27T11:28:46+0800",
+        "gpu_end_util_pct": 9
+      },
+      {
+        "run": "P66",
+        "label": "P",
+        "concurrency": 16,
+        "warmup": false,
+        "original_start": "2026-09-27T11:30:16+0800",
+        "gpu_end_util_pct": 6
+      },
+      {
+        "run": "P66",
+        "label": "P",
+        "concurrency": 32,
+        "warmup": false,
+        "original_start": "2026-09-27T11:31:16+0800",
+        "gpu_end_util_pct": 9
+      },
+      {
+        "run": "P66",
+        "label": "P",
+        "concurrency": 64,
+        "warmup": false,
+        "original_start": "2026-09-27T11:32:13+0800",
+        "gpu_end_util_pct": 8
+      },
+      {
+        "run": "P66",
+        "label": "P",
+        "concurrency": 128,
+        "warmup": false,
+        "original_start": "2026-09-27T11:33:19+0800",
+        "gpu_end_util_pct": 7
+      },
+      {
+        "run": "P66",
+        "label": "R3",
+        "concurrency": 8,
+        "warmup": true,
+        "original_start": "2026-09-27T11:35:31+0800",
+        "gpu_end_util_pct": 5
+      },
+      {
+        "run": "P66",
+        "label": "R3",
+        "concurrency": 1,
+        "warmup": false,
+        "original_start": "2026-09-27T11:36:31+0800",
+        "gpu_end_util_pct": 6
+      },
+      {
+        "run": "P66",
+        "label": "R3",
+        "concurrency": 8,
+        "warmup": false,
+        "original_start": "2026-09-27T11:44:52+0800",
+        "gpu_end_util_pct": 7
+      },
+      {
+        "run": "P66",
+        "label": "R3",
+        "concurrency": 16,
+        "warmup": false,
+        "original_start": "2026-09-27T11:46:31+0800",
+        "gpu_end_util_pct": 7
+      },
+      {
+        "run": "P66",
+        "label": "R3",
+        "concurrency": 32,
+        "warmup": false,
+        "original_start": "2026-09-27T11:47:40+0800",
+        "gpu_end_util_pct": 7
+      },
+      {
+        "run": "P66",
+        "label": "R3",
+        "concurrency": 64,
+        "warmup": false,
+        "original_start": "2026-09-27T11:48:49+0800",
+        "gpu_end_util_pct": 7
+      },
+      {
+        "run": "P66",
+        "label": "R3",
+        "concurrency": 128,
+        "warmup": false,
+        "original_start": "2026-09-27T11:50:34+0800",
+        "gpu_end_util_pct": 12
+      },
+      {
+        "run": "P67",
+        "label": "N",
+        "concurrency": 8,
+        "warmup": true,
+        "original_start": "2026-09-27T15:32:12+0800",
+        "gpu_end_util_pct": 12
+      },
+      {
+        "run": "P67",
+        "label": "N",
+        "concurrency": 32,
+        "warmup": false,
+        "original_start": "2026-09-27T15:33:11+0800",
+        "gpu_end_util_pct": 14
+      },
+      {
+        "run": "P67",
+        "label": "N",
+        "concurrency": 64,
+        "warmup": false,
+        "original_start": "2026-09-27T15:34:08+0800",
+        "gpu_end_util_pct": 4
+      },
+      {
+        "run": "P67",
+        "label": "N",
+        "concurrency": 128,
+        "warmup": false,
+        "original_start": "2026-09-27T15:35:13+0800",
+        "gpu_end_util_pct": 15
+      },
+      {
+        "run": "P67",
+        "label": "R1024_W1K5",
+        "concurrency": 8,
+        "warmup": true,
+        "original_start": "2026-09-27T15:37:26+0800",
+        "gpu_end_util_pct": 3
+      },
+      {
+        "run": "P67",
+        "label": "R1024_W1K5",
+        "concurrency": 64,
+        "warmup": false,
+        "original_start": "2026-09-27T15:38:54+0800",
+        "gpu_end_util_pct": 7
+      },
+      {
+        "run": "P67",
+        "label": "R1024_W1K5",
+        "concurrency": 128,
+        "warmup": false,
+        "original_start": "2026-09-27T15:41:10+0800",
+        "gpu_end_util_pct": 4
+      },
+      {
+        "run": "P67",
+        "label": "R1024_W4K75",
+        "concurrency": 8,
+        "warmup": true,
+        "original_start": "2026-09-27T15:45:54+0800",
+        "gpu_end_util_pct": 8
+      },
+      {
+        "run": "P67",
+        "label": "R1024_W4K75",
+        "concurrency": 64,
+        "warmup": false,
+        "original_start": "2026-09-27T15:47:23+0800",
+        "gpu_end_util_pct": 7
+      },
+      {
+        "run": "P67",
+        "label": "R1024_W4K75",
+        "concurrency": 128,
+        "warmup": false,
+        "original_start": "2026-09-27T15:49:19+0800",
+        "gpu_end_util_pct": 19
+      },
+      {
+        "run": "P67",
+        "label": "R1024_W4K5",
+        "concurrency": 8,
+        "warmup": true,
+        "original_start": "2026-09-27T16:39:27+0800",
+        "gpu_end_util_pct": 3
+      },
+      {
+        "run": "P67",
+        "label": "P_W1K5",
+        "concurrency": 64,
+        "warmup": false,
+        "original_start": "2026-09-27T17:04:51+0800",
+        "gpu_end_util_pct": 5
+      }
+    ],
+    "against_the_ticket_list": "the ticket expected 21 (P66) and 10 (P67); the rule gives 21 and 12: it also lists P67's R1024 W4K5 warm-up (16:39, util 3) and P_W1K5 at 64 (17:04, util 5), both after the reported game window. The rule is followed."
+  },
+  "plan": {
+    "steps": [
+      [
+        "P66",
+        "N",
+        null,
+        null,
+        [
+          1,
+          8,
+          16,
+          32,
+          64,
+          128
+        ]
+      ],
+      [
+        "P66",
+        "P",
+        null,
+        null,
+        [
+          1,
+          8,
+          16,
+          32,
+          64,
+          128
+        ]
+      ],
+      [
+        "P66",
+        "R3",
+        null,
+        null,
+        [
+          1
+        ]
+      ],
+      [
+        "P66",
+        "R1024",
+        null,
+        null,
+        [
+          1
+        ]
+      ],
+      [
+        "P66",
+        "R3",
+        null,
+        null,
+        [
+          8
+        ]
+      ],
+      [
+        "P66",
+        "R1024",
+        null,
+        null,
+        [
+          8
+        ]
+      ],
+      [
+        "P66",
+        "R3",
+        null,
+        null,
+        [
+          16
+        ]
+      ],
+      [
+        "P66",
+        "R1024",
+        null,
+        null,
+        [
+          16
+        ]
+      ],
+      [
+        "P66",
+        "R3",
+        null,
+        null,
+        [
+          32
+        ]
+      ],
+      [
+        "P66",
+        "R1024",
+        null,
+        null,
+        [
+          32
+        ]
+      ],
+      [
+        "P66",
+        "R3",
+        null,
+        null,
+        [
+          64,
+          128
+        ]
+      ],
+      [
+        "P67",
+        "N",
+        null,
+        null,
+        [
+          32,
+          64,
+          128
+        ]
+      ],
+      [
+        "P67",
+        "R1024",
+        1,
+        5,
+        [
+          64,
+          128
+        ]
+      ],
+      [
+        "P67",
+        "R1024",
+        4,
+        75,
+        [
+          64,
+          128
+        ]
+      ],
+      [
+        "P67",
+        "R1024",
+        4,
+        5,
+        []
+      ],
+      [
+        "P67",
+        "P",
+        1,
+        5,
+        [
+          64
+        ]
+      ]
+    ],
+    "one_nim_container": true,
+    "same_window_ratio": "P66's R3 levels 1, 8, 16, 32 alternate with R1024 at the same levels (R1024 was clean in P66 and is repeated here), so R3 / R1024 at 1-32 has both terms in one window",
+    "per_server_start": "P66 cells: P66's server (p66_gr_server.py); P67 cells: P67's server with their W and K. Each start runs its discarded warm-up level (c=8, 100 requests, seed 20260927 + 9000) and its G2 probes (P67 starts: per worker)"
+  },
+  "gates": {
+    "G8": "before every level, warm-ups included: tools/g8_gate.py (P66 R1024 arm, 2026-09-27 12:52-13:21, a window with no other GPU load: every level ended at 0% utilization and 26-42 W (P66 results, p66_rails_under_load/levels.jsonl, gpu_end)); util p50 <= 2 % and power p50 <= 45 W over 10 samples at 1 Hz; retry every 60 s up to 15 min, else the cell is null; all samples recorded",
+    "G8_positive_control": "once, after NIM is ready: G8 sampled while 4 requests decode on NIM; it must not pass",
+    "timeout": "every level: max(3 x the original level's wall-clock duration, 300 s), at most 900 s (tools/cell_timeout.py; positive control: AIPerf against a socket that never answers is stopped at 20 s and reported hung). On a timeout the load generator is stopped, the level is recorded hung with what was in flight, the server is started again and the level is tried once more; a second timeout leaves it hung and the run goes on. P66's R1024 at 1 took 832 s, so its limit (900 s) leaves 8%.",
+    "no_overwrite": "after every level: tracked files unchanged and new files only under this run's directory (tools/overwrite_gate.py), else the run stops",
+    "carried_over": "P66's G1, G2, G5, G6 and P67's G2 (per worker) and G7, through their analysis programs unchanged"
+  },
+  "not_done": [
+    "the contaminated original levels are not changed; contamination_marks.jsonl names them with their fingerprint",
+    "Part D is not repeated: a verdict does not depend on speed; the P67 Part D pass that overlapped the reported window is marked in the README",
+    "contaminated and clean cells are never mixed in one headline table"
+  ],
+  "harness_test": "a first harness test (2026-09-27 21:41) stopped progressing at 21:53:59 on P67's R1024 W4K75 at 64 (AIPerf waiting for its last requests, NIM with nothing running or waiting, the four workers idle, 12 connections established on the server port held by the parent process); its state was recorded before it was stopped (hang_evidence_p69_test_20260927T214149.json, beside this file). The per-level timeout was added after it.",
+  "predictions": {
+    "R1": "the G8 positive control does not pass; G8 passes before every re-run level",
+    "R2": "after the re-run, P67's N anchors are within +-5% of P66's N at 32, 64 and 128 (G7 on clean cells on both sides)",
+    "R3": "in the clean window R3 / R1024 at 1, 8, 16 and 32 is within 1.5-1.8",
+    "R4": "contaminated against clean: reported only; no statement of the form 'the background slowed X by Y%'",
+    "reading_of_predictions": "a failed prediction is reported as failed; nothing is re-run to chase a result"
+  },
+  "analysis_rules": {
+    "program": "vol1b/scripts/p69_analyze.py (9 self-test cases; each of 7 mutations -- the band, the positive-control and G8 conditions, the G2 aggregation, either view's replacement, a ratio's direction -- makes at least one fail); P66's and P67's analysis programs imported unchanged"
+  },
+  "harness_sha256": {
+    "vol1b/scripts/p69_clean_rerun.py": "171a5be26c8a183a4c9e34b6ab5a0d5e58a5272b3bf6b0276d9ddf3a3b78e0d8",
+    "vol1b/scripts/p69_analyze.py": "1ed500e6b7c87b857c8757eab09720ba1fc239c1991b0f741b1180d2ba91b714",
+    "vol1b/scripts/run_p69.sh": "6f492a7d80d49d995db52da88d34cfd84afaa9580e97ee29b5bb3d5e5c96c28e",
+    "vol1b/scripts/p66_rails_under_load.py": "80b17c540f57619e01e5d73218d1c3d765dd55055c45bed865f3af54395eedb9",
+    "vol1b/scripts/p66_gr_server.py": "c2ff6e139624828fe4b4b13cb94ee7502c46487b993a121a9601965401654797",
+    "vol1b/scripts/p66_analyze.py": "e12f64fb3ff8b72429b5c5f6fe627b573bdabfe5b0e8d681d6320a5bcc3041c3",
+    "vol1b/scripts/p67_rails_server_config.py": "8b995b10a14df9989541be3f07030f257b77fb5aa02b854cccebf37a6ff8772b",
+    "vol1b/scripts/p67_gr_server.py": "3e67cda441e1bb2659a16cc13de884e63ae68d59aba348f0b1a6d488631700df",
+    "vol1b/scripts/p67_gr_app.py": "003a0db490efc940e4eb385971777d7b72a702094782e98b07e69b2d01b844f8",
+    "vol1b/scripts/p67_analyze.py": "3cd577ec2b359d6a8ff0cca9bd38f483571b3a67e7556231a7a001be728a721f",
+    "vol1b/scripts/prediction_guard.py": "05b735290b1e935b32e3ec5805f43f38f2101a47c8c5f9b1efdad6db852a9f83",
+    "vol1a-revisit/scripts/p59_nim_value.py": "4f0867273e47723680907494f6b3e79924e720b1c82f81591c6b16fe4c9acec5",
+    "vol2/scripts/p54_engine.py": "9a9944603e5ada74df1ee4addffbc6111540e4b80fca490ef1e6038e4aa626c4",
+    "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb",
+    "tools/overwrite_gate.py": "e4d0a7ef16da29849bea9a36c826b6c4146e1888a071e989e41641c40a139d32",
+    "tools/cell_timeout.py": "1ddb23c091460f14e331130ff41f946fccf6ed0d2a4ad9477d97bbbe2cbd1522",
+    "vol1b/results/p67_rails_server_config/configs/default/config.yml": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+    "vol1b/results/p67_rails_server_config/configs/mt3/config.yml": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+    "vol1b/results/p67_rails_server_config/configs/passthrough/config.yml": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f"
+  },
+  "fixed_inputs_sha256": {
+    "vol1b/results/p66_rails_under_load/levels.jsonl": "7b44e9893d5682e4a407f5709949ac2c7c32de0422fce7223d08af7dec8e61fb",
+    "vol1b/results/p66_rails_under_load/events_public.jsonl": "c874d65bd6f9e7221ce9624af459e185bbd54298b8a4cd821a253e5845789281",
+    "vol1b/results/p66_rails_under_load/part_d_verdicts.jsonl": "2c65ec234f88cb082d4b7d565f37f7f974a4b7a9766376fa843e1bfe42e6afe6",
+    "vol1b/results/p66_rails_under_load/stack.json": "e714d650606c18514d735f8f664974d8a413428269ef234b1ba0e39410e22595",
+    "vol1b/results/p66_rails_under_load/analysis.json": "6993ddc8402f655f40822325b97d7384d8ac1c9a3c572a3da9874227662ef6e8",
+    "vol1b/results/p67_rails_server_config/levels.jsonl": "39c2f3ef748bbce224b2483454be8440b05ed0aa2e2295f1d1d588df174b60fe",
+    "vol1b/results/p67_rails_server_config/events_public.jsonl": "1319a2805f4e3410ef0ecf2ef356a668fe34372cf931677d84a54ccb36ae76bd",
+    "vol1b/results/p67_rails_server_config/part_d_verdicts.jsonl": "9d7110d9d163669febb948be1c6eb120fd435bebf798c858515de0430dc6c478",
+    "vol1b/results/p67_rails_server_config/stack.json": "4910f0656375229e3f9f9b4f7b79a386cec11cd1c47846bbd737e27ec4f6ba7c",
+    "vol1b/results/p67_rails_server_config/prediction_p67.json": "9cc4b72b9a37e5fb7941528429ed1c240bb3ddb9d2227892e2545b5d01d8208a"
+  }
+}

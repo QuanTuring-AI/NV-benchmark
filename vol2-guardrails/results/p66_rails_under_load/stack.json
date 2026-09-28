@@ -1,0 +1,54 @@
+{
+ "nim": {
+  "image": "nvcr.io/nim/meta/llama-3.1-8b-instruct:2.0.12",
+  "image_id": "sha256:d2c94c1d654c3e80b8bc08cc83298d2ba4e219dff41d1092555795edb93c6545",
+  "profile": "092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90",
+  "env": {
+   "NIM_MAX_MODEL_LEN": "8192",
+   "VLLM_USE_V2_MODEL_RUNNER": "0"
+  },
+  "source": "vol1a-revisit/scripts/p59_nim_value.py (ARMS N-BF16, NIM_ENV) via vol2/scripts/p54_engine.py; image id from docker image inspect (versions.txt)"
+ },
+ "guardrails": {
+  "nemoguardrails": "0.23.0",
+  "httpx": "0.28.1",
+  "uvicorn": "0.54.0",
+  "fastapi": "0.141.1",
+  "starlette": "1.7.0",
+  "environment": "a new venv (gr0230srv): the P19 environment's packages at the same versions (constraints from its pip freeze) plus the server extra (aiofiles, distro, fastapi, jiter, openai, sniffio, starlette, uvicorn, watchdog); no version of a P19 package differs",
+  "freeze_sha256": "c649fb2bf93e4e0199dc9286dde278b60fc23896b8eb0bb3a1d8c7f28e3c1fb3",
+  "server": "vol1b/scripts/p66_gr_server.py = the CLI's `server` (nemoguardrails/cli/__init__.py) with --default-config-id; host 127.0.0.1 instead of the CLI's 0.0.0.0 (cli/__init__.py:212)",
+  "config_selection": "--default-config-id (server/api.py set_default_config_id; api.py:501-507 uses it when the request names no config), so the four request bodies are identical",
+  "usage_stats": "NEMO_GUARDRAILS_NO_USAGE_STATS=1 on every server (telemetry.py:372): no usage-statistics upload; not part of the request path",
+  "llm_framework": "default (llm/frameworks/registry.py:27, NEMOGUARDRAILS_LLM_FRAMEWORK unset): the library's own OpenAI-compatible client, not LangChain"
+ },
+ "client_pool": {
+  "max_connections": 1000,
+  "max_keepalive_connections": 100,
+  "source": "nemoguardrails/llm/clients/constants.py:20 DEFAULT_CONNECTION_LIMITS, used by llm/clients/base.py:127 when no http_client is passed; read at run time by run_p66.sh (versions.txt)",
+  "note": "above every concurrency level (128), so no pool-raised variant is run"
+ },
+ "iorails_admission_queue": {
+  "present_in_0_23_0": true,
+  "enabled": false,
+  "NONSTREAM_QUEUE_DEPTH": 256,
+  "NONSTREAM_MAX_CONCURRENCY": 256,
+  "source": "nemoguardrails/guardrails/iorails.py:80-81; enabled only when NEMO_GUARDRAILS_IORAILS_ENGINE is true/1 (nemoguardrails/__init__.py:48), which the harness removes from every server's environment"
+ },
+ "configs": {
+  "default": {
+   "sha256": "e04a102167056f492903399927e7ccc8a27d16d4a38a6b90df1ec8b9bf0dad4d",
+   "same_bytes_as": "vol1b/results/p19_cell5/gr_config_default/config.yml (committed blob; meta.json C_used_sha256)"
+  },
+  "mt3": {
+   "sha256": "0c8e6773a42f3100a84194dd0a8c2083cb19caf652c9ead2b9e486b285a15278",
+   "same_bytes_as": "vol1b/results/p19_cell5/gr_config_mt3/config.yml (committed blob; meta.json Cp_used_sha256)"
+  },
+  "passthrough": {
+   "sha256": "688015949cb9e6b3d349b5e75f5671c48c2f05963df9c652719c1d8d580b6e0f",
+   "derived": "the default config's bytes up to its `# Self-check rails` comment: the same models section, no rails, no prompts"
+  }
+ },
+ "request_parameters_through_the_server": "max_tokens, temperature and top_p from the request body go to the main generation call (server/api.py chat_completion -> llm_params); the self-check calls use the task's own max_tokens (library/self_check/*/actions.py). The request schema has no ignore_eos, so no arm is sent one.",
+ "parallel_rails": "not applicable: one input and one output rail; not enabled"
+}

@@ -1,0 +1,23 @@
+{
+ "date": "2026-09-28",
+ "purpose": "Rename the volume directories to match the volume numbers. Input of tools/renumber_dirs.py. For every path the first rule that matches wins; the same rules move tracked, ignored and untracked files.",
+ "attribution_rule": "A path belongs to the volume of its run code (the pNN prefix of a result directory or a script), not to the directory it was written in. A script used by more than one volume stays with its earliest user, which for every shared script here is the run of its own name. The cross-volume imports this leaves are computed by the script after the move (PATH_MAP.json, cross_volume_imports), not listed by hand.",
+ "moves": [
+  {"from": "vol2/results/p54_engine/", "to": "vol1-nim/results/p54_engine/", "why": "P54 (NIM 2.0.12 against upstream vLLM on Llama 3.1 8B) is a Vol.1 run"},
+  {"from": "vol2/scripts/p54_", "to": "vol1-nim/scripts/p54_", "why": "P54's scripts (engine, analysis, prediction)"},
+  {"from": "vol2/scripts/run_p54_engine.sh", "to": "vol1-nim/scripts/run_p54_engine.sh", "why": "P54's run script"},
+  {"from": "vol1a-revisit/", "to": "vol1-nim/", "why": "Vol.1 (renewed): P59, P62, P63"},
+  {"from": "vol1b/", "to": "vol2-guardrails/", "why": "Vol.2: NIM x NeMo Guardrails"},
+  {"from": "vol2/", "to": "vol3-nemotron/", "why": "Vol.3: Nemotron"}
+ ],
+ "run_codes": {"p69": "vol2-guardrails", "p70": "vol1-nim"},
+ "run_codes_rule": "Applied before `moves`: an entry <old root>/results/<run code>_... or <old root>/scripts/[run_]<run code>_... goes to <volume>/results|scripts/..., whichever old root holds it. P69 (Vol.2 clean re-runs) and P70 (Vol.1 clean re-check) are listed before their files exist.",
+ "old_roots": ["vol1a-revisit", "vol1b", "vol2"],
+ "new_roots": ["vol1-nim", "vol2-guardrails", "vol3-nemotron"],
+ "not_moved": ["benchmark/ (Vol.1, March 2026 original)", "DEPLOYMENT_NOTES.md", "roadmap-e456/", "tools/", "every other root file"],
+ "tags": {
+  "new": {"vol1-nim-published": "Vol.1 (renewed)", "vol2-guardrails-published": "Vol.2", "vol3-nemotron-published": "Vol.3"},
+  "kept_as_pushed": {"vol1-revisit-published": "Vol.1 (renewed), directory vol1a-revisit/", "vol1b-published": "Vol.2 (then called Vol.1-B), directory vol1b/", "vol2-published": "Vol.3 (then called Vol.2, Nemotron), directory vol2/"}
+ },
+ "note_on_frozen_paths": "Frozen harnesses import with paths written at the time (for example os.path.join(REPO, \"vol2\", \"scripts\")). They are bound by SHA-256 and are not edited, so they run as written only at the tag of their volume. PATH_MAP.md maps every old path."
+}
