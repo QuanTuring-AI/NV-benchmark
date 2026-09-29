@@ -2,7 +2,7 @@
 
 The same stored answer texts judged by two output judges that differ in one line of the rails config: **J1024** (the cell ④
 config; `max_tokens` unset, so the library default 1024 applies) and **J3** (the same file plus `max_tokens: 3` on the two
-self-check prompt entries). No answer is generated. The result is written up in `vol2-guardrails/BASELINE.md` §9.
+self-check prompt entries). No answer is generated. The result is written up in `vol3-judges/BASELINE.md` §9.
 
 | File | What it is |
 |---|---|

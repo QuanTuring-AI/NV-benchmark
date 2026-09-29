@@ -10,7 +10,7 @@
 ## Layout
 
 ```
-vol3-nemotron/
+vol2-nemotron/
 ├── README.md
 ├── data/README.md          # pointer only — question sets are Vol.1's, not copied
 ├── scripts/
@@ -262,7 +262,7 @@ SciFact is fetched at run time from `mteb/scifact` (E8) or read from a local cop
 
 ## Running the scripts
 
-Scripts resolve paths relative to `vol3-nemotron/` and read question sets from `../benchmark/`. Machine-specific locations come from environment variables:
+Scripts resolve paths relative to `vol2-nemotron/` and read question sets from `../benchmark/`. Machine-specific locations come from environment variables:
 
 | Variable | Used by | Meaning |
 |---|---|---|
