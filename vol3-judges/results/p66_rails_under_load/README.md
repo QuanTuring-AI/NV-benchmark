@@ -1,4 +1,4 @@
-# Vol.2 · P66 · NeMo Guardrails 0.23.0 under load: four entry points at 1–128 concurrent requests, and detection under load (run 2026-09-27, 10:58–14:22)
+# Vol.3 · P66 · NeMo Guardrails 0.23.0 under load: four entry points at 1–128 concurrent requests, and detection under load (run 2026-09-27, 10:58–14:22)
 
 **Why.** `../../BASELINE.md` §4 states that this volume's concurrency measurements ran without Guardrails. The ceiling with rails on was never measured, and it cannot be added up from two tables. This run measures three things:
 - what the rails cost when many requests arrive at once;
@@ -9,7 +9,7 @@
 
 ## Setup
 
-**One NIM container:** Llama 3.1 8B Instruct on NIM 2.0.12, bf16 profile `092ed421…`, `NIM_MAX_MODEL_LEN` 8192, `VLLM_USE_V2_MODEL_RUNNER=0`. This is the Vol.2 baseline (cell ④) and the Vol.1 N-BF16 arm. Health: 88.1 tok/s at c=1, 79.0% of the card's bandwidth, against a 60% gate. Four entry points send the same requests:
+**One NIM container:** Llama 3.1 8B Instruct on NIM 2.0.12, bf16 profile `092ed421…`, `NIM_MAX_MODEL_LEN` 8192, `VLLM_USE_V2_MODEL_RUNNER=0`. This is the Vol.3 baseline (cell ④) and the Vol.1 N-BF16 arm. Health: 88.1 tok/s at c=1, 79.0% of the card's bandwidth, against a 60% gate. Four entry points send the same requests:
 
 | Arm | Entry | What it isolates |
 |---|---|---|

@@ -1,6 +1,6 @@
-# Vol.2 · BASELINE
+# Vol.3 · BASELINE
 
-Vol.2 repeats the published Vol.1 guardrails-overhead experiment (E3) with the model, harness logic, question set
+Vol.3 repeats the published Vol.1 guardrails-overhead experiment (E3) with the model, harness logic, question set
 and rail configuration held fixed, and moves the two NVIDIA components forward one axis at a time:
 
 |  | NeMo Guardrails **0.21.0** | NeMo Guardrails **0.23.0** |
@@ -25,7 +25,7 @@ NVIDIA GeForce RTX 5090 32 GB · driver 577.00 / CUDA 12.9 · `nvcr.io/nim/meta/
 | edge_case | 5,958 ms | 5,959 ms | +1 ms (~0%) | 100% pass-through |
 | adversarial_input | 707 ms | 301 ms | -406 ms (-57.4%) | 93.3% detection |
 
-This section is permanent. It is not overwritten, and Vol.2 values are never subtracted from it and quoted as a single number.
+This section is permanent. It is not overwritten, and Vol.3 values are never subtracted from it and quoted as a single number.
 
 ---
 
@@ -98,15 +98,15 @@ Differences between ① and ③, or between ② and ④, are **not** read as "th
 
 | # | Vol.1 harness property | Known since | Effect on the published figure |
 |---|---|---|---|
-| a | No token usage recorded | Vol.2 run | The +2.1% cannot be split into rail cost and output-length effect (item 9) |
-| b | E2 ran NIM and Ollama alternately on the same GPU | Vol.3 B′ (2026-09-14) | E2's NIM TTFT of 221 ms is a co-residence figure (§5). **E3 was not co-resident**: `benchmark/run_e3_guardrails.py` calls NIM only, and E3's nim-only TTFT averages 51.3 ms (135 requests), the same as a NIM-alone container today (50.0 ms) and a quarter of the co-resident E2 value; E3 also started 7 h after E2 ended |
-| c | A new asyncio event loop per Guardrails call | Vol.2 mock test | No retries were seen with 0.21.0 in the mock; effect on the real server not measured, expected small |
+| a | No token usage recorded | Vol.3 run | The +2.1% cannot be split into rail cost and output-length effect (item 9) |
+| b | E2 ran NIM and Ollama alternately on the same GPU | Vol.2 B′ (2026-09-14) | E2's NIM TTFT of 221 ms is a co-residence figure (§5). **E3 was not co-resident**: `benchmark/run_e3_guardrails.py` calls NIM only, and E3's nim-only TTFT averages 51.3 ms (135 requests), the same as a NIM-alone container today (50.0 ms) and a quarter of the co-resident E2 value; E3 also started 7 h after E2 ended |
+| c | A new asyncio event loop per Guardrails call | Vol.3 mock test | No retries were seen with 0.21.0 in the mock; effect on the real server not measured, expected small |
 
 ---
 
 ## 4 · Applicability
 
-- From Vol.2 on, **cell ④ is the baseline** for Llama 3.1 8B with NIM and NeMo Guardrails in this repository.
+- From Vol.3 on, **cell ④ is the baseline** for Llama 3.1 8B with NIM and NeMo Guardrails in this repository.
 - §1 stays as published. The two baselines are shown side by side with their stacks, never as one subtracted number.
 - Cell ① was run on the Vol.1 stack under the §3 differences. It is **not** a reproduction of Vol.1: ① differs from Vol.1 in items 3–8.
 - These results cover sequential single requests (one at a time, 2 s cooldown). They say nothing about behaviour under concurrent load.
@@ -120,7 +120,7 @@ Differences between ① and ③, or between ② and ④, are **not** read as "th
 |---|---|---|
 | Vol.1 E2 NIM avg TTFT | **221 ms** | NIM 1.13.1, 100 questions × 3 rounds (Vol.1 E2 set) ([`benchmark/report/e2_report.md`](../benchmark/report/e2_report.md)). **NIM and Ollama requests alternated per question on the same GPU**, 2 s apart ([`benchmark/run_benchmark.py`](../benchmark/run_benchmark.py), main loop), so Ollama's model stayed loaded next to NIM |
 | Same image, NIM alone vs NIM with Ollama resident | **67.6 ms** (NIM alone, before) · **219.2 ms** (Ollama resident) · **57.1 ms** (NIM alone, after Ollama was unloaded) | NIM 1.13.1, profile `574eb076…`, 30 E2 questions, one container, 2026-09-14 ([`vol2-nemotron/results/e7/b_prime/`](../vol2-nemotron/results/e7/b_prime/)). ⚠️ That run's own validity gate (the two NIM-alone cells within 10%) **failed** (16.8%): the first request after startup took 579.4 ms and was counted. Read its `READ_ME_FIRST.md` first. |
-| Vol.2 nim-only avg TTFT | **50.0 ms** (①②, NIM 1.13.1) · **48.1 ms** (③④, NIM 2.0.12) | NIM alone on the GPU · Vol.1 **E3** question set, which is not the E2 set · warm-up excluded |
+| Vol.3 nim-only avg TTFT | **50.0 ms** (①②, NIM 1.13.1) · **48.1 ms** (③④, NIM 2.0.12) | NIM alone on the GPU · Vol.1 **E3** question set, which is not the E2 set · warm-up excluded |
 
 These rows use different question sets and GPU residency. No ratio between them is stated in this volume. The mechanism behind the higher TTFT with Ollama resident is **not established**: in the 2026-09-14 run, NIM's GPU memory footprint did not move, and Ollama was not seen using the GPU during NIM requests (small n).
 

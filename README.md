@@ -33,22 +33,22 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 | Volume | Question | Directory | Status |
 |---|---|---|---|
 | **Vol.1 (renewed 2026-09)** | Does NIM change one user's speed? Where does serving start to pay? Does answer quality hold? | [`vol1-nim/`](vol1-nim/README.md) | this release |
-| **Vol.2** | NeMo Guardrails 0.23.0 on NIM 2.0.12: what the upgrade costs and how to take it back | [`vol3-judges/`](vol3-judges/README.md) | data published 2026-09-19; write-up to follow |
-| **Vol.3** | Two Nemotron deployment options on 32 GB | [`vol2-nemotron/`](vol2-nemotron/README.md) | data published 2026-09-25; write-up to follow |
-| Vol.4–5 | NeMo Retriever and Nemotron as judge in a RAG system | not yet created | planned |
+| **Vol.2** | NIM + Nemotron: two deployment options on 32 GB | [`vol2-nemotron/`](vol2-nemotron/README.md) | data published 2026-09-25; write-up to follow |
+| **Vol.3** | Judges in NeMo Guardrails on NIM 2.0.12 | [`vol3-judges/`](vol3-judges/README.md) | baseline data published 2026-09-19; the judge study is in progress |
+| Vol.4–5 | NeMo Retriever and Nemotron in a RAG system | not yet created | planned |
 | Vol.1 · March 2026 original (archived) | NIM against Ollama, and NeMo Guardrails' latency, as first published | [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) | frozen |
 
-*Directories were renamed on 2026-09-28 to match the volume numbers: [`PATH_MAP.md`](PATH_MAP.md) maps every old path, and [`CHANGELOG.md`](CHANGELOG.md) records the change.*
+*Directories were renamed on 2026-09-28 to match the volume numbers, and again on 2026-09-29 when Vol.2 and Vol.3 swapped places: [`PATH_MAP.md`](PATH_MAP.md) maps every old path, and [`CHANGELOG.md`](CHANGELOG.md) records both changes.*
 
 ### Tags
 
 | Tag | Volume | Commit | Note |
 |---|---|---|---|
 | `vol1-nim-published` | Vol.1 | `3efa794` | rerun Vol.1 here |
-| `vol2-guardrails-published` | Vol.2 | `3efa794` | rerun Vol.2 here |
-| `vol3-nemotron-published` | Vol.3 | `e4f0ec5` | rerun Vol.3 here |
+| `vol2-nemotron-published` | Vol.2 | `e4f0ec5` | rerun Vol.2 here |
+| `vol3-judges-baseline` | Vol.3 | `3efa794` | rerun the Vol.3 baseline here; the judge study has not been published |
 
-Each tag points to the last commit before the rename that holds its volume's runs, so every path in those runs is correct there.
+Each tag points to the last commit before the renames that holds its volume's runs, so every path in those runs is correct there.
 
 *Earlier tags and every change to this repository: [`CHANGELOG.md`](CHANGELOG.md).*
 
@@ -71,18 +71,17 @@ Llama 3.1 8B Instruct, one RTX 5090, synthetic chat requests (200 tokens in, 200
   - GSM8K: the 4-bit build −2.43 pp [−4.40, −0.53]; NIM FP8 −1.52 pp [−3.11, 0.00]. Both are undetermined against ±2 pp.
 
   → [§E](vol1-nim/README.md) · [`results/p63_gsm8k/`](vol1-nim/results/p63_gsm8k/README.md)
-- **Guardrails (Vol.2).**
-  - NeMo Guardrails 0.23.0 detects the same attacks as 0.21.0: 42 / 45, with 0 / 90 false blocks.
-  - It costs +1,515 ms per request by default.
-  - One config line (`max_tokens: 3` on the self-check) brings each judge call from a median 970 ms to 60 ms, and the two judges' verdicts agree on 115 / 115 texts.
-
-  → [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §2, §8, §9
-- **Nemotron (Vol.3).**
+- **Nemotron (Vol.2).**
   - Fit: both deployment options fit the 32 GB card (22,909 / 25,972 MiB in use at their smallest passing budgets).
   - Speed: the MoE option generates 4.14× faster per token and finishes an answer about 2.9× sooner.
   - Concurrency: on the chat profile it stays inside the server SLO up to 128 concurrent requests, where the dense option's engine crashes at 32.
 
   → [`vol2-nemotron/BASELINE.md`](vol2-nemotron/BASELINE.md) §A–§C
+- **Judges (Vol.3).** Baseline data; the judge study is in progress.
+  - With Llama 3.1 8B as its own judge, NeMo Guardrails 0.23.0 blocks the same adversarial prompts as 0.21.0 on this set: 42 / 45, with 0 / 90 false blocks.
+  - The time it adds per request comes from the judge's answer length: by default 0.23.0 lets the self-check judge answer with up to 1,024 tokens, where 0.21.0 asked for 3.
+
+  → [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §2, §8
 
 ## How to read a number here
 

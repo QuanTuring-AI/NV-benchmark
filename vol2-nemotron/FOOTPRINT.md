@@ -1,4 +1,4 @@
-# Vol.3 · Footprint — what each model needs on one GPU
+# Vol.2 · Footprint — what each model needs on one GPU
 
 Two deployment options on one RTX 5090 (32,607 MiB, driver 591.86): **A1** Nemotron Nano 9B v2 (bf16, NIM 1.12.2) and **A2** Nemotron 3 Nano (NVFP4, NIM 2.0.12). Everything below is measured on this card on 2026-09-21; the run records are in `results/p50_footprint/`, `results/p50_footprint_addendum/`, `results/p50_footprint_addendum2/`, each with a frozen pre-registration and its own README.
 

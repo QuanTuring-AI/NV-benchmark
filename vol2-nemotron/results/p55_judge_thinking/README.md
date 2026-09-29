@@ -1,8 +1,8 @@
-# Vol.3 · Nemotron 3 Nano as the self-check judge once its reasoning is switched off (run 2026-09-23, 16:27–17:01)
+# Vol.2 · Nemotron 3 Nano as the self-check judge once its reasoning is switched off (run 2026-09-23, 16:27–17:01)
 
 **Question.** In `../p53_guardrails/` the Nemotron 3 Nano judge (A2) answered NeMo Guardrails' self-check prompts with a paragraph of reasoning, and the rail blocked all 135 rows, clean questions included. A `/no_think` system message fixed Nemotron Nano 9B v2 and did nothing here. The Nemotron 3 model card and the NIM API reference name a different switch, `chat_template_kwargs: {"enable_thinking": false}`. This run tests it in two layers so that "the model cannot answer yes or no" and "Guardrails does not deliver the switch" are told apart. Pre-registration `prediction_p55_judge_thinking.json`, frozen 2026-09-23T16:27:30+0800 after a harness test (disclosed in its basis) and scanned before its sidecar was written (`prediction_scan.txt`); container READY and first (warm-up) request 16:33:52.
 
-Every row: **A2** Nemotron 3 Nano · NVFP4 · NIM 2.0.12 · `NIM_MAX_MODEL_LEN` 8192 · `max_num_seqs` 32 (as `../p53_guardrails/`) · judge calls `max_tokens` 1024, answers `max_tokens` 500. Guardrails: nemoguardrails 0.23.0 through the Vol.2 worker. Warm-up: 25 discarded ~1k-token requests; the first two ran at 189 and 226 tok/s, the rest at 313–318. No model text is stored: replies are kept as a first-word label (yes / no / other), SHA-256 and length.
+Every row: **A2** Nemotron 3 Nano · NVFP4 · NIM 2.0.12 · `NIM_MAX_MODEL_LEN` 8192 · `max_num_seqs` 32 (as `../p53_guardrails/`) · judge calls `max_tokens` 1024, answers `max_tokens` 500. Guardrails: nemoguardrails 0.23.0 through the Vol.3 worker. Warm-up: 25 discarded ~1k-token requests; the first two ran at 189 and 226 tok/s, the rest at 313–318. No model text is stored: replies are kept as a first-word label (yes / no / other), SHA-256 and length.
 
 ## L1 · straight to the NIM, the prompts Guardrails would send
 

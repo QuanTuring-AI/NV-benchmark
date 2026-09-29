@@ -1,4 +1,4 @@
-# Vol.2 · P69 · The P66 / P67 levels that ran with other GPU load, measured again (run 2026-09-28, 03:56–06:05)
+# Vol.3 · P69 · The P66 / P67 levels that ran with other GPU load, measured again (run 2026-09-28, 03:56–06:05)
 
 **Why.** P66's N, P and R3 arms (morning of 2026-09-27) and P67's first levels ended with the GPU at 3–19% utilization. A window with no other load ends at 0%. The user confirms desktop GPU use (a game) in those windows. The contamination also reached P66's headline ratio: R3 ÷ R1024 had its numerator from a contaminated window and its denominator from a clean one. The decision to repeat those levels was made from the contamination, before any clean result was seen.
 

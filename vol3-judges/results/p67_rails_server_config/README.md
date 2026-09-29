@@ -1,4 +1,4 @@
-# Vol.2 · P67 · The Guardrails server's own limits, separated from the rails' cost: worker processes and keep-alive at 32–128 concurrent requests (run 2026-09-27, 15:26–17:08)
+# Vol.3 · P67 · The Guardrails server's own limits, separated from the rails' cost: worker processes and keep-alive at 32–128 concurrent requests (run 2026-09-27, 15:26–17:08)
 
 **Why.** P66 (`../p66_rails_under_load/`) left two things at 64 and 128 concurrent requests that it could not tell apart from the rails' own cost:
 - both rails arms' Guardrails server stayed at one full core at 128 (`server_bound`);

@@ -1,4 +1,4 @@
-# Vol.3 · A2 concurrency at the image's own sequence cap, `max_num_seqs` 256 (run 2026-09-23, 17:46–19:43)
+# Vol.2 · A2 concurrency at the image's own sequence cap, `max_num_seqs` 256 (run 2026-09-23, 17:46–19:43)
 
 **Question.** In `../p53_concurrency_v2/` both arms ran at `max_num_seqs` 32 so that they shared one configuration. A1's engine dies at 32, so 32 is A1's real boundary. For A2 it is only the number we set: the Server- and Interactive-SLO maximum of 32 there is a lower bound, not A2's own ceiling. This run repeats A2's sweep with no sequence-cap override at all (the image default, 256) and asks where the ceiling lies and which pool sets it. Pre-registration `prediction_p55_concurrency_a2_256.json`, frozen 2026-09-23T16:27:29+0800 after a harness test at c=1 and 4 (disclosed in its basis) and scanned before its sidecar was written (`prediction_scan.txt`); first request (the warm-up level) 17:52:52.
 

@@ -57,7 +57,7 @@ What still differs is listed in the pre-registration and in `../vol1-nim/results
 
 ## A · Single stream: the same engine, the same answers
 
-Four alternating blocks (N, V, N, V) over the 50 questions of the co-residence sample (`../vol3-judges/results/p20_coresidence/sample.json`), one request at a time, `max_tokens` 4096, temperature 0, top_p 0.9, streaming with usage; 2026-09-24 00:40–01:06. All preconditions held.
+Four alternating blocks (N, V, N, V) over the 50 questions of the co-residence sample (the file is named in `results/p54_engine/README.md`), one request at a time, `max_tokens` 4096, temperature 0, top_p 0.9, streaming with usage; 2026-09-24 00:40–01:06. All preconditions held.
 
 | | N · NIM 2.0.12 | V · vLLM 0.27.1 | V over N (ratio of means, 95% CI over questions) |
 |---|---|---|---|
@@ -72,7 +72,7 @@ Four alternating blocks (N, V, N, V) over the 50 questions of the co-residence s
 
 **Concurrency, the same.** With `p53_concurrency_v2`'s harness and SLOs unchanged (`../vol1-nim/results/p54_engine/README.md`), the chat profile (200/200) gives both arms the same ceilings: **256** concurrent requests inside the MLPerf server SLO and **32** inside the interactive one, at about 6,100–6,300 tok/s at the top. The fresh-container repeats agree within 0.2%, and the 3–5% gap in the main sweeps is container to container. The RAG profile (3,500/500) has **no conclusion**. The harness's own calibration prompt hits vLLM's prefix cache on this model, and its pre-registered gate refuses the sweep. That defect is the harness's, not either engine's. Its level tables show both arms running out of KV cache at 26–39 sequences. V is 7–8% ahead there, in line with the 10.7% more KV cache it sized for itself at start.
 
-This is what the physics allows. A healthy engine decoding one stream reads the weights once per token, so two healthy engines on one card, one model and one precision can differ by little. The ratio that originally led the March 2026 Vol.1 belongs to that configuration: two engines, two precisions, and one arm largely outside GPU memory (`../vol3-judges/BASELINE.md`, section 12).
+This is what the physics allows. A healthy engine decoding one stream reads the weights once per token, so two healthy engines on one card, one model and one precision can differ by little. The ratio that originally led the March 2026 Vol.1 belongs to that configuration: two engines, two precisions, and one arm largely outside GPU memory (the account that closes the March 2026 comparison: [`../CHANGELOG.md`](../CHANGELOG.md), 2026-09-19).
 
 ## B · What it takes to get a serving configuration
 
@@ -87,7 +87,7 @@ Two findings about this host (Docker Desktop on WSL2). **Left to itself, NIM sel
 
 ## C · Was anything else resident on the card during E3? (read from the code and the records, no GPU)
 
-`../vol3-judges/BASELINE.md`, section 12, showed that in the March 2026 Vol.1's E2 the comparison engine's model ran largely outside GPU memory. A later reading of E3 (NIM alone against NIM + NeMo Guardrails, the source of the published `+2.1%`) called it "not co-resident" because E3's time to first token was 51 ms where the co-resident E2 measured 221 ms. That was an inference from a timing. The question here is whether the code and the records say it.
+The account that closes the March 2026 comparison ([`../CHANGELOG.md`](../CHANGELOG.md), 2026-09-19) showed that in the March 2026 Vol.1's E2 the comparison engine's model ran largely outside GPU memory. A later reading of E3 (NIM alone against NIM + NeMo Guardrails, the source of the published `+2.1%`) called it "not co-resident" because E3's time to first token was 51 ms where the co-resident E2 measured 221 ms. That was an inference from a timing. The question here is whether the code and the records say it.
 
 **What the code says.**
 
@@ -102,7 +102,7 @@ Two findings about this host (Docker Desktop on WSL2). **Left to itself, NIM sel
 
 **Answer: ③ cannot be determined from the code and the records.** Nothing in E3 loaded the comparison engine's model. Whether it was still resident at 09:08 depends on two things that were not recorded: the comparison server's keep-loaded setting (its default unloads an idle model after five minutes, which would have emptied the card long before E3; a server-side setting can extend that indefinitely), and whether any other client used that server during the 7 h 23 min. The timing argument (51 ms against 221 ms) is consistent with an empty card and remains an inference.
 
-**If it was resident**, the direction is known and the size is not: NIM-only latency would carry the co-residence cost in the denominator, so the published `+2.1%` would understate the rail's relative overhead. No corrected figure is computed here. The later re-measurement of the rail on NIM 2.0.12 alone on the card (`../vol3-judges/BASELINE.md`) does not depend on this question.
+**If it was resident**, the direction is known and the size is not: NIM-only latency would carry the co-residence cost in the denominator, so the published `+2.1%` would understate the rail's relative overhead. No corrected figure is computed here. The later re-measurement of the rail on NIM 2.0.12 alone on the card does not depend on this question.
 
 ## D · Several users at once: NIM against Ollama (`results/p59_nim_value/`)
 

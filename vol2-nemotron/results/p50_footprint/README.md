@@ -1,4 +1,4 @@
-# Vol.3 · footprint decomposition (run 2026-09-21)
+# Vol.2 · footprint decomposition (run 2026-09-21)
 
 **Question.** What does each model need on one GPU — as opposed to what a NIM shows in `nvidia-smi`, which is the budget it was allowed and filled with KV cache. Pre-registration `prediction_p50_footprint.json` (frozen before the run, `.sha256` beside it); per-start records in `configs.jsonl`; analysis in `analysis.json`.
 

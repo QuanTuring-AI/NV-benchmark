@@ -1,4 +1,4 @@
-# Vol.3 · A1's generation-rate step past 8k tokens: is it the loss of CUDA graphs? (run 2026-09-23, 17:02–17:28)
+# Vol.2 · A1's generation-rate step past 8k tokens: is it the loss of CUDA graphs? (run 2026-09-23, 17:02–17:28)
 
 **Question.** In `../p53_longctx/` and its addendum, A1 (Nemotron Nano 9B v2, NIM 1.12.2, vLLM V0) generated at about 72 tok/s at 1k and 4k prompt tokens, about 45 tok/s at 16k, and about 44 at 57k: a step, then flat. Every A1 engine config dump reads `"max_seq_len_to_capture": 8192`, and the README attributed the step to decode running without CUDA graphs past that length. That was an inference. This run measures it. Pre-registration `prediction_p55_a1_capture.json`, frozen 2026-09-23T16:27:31+0800 after harness tests (disclosed in its basis) and scanned before its sidecar was written (`prediction_scan.txt`); first request 17:06:10.
 

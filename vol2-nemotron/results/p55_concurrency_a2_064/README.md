@@ -1,4 +1,4 @@
-# Vol.3 · A2 concurrency at an intermediate sequence cap, `max_num_seqs` 64 (run 2026-09-23, 21:08–22:23)
+# Vol.2 · A2 concurrency at an intermediate sequence cap, `max_num_seqs` 64 (run 2026-09-23, 21:08–22:23)
 
 **Question.** The same sweep as `../p55_concurrency_a2_256/` and `../p55_concurrency_a2_128/` with the cap set to 64 (`NIM_PASSTHROUGH_ARGS "--max-num-seqs 64"`), the second intermediate state between 32 and the image default 256. Pre-registration `prediction_p55_concurrency_a2_064.json`, frozen 2026-09-23T16:27:29+0800 and scanned before its sidecar was written (`prediction_scan.txt`); first request (the warm-up level) 21:15:36.
 

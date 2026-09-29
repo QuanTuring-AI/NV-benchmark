@@ -1,9 +1,9 @@
-# Vol.3 — Evidence Index
+# Vol.2 — Evidence Index
 
-> **Reproduce:** `git checkout vol3-nemotron-published`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
+> **Reproduce:** `git checkout vol2-nemotron-published`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
 
 > **The March 2026 Vol.1 lives in [`../benchmark/`](../benchmark/)** (question sets, harness, results). It is published evidence and is not modified here.
-> This directory holds the Vol.3 harness and results. This file is an **index**: which file belongs to which experiment, where its measurement boundary is recorded, and how data points are counted. This README contains measurement boundaries for data in this directory. It does not contain conclusions; those are for the write-up. **This index covers Vol.3 evidence. Its data is published (2026-09-25); the write-up is to follow.**
+> This directory holds the Vol.2 harness and results. This file is an **index**: which file belongs to which experiment, where its measurement boundary is recorded, and how data points are counted. This README contains measurement boundaries for data in this directory. It does not contain conclusions; those are for the write-up. **This index covers Vol.2 evidence. Its data is published (2026-09-25); the write-up is to follow.**
 
 ---
 
@@ -31,7 +31,7 @@ vol2-nemotron/
 │   ├── p53_concurrency_v2.py · p53_concurrency_v2_analyze.py · p53_concurrency_v2_gen_prediction.py · run_p53_concurrency_v2.sh   # second run: warm-up level before calibration, profile-matched calibration prompt, engine death as ceiling
 │   ├── p53_longctx.py · p53_longctx_analyze.py · p53_longctx_gen_prediction.py · run_p53_longctx.sh             # prompt-depth sweep, one container per depth
 │   ├── p53_longctx_addendum.py · p53_longctx_addendum_analyze.py · p53_longctx_addendum_gen_prediction.py · run_p53_longctx_addendum.sh   # the same on A2 (and A1 at 16k) with a 90 s warm-up phase
-│   ├── p53_guardrails.py · p53_guardrails_analyze.py · p53_guardrails_gen_prediction.py · run_p53_guardrails.sh   # NeMo Guardrails 0.23.0 on both arms (drives the Vol.2 bridge harness)
+│   ├── p53_guardrails.py · p53_guardrails_analyze.py · p53_guardrails_gen_prediction.py · run_p53_guardrails.sh   # NeMo Guardrails 0.23.0 on both arms (drives the Vol.3 bridge harness)
 │   ├── p53_guardrails_analyze_digest.py   # corrected guardrails analysis (block labels from response digests; written after the run, see its README)
 │   ├── p55_concurrency_a2.py · p55_concurrency_a2_analyze.py · p55_concurrency_a2_gen_prediction.py · run_p55_concurrency_a2.sh   # A2 concurrency at max_num_seqs 64 / 128 / 256 (imports the second concurrency run's harness)
 │   ├── p55_capture_control.py · p55_capture_control_analyze.py · p55_capture_control_gen_prediction.py · run_p55_capture_control.sh   # A2 at cap 256 with only the CUDA-graph capture size lowered
@@ -97,6 +97,8 @@ Per-request raw rows (`*.rows.jsonl`) are not included.
 | **Long context, ~120k** (P55) | Both arms at ~120k prompt tokens (`NIM_MAX_MODEL_LEN` 131072) | `results/p55_longctx_120k/README.md` · `requests.jsonl` · `events.jsonl` · `analysis.json` · `analysis_ref_order_addendum_first.json` | `results/p55_longctx_120k/prediction_p55_longctx_120k.json` (+ `.sha256`) |
 | **A2 slow first phase** (P55, no GPU) | Request records and saved container logs of earlier runs read for a mechanism and a warm-up count | `results/p55_a2_slow_phase/README.md` · `slow_phase.json` | — (analysis of existing records) |
 
+The Guardrails, E9, S6 and judge-with-reasoning-off rows are measurements of Nemotron on NIM and stay here; the judge topic itself is the subject of Vol.3 ([`../vol3-judges/`](../vol3-judges/README.md)).
+
 **The speed table is not a single-variable comparison either.** A1 and A2 differ in architecture (dense / MoE), precision (bf16 / NVFP4 — the only precision each image can run on this card) and NIM version (1.12.2 / 2.0.12 — no common version exists, see `results/p50_availability/`). It compares two deployment options, each in its own best configuration on this card.
 
 **P07 is not a model comparison.** Arms P (Llama 3.1 8B) and A1 (Nemotron Nano 9B v2) differ in NIM version (1.13.1 / 1.12.2), tool-call parser (`llama3_json` / `nemotron_json`), chat template, `NIM_MAX_NUM_SEQS` (default / 32) and sampling source. Each arm is an observation of that one configuration. Sampling: the harness sets no temperature. For A2 (Nemotron 3 Nano, NIM 2.0.12) the server's defaults are overridden by the model's `generation_config.json` (temperature 1.0, top_p 1.0; startup log); A2 was not measured because its image does not enable tool calling by default. For A1 the model's generation config sets no sampling values, so the NIM 1.12.2 engine default applies — that value was not checked. For P it was not checked. The post-hoc "which tools did you use" turn was sent without `tools`, so the tool names were not in the context; that secondary metric cannot be interpreted.
@@ -152,7 +154,7 @@ The other pre-registrations ship with a `.sha256` file written at registration t
 | Long context — 5 requests × 4 depths × 2 arms (`p53_longctx`) | 40 | ✅ single-request |
 | Long context addendum — 5 measured requests × 5 (arm, depth) cells (`p53_longctx_addendum`; 68 warm-up rows recorded, not counted) | 25 | ✅ single-request |
 | Guardrails — 45 questions × 3 rounds × 3 request arms × 2 container arms (`p53_guardrails`) | 810 | ✅ (270 nim-only single-request rows + 540 rail rows) |
-| **Single-request latency points, Vol.3 P50/P53** | **1,075** | |
+| **Single-request latency points, Vol.2 P50/P53** | **1,075** | |
 | Concurrency, first run — AIPerf closed-loop requests completed over 36 levels (`p53_concurrency`) | 4,995 | ❌ different unit (closed-loop levels; conclusions null) |
 | Concurrency, second run — completed over 33 levels (+ 576 in discarded warm-up levels) (`p53_concurrency_v2`) | 5,145 | ❌ different unit (closed-loop levels) |
 | Footprint — container starts (`p50_footprint` 15, addenda 6 + 8) | 29 | ❌ different unit |
@@ -271,7 +273,7 @@ Scripts resolve paths relative to `vol2-nemotron/` and read question sets from `
 | `GR0230_PY` | `scripts/e9/run_e9.sh` | python of an isolated venv with `nemoguardrails==0.23.0` |
 | `NGC_ENV_FILE` · `NIM_CACHE_DIR` | `scripts/run_p50_*.sh` · `scripts/run_p53_*.sh` | as above (the P50/P53 harnesses start their own containers) |
 | `AIPERF` · `TOKENIZER_ROOT` | `scripts/run_p53_concurrency.sh` · `scripts/run_p53_concurrency_v2.sh` | the `aiperf` executable (0.11.0) and a directory holding each model's tokenizer files under `a1/` and `a2/` |
-| `GR023_PY` | `scripts/run_p53_guardrails.sh` | python of an isolated venv with `nemoguardrails==0.23.0` (the Vol.2 worker) |
+| `GR023_PY` | `scripts/run_p53_guardrails.sh` | python of an isolated venv with `nemoguardrails==0.23.0` (the Vol.3 worker) |
 
 See [`../DEPLOYMENT_NOTES.md`](../DEPLOYMENT_NOTES.md) for RTX 5090 deployment notes.
 
