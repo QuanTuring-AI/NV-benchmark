@@ -1,4 +1,4 @@
-# Vol.2 · NeMo Guardrails 0.23.0 on NIM 2.0.12: the same verdicts, a 16× cheaper judge with one line
+# Vol.2 · NeMo Guardrails 0.23.0 on NIM 2.0.12: the same verdicts, a 16× faster judge call with one line
 *Upgrading the rails cost about 1.5 s per request by default; the detection did not change; one config line takes the cost back. The old ratio is closed as an account, not a claim.*
 
 > **Reproduce:** `git checkout vol2-guardrails-published`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
