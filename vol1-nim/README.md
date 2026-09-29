@@ -27,7 +27,6 @@ Llama 3.1 8B Instruct on one RTX 5090. The concurrency results use synthetic cha
    - Accuracy: 1.5 points lower on GSM8K (95% CI −3.1 to 0.0), and within ±2 points on MMLU.
 
    → §D · §E
-8. **NeMo Guardrails 0.23.0 blocks the same prompts as 0.21.0** (42/45 adversarial, 0/90 false blocks on this set), but asks the judge for up to 1,024 tokens instead of 3. That one default costs about 1.5 s per request, and setting it back is one line. → `../vol2-guardrails/BASELINE.md` §2, §8
 
 | Concurrent requests | NIM bf16 ÷ 4-bit (16 slots), total | NIM FP8 ÷ 4-bit, total | NIM bf16 ÷ 16-bit, total (matched precision) | NIM bf16 ÷ 4-bit, per-user end-to-end |
 |---|---|---|---|---|
@@ -50,7 +49,7 @@ Vol.1 as first published (2026-03) is `../benchmark/` and is not changed by anyt
 
 **Setup.** Llama 3.1 8B Instruct, bf16, one RTX 5090 (32,607 MiB, 1,792 GB/s, driver 591.86), both arms from the same snapshot of the NIM cache: 16,060,556,376 bytes of safetensors, the same file hashes in both containers (`stack.json`, hashed inside a container through the same mount both arms use).
 
-- **Arm N** is the NIM container: NIM 2.0.12, profile `092ed421…` (bf16), `NIM_MAX_MODEL_LEN` 8192 and `VLLM_USE_V2_MODEL_RUNNER=0`. This is Vol.2's baseline configuration.
+- **Arm N** is the NIM container: NIM 2.0.12, profile `092ed421…` (bf16), `NIM_MAX_MODEL_LEN` 8192 and `VLLM_USE_V2_MODEL_RUNNER=0`.
 - **Arm V** is the upstream `vllm/vllm-openai:v0.27.1` container. It has the same vLLM build commit (`6e448d0e`) and the same torch, CUDA, flashinfer, triton and transformers as the engine inside N.
 - **V's engine arguments are NIM's own.** They are the argument list NIM resolves for N's configuration (`nim-serve --dry-run`), with four edits: the model path; NIM's internal port and host; and NIM's two server-layer middlewares, which do not exist outside NIM.
 
@@ -58,7 +57,7 @@ What still differs is listed in the pre-registration and in `../vol1-nim/results
 
 ## A · Single stream: the same engine, the same answers
 
-Four alternating blocks (N, V, N, V) over the 50 questions of the Vol.2 sample, one request at a time, `max_tokens` 4096, temperature 0, top_p 0.9, streaming with usage; 2026-09-24 00:40–01:06. All preconditions held.
+Four alternating blocks (N, V, N, V) over the 50 questions of the co-residence sample (`../vol2-guardrails/results/p20_coresidence/sample.json`), one request at a time, `max_tokens` 4096, temperature 0, top_p 0.9, streaming with usage; 2026-09-24 00:40–01:06. All preconditions held.
 
 | | N · NIM 2.0.12 | V · vLLM 0.27.1 | V over N (ratio of means, 95% CI over questions) |
 |---|---|---|---|
@@ -88,7 +87,7 @@ Two findings about this host (Docker Desktop on WSL2). **Left to itself, NIM sel
 
 ## C · Was anything else resident on the card during E3? (read from the code and the records, no GPU)
 
-Vol.2 (`../vol2-guardrails/BASELINE.md`, section 12) showed that in the March 2026 Vol.1's E2 the comparison engine's model ran largely outside GPU memory. A later reading of E3 (NIM alone against NIM + NeMo Guardrails, the source of the published `+2.1%`) called it "not co-resident" because E3's time to first token was 51 ms where the co-resident E2 measured 221 ms. That was an inference from a timing. The question here is whether the code and the records say it.
+`../vol2-guardrails/BASELINE.md`, section 12, showed that in the March 2026 Vol.1's E2 the comparison engine's model ran largely outside GPU memory. A later reading of E3 (NIM alone against NIM + NeMo Guardrails, the source of the published `+2.1%`) called it "not co-resident" because E3's time to first token was 51 ms where the co-resident E2 measured 221 ms. That was an inference from a timing. The question here is whether the code and the records say it.
 
 **What the code says.**
 
@@ -103,7 +102,7 @@ Vol.2 (`../vol2-guardrails/BASELINE.md`, section 12) showed that in the March 20
 
 **Answer: ③ cannot be determined from the code and the records.** Nothing in E3 loaded the comparison engine's model. Whether it was still resident at 09:08 depends on two things that were not recorded: the comparison server's keep-loaded setting (its default unloads an idle model after five minutes, which would have emptied the card long before E3; a server-side setting can extend that indefinitely), and whether any other client used that server during the 7 h 23 min. The timing argument (51 ms against 221 ms) is consistent with an empty card and remains an inference.
 
-**If it was resident**, the direction is known and the size is not: NIM-only latency would carry the co-residence cost in the denominator, so the published `+2.1%` would understate the rail's relative overhead. No corrected figure is computed here. The Vol.2 re-measurement of the rail on NIM 2.0.12 alone on the card (`../vol2-guardrails/BASELINE.md`) does not depend on this question.
+**If it was resident**, the direction is known and the size is not: NIM-only latency would carry the co-residence cost in the denominator, so the published `+2.1%` would understate the rail's relative overhead. No corrected figure is computed here. The later re-measurement of the rail on NIM 2.0.12 alone on the card (`../vol2-guardrails/BASELINE.md`) does not depend on this question.
 
 ## D · Several users at once: NIM against Ollama (`results/p59_nim_value/`)
 
