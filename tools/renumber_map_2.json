@@ -1,0 +1,70 @@
+{
+ "date": "2026-09-29",
+ "purpose": "Second directory rename: Vol.2 and Vol.3 swap places so that the reading order is NIM (Vol.1), then Nemotron on NIM (Vol.2), then Nemotron and other models as judges (Vol.3). Input of tools/renumber_dirs.py --gen 2. For every path the first rule that matches wins; the same rules move tracked, ignored and untracked files.",
+ "subject": "Swap the Vol.2 and Vol.3 directories to follow the new volume order (moves only)",
+ "commit_body": "vol3-nemotron/ -> vol2-nemotron/ (Vol.2, Nemotron on NIM), vol2-guardrails/ -> vol3-judges/ (Vol.3, judges in NeMo Guardrails). Both new names have never been used before.",
+ "docs_label": "Directory rename 2026-09-29",
+ "moves": [
+  {
+   "from": "vol3-nemotron/",
+   "to": "vol2-nemotron/",
+   "why": "Vol.2: NIM + Nemotron (two deployment options, footprint, speed, concurrency, long context)"
+  },
+  {
+   "from": "vol2-guardrails/",
+   "to": "vol3-judges/",
+   "why": "Vol.3: judges in NeMo Guardrails (the Llama judge baseline data; the judge study is to follow)"
+  }
+ ],
+ "run_codes": {},
+ "old_roots": [
+  "vol2-guardrails",
+  "vol3-nemotron"
+ ],
+ "new_roots": [
+  "vol2-nemotron",
+  "vol3-judges"
+ ],
+ "not_moved": [
+  "vol1-nim/",
+  "benchmark/ (Vol.1, March 2026 original)",
+  "DEPLOYMENT_NOTES.md",
+  "roadmap-e456/",
+  "tools/",
+  "every other root file"
+ ],
+ "history_files": [
+  "CHANGELOG.md"
+ ],
+ "history_files_rule": "Files that record past paths on purpose. The docs phase leaves them as they are; they are updated by hand in the same batch.",
+ "tags": {
+  "new": {
+   "vol2-nemotron-published": "Vol.2",
+   "vol3-judges-baseline": "Vol.3 (baseline data; the judge study has not been published)"
+  },
+  "kept_as_pushed": {
+   "vol2-guardrails-published": "Vol.3, directory vol2-guardrails/",
+   "vol3-nemotron-published": "Vol.2, directory vol3-nemotron/"
+  }
+ },
+ "tag_message": "the last commit before the directory renames that holds this volume's runs at the paths their pre-registrations name",
+ "note_on_frozen_paths": "Frozen harnesses import with the paths written at the time. They are bound by SHA-256 and are not edited, so they run as written only at the tag of their volume. PATH_MAP.md maps every old path through both renames.",
+ "path_map_intro": "Directories were renamed twice: on 2026-09-28 to match the volume numbers, and on 2026-09-29, when Vol.2 and Vol.3 swapped places so that Nemotron on NIM (Vol.2) comes before the judges (Vol.3). Files written before a rename, including frozen pre-registrations, refer to the paths of their day; this file maps every one through both renames. To reproduce a run byte for byte, check out the tag listed for its volume. Check out a tag or the tip of the branch; a pure-rename commit alone is not a supported checkout (its .gitattributes still names the paths before it).",
+ "volume_table": [
+  [
+   "Vol.1",
+   "vol1-nim/",
+   "vol1-nim-published"
+  ],
+  [
+   "Vol.2",
+   "vol2-nemotron/",
+   "vol2-nemotron-published"
+  ],
+  [
+   "Vol.3",
+   "vol3-judges/",
+   "vol3-judges-baseline"
+  ]
+ ]
+}
