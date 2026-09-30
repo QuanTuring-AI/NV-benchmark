@@ -1,0 +1,80 @@
+{
+  "written_at": "2026-09-29T21:58:53+0800",
+  "experiment": "P78 G1 · Vol.1 · NIM's own FP8 choice at 1, 32 and 128 concurrent requests in a clean window, with a prefix-cache detector that tells warm-up from a cache hit",
+  "why": "P70's FP8 arm was refused by P59's detector (two different prompts, ratio 0.535): the first request after a start is slow for reasons that are not a cache. P59's and P70's pre-registrations are not changed.",
+  "arms": {
+    "N-FP8": {
+      "levels": [
+        1,
+        32,
+        128
+      ]
+    },
+    "N-BF16": {
+      "levels": [
+        128
+      ],
+      "role": "anchor in the same window"
+    }
+  },
+  "unchanged_from_p70": "image, profiles, context 8192, isolation check, discarded 120 s warm-up level, calibration, AIPerf command (profile C, streaming, --use-legacy-max-tokens, client token counts), 60 s per level, seed 20260925 + c",
+  "detector": {
+    "steps": [
+      "one discarded fresh prompt",
+      "five pairs of two different fresh prompts, the first-sent alternating between pairs; r_k = TTFT(second)/TTFT(first)",
+      "positive control: one fresh prompt twice; r_s = TTFT(second)/TTFT(first)"
+    ],
+    "threshold": "T = 0.8 x min(r_1..r_5), from this container's five pairs",
+    "fired": "r_s < T",
+    "pass": "fired",
+    "branch": "positive control does not fire -> that arm is null, reported as it is; the threshold is not changed and the arm is not re-run tonight",
+    "self_test": "four synthetic sequences through the same function (same-prompt cache only: pass; no cache: fail; cross-prompt hits: fail; P70's slow first pair after warm-up: pass), recorded in events.jsonl before the first container"
+  },
+  "denominators": {
+    "O-Q4_at_128_tok_s": 780.24,
+    "source": "P70 analysis.json cells.O-Q4|128.total_tps (clean window)",
+    "N-BF16_at_128_P70_tok_s": 6043.26,
+    "P59_N-FP8_at_128_tok_s": 8712.63,
+    "P59_N-BF16_at_128_tok_s": 5457.87
+  },
+  "predictions": {
+    "R1": {
+      "what": "N-FP8 total tok/s at 128 / 780.24 (P70's clean O-Q4)",
+      "pass_if": "in [10.5, 13.5]",
+      "p59_value": 11.167
+    },
+    "R2": {
+      "what": "N-FP8 / N-BF16 total tok/s at 128, same window",
+      "pass_if": "in [1.45, 1.75]",
+      "p59_value": 1.596
+    },
+    "R3": {
+      "what": "N-BF16 at 128 against P70's clean value",
+      "pass_if": "within +-5% of 6043.3"
+    },
+    "record": "N-FP8 at 1 and 32; the detector's five pair ratios, threshold and positive-control ratio per arm"
+  },
+  "harness_sha256": {
+    "vol1-nim/scripts/p78_fp8_clean.py": "3da88387a285568d844085cb28493d71fc000cb620826fec5bf721aea8d9bed7",
+    "vol1-nim/scripts/p70_clean_recheck.py": "5f7e72827bb88e7e4d9608a5fa136b3f24d122d56e28191bbbcd1c6c84008260",
+    "vol1-nim/scripts/p59_nim_value.py": "4f0867273e47723680907494f6b3e79924e720b1c82f81591c6b16fe4c9acec5",
+    "vol1-nim/scripts/p54_engine.py": "9a9944603e5ada74df1ee4addffbc6111540e4b80fca490ef1e6038e4aa626c4",
+    "vol2-nemotron/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+    "vol2-nemotron/scripts/p53_concurrency.py": "3858baaf99a7aa200c3c391b15cbcbf5c5e12fa8feb6fb2df11e2f89403dd7aa",
+    "vol2-nemotron/scripts/run_p78.sh": "39de1514142b5b1b96b3841c883b07e03e8cf16187f902dc55461ed73a3a1d0b",
+    "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb",
+    "tools/host_gate.py": "3ff71b506d7c44b0c3519d70f9124b633dc26ac72aa5466ccac9b291ca4876bd",
+    "tools/overwrite_gate.py": "e4d0a7ef16da29849bea9a36c826b6c4146e1888a071e989e41641c40a139d32",
+    "tools/renumber_dirs.py": "a9cf6c421ef2d6084d08e11c49554902dfac6dd1814684da8c4a21280a4fe5ca"
+  },
+  "written_before": "the stage's first GPU cell (run_p78.sh refuses a stage whose prediction or .sha256 is missing or changed, or whose results exist)",
+  "window": "the night of 2026-09-29 to 30; the user closes Steam and other heavy host load before the run",
+  "gates_every_cell": {
+    "G8": "tools/g8_gate.py before every measured cell: median GPU utilization <= 2% and median power <= 45 W over 10 s; retried every 60 s up to 15 min; a cell whose G8 did not pass is null, recorded",
+    "host": "tools/host_gate.py: a CPU-work calibration before the run and, per cell, wall time, system CPU busy share, this process's CPU share, children's CPU seconds and a work probe at the cell's end; recorded, not a gate (no measured threshold exists yet)",
+    "no_overwrite": "tools/overwrite_gate.py after every cell: tracked files unchanged and new files only under this stage's results directory, else the stage stops (exit 4) and the cell is void",
+    "old_directory_gate": "tools/renumber_dirs.py check-old-dirs before every stage: a harness written for old paths must not recreate an old directory",
+    "exit_code": "the runner writes each harness's exit code into the stage's results directory"
+  },
+  "deadline": "08:00: a stage or cell not started by then is not started; finished cells are kept; what is left is listed in the report"
+}

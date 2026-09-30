@@ -1,0 +1,5029 @@
+{
+ "head": "7f54095fe7abe69a010015143a9d37700541547f",
+ "fingerprint": {
+  "util_pct": 0,
+  "power_w": [
+   26.0,
+   42.0
+  ]
+ },
+ "positive_control": [
+  {
+   "case": "util 0 / 30 W",
+   "record": {
+    "util_pct": 0,
+    "power_w": 30.0
+   },
+   "expected": "clean",
+   "got": "clean"
+  },
+  {
+   "case": "util 5 / 30 W",
+   "record": {
+    "util_pct": 5,
+    "power_w": 30.0
+   },
+   "expected": "dirty",
+   "got": "dirty"
+  },
+  {
+   "case": "util 0 / 60 W",
+   "record": {
+    "util_pct": 0,
+    "power_w": 60.0
+   },
+   "expected": "dirty",
+   "got": "dirty"
+  },
+  {
+   "case": "missing record",
+   "record": null,
+   "expected": "undeterminable",
+   "got": "undeterminable"
+  }
+ ],
+ "runs": {
+  "p50_availability": {
+   "run": "p50_availability",
+   "format": "no GPU run (query / analysis of existing records)",
+   "cells": 0,
+   "with_end_record": 0,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [],
+   "note": "no measured cells: README.md, availability.json"
+  },
+  "p50_footprint": {
+   "run": "p50_footprint",
+   "format": "footprint: gpu_after_probe per container start",
+   "cells": 15,
+   "with_end_record": 9,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "ctx.txt last line: 2026-09-21T20:35:53+0800 | after A2FP8 | 446 MiB, 32607 MiB, 3 %, 47, 34.70 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p50_footprint_addendum": {
+   "run": "p50_footprint_addendum",
+   "format": "footprint: gpu_after_probe per container start",
+   "cells": 6,
+   "with_end_record": 4,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "ctx.txt last line: 2026-09-21T22:17:30+0800 | end | 339 MiB, 32607 MiB, 0 %, 47, 12.26 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p50_footprint_addendum2": {
+   "run": "p50_footprint_addendum2",
+   "format": "footprint: gpu_after_probe per container start",
+   "cells": 8,
+   "with_end_record": 6,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "ctx.txt last line: 2026-09-21T23:22:01+0800 | end | 353 MiB, 32607 MiB, 0 %, 47, 12.95 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p50_speed": {
+   "run": "p50_speed",
+   "format": "per-request: gpu_after of the cell's last measured request",
+   "cells": 4,
+   "with_end_record": 4,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:2 block_end A1 0: gpu_after_stop util 0% · 25.87 W · 486 MiB (after container removal)",
+    "events.jsonl:4 block_end A2 1: gpu_after_stop util 0% · 14.03 W · 193 MiB (after container removal)",
+    "events.jsonl:6 block_end A1 2: gpu_after_stop util 0% · 17.68 W · 193 MiB (after container removal)",
+    "events.jsonl:8 block_end A2 3: gpu_after_stop util 2% · 39.16 W · 457 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-21T21:38:33+0800 | end | 457 MiB, 32607 MiB, 2 %, 53, 39.16 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p53_answer": {
+   "run": "p53_answer",
+   "format": "per-request: gpu_after of the cell's last measured request",
+   "cells": 4,
+   "with_end_record": 4,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:2 block_end A1 0: gpu_after_stop util 4% · 44.82 W · 1338 MiB (after container removal)",
+    "events.jsonl:4 block_end A2 1: gpu_after_stop util 2% · 41.96 W · 518 MiB (after container removal)",
+    "events.jsonl:6 block_end A1 2: gpu_after_stop util 2% · 44.48 W · 629 MiB (after container removal)",
+    "events.jsonl:8 block_end A2 3: gpu_after_stop util 4% · 44.47 W · 273 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T01:20:56+0800 | end | 273 MiB, 32607 MiB, 4 %, 53, 44.53 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p53_concurrency": {
+   "run": "p53_concurrency",
+   "format": "concurrency: levels.jsonl gpu_end per level",
+   "cells": 36,
+   "with_end_record": 36,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:2 container_end A1 C main: gpu_after_stop util 2% · 37.09 W · 844 MiB (after container removal)",
+    "events.jsonl:4 container_end A1 C fresh: gpu_after_stop util 2% · 35.58 W · 804 MiB (after container removal)",
+    "events.jsonl:6 container_end A1 R main: gpu_after_stop util 2% · 36.34 W · 665 MiB (after container removal)",
+    "events.jsonl:8 container_end A1 R fresh: gpu_after_stop util 2% · 37.13 W · 587 MiB (after container removal)",
+    "events.jsonl:10 container_end A2 C main: gpu_after_stop util 2% · 40.67 W · 693 MiB (after container removal)",
+    "events.jsonl:12 container_end A2 C fresh: gpu_after_stop util 3% · 41.39 W · 530 MiB (after container removal)",
+    "events.jsonl:14 container_end A2 R main: gpu_after_stop util 4% · 43.89 W · 583 MiB (after container removal)",
+    "events.jsonl:16 container_end A2 R fresh: gpu_after_stop util 2% · 42.25 W · 352 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T03:18:29+0800 | end | 351 MiB, 32607 MiB, 2 %, 52, 42.25 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p53_concurrency_v2": {
+   "run": "p53_concurrency_v2",
+   "format": "concurrency: levels.jsonl gpu_end per level",
+   "cells": 41,
+   "with_end_record": 41,
+   "warmup_levels": 0,
+   "skipped_records": 4,
+   "run_level_records": [
+    "events.jsonl:2 container_end A1 C main: gpu_after_stop util 0% · 11.13 W · 451 MiB (after container removal)",
+    "events.jsonl:4 container_end A1 C fresh: gpu_after_stop util 0% · 11.25 W · 482 MiB (after container removal)",
+    "events.jsonl:6 container_end A1 R main: gpu_after_stop util 0% · 11.2 W · 419 MiB (after container removal)",
+    "events.jsonl:8 container_end A1 R fresh: gpu_after_stop util 0% · 10.29 W · 421 MiB (after container removal)",
+    "events.jsonl:10 container_end A2 C main: gpu_after_stop util 0% · 12.76 W · 212 MiB (after container removal)",
+    "events.jsonl:12 container_end A2 C fresh: gpu_after_stop util 0% · 13.04 W · 232 MiB (after container removal)",
+    "events.jsonl:14 container_end A2 R main: gpu_after_stop util 0% · 14.89 W · 238 MiB (after container removal)",
+    "events.jsonl:16 container_end A2 R fresh: gpu_after_stop util 0% · 14.24 W · 252 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T10:04:30+0800 | end | 252 MiB, 32607 MiB, 0 %, 54, 14.24 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p53_guardrails": {
+   "run": "p53_guardrails",
+   "format": "guardrails/judge: no per-cell GPU record",
+   "cells": 6,
+   "with_end_record": 0,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:2 arm_end A1: gpu_after_stop util 0% · 21.22 W · 522 MiB (after container removal)",
+    "events.jsonl:4 arm_end A2: gpu_after_stop util 0% · 15.69 W · 491 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T05:32:45+0800 | end | 491 MiB, 32607 MiB, 0 %, 53, 15.69 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p53_longctx": {
+   "run": "p53_longctx",
+   "format": "per-request: gpu_after of the cell's last measured request",
+   "cells": 8,
+   "with_end_record": 8,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:2 depth_end A1: gpu_after_stop util 3% · 40.8 W · 393 MiB (after container removal)",
+    "events.jsonl:4 depth_end A1: gpu_after_stop util 2% · 40.79 W · 406 MiB (after container removal)",
+    "events.jsonl:6 depth_end A1: gpu_after_stop util 2% · 39.58 W · 416 MiB (after container removal)",
+    "events.jsonl:8 depth_end A1: gpu_after_stop util 2% · 40.55 W · 697 MiB (after container removal)",
+    "events.jsonl:10 depth_end A2: gpu_after_stop util 4% · 38.81 W · 312 MiB (after container removal)",
+    "events.jsonl:12 depth_end A2: gpu_after_stop util 0% · 32.25 W · 850 MiB (after container removal)",
+    "events.jsonl:14 depth_end A2: gpu_after_stop util 7% · 25.69 W · 630 MiB (after container removal)",
+    "events.jsonl:16 depth_end A2: gpu_after_stop util 0% · 22.44 W · 375 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T04:11:53+0800 | end | 375 MiB, 32607 MiB, 0 %, 50, 22.44 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p53_longctx_addendum": {
+   "run": "p53_longctx_addendum",
+   "format": "per-request: gpu_after of the cell's last measured request",
+   "cells": 5,
+   "with_end_record": 5,
+   "warmup_levels": 68,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:3 depth_end A2: gpu_after_stop util 0% · 11.86 W · 365 MiB (after container removal)",
+    "events.jsonl:6 depth_end A2: gpu_after_stop util 0% · 11.64 W · 368 MiB (after container removal)",
+    "events.jsonl:9 depth_end A2: gpu_after_stop util 0% · 13.45 W · 366 MiB (after container removal)",
+    "events.jsonl:12 depth_end A2: gpu_after_stop util 0% · 12.99 W · 436 MiB (after container removal)",
+    "events.jsonl:15 depth_end A1: gpu_after_stop util 0% · 30.18 W · 448 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T07:51:10+0800 | end | 448 MiB, 32607 MiB, 0 %, 53, 30.18 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p55_a1_capture": {
+   "run": "p55_a1_capture",
+   "format": "per-request: gpu_after of the cell's last measured request",
+   "cells": 5,
+   "with_end_record": 5,
+   "warmup_levels": 39,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:3 condition_end a1_4k_default: gpu_after_stop util 0% · 12.47 W · 327 MiB (after container removal)",
+    "events.jsonl:6 condition_end a1_4k_eager: gpu_after_stop util 0% · 12.88 W · 334 MiB (after container removal)",
+    "events.jsonl:9 condition_end a1_16k_default: gpu_after_stop util 0% · 14.11 W · 331 MiB (after container removal)",
+    "events.jsonl:12 condition_end a1_16k_eager: gpu_after_stop util 0% · 16.42 W · 331 MiB (after container removal)",
+    "events.jsonl:15 condition_end a1_16k_capture: gpu_after_stop util 0% · 23.61 W · 331 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T17:28:39+0800 | end | 331 MiB, 32607 MiB, 0 %, 52, 23.61 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p55_a2_slow_phase": {
+   "run": "p55_a2_slow_phase",
+   "format": "no GPU run (query / analysis of existing records)",
+   "cells": 0,
+   "with_end_record": 0,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [],
+   "note": "no measured cells: README.md, slow_phase.json"
+  },
+  "p55_capture_control": {
+   "run": "p55_capture_control",
+   "format": "concurrency: levels.jsonl gpu_end per level",
+   "cells": 8,
+   "with_end_record": 8,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:2 container_end s256_default: gpu_after_stop util 2% · 42.22 W · 335 MiB (after container removal)",
+    "events.jsonl:4 container_end s256_cg064: gpu_after_stop util 2% · 40.93 W · 485 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T23:05:08+0800 | end | 485 MiB, 32607 MiB, 5 %, 52, 41.13 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p55_concurrency_a2_064": {
+   "run": "p55_concurrency_a2_064",
+   "format": "concurrency: levels.jsonl gpu_end per level",
+   "cells": 24,
+   "with_end_record": 24,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:2 container_end A2 C main: gpu_after_stop util 0% · 23.1 W · 717 MiB (after container removal)",
+    "events.jsonl:4 container_end A2 C fresh: gpu_after_stop util 3% · 41.06 W · 605 MiB (after container removal)",
+    "events.jsonl:6 container_end A2 R main: gpu_after_stop util 0% · 25.79 W · 581 MiB (after container removal)",
+    "events.jsonl:8 container_end A2 R fresh: gpu_after_stop util 2% · 40.58 W · 413 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T22:23:55+0800 | end | 405 MiB, 32607 MiB, 2 %, 52, 41.04 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p55_concurrency_a2_128": {
+   "run": "p55_concurrency_a2_128",
+   "format": "concurrency: levels.jsonl gpu_end per level",
+   "cells": 26,
+   "with_end_record": 26,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:2 container_end A2 C main: gpu_after_stop util 0% · 15.73 W · 315 MiB (after container removal)",
+    "events.jsonl:4 container_end A2 C fresh: gpu_after_stop util 0% · 15.07 W · 315 MiB (after container removal)",
+    "events.jsonl:6 container_end A2 R main: gpu_after_stop util 0% · 15.42 W · 316 MiB (after container removal)",
+    "events.jsonl:8 container_end A2 R fresh: gpu_after_stop util 0% · 25.34 W · 521 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T21:07:40+0800 | end | 521 MiB, 32607 MiB, 0 %, 51, 25.34 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p55_concurrency_a2_256": {
+   "run": "p55_concurrency_a2_256",
+   "format": "concurrency: levels.jsonl gpu_end per level",
+   "cells": 28,
+   "with_end_record": 28,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:2 container_end A2 C main: gpu_after_stop util 0% · 18.1 W · 335 MiB (after container removal)",
+    "events.jsonl:4 container_end A2 C fresh: gpu_after_stop util 2% · 39.33 W · 645 MiB (after container removal)",
+    "events.jsonl:6 container_end A2 R main: gpu_after_stop util 0% · 38.05 W · 460 MiB (after container removal)",
+    "events.jsonl:8 container_end A2 R fresh: gpu_after_stop util 0% · 16.41 W · 278 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T19:43:46+0800 | end | 278 MiB, 32607 MiB, 0 %, 51, 16.41 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p55_judge_thinking": {
+   "run": "p55_judge_thinking",
+   "format": "guardrails/judge: no per-cell GPU record",
+   "cells": 7,
+   "with_end_record": 0,
+   "warmup_levels": 0,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:7 container_end : gpu_after_stop util 0% · 11.74 W · 327 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T17:01:51+0800 | end | 327 MiB, 32607 MiB, 0 %, 53, 11.31 W, 591.86"
+   ],
+   "note": ""
+  },
+  "p55_longctx_120k": {
+   "run": "p55_longctx_120k",
+   "format": "per-request: gpu_after of the cell's last measured request",
+   "cells": 2,
+   "with_end_record": 2,
+   "warmup_levels": 12,
+   "skipped_records": 0,
+   "run_level_records": [
+    "events.jsonl:3 condition_end a2_120k: gpu_after_stop util 0% · 23.3 W · 331 MiB (after container removal)",
+    "events.jsonl:6 condition_end a1_120k: gpu_after_stop util 0% · 15.54 W · 331 MiB (after container removal)",
+    "ctx.txt last line: 2026-09-23T17:46:08+0800 | end | 331 MiB, 32607 MiB, 0 %, 55, 15.54 W, 591.86"
+   ],
+   "note": ""
+  }
+ },
+ "cells": [
+  {
+   "run": "p50_footprint",
+   "cell": "A1_default",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint/configs.jsonl:1:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 87,
+   "power_w": 453.74,
+   "used_mib": 29424,
+   "classification": "dirty",
+   "reasons": [
+    "util 87% > 0",
+    "power 453.74 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: A1 level after default budget 29,420 MiB",
+    "vol2-nemotron/FOOTPRINT.md §2 table: A1 default level 29,420",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A1_pct0.85",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint/configs.jsonl:2:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 88,
+   "power_w": 459.06,
+   "used_mib": 27792,
+   "classification": "dirty",
+   "reasons": [
+    "util 88% > 0",
+    "power 459.06 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A1_pct0.80",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint/configs.jsonl:3:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 90,
+   "power_w": 463.92,
+   "used_mib": 26168,
+   "classification": "dirty",
+   "reasons": [
+    "util 90% > 0",
+    "power 463.92 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A1_pct0.75",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint/configs.jsonl:4:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 86,
+   "power_w": 441.94,
+   "used_mib": 24543,
+   "classification": "dirty",
+   "reasons": [
+    "util 86% > 0",
+    "power 441.94 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A1_pct0.70",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint/configs.jsonl:5:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 95,
+   "power_w": 465.24,
+   "used_mib": 22913,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 465.24 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: A1 smallest passing budget 0.70 → 22,825 (22,909 in use)",
+    "vol2-nemotron/FOOTPRINT.md §2 table: A1 added at READY 22,375",
+    "vol2-nemotron/FOOTPRINT.md §4 table: A1 22,909 MiB in use",
+    "vol2-nemotron/FOOTPRINT.md §4 text: ~1,600 MiB difference (A1 side)",
+    "README.md Headline results · Nemotron (Vol.2): fit: 22,909 MiB (A1)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A1_pct0.65",
+   "kind": "measured (one container start)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 11.24 W, not a cell end"
+   ],
+   "notes": [
+    "never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 11.24 W, not a cell end"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A1_pct0.675",
+   "kind": "measured (one container start)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 11.6 W, not a cell end"
+   ],
+   "notes": [
+    "never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 11.6 W, not a cell end"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: A1 largest failing budget 0.675",
+    "vol2-nemotron/FOOTPRINT.md §2 table: A1 0.675 → 22,010 refusal",
+    "vol2-nemotron/FOOTPRINT.md §4 table: A1 bracket 22,010 – 22,825",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A2_default",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint/configs.jsonl:8:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 95,
+   "power_w": 358.3,
+   "used_mib": 31465,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 358.3 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: A2 level after default budget 31,468 MiB",
+    "vol2-nemotron/FOOTPRINT.md §2 table: A2 default level 31,468",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A2_pct0.85",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint/configs.jsonl:9:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 90,
+   "power_w": 342.47,
+   "used_mib": 29190,
+   "classification": "dirty",
+   "reasons": [
+    "util 90% > 0",
+    "power 342.47 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A2_pct0.80",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint/configs.jsonl:10:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 94,
+   "power_w": 342.78,
+   "used_mib": 27598,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 342.78 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A2_pct0.75",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint/configs.jsonl:11:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 94,
+   "power_w": 335.48,
+   "used_mib": 25972,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 335.48 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: A2 smallest passing budget 0.75 → 24,455 (25,972 in use)",
+    "vol2-nemotron/FOOTPRINT.md §2 table: A2 added at READY 25,835",
+    "vol2-nemotron/FOOTPRINT.md §3 text: 14.6 MiB per sequence (24,455 − 21,195)",
+    "README.md Headline results · Nemotron (Vol.2): fit: 25,972 MiB (A2)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A2_pct0.70",
+   "kind": "measured (one container start)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 12.48 W, not a cell end"
+   ],
+   "notes": [
+    "never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 12.48 W, not a cell end"
+   ],
+   "feeds": [
+    "vol2-nemotron/FOOTPRINT.md §3 text: Mamba cache blocks 146 at 0.70",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A2_pct0.725",
+   "kind": "measured (one container start)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 16.24 W, not a cell end"
+   ],
+   "notes": [
+    "never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 16.24 W, not a cell end"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: A2 largest failing 0.725 (Mamba state)",
+    "vol2-nemotron/FOOTPRINT.md §2 table: A2 0.725 refusal (213 blocks)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A2FP8_default",
+   "kind": "measured (one container start)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 10.83 W, not a cell end"
+   ],
+   "notes": [
+    "never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 10.83 W, not a cell end"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: FP8 negative control never READY",
+    "vol2-nemotron/FOOTPRINT.md §2 table: FP8 default attempt did not reach READY",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint",
+   "cell": "A2FP8_pct0.85",
+   "kind": "measured (one container start)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: never probed (start refused / not READY); only post-removal gpu_after_stop util 3% / 34.7 W, not a cell end"
+   ],
+   "notes": [
+    "never probed (start refused / not READY); only post-removal gpu_after_stop util 3% / 34.7 W, not a cell end"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: FP8 0.85 refused",
+    "vol2-nemotron/BASELINE.md §F table: FP8 refused at 0.85",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum",
+   "cell": "A2B32_default",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint_addendum/configs.jsonl:1:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 94,
+   "power_w": 354.47,
+   "used_mib": 31646,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 354.47 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "vol2-nemotron/FOOTPRINT.md §3 text: [qualitative] 'reproduced the main run exactly' (no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum",
+   "cell": "A2B32_pct0.85",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint_addendum/configs.jsonl:2:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 95,
+   "power_w": 359.33,
+   "used_mib": 29369,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 359.33 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "vol2-nemotron/FOOTPRINT.md §3 text: [qualitative] 'reproduced the main run exactly' (no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum",
+   "cell": "A2B32_pct0.80",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint_addendum/configs.jsonl:3:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 95,
+   "power_w": 351.11,
+   "used_mib": 27830,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 351.11 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "vol2-nemotron/FOOTPRINT.md §3 text: [qualitative] 'reproduced the main run exactly' (no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum",
+   "cell": "A2B32_pct0.75",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint_addendum/configs.jsonl:4:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 94,
+   "power_w": 337.05,
+   "used_mib": 26166,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 337.05 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "vol2-nemotron/FOOTPRINT.md §3 text: [qualitative] 'reproduced the main run exactly' (no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum",
+   "cell": "A2B32_pct0.70",
+   "kind": "measured (one container start)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 11.44 W, not a cell end"
+   ],
+   "notes": [
+    "never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 11.44 W, not a cell end"
+   ],
+   "feeds": [
+    "vol2-nemotron/FOOTPRINT.md §3 text: [qualitative] 'reproduced the main run exactly' (no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum",
+   "cell": "A2B32_pct0.725",
+   "kind": "measured (one container start)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 12.26 W, not a cell end"
+   ],
+   "notes": [
+    "never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 12.26 W, not a cell end"
+   ],
+   "feeds": [
+    "vol2-nemotron/FOOTPRINT.md §3 text: [qualitative] 'reproduced the main run exactly' (no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum2",
+   "cell": "A2S32_default",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint_addendum2/configs.jsonl:1:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 97,
+   "power_w": 252.73,
+   "used_mib": 30167,
+   "classification": "dirty",
+   "reasons": [
+    "util 97% > 0",
+    "power 252.73 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: A2 seqs 32 level after default budget 29,850",
+    "vol2-nemotron/FOOTPRINT.md §2 table: A2 seqs 32 default level 29,850",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum2",
+   "cell": "A2S32_pct0.85",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint_addendum2/configs.jsonl:2:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 52,
+   "power_w": 347.28,
+   "used_mib": 28400,
+   "classification": "dirty",
+   "reasons": [
+    "util 52% > 0",
+    "power 347.28 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum2",
+   "cell": "A2S32_pct0.80",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint_addendum2/configs.jsonl:3:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 93,
+   "power_w": 365.08,
+   "used_mib": 26766,
+   "classification": "dirty",
+   "reasons": [
+    "util 93% > 0",
+    "power 365.08 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum2",
+   "cell": "A2S32_pct0.75",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint_addendum2/configs.jsonl:4:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 94,
+   "power_w": 355.24,
+   "used_mib": 25134,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 355.24 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum2",
+   "cell": "A2S32_pct0.70",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint_addendum2/configs.jsonl:5:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 94,
+   "power_w": 349.79,
+   "used_mib": 23520,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 349.79 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum2",
+   "cell": "A2S32_pct0.65",
+   "kind": "measured (one container start)",
+   "source": "vol2-nemotron/results/p50_footprint_addendum2/configs.jsonl:6:gpu_after_probe",
+   "end_at": null,
+   "util_pct": 93,
+   "power_w": 352.91,
+   "used_mib": 21872,
+   "classification": "dirty",
+   "reasons": [
+    "util 93% > 0",
+    "power 352.91 W > 42"
+   ],
+   "notes": [
+    "sampled right after the 3-question probe; the measured quantity is memory at READY (gpu_ready)"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: A2 seqs 32 smallest passing 0.65 → 21,195 (21,872 in use)",
+    "vol2-nemotron/FOOTPRINT.md §2 table: A2 seqs 32 added at READY 21,519",
+    "vol2-nemotron/FOOTPRINT.md §4 table: A2 21,872 MiB in use",
+    "vol2-nemotron/BASELINE.md §A text: ~1,600 MiB difference (A2 side)",
+    "vol2-nemotron/FOOTPRINT.md §3 text: 14.6 MiB per sequence (24,455 − 21,195)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum2",
+   "cell": "A2S32_pct0.60",
+   "kind": "measured (one container start)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 11.73 W, not a cell end"
+   ],
+   "notes": [
+    "never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 11.73 W, not a cell end"
+   ],
+   "feeds": [
+    "none found",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_footprint_addendum2",
+   "cell": "A2S32_pct0.625",
+   "kind": "measured (one container start)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 12.95 W, not a cell end"
+   ],
+   "notes": [
+    "never probed (start refused / not READY); only post-removal gpu_after_stop util 0% / 12.95 W, not a cell end"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §A table: A2 seqs 32 largest failing 0.625",
+    "vol2-nemotron/FOOTPRINT.md §2 table: 0.625 → 20,379 refusal",
+    "vol2-nemotron/FOOTPRINT.md §4 table: A2 bracket 20,379 – 21,195",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 29 container starts"
+   ]
+  },
+  {
+   "run": "p50_speed",
+   "cell": "A1_block0",
+   "kind": "measured (25 requests)",
+   "source": "vol2-nemotron/results/p50_speed/requests.jsonl:25:gpu_after",
+   "end_at": "2026-09-21T21:13:17+0800",
+   "util_pct": 78,
+   "power_w": 477.63,
+   "used_mib": 29383,
+   "classification": "dirty",
+   "reasons": [
+    "util 78% > 0",
+    "power 477.63 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §B speed table: generation rate A1 72.9 / A2 305.1 tok/s, A2/A1 4.14 [4.08, 4.19]",
+    "vol2-nemotron/BASELINE.md §B speed table: tps ratio 4.01",
+    "vol2-nemotron/BASELINE.md §B speed table: TTFT ratio 0.70",
+    "vol2-nemotron/BASELINE.md §B speed table: cut at 500 tokens 42/50, 37/50",
+    "vol2-nemotron/BASELINE.md §B speed table: arm health 72%",
+    "README.md Headline results · Nemotron (Vol.2): 4.14× faster per token",
+    "vol2-nemotron/FOOTPRINT.md §4 DGX Spark projection: A1 at 72% of peak bandwidth",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 100 single-request points"
+   ]
+  },
+  {
+   "run": "p50_speed",
+   "cell": "A2_block1",
+   "kind": "measured (25 requests)",
+   "source": "vol2-nemotron/results/p50_speed/requests.jsonl:50:gpu_after",
+   "end_at": "2026-09-21T21:21:36+0800",
+   "util_pct": 93,
+   "power_w": 364.33,
+   "used_mib": 31574,
+   "classification": "dirty",
+   "reasons": [
+    "util 93% > 0",
+    "power 364.33 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §B speed table: generation rate A1 72.9 / A2 305.1 tok/s, A2/A1 4.14 [4.08, 4.19]",
+    "vol2-nemotron/BASELINE.md §B speed table: tps ratio 4.01",
+    "vol2-nemotron/BASELINE.md §B speed table: TTFT ratio 0.70",
+    "vol2-nemotron/BASELINE.md §B speed table: cut at 500 tokens 42/50, 37/50",
+    "vol2-nemotron/BASELINE.md §B speed table: arm health 61%",
+    "README.md Headline results · Nemotron (Vol.2): 4.14× faster per token",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 100 single-request points"
+   ]
+  },
+  {
+   "run": "p50_speed",
+   "cell": "A1_block2",
+   "kind": "measured (25 requests)",
+   "source": "vol2-nemotron/results/p50_speed/requests.jsonl:75:gpu_after",
+   "end_at": "2026-09-21T21:30:24+0800",
+   "util_pct": 87,
+   "power_w": 480.37,
+   "used_mib": 29090,
+   "classification": "dirty",
+   "reasons": [
+    "util 87% > 0",
+    "power 480.37 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §B speed table: generation rate A1 72.9 / A2 305.1 tok/s, A2/A1 4.14 [4.08, 4.19]",
+    "vol2-nemotron/BASELINE.md §B speed table: tps ratio 4.01",
+    "vol2-nemotron/BASELINE.md §B speed table: TTFT ratio 0.70",
+    "vol2-nemotron/BASELINE.md §B speed table: cut at 500 tokens 42/50, 37/50",
+    "vol2-nemotron/BASELINE.md §B speed table: arm health 72%",
+    "README.md Headline results · Nemotron (Vol.2): 4.14× faster per token",
+    "vol2-nemotron/FOOTPRINT.md §4 DGX Spark projection: A1 at 72% of peak bandwidth",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 100 single-request points"
+   ]
+  },
+  {
+   "run": "p50_speed",
+   "cell": "A2_block3",
+   "kind": "measured (25 requests)",
+   "source": "vol2-nemotron/results/p50_speed/requests.jsonl:100:gpu_after",
+   "end_at": "2026-09-21T21:38:23+0800",
+   "util_pct": 95,
+   "power_w": 365.1,
+   "used_mib": 31833,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 365.1 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §B speed table: generation rate A1 72.9 / A2 305.1 tok/s, A2/A1 4.14 [4.08, 4.19]",
+    "vol2-nemotron/BASELINE.md §B speed table: tps ratio 4.01",
+    "vol2-nemotron/BASELINE.md §B speed table: TTFT ratio 0.70",
+    "vol2-nemotron/BASELINE.md §B speed table: cut at 500 tokens 42/50, 37/50",
+    "vol2-nemotron/BASELINE.md §B speed table: arm health 61%",
+    "README.md Headline results · Nemotron (Vol.2): 4.14× faster per token",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 100 single-request points"
+   ]
+  },
+  {
+   "run": "p53_answer",
+   "cell": "A1_block0",
+   "kind": "measured (25 requests)",
+   "source": "vol2-nemotron/results/p53_answer/requests.jsonl:25:gpu_after",
+   "end_at": "2026-09-23T00:45:15+0800",
+   "util_pct": 93,
+   "power_w": 482.86,
+   "used_mib": 29419,
+   "classification": "dirty",
+   "reasons": [
+    "util 93% > 0",
+    "power 482.86 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §B answer table: answer time A1 19,814/20,102 vs A2 6,796/7,314 ms; ratio 0.343 (≈2.9×)",
+    "vol2-nemotron/BASELINE.md §B answer table: completion tokens ratio 1.44",
+    "vol2-nemotron/BASELINE.md §B answer table: cut at 4,096: 0/50, 6/50",
+    "vol2-nemotron/BASELINE.md §B answer table: generation rate 71.1 / 298.9, ratio 4.15",
+    "vol2-nemotron/BASELINE.md §B (text): health gate 70.5% / 59.9%",
+    "README.md Headline results · Nemotron (Vol.2): about 2.9× sooner per answer",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 100 single-request points"
+   ]
+  },
+  {
+   "run": "p53_answer",
+   "cell": "A2_block1",
+   "kind": "measured (25 requests)",
+   "source": "vol2-nemotron/results/p53_answer/requests.jsonl:50:gpu_after",
+   "end_at": "2026-09-23T00:56:09+0800",
+   "util_pct": 95,
+   "power_w": 365.08,
+   "used_mib": 31815,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 365.08 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §B answer table: answer time A1 19,814/20,102 vs A2 6,796/7,314 ms; ratio 0.343 (≈2.9×)",
+    "vol2-nemotron/BASELINE.md §B answer table: completion tokens ratio 1.44",
+    "vol2-nemotron/BASELINE.md §B answer table: cut at 4,096: 0/50, 6/50",
+    "vol2-nemotron/BASELINE.md §B answer table: generation rate 71.1 / 298.9, ratio 4.15",
+    "vol2-nemotron/BASELINE.md §B (text): health gate 70.5% / 59.9%",
+    "README.md Headline results · Nemotron (Vol.2): about 2.9× sooner per answer",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 100 single-request points"
+   ]
+  },
+  {
+   "run": "p53_answer",
+   "cell": "A1_block2",
+   "kind": "measured (25 requests)",
+   "source": "vol2-nemotron/results/p53_answer/requests.jsonl:75:gpu_after",
+   "end_at": "2026-09-23T01:10:15+0800",
+   "util_pct": 93,
+   "power_w": 485.33,
+   "used_mib": 28710,
+   "classification": "dirty",
+   "reasons": [
+    "util 93% > 0",
+    "power 485.33 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §B answer table: answer time A1 19,814/20,102 vs A2 6,796/7,314 ms; ratio 0.343 (≈2.9×)",
+    "vol2-nemotron/BASELINE.md §B answer table: completion tokens ratio 1.44",
+    "vol2-nemotron/BASELINE.md §B answer table: cut at 4,096: 0/50, 6/50",
+    "vol2-nemotron/BASELINE.md §B answer table: generation rate 71.1 / 298.9, ratio 4.15",
+    "vol2-nemotron/BASELINE.md §B (text): health gate 70.5% / 59.9%",
+    "README.md Headline results · Nemotron (Vol.2): about 2.9× sooner per answer",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 100 single-request points"
+   ]
+  },
+  {
+   "run": "p53_answer",
+   "cell": "A2_block3",
+   "kind": "measured (25 requests)",
+   "source": "vol2-nemotron/results/p53_answer/requests.jsonl:100:gpu_after",
+   "end_at": "2026-09-23T01:20:43+0800",
+   "util_pct": 95,
+   "power_w": 365.46,
+   "used_mib": 31652,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 365.46 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §B answer table: answer time A1 19,814/20,102 vs A2 6,796/7,314 ms; ratio 0.343 (≈2.9×)",
+    "vol2-nemotron/BASELINE.md §B answer table: completion tokens ratio 1.44",
+    "vol2-nemotron/BASELINE.md §B answer table: cut at 4,096: 0/50, 6/50",
+    "vol2-nemotron/BASELINE.md §B answer table: generation rate 71.1 / 298.9, ratio 4.15",
+    "vol2-nemotron/BASELINE.md §B (text): health gate 70.5% / 59.9%",
+    "README.md Headline results · Nemotron (Vol.2): about 2.9× sooner per answer",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 100 single-request points"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_C_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:1:gpu_end",
+   "end_at": "2026-09-23T01:28:35+0800",
+   "util_pct": 2,
+   "power_w": 78.57,
+   "used_mib": 28690,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 78.57 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_C_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:2:gpu_end",
+   "end_at": "2026-09-23T01:29:59+0800",
+   "util_pct": 2,
+   "power_w": 79.28,
+   "used_mib": 29109,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 79.28 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_C_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:3:gpu_end",
+   "end_at": "2026-09-23T01:31:23+0800",
+   "util_pct": 2,
+   "power_w": 74.81,
+   "used_mib": 29151,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 74.81 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_C_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:4:gpu_end",
+   "end_at": "2026-09-23T01:32:50+0800",
+   "util_pct": 0,
+   "power_w": 70.39,
+   "used_mib": 29525,
+   "classification": "dirty",
+   "reasons": [
+    "power 70.39 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_C_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:5:gpu_end",
+   "end_at": "2026-09-23T01:34:18+0800",
+   "util_pct": 2,
+   "power_w": 71.84,
+   "used_mib": 30514,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 71.84 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_C_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:6:gpu_end",
+   "end_at": "2026-09-23T01:35:41+0800",
+   "util_pct": 0,
+   "power_w": 19.78,
+   "used_mib": 907,
+   "classification": "dirty",
+   "reasons": [
+    "power 19.78 W < 26"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)",
+    "gpu_end memory 907 MiB: engine no longer resident"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (intro): [qualitative] first run: A1 crash broke its rule (the run's conclusions are null; no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_C_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:7:gpu_end",
+   "end_at": "2026-09-23T01:37:38+0800",
+   "util_pct": 2,
+   "power_w": 35.35,
+   "used_mib": 815,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)",
+    "gpu_end memory 815 MiB: engine no longer resident"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (intro): [qualitative] first run: A1 crash broke its rule (the run's conclusions are null; no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_C_fresh_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:8:gpu_end",
+   "end_at": "2026-09-23T01:43:29+0800",
+   "util_pct": 2,
+   "power_w": 72.04,
+   "used_mib": 30827,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 72.04 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (intro): [qualitative] first run: A1 crash broke its rule (the run's conclusions are null; no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_C_fresh_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:9:gpu_end",
+   "end_at": "2026-09-23T01:45:14+0800",
+   "util_pct": 2,
+   "power_w": 35.97,
+   "used_mib": 804,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)",
+    "gpu_end memory 804 MiB: engine no longer resident"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (intro): [qualitative] first run: A1 crash broke its rule (the run's conclusions are null; no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_R_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:10:gpu_end",
+   "end_at": "2026-09-23T01:51:52+0800",
+   "util_pct": 2,
+   "power_w": 70.49,
+   "used_mib": 30355,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 70.49 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_R_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:11:gpu_end",
+   "end_at": "2026-09-23T01:53:22+0800",
+   "util_pct": 2,
+   "power_w": 79.7,
+   "used_mib": 31293,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 79.7 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_R_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:12:gpu_end",
+   "end_at": "2026-09-23T01:55:00+0800",
+   "util_pct": 0,
+   "power_w": 68.83,
+   "used_mib": 31202,
+   "classification": "dirty",
+   "reasons": [
+    "power 68.83 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_R_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:13:gpu_end",
+   "end_at": "2026-09-23T01:57:20+0800",
+   "util_pct": 2,
+   "power_w": 77.17,
+   "used_mib": 31917,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 77.17 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_R_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:14:gpu_end",
+   "end_at": "2026-09-23T02:01:34+0800",
+   "util_pct": 0,
+   "power_w": 55.83,
+   "used_mib": 32030,
+   "classification": "dirty",
+   "reasons": [
+    "power 55.83 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_R_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:15:gpu_end",
+   "end_at": "2026-09-23T02:04:58+0800",
+   "util_pct": 2,
+   "power_w": 36.64,
+   "used_mib": 714,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)",
+    "gpu_end memory 714 MiB: engine no longer resident"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (intro): [qualitative] first run: A1 crash broke its rule (the run's conclusions are null; no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_R_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:16:gpu_end",
+   "end_at": "2026-09-23T02:11:23+0800",
+   "util_pct": 3,
+   "power_w": 36.58,
+   "used_mib": 665,
+   "classification": "dirty",
+   "reasons": [
+    "util 3% > 0"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)",
+    "gpu_end memory 665 MiB: engine no longer resident"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (intro): [qualitative] first run: A1 crash broke its rule (the run's conclusions are null; no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_R_fresh_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:17:gpu_end",
+   "end_at": "2026-09-23T02:17:22+0800",
+   "util_pct": 2,
+   "power_w": 66.67,
+   "used_mib": 32007,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 66.67 W > 42"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (intro): [qualitative] first run: A1 crash broke its rule (the run's conclusions are null; no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A1_R_fresh_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:18:gpu_end",
+   "end_at": "2026-09-23T02:18:44+0800",
+   "util_pct": 2,
+   "power_w": 35.56,
+   "used_mib": 576,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)",
+    "gpu_end memory 576 MiB: engine no longer resident"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (intro): [qualitative] first run: A1 crash broke its rule (the run's conclusions are null; no number quoted)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_C_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:19:gpu_end",
+   "end_at": "2026-09-23T02:27:40+0800",
+   "util_pct": 2,
+   "power_w": 77.81,
+   "used_mib": 30677,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 77.81 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_C_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:20:gpu_end",
+   "end_at": "2026-09-23T02:29:02+0800",
+   "util_pct": 2,
+   "power_w": 60.54,
+   "used_mib": 30676,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 60.54 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_C_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:21:gpu_end",
+   "end_at": "2026-09-23T02:30:23+0800",
+   "util_pct": 1,
+   "power_w": 64.66,
+   "used_mib": 30692,
+   "classification": "dirty",
+   "reasons": [
+    "util 1% > 0",
+    "power 64.66 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_C_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:22:gpu_end",
+   "end_at": "2026-09-23T02:31:45+0800",
+   "util_pct": 1,
+   "power_w": 53.4,
+   "used_mib": 30789,
+   "classification": "dirty",
+   "reasons": [
+    "util 1% > 0",
+    "power 53.4 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_C_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:23:gpu_end",
+   "end_at": "2026-09-23T02:33:10+0800",
+   "util_pct": 2,
+   "power_w": 74.41,
+   "used_mib": 30925,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 74.41 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_C_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:24:gpu_end",
+   "end_at": "2026-09-23T02:34:38+0800",
+   "util_pct": 2,
+   "power_w": 71.98,
+   "used_mib": 31304,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 71.98 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_C_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:25:gpu_end",
+   "end_at": "2026-09-23T02:36:08+0800",
+   "util_pct": 2,
+   "power_w": 64.52,
+   "used_mib": 31299,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 64.52 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_C_fresh_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:26:gpu_end",
+   "end_at": "2026-09-23T02:45:05+0800",
+   "util_pct": 2,
+   "power_w": 78.98,
+   "used_mib": 30969,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 78.98 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_C_fresh_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:27:gpu_end",
+   "end_at": "2026-09-23T02:46:35+0800",
+   "util_pct": 2,
+   "power_w": 66.46,
+   "used_mib": 31026,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 66.46 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_R_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:28:gpu_end",
+   "end_at": "2026-09-23T02:56:38+0800",
+   "util_pct": 2,
+   "power_w": 72.55,
+   "used_mib": 31002,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 72.55 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_R_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:29:gpu_end",
+   "end_at": "2026-09-23T02:58:01+0800",
+   "util_pct": 2,
+   "power_w": 78.45,
+   "used_mib": 30980,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 78.45 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_R_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:30:gpu_end",
+   "end_at": "2026-09-23T02:59:24+0800",
+   "util_pct": 2,
+   "power_w": 78.94,
+   "used_mib": 30967,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 78.94 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_R_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:31:gpu_end",
+   "end_at": "2026-09-23T03:00:50+0800",
+   "util_pct": 2,
+   "power_w": 63.06,
+   "used_mib": 31045,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 63.06 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_R_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:32:gpu_end",
+   "end_at": "2026-09-23T03:02:19+0800",
+   "util_pct": 2,
+   "power_w": 79.65,
+   "used_mib": 31006,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 79.65 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_R_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:33:gpu_end",
+   "end_at": "2026-09-23T03:04:05+0800",
+   "util_pct": 2,
+   "power_w": 70.97,
+   "used_mib": 31235,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 70.97 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_R_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:34:gpu_end",
+   "end_at": "2026-09-23T03:07:02+0800",
+   "util_pct": 2,
+   "power_w": 61.17,
+   "used_mib": 31262,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 61.17 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_R_fresh_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:35:gpu_end",
+   "end_at": "2026-09-23T03:15:03+0800",
+   "util_pct": 2,
+   "power_w": 67.14,
+   "used_mib": 30720,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 67.14 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency",
+   "cell": "A2_R_fresh_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency/levels.jsonl:36:gpu_end",
+   "end_at": "2026-09-23T03:18:13+0800",
+   "util_pct": 2,
+   "power_w": 58.78,
+   "used_mib": 30831,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 58.78 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 4,995 completed over 36 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_C_main_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:1:gpu_end",
+   "end_at": "2026-09-23T07:58:55+0800",
+   "util_pct": 0,
+   "power_w": 63.61,
+   "used_mib": 28606,
+   "classification": "dirty",
+   "reasons": [
+    "power 63.61 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_C_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:2:gpu_end",
+   "end_at": "2026-09-23T08:00:50+0800",
+   "util_pct": 0,
+   "power_w": 43.87,
+   "used_mib": 28606,
+   "classification": "dirty",
+   "reasons": [
+    "power 43.87 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 16 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 16 (every level <= it must pass)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_C_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:3:gpu_end",
+   "end_at": "2026-09-23T08:02:14+0800",
+   "util_pct": 0,
+   "power_w": 55.99,
+   "used_mib": 28650,
+   "classification": "dirty",
+   "reasons": [
+    "power 55.99 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 16 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 16 (every level <= it must pass)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_C_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:4:gpu_end",
+   "end_at": "2026-09-23T08:03:38+0800",
+   "util_pct": 0,
+   "power_w": 69.61,
+   "used_mib": 28756,
+   "classification": "dirty",
+   "reasons": [
+    "power 69.61 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 16 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 16 (every level <= it must pass)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_C_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:5:gpu_end",
+   "end_at": "2026-09-23T08:05:05+0800",
+   "util_pct": 0,
+   "power_w": 52.27,
+   "used_mib": 28986,
+   "classification": "dirty",
+   "reasons": [
+    "power 52.27 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 16 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 16 (every level <= it must pass)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_C_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:6:gpu_end",
+   "end_at": "2026-09-23T08:06:34+0800",
+   "util_pct": 0,
+   "power_w": 46.42,
+   "used_mib": 29828,
+   "classification": "dirty",
+   "reasons": [
+    "power 46.42 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 16 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 16 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A1·C throughput at c=16: 777 tok/s; p99 TTFT 434 ms, p99 ITL 20.6 ms",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_C_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:7:gpu_end",
+   "end_at": "2026-09-23T08:07:59+0800",
+   "util_pct": 0,
+   "power_w": 11.25,
+   "used_mib": 451,
+   "classification": "dirty",
+   "reasons": [
+    "power 11.25 W < 26"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)",
+    "gpu_end memory 451 MiB: engine no longer resident"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 16 (this level is where it fails)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 16 (this level is where it fails)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A1 ceiling: engine crash at c=32",
+    "README.md Headline results · Nemotron (Vol.2): dense option's engine crashes at 32",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_C_fresh_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:9:gpu_end",
+   "end_at": "2026-09-23T08:15:40+0800",
+   "util_pct": 0,
+   "power_w": 66.84,
+   "used_mib": 28637,
+   "classification": "dirty",
+   "reasons": [
+    "power 66.84 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_C_fresh_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:10:gpu_end",
+   "end_at": "2026-09-23T08:17:06+0800",
+   "util_pct": 0,
+   "power_w": 11.31,
+   "used_mib": 482,
+   "classification": "dirty",
+   "reasons": [
+    "power 11.31 W < 26"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)",
+    "gpu_end memory 482 MiB: engine no longer resident"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): crash count: 3 of 4 containers at 32",
+    "README.md Headline results · Nemotron (Vol.2): dense option's engine crashes at 32",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_R_main_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:12:gpu_end",
+   "end_at": "2026-09-23T08:24:28+0800",
+   "util_pct": 0,
+   "power_w": 50.91,
+   "used_mib": 30065,
+   "classification": "dirty",
+   "reasons": [
+    "power 50.91 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_R_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:13:gpu_end",
+   "end_at": "2026-09-23T08:27:15+0800",
+   "util_pct": 0,
+   "power_w": 60.29,
+   "used_mib": 30065,
+   "classification": "dirty",
+   "reasons": [
+    "power 60.29 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 4 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 1 (every level <= it must pass)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_R_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:14:gpu_end",
+   "end_at": "2026-09-23T08:28:44+0800",
+   "util_pct": 0,
+   "power_w": 45.21,
+   "used_mib": 30953,
+   "classification": "dirty",
+   "reasons": [
+    "power 45.21 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 4 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 1 (this level is where it fails)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_R_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:15:gpu_end",
+   "end_at": "2026-09-23T08:30:18+0800",
+   "util_pct": 0,
+   "power_w": 41.06,
+   "used_mib": 30953,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 4 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A1·R throughput at c=4: 234 tok/s",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_R_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:16:gpu_end",
+   "end_at": "2026-09-23T08:32:13+0800",
+   "util_pct": 0,
+   "power_w": 43.43,
+   "used_mib": 31913,
+   "classification": "dirty",
+   "reasons": [
+    "power 43.43 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 4 (this level is where it fails)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_R_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:17:gpu_end",
+   "end_at": "2026-09-23T08:34:37+0800",
+   "util_pct": 0,
+   "power_w": 57.74,
+   "used_mib": 32099,
+   "classification": "dirty",
+   "reasons": [
+    "power 57.74 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_R_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:18:gpu_end",
+   "end_at": "2026-09-23T08:37:40+0800",
+   "util_pct": 0,
+   "power_w": 11.08,
+   "used_mib": 419,
+   "classification": "dirty",
+   "reasons": [
+    "power 11.08 W < 26"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)",
+    "gpu_end memory 419 MiB: engine no longer resident"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): A1·R engine crash at c=32 (3 of 4 containers at 32)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_R_fresh_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:20:gpu_end",
+   "end_at": "2026-09-23T08:45:16+0800",
+   "util_pct": 0,
+   "power_w": 44.4,
+   "used_mib": 30004,
+   "classification": "dirty",
+   "reasons": [
+    "power 44.4 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_R_fresh_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:21:gpu_end",
+   "end_at": "2026-09-23T08:47:07+0800",
+   "util_pct": 0,
+   "power_w": 49.74,
+   "used_mib": 32098,
+   "classification": "dirty",
+   "reasons": [
+    "power 49.74 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): the fourth container survived 32",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A1_R_fresh_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:22:gpu_end",
+   "end_at": "2026-09-23T08:53:09+0800",
+   "util_pct": 0,
+   "power_w": 10.37,
+   "used_mib": 421,
+   "classification": "dirty",
+   "reasons": [
+    "power 10.37 W < 26"
+   ],
+   "notes": [
+    "level rc=1 (engine dead: no measurement)",
+    "gpu_end memory 421 MiB: engine no longer resident"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): the fourth container crashed at 64",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_main_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:24:gpu_end",
+   "end_at": "2026-09-23T09:03:38+0800",
+   "util_pct": 0,
+   "power_w": 54.07,
+   "used_mib": 30535,
+   "classification": "dirty",
+   "reasons": [
+    "power 54.07 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:25:gpu_end",
+   "end_at": "2026-09-23T09:05:08+0800",
+   "util_pct": 0,
+   "power_w": 39.24,
+   "used_mib": 30535,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:26:gpu_end",
+   "end_at": "2026-09-23T09:06:31+0800",
+   "util_pct": 0,
+   "power_w": 44.06,
+   "used_mib": 30535,
+   "classification": "dirty",
+   "reasons": [
+    "power 44.06 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:27:gpu_end",
+   "end_at": "2026-09-23T09:07:53+0800",
+   "util_pct": 0,
+   "power_w": 38.62,
+   "used_mib": 30580,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:28:gpu_end",
+   "end_at": "2026-09-23T09:09:17+0800",
+   "util_pct": 0,
+   "power_w": 66.88,
+   "used_mib": 30715,
+   "classification": "dirty",
+   "reasons": [
+    "power 66.88 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:29:gpu_end",
+   "end_at": "2026-09-23T09:10:45+0800",
+   "util_pct": 0,
+   "power_w": 47.01,
+   "used_mib": 30881,
+   "classification": "dirty",
+   "reasons": [
+    "power 47.01 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:30:gpu_end",
+   "end_at": "2026-09-23T09:12:14+0800",
+   "util_pct": 0,
+   "power_w": 45.76,
+   "used_mib": 30894,
+   "classification": "dirty",
+   "reasons": [
+    "power 45.76 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·C throughput 1,540 tok/s at c=32, saturation at 32",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 32): cap-32 row: 32 · 32; 1,540 · 1,540",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:31:gpu_end",
+   "end_at": "2026-09-23T09:13:46+0800",
+   "util_pct": 0,
+   "power_w": 38.51,
+   "used_mib": 30894,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 32 (this level is where it fails)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 32 (this level is where it fails)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): 1,490 tok/s at c=64",
+    "vol2-nemotron/BASELINE.md §C (second-run table): ceiling reached at c=64, p99 TTFT 4.6 s",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_fresh_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:32:gpu_end",
+   "end_at": "2026-09-23T09:24:05+0800",
+   "util_pct": 0,
+   "power_w": 47.07,
+   "used_mib": 30587,
+   "classification": "dirty",
+   "reasons": [
+    "power 47.07 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_fresh_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:33:gpu_end",
+   "end_at": "2026-09-23T09:25:34+0800",
+   "util_pct": 0,
+   "power_w": 64.59,
+   "used_mib": 30763,
+   "classification": "dirty",
+   "reasons": [
+    "power 64.59 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (text under second-run table): fresh repeats within 0.3–3.5% of main",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_C_fresh_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:34:gpu_end",
+   "end_at": "2026-09-23T09:27:06+0800",
+   "util_pct": 0,
+   "power_w": 45.31,
+   "used_mib": 30763,
+   "classification": "dirty",
+   "reasons": [
+    "power 45.31 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (text under second-run table): fresh repeats within 0.3–3.5% of main",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_main_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:35:gpu_end",
+   "end_at": "2026-09-23T09:37:27+0800",
+   "util_pct": 0,
+   "power_w": 40.59,
+   "used_mib": 30720,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:36:gpu_end",
+   "end_at": "2026-09-23T09:39:10+0800",
+   "util_pct": 0,
+   "power_w": 44.55,
+   "used_mib": 30720,
+   "classification": "dirty",
+   "reasons": [
+    "power 44.55 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 4 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R p99 ITL < 24 ms up to c=64",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:37:gpu_end",
+   "end_at": "2026-09-23T09:40:35+0800",
+   "util_pct": 0,
+   "power_w": 39.16,
+   "used_mib": 30720,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 4 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R p99 ITL < 24 ms up to c=64",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:38:gpu_end",
+   "end_at": "2026-09-23T09:41:59+0800",
+   "util_pct": 0,
+   "power_w": 43.58,
+   "used_mib": 30720,
+   "classification": "dirty",
+   "reasons": [
+    "power 43.58 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 4 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R p99 ITL < 24 ms up to c=64",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:39:gpu_end",
+   "end_at": "2026-09-23T09:43:26+0800",
+   "util_pct": 0,
+   "power_w": 55.83,
+   "used_mib": 30720,
+   "classification": "dirty",
+   "reasons": [
+    "power 55.83 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside interactive SLO = 4 (this level is where it fails)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R throughput at c=8: 884 tok/s",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R p99 ITL < 24 ms up to c=64",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:40:gpu_end",
+   "end_at": "2026-09-23T09:44:58+0800",
+   "util_pct": 0,
+   "power_w": 59.65,
+   "used_mib": 30722,
+   "classification": "dirty",
+   "reasons": [
+    "power 59.65 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): largest c inside server SLO = 8 (this level is where it fails)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R ceiling reached at c=16 (p99 TTFT 2.1 s)",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R p99 ITL < 24 ms up to c=64",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:41:gpu_end",
+   "end_at": "2026-09-23T09:46:39+0800",
+   "util_pct": 0,
+   "power_w": 51.65,
+   "used_mib": 30722,
+   "classification": "dirty",
+   "reasons": [
+    "power 51.65 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R saturation 1,462 → 1,464 tok/s",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R p99 ITL < 24 ms up to c=64",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:42:gpu_end",
+   "end_at": "2026-09-23T09:49:18+0800",
+   "util_pct": 0,
+   "power_w": 57.31,
+   "used_mib": 30724,
+   "classification": "dirty",
+   "reasons": [
+    "power 57.31 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R saturation 1,462 → 1,464 tok/s",
+    "vol2-nemotron/BASELINE.md §C (second-run table): A2·R p99 ITL < 24 ms up to c=64",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_fresh_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:43:gpu_end",
+   "end_at": "2026-09-23T09:59:53+0800",
+   "util_pct": 0,
+   "power_w": 41.63,
+   "used_mib": 30735,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_fresh_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:44:gpu_end",
+   "end_at": "2026-09-23T10:01:31+0800",
+   "util_pct": 0,
+   "power_w": 41.24,
+   "used_mib": 30735,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (text under second-run table): fresh repeats within 0.3–3.5% of main",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_concurrency_v2",
+   "cell": "A2_R_fresh_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl:45:gpu_end",
+   "end_at": "2026-09-23T10:04:14+0800",
+   "util_pct": 0,
+   "power_w": 59.35,
+   "used_mib": 30737,
+   "classification": "dirty",
+   "reasons": [
+    "power 59.35 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (text under second-run table): fresh repeats within 0.3–3.5% of main",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 5,145 completed over 33 levels"
+   ]
+  },
+  {
+   "run": "p53_guardrails",
+   "cell": "A1_N",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E table: A1 N is the baseline of the −0.2% overhead",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 810 rows"
+   ]
+  },
+  {
+   "run": "p53_guardrails",
+   "cell": "A1_G",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E table: A1 G: 60/60·30/30·45/45, 214 tokens (2.9 s)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 810 rows"
+   ]
+  },
+  {
+   "run": "p53_guardrails",
+   "cell": "A1_H",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E table: A1 H: 0/60·0/30·45/45; rail cost ~250 ms; overhead −0.2%",
+    "vol2-nemotron/BASELINE.md §E table: A1 H rail cost ≈ 250 ms",
+    "vol2-nemotron/BASELINE.md §E table: A1 H overhead −0.2%",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 810 rows"
+   ]
+  },
+  {
+   "run": "p53_guardrails",
+   "cell": "A2_N",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E table: A2 N: overhead not measurable",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 810 rows"
+   ]
+  },
+  {
+   "run": "p53_guardrails",
+   "cell": "A2_G",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E table: A2 G: 60/60·30/30·45/45, 79 tokens (415 ms)",
+    "vol2-nemotron/BASELINE.md §E table: A2 judge 415–426 ms",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 810 rows"
+   ]
+  },
+  {
+   "run": "p53_guardrails",
+   "cell": "A2_H",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E table: A2 H: 60/60·30/30·45/45, 78 tokens",
+    "vol2-nemotron/BASELINE.md §E table: A2 judge 415–426 ms",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 810 rows"
+   ]
+  },
+  {
+   "run": "p53_longctx",
+   "cell": "A1_d1024",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx/requests.jsonl:5:gpu_after",
+   "end_at": "2026-09-23T03:24:09+0800",
+   "util_pct": 95,
+   "power_w": 469.89,
+   "used_mib": 29666,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 469.89 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table: A1 ~1,135 tokens: 157 ms · 71.7 tok/s",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 40 single-request points"
+   ]
+  },
+  {
+   "run": "p53_longctx",
+   "cell": "A1_d4096",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx/requests.jsonl:10:gpu_after",
+   "end_at": "2026-09-23T03:28:21+0800",
+   "util_pct": 92,
+   "power_w": 474.71,
+   "used_mib": 29562,
+   "classification": "dirty",
+   "reasons": [
+    "util 92% > 0",
+    "power 474.71 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table: A1 ~3,770 tokens: 408 ms · 71.6 tok/s",
+    "vol2-nemotron/BASELINE.md §D (text): A1 rate steps down 38% between 4k and 16k",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 40 single-request points"
+   ]
+  },
+  {
+   "run": "p53_longctx",
+   "cell": "A1_d16384",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx/requests.jsonl:15:gpu_after",
+   "end_at": "2026-09-23T03:33:17+0800",
+   "util_pct": 66,
+   "power_w": 338.52,
+   "used_mib": 27124,
+   "classification": "dirty",
+   "reasons": [
+    "util 66% > 0",
+    "power 338.52 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table: A1 ~14,215 tokens: 1,398 ms · 44.7 tok/s",
+    "vol2-nemotron/BASELINE.md §D (text): A1 rate steps down 38% between 4k and 16k",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 40 single-request points"
+   ]
+  },
+  {
+   "run": "p53_longctx",
+   "cell": "A1_d65536",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx/requests.jsonl:20:gpu_after",
+   "end_at": "2026-09-23T03:39:13+0800",
+   "util_pct": 72,
+   "power_w": 352.54,
+   "used_mib": 30655,
+   "classification": "dirty",
+   "reasons": [
+    "util 72% > 0",
+    "power 352.54 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table: A1 ~56,730 tokens: 6,201 ms · 44.4 tok/s",
+    "vol2-nemotron/BASELINE.md §D (intro): no context ceiling at 131,072 (this container)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 40 single-request points"
+   ]
+  },
+  {
+   "run": "p53_longctx",
+   "cell": "A2_d1024",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx/requests.jsonl:25:gpu_after",
+   "end_at": "2026-09-23T03:47:49+0800",
+   "util_pct": 94,
+   "power_w": 162.48,
+   "used_mib": 30865,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 162.48 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "none found (A2 medians of this run are superseded by the addendum in BASELINE §D; not quoted numerically)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 40 single-request points"
+   ]
+  },
+  {
+   "run": "p53_longctx",
+   "cell": "A2_d4096",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx/requests.jsonl:30:gpu_after",
+   "end_at": "2026-09-23T03:56:28+0800",
+   "util_pct": 95,
+   "power_w": 242.67,
+   "used_mib": 31518,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 242.67 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "none found (A2 medians of this run are superseded by the addendum in BASELINE §D; not quoted numerically)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 40 single-request points"
+   ]
+  },
+  {
+   "run": "p53_longctx",
+   "cell": "A2_d16384",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx/requests.jsonl:35:gpu_after",
+   "end_at": "2026-09-23T04:04:30+0800",
+   "util_pct": 94,
+   "power_w": 364.22,
+   "used_mib": 31186,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 364.22 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "none found (A2 medians of this run are superseded by the addendum in BASELINE §D; not quoted numerically)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 40 single-request points"
+   ]
+  },
+  {
+   "run": "p53_longctx",
+   "cell": "A2_d65536",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx/requests.jsonl:40:gpu_after",
+   "end_at": "2026-09-23T04:11:41+0800",
+   "util_pct": 95,
+   "power_w": 405.42,
+   "used_mib": 30838,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 405.42 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "none found (A2 medians of this run are superseded by the addendum in BASELINE §D; not quoted numerically)",
+    "vol2-nemotron/BASELINE.md §D (intro): no context ceiling at 131,072 (this container)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 40 single-request points"
+   ]
+  },
+  {
+   "run": "p53_longctx_addendum",
+   "cell": "A2_d1024",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx_addendum/requests.jsonl:21:gpu_after",
+   "end_at": "2026-09-23T07:16:00+0800",
+   "util_pct": 94,
+   "power_w": 170.11,
+   "used_mib": 30846,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 170.11 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table: A2 ~1,135 tokens: 95 ms · 304.8 tok/s",
+    "vol2-nemotron/BASELINE.md §D (text): A2 TTFT 24.8× for 50× the tokens",
+    "vol2-nemotron/BASELINE.md §D (text): A2 flat 304.8 → 308.4 tok/s (1k end)",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 25 measured points"
+   ]
+  },
+  {
+   "run": "p53_longctx_addendum",
+   "cell": "A2_d4096",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx_addendum/requests.jsonl:44:gpu_after",
+   "end_at": "2026-09-23T07:24:35+0800",
+   "util_pct": 94,
+   "power_w": 345.07,
+   "used_mib": 30830,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 345.07 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table: A2 ~3,770 tokens: 155 ms · 298.9 tok/s",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 25 measured points"
+   ]
+  },
+  {
+   "run": "p53_longctx_addendum",
+   "cell": "A2_d16384",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx_addendum/requests.jsonl:65:gpu_after",
+   "end_at": "2026-09-23T07:33:19+0800",
+   "util_pct": 95,
+   "power_w": 390.68,
+   "used_mib": 31023,
+   "classification": "dirty",
+   "reasons": [
+    "util 95% > 0",
+    "power 390.68 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table: A2 ~14,215 tokens: 489 ms · 315.2 tok/s",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 25 measured points"
+   ]
+  },
+  {
+   "run": "p53_longctx_addendum",
+   "cell": "A2_d65536",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx_addendum/requests.jsonl:81:gpu_after",
+   "end_at": "2026-09-23T07:43:15+0800",
+   "util_pct": 94,
+   "power_w": 417.67,
+   "used_mib": 30900,
+   "classification": "dirty",
+   "reasons": [
+    "util 94% > 0",
+    "power 417.67 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table: A2 ~56,730 tokens: 2,371 ms · 309.0 tok/s",
+    "vol2-nemotron/BASELINE.md §D (text): A2 TTFT 24.8× for 50× the tokens",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 25 measured points"
+   ]
+  },
+  {
+   "run": "p53_longctx_addendum",
+   "cell": "A1_d16384",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p53_longctx_addendum/requests.jsonl:93:gpu_after",
+   "end_at": "2026-09-23T07:50:54+0800",
+   "util_pct": 50,
+   "power_w": 320.42,
+   "used_mib": 26938,
+   "classification": "dirty",
+   "reasons": [
+    "util 50% > 0",
+    "power 320.42 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table: A1 16k addendum: 1,348 ms · 45.8 tok/s",
+    "vol2-nemotron/README.md Data-point ledger: [ledger count] 25 measured points"
+   ]
+  },
+  {
+   "run": "p55_a1_capture",
+   "cell": "a1_4k_default",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p55_a1_capture/requests.jsonl:15:gpu_after",
+   "end_at": "2026-09-23T17:07:36+0800",
+   "util_pct": 79,
+   "power_w": 487.15,
+   "used_mib": 29210,
+   "classification": "dirty",
+   "reasons": [
+    "util 79% > 0",
+    "power 487.15 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D (text): A1 ~3.8k graphs on: 76.4 tok/s"
+   ]
+  },
+  {
+   "run": "p55_a1_capture",
+   "cell": "a1_4k_eager",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p55_a1_capture/requests.jsonl:27:gpu_after",
+   "end_at": "2026-09-23T17:12:22+0800",
+   "util_pct": 71,
+   "power_w": 380.39,
+   "used_mib": 29142,
+   "classification": "dirty",
+   "reasons": [
+    "util 71% > 0",
+    "power 380.39 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D (text): A1 ~3.8k graphs off: 52.3 tok/s"
+   ]
+  },
+  {
+   "run": "p55_a1_capture",
+   "cell": "a1_16k_default",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p55_a1_capture/requests.jsonl:40:gpu_after",
+   "end_at": "2026-09-23T17:17:45+0800",
+   "util_pct": 68,
+   "power_w": 385.36,
+   "used_mib": 26823,
+   "classification": "dirty",
+   "reasons": [
+    "util 68% > 0",
+    "power 385.36 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D (text): A1 ~14k default: 55.7 tok/s (also 'same session's 14k: 55.7' in the 120k row)"
+   ]
+  },
+  {
+   "run": "p55_a1_capture",
+   "cell": "a1_16k_eager",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p55_a1_capture/requests.jsonl:51:gpu_after",
+   "end_at": "2026-09-23T17:22:45+0800",
+   "util_pct": 71,
+   "power_w": 366.23,
+   "used_mib": 26748,
+   "classification": "dirty",
+   "reasons": [
+    "util 71% > 0",
+    "power 366.23 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D (text): A1 ~14k graphs off: 51.7 tok/s"
+   ]
+  },
+  {
+   "run": "p55_a1_capture",
+   "cell": "a1_16k_capture",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p55_a1_capture/requests.jsonl:64:gpu_after",
+   "end_at": "2026-09-23T17:28:24+0800",
+   "util_pct": 26,
+   "power_w": 346.29,
+   "used_mib": 26820,
+   "classification": "dirty",
+   "reasons": [
+    "util 26% > 0",
+    "power 346.29 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "none found (forward capture test, 51.5 tok/s, not cited in the drafts)"
+   ]
+  },
+  {
+   "run": "p55_capture_control",
+   "cell": "A2_C_s256_default_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_capture_control/levels.jsonl:1:gpu_end",
+   "end_at": "2026-09-23T22:46:19+0800",
+   "util_pct": 2,
+   "power_w": 76.46,
+   "used_mib": 31718,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 76.46 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_capture_control",
+   "cell": "A2_C_s256_default_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_capture_control/levels.jsonl:2:gpu_end",
+   "end_at": "2026-09-23T22:47:48+0800",
+   "util_pct": 0,
+   "power_w": 80.12,
+   "used_mib": 31747,
+   "classification": "dirty",
+   "reasons": [
+    "power 80.12 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_capture_control",
+   "cell": "A2_C_s256_default_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_capture_control/levels.jsonl:3:gpu_end",
+   "end_at": "2026-09-23T22:49:21+0800",
+   "util_pct": 0,
+   "power_w": 69.2,
+   "used_mib": 31784,
+   "classification": "dirty",
+   "reasons": [
+    "power 69.2 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C reading (3): capture-size control ratio 0.49× at c=16"
+   ]
+  },
+  {
+   "run": "p55_capture_control",
+   "cell": "A2_C_s256_default_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_capture_control/levels.jsonl:4:gpu_end",
+   "end_at": "2026-09-23T22:50:48+0800",
+   "util_pct": 2,
+   "power_w": 77.25,
+   "used_mib": 31785,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 77.25 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C reading (3): capture-size control ratio 0.47× at c=32"
+   ]
+  },
+  {
+   "run": "p55_capture_control",
+   "cell": "A2_C_s256_cg064_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_capture_control/levels.jsonl:5:gpu_end",
+   "end_at": "2026-09-23T23:00:21+0800",
+   "util_pct": 0,
+   "power_w": 49.58,
+   "used_mib": 31146,
+   "classification": "dirty",
+   "reasons": [
+    "power 49.58 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_capture_control",
+   "cell": "A2_C_s256_cg064_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_capture_control/levels.jsonl:6:gpu_end",
+   "end_at": "2026-09-23T23:01:50+0800",
+   "util_pct": 0,
+   "power_w": 56.85,
+   "used_mib": 31279,
+   "classification": "dirty",
+   "reasons": [
+    "power 56.85 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_capture_control",
+   "cell": "A2_C_s256_cg064_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_capture_control/levels.jsonl:7:gpu_end",
+   "end_at": "2026-09-23T23:03:24+0800",
+   "util_pct": 2,
+   "power_w": 74.62,
+   "used_mib": 31271,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 74.62 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C reading (3): capture-size control ratio 0.49× at c=16"
+   ]
+  },
+  {
+   "run": "p55_capture_control",
+   "cell": "A2_C_s256_cg064_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_capture_control/levels.jsonl:8:gpu_end",
+   "end_at": "2026-09-23T23:04:52+0800",
+   "util_pct": 2,
+   "power_w": 69.39,
+   "used_mib": 31268,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 69.39 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C reading (3): capture-size control ratio 0.47× at c=32"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_main_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:1:gpu_end",
+   "end_at": "2026-09-23T21:17:51+0800",
+   "util_pct": 0,
+   "power_w": 77.87,
+   "used_mib": 30953,
+   "classification": "dirty",
+   "reasons": [
+    "power 77.87 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:2:gpu_end",
+   "end_at": "2026-09-23T21:19:20+0800",
+   "util_pct": 0,
+   "power_w": 58.32,
+   "used_mib": 30947,
+   "classification": "dirty",
+   "reasons": [
+    "power 58.32 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 64 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside interactive SLO = 16 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:3:gpu_end",
+   "end_at": "2026-09-23T21:20:41+0800",
+   "util_pct": 2,
+   "power_w": 78.35,
+   "used_mib": 31290,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 78.35 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 64 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside interactive SLO = 16 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:4:gpu_end",
+   "end_at": "2026-09-23T21:22:02+0800",
+   "util_pct": 0,
+   "power_w": 77.63,
+   "used_mib": 31003,
+   "classification": "dirty",
+   "reasons": [
+    "power 77.63 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 64 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside interactive SLO = 16 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:5:gpu_end",
+   "end_at": "2026-09-23T21:23:24+0800",
+   "util_pct": 0,
+   "power_w": 52.23,
+   "used_mib": 31257,
+   "classification": "dirty",
+   "reasons": [
+    "power 52.23 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 64 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside interactive SLO = 16 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:6:gpu_end",
+   "end_at": "2026-09-23T21:24:48+0800",
+   "util_pct": 0,
+   "power_w": 61.78,
+   "used_mib": 31392,
+   "classification": "dirty",
+   "reasons": [
+    "power 61.78 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 64 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside interactive SLO = 16 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:7:gpu_end",
+   "end_at": "2026-09-23T21:26:20+0800",
+   "util_pct": 0,
+   "power_w": 49.85,
+   "used_mib": 31281,
+   "classification": "dirty",
+   "reasons": [
+    "power 49.85 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 64 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside interactive SLO = 16 (this level is where it fails)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): C throughput at c=32: 1,130 tok/s"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:8:gpu_end",
+   "end_at": "2026-09-23T21:28:07+0800",
+   "util_pct": 0,
+   "power_w": 71.26,
+   "used_mib": 31249,
+   "classification": "dirty",
+   "reasons": [
+    "power 71.26 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 64 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C reading (2): KV gauge 42.4% at cap 64",
+    "vol2-nemotron/BASELINE.md §C reading (3): main vs fresh up to 31% at c=64"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_main_c0128",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:9:gpu_end",
+   "end_at": "2026-09-23T21:30:31+0800",
+   "util_pct": 0,
+   "power_w": 51.46,
+   "used_mib": 31237,
+   "classification": "dirty",
+   "reasons": [
+    "power 51.46 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 64 (this level is where it fails)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): peak 1,470 tok/s (c=128, main)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_fresh_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:10:gpu_end",
+   "end_at": "2026-09-23T21:39:26+0800",
+   "util_pct": 3,
+   "power_w": 73.83,
+   "used_mib": 31222,
+   "classification": "dirty",
+   "reasons": [
+    "util 3% > 0",
+    "power 73.83 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_fresh_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:11:gpu_end",
+   "end_at": "2026-09-23T21:40:54+0800",
+   "util_pct": 0,
+   "power_w": 39.89,
+   "used_mib": 31531,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C reading (3): main vs fresh up to 31% at c=64"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_C_fresh_c0128",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:12:gpu_end",
+   "end_at": "2026-09-23T21:42:50+0800",
+   "util_pct": 2,
+   "power_w": 62.89,
+   "used_mib": 31264,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 62.89 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): fresh container 1,804 tok/s (c=128)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_main_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:13:gpu_end",
+   "end_at": "2026-09-23T21:53:00+0800",
+   "util_pct": 2,
+   "power_w": 65.9,
+   "used_mib": 31313,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 65.9 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:14:gpu_end",
+   "end_at": "2026-09-23T21:54:44+0800",
+   "util_pct": 2,
+   "power_w": 71.67,
+   "used_mib": 31301,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 71.67 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside interactive SLO = 2 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:15:gpu_end",
+   "end_at": "2026-09-23T21:56:07+0800",
+   "util_pct": 2,
+   "power_w": 56.5,
+   "used_mib": 31397,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 56.5 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside interactive SLO = 2 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:16:gpu_end",
+   "end_at": "2026-09-23T21:57:30+0800",
+   "util_pct": 2,
+   "power_w": 89.81,
+   "used_mib": 31372,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 89.81 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside interactive SLO = 2 (this level is where it fails)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:17:gpu_end",
+   "end_at": "2026-09-23T21:58:56+0800",
+   "util_pct": 0,
+   "power_w": 66.17,
+   "used_mib": 31338,
+   "classification": "dirty",
+   "reasons": [
+    "power 66.17 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 8 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:18:gpu_end",
+   "end_at": "2026-09-23T22:00:25+0800",
+   "util_pct": 2,
+   "power_w": 73.55,
+   "used_mib": 31406,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 73.55 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 64): largest c inside server SLO = 8 (this level is where it fails)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:19:gpu_end",
+   "end_at": "2026-09-23T22:02:07+0800",
+   "util_pct": 0,
+   "power_w": 52.11,
+   "used_mib": 31400,
+   "classification": "dirty",
+   "reasons": [
+    "power 52.11 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:20:gpu_end",
+   "end_at": "2026-09-23T22:04:48+0800",
+   "util_pct": 2,
+   "power_w": 76.7,
+   "used_mib": 31424,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 76.7 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_main_c0128",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:21:gpu_end",
+   "end_at": "2026-09-23T22:09:08+0800",
+   "util_pct": 0,
+   "power_w": 77.67,
+   "used_mib": 31401,
+   "classification": "dirty",
+   "reasons": [
+    "power 77.67 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_fresh_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:22:gpu_end",
+   "end_at": "2026-09-23T22:17:42+0800",
+   "util_pct": 0,
+   "power_w": 71.21,
+   "used_mib": 30828,
+   "classification": "dirty",
+   "reasons": [
+    "power 71.21 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_fresh_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:23:gpu_end",
+   "end_at": "2026-09-23T22:19:21+0800",
+   "util_pct": 2,
+   "power_w": 60.22,
+   "used_mib": 30827,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 60.22 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_064",
+   "cell": "A2_R_fresh_c0128",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_064/levels.jsonl:24:gpu_end",
+   "end_at": "2026-09-23T22:23:38+0800",
+   "util_pct": 2,
+   "power_w": 66.83,
+   "used_mib": 30976,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 66.83 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_main_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:1:gpu_end",
+   "end_at": "2026-09-23T19:52:38+0800",
+   "util_pct": 0,
+   "power_w": 54.7,
+   "used_mib": 30982,
+   "classification": "dirty",
+   "reasons": [
+    "power 54.7 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:2:gpu_end",
+   "end_at": "2026-09-23T19:54:06+0800",
+   "util_pct": 0,
+   "power_w": 61.96,
+   "used_mib": 30982,
+   "classification": "dirty",
+   "reasons": [
+    "power 61.96 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside interactive SLO = 32 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:3:gpu_end",
+   "end_at": "2026-09-23T19:55:27+0800",
+   "util_pct": 0,
+   "power_w": 48.84,
+   "used_mib": 30982,
+   "classification": "dirty",
+   "reasons": [
+    "power 48.84 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside interactive SLO = 32 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:4:gpu_end",
+   "end_at": "2026-09-23T19:56:48+0800",
+   "util_pct": 0,
+   "power_w": 65.43,
+   "used_mib": 30982,
+   "classification": "dirty",
+   "reasons": [
+    "power 65.43 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside interactive SLO = 32 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:5:gpu_end",
+   "end_at": "2026-09-23T19:58:10+0800",
+   "util_pct": 0,
+   "power_w": 80.08,
+   "used_mib": 31090,
+   "classification": "dirty",
+   "reasons": [
+    "power 80.08 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside interactive SLO = 32 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:6:gpu_end",
+   "end_at": "2026-09-23T19:59:34+0800",
+   "util_pct": 0,
+   "power_w": 50.84,
+   "used_mib": 31247,
+   "classification": "dirty",
+   "reasons": [
+    "power 50.84 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside interactive SLO = 32 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:7:gpu_end",
+   "end_at": "2026-09-23T20:00:59+0800",
+   "util_pct": 0,
+   "power_w": 44.27,
+   "used_mib": 31247,
+   "classification": "dirty",
+   "reasons": [
+    "power 44.27 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): C throughput at c=32: 1,738 tok/s"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:8:gpu_end",
+   "end_at": "2026-09-23T20:02:25+0800",
+   "util_pct": 0,
+   "power_w": 56.57,
+   "used_mib": 31247,
+   "classification": "dirty",
+   "reasons": [
+    "power 56.57 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside interactive SLO = 32 (this level is where it fails)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_main_c0128",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:9:gpu_end",
+   "end_at": "2026-09-23T20:04:02+0800",
+   "util_pct": 0,
+   "power_w": 42.94,
+   "used_mib": 31247,
+   "classification": "dirty",
+   "reasons": [
+    "power 42.94 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): peak 2,679 tok/s (c=128)",
+    "vol2-nemotron/BASELINE.md §C reading (2): KV gauge 87.3% at cap 128"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_main_c0256",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:10:gpu_end",
+   "end_at": "2026-09-23T20:06:35+0800",
+   "util_pct": 0,
+   "power_w": 49.49,
+   "used_mib": 31252,
+   "classification": "dirty",
+   "reasons": [
+    "power 49.49 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 128 (this level is where it fails)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_fresh_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:11:gpu_end",
+   "end_at": "2026-09-23T20:15:05+0800",
+   "util_pct": 0,
+   "power_w": 63.65,
+   "used_mib": 31010,
+   "classification": "dirty",
+   "reasons": [
+    "power 63.65 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_fresh_c0128",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:12:gpu_end",
+   "end_at": "2026-09-23T20:16:35+0800",
+   "util_pct": 0,
+   "power_w": 55.12,
+   "used_mib": 31142,
+   "classification": "dirty",
+   "reasons": [
+    "power 55.12 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_C_fresh_c0256",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:13:gpu_end",
+   "end_at": "2026-09-23T20:19:06+0800",
+   "util_pct": 0,
+   "power_w": 67.4,
+   "used_mib": 31142,
+   "classification": "dirty",
+   "reasons": [
+    "power 67.4 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_main_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:14:gpu_end",
+   "end_at": "2026-09-23T20:27:26+0800",
+   "util_pct": 0,
+   "power_w": 49.56,
+   "used_mib": 31143,
+   "classification": "dirty",
+   "reasons": [
+    "power 49.56 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:15:gpu_end",
+   "end_at": "2026-09-23T20:29:07+0800",
+   "util_pct": 0,
+   "power_w": 46.7,
+   "used_mib": 31143,
+   "classification": "dirty",
+   "reasons": [
+    "power 46.7 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside interactive SLO = 2 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:16:gpu_end",
+   "end_at": "2026-09-23T20:30:30+0800",
+   "util_pct": 0,
+   "power_w": 64.4,
+   "used_mib": 31143,
+   "classification": "dirty",
+   "reasons": [
+    "power 64.4 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside interactive SLO = 2 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:17:gpu_end",
+   "end_at": "2026-09-23T20:31:52+0800",
+   "util_pct": 0,
+   "power_w": 54.46,
+   "used_mib": 31143,
+   "classification": "dirty",
+   "reasons": [
+    "power 54.46 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside interactive SLO = 2 (this level is where it fails)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:18:gpu_end",
+   "end_at": "2026-09-23T20:33:17+0800",
+   "util_pct": 0,
+   "power_w": 76.61,
+   "used_mib": 31143,
+   "classification": "dirty",
+   "reasons": [
+    "power 76.61 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 8 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:19:gpu_end",
+   "end_at": "2026-09-23T20:34:45+0800",
+   "util_pct": 0,
+   "power_w": 55.78,
+   "used_mib": 31143,
+   "classification": "dirty",
+   "reasons": [
+    "power 55.78 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 128): largest c inside server SLO = 8 (this level is where it fails)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:20:gpu_end",
+   "end_at": "2026-09-23T20:36:25+0800",
+   "util_pct": 0,
+   "power_w": 77.53,
+   "used_mib": 31143,
+   "classification": "dirty",
+   "reasons": [
+    "power 77.53 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:21:gpu_end",
+   "end_at": "2026-09-23T20:38:56+0800",
+   "util_pct": 0,
+   "power_w": 72.15,
+   "used_mib": 31143,
+   "classification": "dirty",
+   "reasons": [
+    "power 72.15 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_main_c0128",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:22:gpu_end",
+   "end_at": "2026-09-23T20:42:57+0800",
+   "util_pct": 0,
+   "power_w": 62.2,
+   "used_mib": 31143,
+   "classification": "dirty",
+   "reasons": [
+    "power 62.2 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_main_c0256",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:23:gpu_end",
+   "end_at": "2026-09-23T20:49:59+0800",
+   "util_pct": 0,
+   "power_w": 64.23,
+   "used_mib": 31143,
+   "classification": "dirty",
+   "reasons": [
+    "power 64.23 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_fresh_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:24:gpu_end",
+   "end_at": "2026-09-23T20:58:20+0800",
+   "util_pct": 0,
+   "power_w": 54.4,
+   "used_mib": 31132,
+   "classification": "dirty",
+   "reasons": [
+    "power 54.4 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_fresh_c0128",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:25:gpu_end",
+   "end_at": "2026-09-23T21:00:10+0800",
+   "util_pct": 0,
+   "power_w": 51.69,
+   "used_mib": 31138,
+   "classification": "dirty",
+   "reasons": [
+    "power 51.69 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_128",
+   "cell": "A2_R_fresh_c0256",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_128/levels.jsonl:26:gpu_end",
+   "end_at": "2026-09-23T21:07:24+0800",
+   "util_pct": 0,
+   "power_w": 42.94,
+   "used_mib": 31353,
+   "classification": "dirty",
+   "reasons": [
+    "power 42.94 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:1:gpu_end",
+   "end_at": "2026-09-23T17:55:39+0800",
+   "util_pct": 0,
+   "power_w": 42.21,
+   "used_mib": 31714,
+   "classification": "dirty",
+   "reasons": [
+    "power 42.21 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:2:gpu_end",
+   "end_at": "2026-09-23T17:57:09+0800",
+   "util_pct": 0,
+   "power_w": 41.59,
+   "used_mib": 31714,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "README.md Headline results · Nemotron (Vol.2): chat profile inside server SLO up to 128"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:3:gpu_end",
+   "end_at": "2026-09-23T17:58:33+0800",
+   "util_pct": 0,
+   "power_w": 49.69,
+   "used_mib": 31714,
+   "classification": "dirty",
+   "reasons": [
+    "power 49.69 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "README.md Headline results · Nemotron (Vol.2): chat profile inside server SLO up to 128"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:4:gpu_end",
+   "end_at": "2026-09-23T17:59:57+0800",
+   "util_pct": 0,
+   "power_w": 40.93,
+   "used_mib": 31714,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "README.md Headline results · Nemotron (Vol.2): chat profile inside server SLO up to 128"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:5:gpu_end",
+   "end_at": "2026-09-23T18:01:26+0800",
+   "util_pct": 0,
+   "power_w": 42.32,
+   "used_mib": 31716,
+   "classification": "dirty",
+   "reasons": [
+    "power 42.32 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "README.md Headline results · Nemotron (Vol.2): chat profile inside server SLO up to 128"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:6:gpu_end",
+   "end_at": "2026-09-23T18:02:58+0800",
+   "util_pct": 0,
+   "power_w": 44.38,
+   "used_mib": 31848,
+   "classification": "dirty",
+   "reasons": [
+    "power 44.38 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "README.md Headline results · Nemotron (Vol.2): chat profile inside server SLO up to 128"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:7:gpu_end",
+   "end_at": "2026-09-23T18:04:28+0800",
+   "util_pct": 0,
+   "power_w": 39.72,
+   "used_mib": 31848,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside interactive SLO = 32 (every level <= it must pass)",
+    "README.md Headline results · Nemotron (Vol.2): chat profile inside server SLO up to 128",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): C throughput at c=32: 2,238 tok/s"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:8:gpu_end",
+   "end_at": "2026-09-23T18:06:03+0800",
+   "util_pct": 0,
+   "power_w": 41.8,
+   "used_mib": 31848,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 128 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside interactive SLO = 32 (this level is where it fails)",
+    "README.md Headline results · Nemotron (Vol.2): chat profile inside server SLO up to 128"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0128",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:9:gpu_end",
+   "end_at": "2026-09-23T18:07:39+0800",
+   "util_pct": 0,
+   "power_w": 39.87,
+   "used_mib": 31848,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 128 (every level <= it must pass)",
+    "README.md Headline results · Nemotron (Vol.2): chat profile inside server SLO up to 128"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0256",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:10:gpu_end",
+   "end_at": "2026-09-23T18:09:38+0800",
+   "util_pct": 0,
+   "power_w": 46.76,
+   "used_mib": 31848,
+   "classification": "dirty",
+   "reasons": [
+    "power 46.76 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 128 (this level is where it fails)",
+    "README.md Headline results · Nemotron (Vol.2): chat profile inside server SLO up to 128",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): peak 3,999 tok/s (c=256)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): KV block pool binds: 146 running, 99.7% of 733 blocks"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_main_c0512",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:11:gpu_end",
+   "end_at": "2026-09-23T18:12:53+0800",
+   "util_pct": 0,
+   "power_w": 42.18,
+   "used_mib": 31848,
+   "classification": "dirty",
+   "reasons": [
+    "power 42.18 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C reading (2): about 146 concurrent sequences (gauge at c=256 and 512)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_fresh_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:12:gpu_end",
+   "end_at": "2026-09-23T18:21:17+0800",
+   "util_pct": 0,
+   "power_w": 39.63,
+   "used_mib": 31735,
+   "classification": "clean",
+   "reasons": [],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_fresh_c0256",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:13:gpu_end",
+   "end_at": "2026-09-23T18:23:34+0800",
+   "util_pct": 0,
+   "power_w": 95.66,
+   "used_mib": 31741,
+   "classification": "dirty",
+   "reasons": [
+    "power 95.66 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_C_fresh_c0512",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:14:gpu_end",
+   "end_at": "2026-09-23T18:33:10+0800",
+   "util_pct": 2,
+   "power_w": 53.74,
+   "used_mib": 32015,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 53.74 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:15:gpu_end",
+   "end_at": "2026-09-23T18:43:45+0800",
+   "util_pct": 2,
+   "power_w": 72.65,
+   "used_mib": 31771,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 72.65 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0001",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:16:gpu_end",
+   "end_at": "2026-09-23T18:45:33+0800",
+   "util_pct": 2,
+   "power_w": 83.59,
+   "used_mib": 31769,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 83.59 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside interactive SLO = 2 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0002",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:17:gpu_end",
+   "end_at": "2026-09-23T18:46:56+0800",
+   "util_pct": 2,
+   "power_w": 82.65,
+   "used_mib": 31787,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 82.65 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside interactive SLO = 2 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0004",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:18:gpu_end",
+   "end_at": "2026-09-23T18:48:19+0800",
+   "util_pct": 2,
+   "power_w": 75.37,
+   "used_mib": 31841,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 75.37 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 8 (every level <= it must pass)",
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside interactive SLO = 2 (this level is where it fails)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0008",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:19:gpu_end",
+   "end_at": "2026-09-23T18:49:45+0800",
+   "util_pct": 2,
+   "power_w": 86.04,
+   "used_mib": 31837,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 86.04 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 8 (every level <= it must pass)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0016",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:20:gpu_end",
+   "end_at": "2026-09-23T18:51:15+0800",
+   "util_pct": 2,
+   "power_w": 70.61,
+   "used_mib": 31838,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 70.61 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §C (cap table, row 256): largest c inside server SLO = 8 (this level is where it fails)"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0032",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:21:gpu_end",
+   "end_at": "2026-09-23T18:53:07+0800",
+   "util_pct": 2,
+   "power_w": 85.55,
+   "used_mib": 31844,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 85.55 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0064",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:22:gpu_end",
+   "end_at": "2026-09-23T18:55:59+0800",
+   "util_pct": 2,
+   "power_w": 60.53,
+   "used_mib": 31909,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 60.53 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0128",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:23:gpu_end",
+   "end_at": "2026-09-23T19:00:47+0800",
+   "util_pct": 2,
+   "power_w": 42.73,
+   "used_mib": 31947,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 42.73 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0256",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:24:gpu_end",
+   "end_at": "2026-09-23T19:08:33+0800",
+   "util_pct": 0,
+   "power_w": 77.05,
+   "used_mib": 31852,
+   "classification": "dirty",
+   "reasons": [
+    "power 77.05 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_main_c0512",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:25:gpu_end",
+   "end_at": "2026-09-23T19:21:11+0800",
+   "util_pct": 2,
+   "power_w": 72.83,
+   "used_mib": 31854,
+   "classification": "dirty",
+   "reasons": [
+    "util 2% > 0",
+    "power 72.83 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_fresh_c0001_warmup",
+   "kind": "warmup (discarded)",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:26:gpu_end",
+   "end_at": "2026-09-23T19:30:51+0800",
+   "util_pct": 0,
+   "power_w": 64.51,
+   "used_mib": 31702,
+   "classification": "dirty",
+   "reasons": [
+    "power 64.51 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_fresh_c0256",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:27:gpu_end",
+   "end_at": "2026-09-23T19:33:17+0800",
+   "util_pct": 0,
+   "power_w": 88.23,
+   "used_mib": 31702,
+   "classification": "dirty",
+   "reasons": [
+    "power 88.23 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_concurrency_a2_256",
+   "cell": "A2_R_fresh_c0512",
+   "kind": "measured",
+   "source": "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl:28:gpu_end",
+   "end_at": "2026-09-23T19:43:29+0800",
+   "util_pct": 0,
+   "power_w": 51.91,
+   "used_mib": 31727,
+   "classification": "dirty",
+   "reasons": [
+    "power 51.91 W > 42"
+   ],
+   "notes": [],
+   "feeds": [
+    "none found"
+   ]
+  },
+  {
+   "run": "p55_judge_thinking",
+   "cell": "L2_A2_N",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E judge table: L2 N: baseline 1,698 ms of the +16.8%"
+   ]
+  },
+  {
+   "run": "p55_judge_thinking",
+   "cell": "L2_A2_J",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E judge table: L2 J: +16.8% overhead (1,983 ms), 0/60·0/30·45/45, input 113 / output 87 ms",
+    "vol2-nemotron/BASELINE.md §E judge table: blocked 0/60·0/30·45/45",
+    "vol2-nemotron/BASELINE.md §E judge table: judge 113 / 87 ms"
+   ]
+  },
+  {
+   "run": "p55_judge_thinking",
+   "cell": "L1_IN_T",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E judge table: L1 input check without switch: 67 tokens p50"
+   ]
+  },
+  {
+   "run": "p55_judge_thinking",
+   "cell": "L1_IN_F",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E judge table: L1 input check with switch: 2 tokens, ~106 ms; yes on 0·0·45",
+    "vol2-nemotron/BASELINE.md §E judge table: yes on 0·0·45"
+   ]
+  },
+  {
+   "run": "p55_judge_thinking",
+   "cell": "L1_ANS",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "none found (L1 answer-generation calls for the output check; not quoted)"
+   ]
+  },
+  {
+   "run": "p55_judge_thinking",
+   "cell": "L1_OUT_F",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E judge table: L1 output check with switch: 2 tokens, ~106 ms"
+   ]
+  },
+  {
+   "run": "p55_judge_thinking",
+   "cell": "L1_OUT_T",
+   "kind": "measured (135 rows, interleaved with other cells in one container)",
+   "source": "none",
+   "end_at": null,
+   "util_pct": null,
+   "power_w": null,
+   "used_mib": null,
+   "classification": "undeterminable",
+   "reasons": [
+    "no end-of-cell record: request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "notes": [
+    "request arms rotate per question inside one container: no per-cell GPU record exists"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §E judge table: L1 output check without switch: 79 tokens p50"
+   ]
+  },
+  {
+   "run": "p55_longctx_120k",
+   "cell": "a2_120k",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p55_longctx_120k/requests.jsonl:11:gpu_after",
+   "end_at": "2026-09-23T17:37:43+0800",
+   "util_pct": 96,
+   "power_w": 400.26,
+   "used_mib": 30990,
+   "classification": "dirty",
+   "reasons": [
+    "util 96% > 0",
+    "power 400.26 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table (~119,720 row): A2 ~120k: 7,281 ms · 308.4 tok/s",
+    "vol2-nemotron/BASELINE.md §D (text): A2 flat 304.8 → 308.4 tok/s (120k end)"
+   ]
+  },
+  {
+   "run": "p55_longctx_120k",
+   "cell": "a1_120k",
+   "kind": "measured (5 requests)",
+   "source": "vol2-nemotron/results/p55_longctx_120k/requests.jsonl:22:gpu_after",
+   "end_at": "2026-09-23T17:45:40+0800",
+   "util_pct": 78,
+   "power_w": 383.78,
+   "used_mib": 30294,
+   "classification": "dirty",
+   "reasons": [
+    "util 78% > 0",
+    "power 383.78 W > 42"
+   ],
+   "notes": [
+    "sampled the instant the last request returned (engine still at load); the fingerprint was defined on AIPerf level ends"
+   ],
+   "feeds": [
+    "vol2-nemotron/BASELINE.md §D depth table (~119,720 row): A1 ~120k: 14,263 ms · 52.4 tok/s"
+   ]
+  }
+ ]
+}

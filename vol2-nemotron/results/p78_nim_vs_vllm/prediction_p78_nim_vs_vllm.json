@@ -1,0 +1,55 @@
+{
+  "written_at": "2026-09-29T21:58:55+0800",
+  "experiment": "P78 G4 · Nemotron 3 Nano NVFP4 served by NIM 2.0.12 and by upstream vLLM 0.27.1 (the version inside it) on the same files",
+  "arms": {
+    "N3": "NIM 2.0.12, NVFP4 profile, NIM_MAX_MODEL_LEN 16384",
+    "V3B1": "vllm/vllm-openai:v0.27.1, the snapshot path only (bare)",
+    "V3B2": "the same image with NIM's own vLLM argument list for N3's configuration from `nim-serve --dry-run` (edits: model path, backend port, host, NIM middleware only)"
+  },
+  "order": "N3 -> V3B1 -> V3B2 in one session; then the quality arms V3B1, V3B2 (reasoning off x GSM8K, as N3's cell)",
+  "per_arm": {
+    "warm": "until 220 tok/s or 300 s",
+    "single": "50 co-residence questions, p53_answer's request (max_tokens 4096, temperature 0, top_p 0.9, streamed), response sha256 kept, no text",
+    "concurrency": "profile C, discarded 120 s at c=1, then 1, 8, 32, 64, 128 at 60 s, G8 before each; SLO judged as p53_concurrency (MLPerf server: p99 TTFT <= 2 s and p99 TPOT <= 100 ms)"
+  },
+  "recorded_for_every_upstream_start": "mamba_ssm_cache_dtype, MoE backend, CUDA-graph mode, max_num_seqs (from the start log); first error line if it fails; B2's flags counted",
+  "branches": {
+    "B1_fails_to_start": "the error is recorded as a result (one answer to 'what does a user get without NIM'); B2 is run",
+    "B2_dry_run_gives_no_arguments": "V3B2 null"
+  },
+  "predictions": {
+    "P1": "record, not a prediction: whether V3B1 starts and serves, and its values of the silent settings beside V3B2's. Disclosed before freezing: in the harness test (2026-09-29 20:31-20:56, 3 questions, one 20 s level per arm) both upstream arms started and their logs showed the same values (mamba_ssm_cache_dtype float32 set by vLLM itself for NemotronH, MoE backend FLASHINFER_CUTLASS, CUDA graphs FULL_AND_PIECEWISE, attention FLASHINFER, KV cache float8_e4m3fn); NIM's own log at its default level prints none of them",
+    "P2": "V3B2 / N3 single-stream generation rate (median over the 50 questions) in [0.95, 1.05]",
+    "P3": "V3B2 and N3 write byte-identical responses on >= 45 of 50 questions. Interpreted only if each of the two arms repeats its own text on >= 9 of the 10 self-repeat questions; otherwise the cross-arm count is recorded as not interpretable (the first harness test gave 0 of 3 identical between every pair of arms, with identical prompt token counts and divergent completion lengths; the second, 21:25-21:47, gave 0 of 2 in each arm's own self-repeat)",
+    "P4": "V3B2 / N3 total tok/s within +-10% at every concurrency level both complete",
+    "P5": "if V3B1's mamba_ssm_cache_dtype is not float32 while V3B2's is: V3B1's reasoning-off GSM8K accuracy is below V3B2's (direction only; the size is recorded)"
+  },
+  "inputs_sha256": {
+    "vol3-judges/results/p20_coresidence/sample.json": "001e6ddebd3a64445b90e660704cac0e4562d9a4abc84edcab2bd5295cd9b1b2",
+    "benchmark/questions.json": "262f2339d55ec6b855f7b0180704bd225fdbc561ea37f902b99e1ab405add1f9"
+  },
+  "harness_sha256": {
+    "vol2-nemotron/scripts/p78_nim_vs_vllm.py": "af6112d6bd964e89bdce91566eae992dd740dab22719a6aae3be8b5fcd6d4788",
+    "vol2-nemotron/scripts/p78_quality.py": "5117a84b49d4b1b9dc563c73a579c7783fcbf438868bfde6cbcb8c4cc38b6884",
+    "vol2-nemotron/scripts/p78_engines.py": "889186f5125b59a9ed85accc2492ad1562c3b8b2ac2f35bc093032d35c300828",
+    "vol2-nemotron/scripts/p53_answer.py": "afee88bea15ce17d2d38e3079223464025406ab5bc298cae5b3b5cbc6970cecf",
+    "vol2-nemotron/scripts/p53_concurrency_v2.py": "f7eabd113b8deeec2bdb554632eeafb8d41441039335d96cca8f420f522c6dba",
+    "vol2-nemotron/scripts/p53_concurrency.py": "3858baaf99a7aa200c3c391b15cbcbf5c5e12fa8feb6fb2df11e2f89403dd7aa",
+    "vol2-nemotron/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+    "vol2-nemotron/scripts/run_p78.sh": "39de1514142b5b1b96b3841c883b07e03e8cf16187f902dc55461ed73a3a1d0b",
+    "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb",
+    "tools/host_gate.py": "3ff71b506d7c44b0c3519d70f9124b633dc26ac72aa5466ccac9b291ca4876bd",
+    "tools/overwrite_gate.py": "e4d0a7ef16da29849bea9a36c826b6c4146e1888a071e989e41641c40a139d32",
+    "tools/renumber_dirs.py": "a9cf6c421ef2d6084d08e11c49554902dfac6dd1814684da8c4a21280a4fe5ca"
+  },
+  "written_before": "the stage's first GPU cell (run_p78.sh refuses a stage whose prediction or .sha256 is missing or changed, or whose results exist)",
+  "window": "the night of 2026-09-29 to 30; the user closes Steam and other heavy host load before the run",
+  "gates_every_cell": {
+    "G8": "tools/g8_gate.py before every measured cell: median GPU utilization <= 2% and median power <= 45 W over 10 s; retried every 60 s up to 15 min; a cell whose G8 did not pass is null, recorded",
+    "host": "tools/host_gate.py: a CPU-work calibration before the run and, per cell, wall time, system CPU busy share, this process's CPU share, children's CPU seconds and a work probe at the cell's end; recorded, not a gate (no measured threshold exists yet)",
+    "no_overwrite": "tools/overwrite_gate.py after every cell: tracked files unchanged and new files only under this stage's results directory, else the stage stops (exit 4) and the cell is void",
+    "old_directory_gate": "tools/renumber_dirs.py check-old-dirs before every stage: a harness written for old paths must not recreate an old directory",
+    "exit_code": "the runner writes each harness's exit code into the stage's results directory"
+  },
+  "deadline": "08:00: a stage or cell not started by then is not started; finished cells are kept; what is left is listed in the report"
+}

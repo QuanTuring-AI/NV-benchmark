@@ -1,0 +1,60 @@
+{
+  "written_at": "2026-09-29T21:58:56+0800",
+  "experiment": "P78 G5 · Nemotron Nano 9B v2 bf16 on vllm/vllm-openai:v0.30.0 (newest stable upstream on 2026-09-29), as another deployment option; Z2 found no NIM image newer than 1.12.2",
+  "ladder": [
+    [],
+    [
+      "--trust-remote-code"
+    ],
+    [
+      "--trust-remote-code",
+      "--max-model-len",
+      "16384"
+    ],
+    [
+      "--trust-remote-code",
+      "--max-model-len",
+      "16384",
+      "--max-num-seqs",
+      "64"
+    ]
+  ],
+  "levels": [
+    16,
+    32,
+    64
+  ],
+  "depths_tokens": {
+    "4k": 4000,
+    "16k": 16000
+  },
+  "context_prompts": "each request starts with its own tag so that no prefix is reused (the harness test's 16k TTFT of 114 ms was a prefix-cache hit); about 200 words asked, max_tokens 256",
+  "disclosed_from_the_harness_test": "harness tests 2026-09-29 21:12-21:23 and 21:47-21:58: step 0 (model path only) started and served; c=16 (20 s) completed without an engine exit; single-stream rate 73.6-74.1 tok/s (3 questions); context, one request per depth in the second test: ~4k tokens 73.7 tok/s (TTFT 353 ms), ~16k tokens 73.1 tok/s (TTFT 1,356 ms). P3 is therefore written knowing one request per depth",
+  "predictions": {
+    "P1": "a ladder step <= 2 starts and serves",
+    "P2": "no engine exit at 16, 32 or 64 concurrent requests",
+    "P3": "generation rate at ~16k tokens >= 80% of the rate at ~4k (NIM 1.12.2 lost 38% past ~8k)"
+  },
+  "harness_sha256": {
+    "vol2-nemotron/scripts/p78_n2_upstream.py": "8adbc063d877ebd5fd8cfbbb41499c553dab41b495b96edced58f3ab188d673c",
+    "vol2-nemotron/scripts/p78_engines.py": "889186f5125b59a9ed85accc2492ad1562c3b8b2ac2f35bc093032d35c300828",
+    "vol2-nemotron/scripts/p78_quality.py": "5117a84b49d4b1b9dc563c73a579c7783fcbf438868bfde6cbcb8c4cc38b6884",
+    "vol2-nemotron/scripts/p78_nim_vs_vllm.py": "af6112d6bd964e89bdce91566eae992dd740dab22719a6aae3be8b5fcd6d4788",
+    "vol2-nemotron/scripts/p53_concurrency_v2.py": "f7eabd113b8deeec2bdb554632eeafb8d41441039335d96cca8f420f522c6dba",
+    "vol2-nemotron/scripts/run_p78.sh": "39de1514142b5b1b96b3841c883b07e03e8cf16187f902dc55461ed73a3a1d0b",
+    "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb",
+    "tools/host_gate.py": "3ff71b506d7c44b0c3519d70f9124b633dc26ac72aa5466ccac9b291ca4876bd",
+    "tools/overwrite_gate.py": "e4d0a7ef16da29849bea9a36c826b6c4146e1888a071e989e41641c40a139d32",
+    "tools/renumber_dirs.py": "a9cf6c421ef2d6084d08e11c49554902dfac6dd1814684da8c4a21280a4fe5ca"
+  },
+  "written_before": "the stage's first GPU cell (run_p78.sh refuses a stage whose prediction or .sha256 is missing or changed, or whose results exist)",
+  "window": "the night of 2026-09-29 to 30; the user closes Steam and other heavy host load before the run",
+  "gates_every_cell": {
+    "G8": "tools/g8_gate.py before every measured cell: median GPU utilization <= 2% and median power <= 45 W over 10 s; retried every 60 s up to 15 min; a cell whose G8 did not pass is null, recorded",
+    "host": "tools/host_gate.py: a CPU-work calibration before the run and, per cell, wall time, system CPU busy share, this process's CPU share, children's CPU seconds and a work probe at the cell's end; recorded, not a gate (no measured threshold exists yet)",
+    "no_overwrite": "tools/overwrite_gate.py after every cell: tracked files unchanged and new files only under this stage's results directory, else the stage stops (exit 4) and the cell is void",
+    "old_directory_gate": "tools/renumber_dirs.py check-old-dirs before every stage: a harness written for old paths must not recreate an old directory",
+    "exit_code": "the runner writes each harness's exit code into the stage's results directory"
+  },
+  "deadline": "08:00: a stage or cell not started by then is not started; finished cells are kept; what is left is listed in the report"
+}
