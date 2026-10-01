@@ -32,11 +32,11 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 
 **Vol.1 · [Why NIM? Llama 3.1 8B on one RTX 5090, from 1 to 128 concurrent requests](vol1-nim/README.md)**
 For one user the 4-bit Ollama build is faster; from 4 concurrent requests on NIM leads, 7.4× at 128, and it holds the MLPerf server latency target the whole way. NIM's FP8 default adds another 1.5×, with no measurable change on MMLU.
-→ [`vol1-nim/README.md`](vol1-nim/README.md) · tag `vol1-nim-renewed`
+→ [`vol1-nim/README.md`](vol1-nim/README.md) · tag `vol1-vol2-published`
 
 **Vol.2 · [Nemotron 3 Nano on one RTX 5090 with NIM: ~300 tok/s, flat to 120k context, 128 concurrent requests](vol2-nemotron/README.md)**
 It fits in 21–25 GiB, generates about 300 tok/s at any context length up to 120k, keeps the server latency target up to 128 concurrent chat requests (8 with long RAG-shaped prompts), and scores 95.7% on GSM8K with reasoning on.
-→ [`vol2-nemotron/README.md`](vol2-nemotron/README.md) · tag `vol2-nemotron-published`
+→ [`vol2-nemotron/README.md`](vol2-nemotron/README.md) · tag `vol1-vol2-published`
 
 **Vol.3 · [Judges in NeMo Guardrails on NIM 2.0.12](vol3-judges/README.md)** (baseline data; the judge study is in progress)
 With Llama 3.1 8B as its own judge, NeMo Guardrails 0.23.0 blocks the same adversarial prompts as 0.21.0 on this set (42 / 45, with 0 / 90 false blocks); the time it adds comes from the judge's answer length.
@@ -54,16 +54,17 @@ Each volume's README has the same shape: the headline and a run command first, t
 2. **Find the number** in that volume's README, in the *Claim → evidence* table. Each row gives a file and a key.
 3. **Open the file and follow the key.** The files are JSON; a key such as `levels.N-BF16|C|main.128.total_tps` is a path through it. The stored value should round to the number in the article.
 4. **Recompute it if you want to.** Each result directory's README names the analysis script that produced its `analysis.json` from the raw rows; the scripts run on the published files alone.
-5. **Check that nothing was edited after the fact.** `python tools/bound_files.py --history` lists every file a pre-registration binds by SHA-256 and verifies it.
+5. **Or check every row at once:** `python tools/check_claims.py vol1-nim/README.md vol2-nemotron/README.md` reads each table, opens each file and compares each key; it exits non-zero if any row does not match.
+6. **Check that nothing was edited after the fact.** `python tools/bound_files.py --history` lists every file a pre-registration binds by SHA-256 and verifies it.
 
 ### Tags
 
 | Tag | Which article it is for | What you see when you open it |
 |---|---|---|
-| `vol1-nim-renewed` | Vol.1, *Why NIM?* | Every Vol.1 run, the 29 September FP8 recheck, and the READMEs with their claim → evidence tables. It points to the commit that adds this row. |
-| `vol2-nemotron-published` | Vol.2, *Nemotron 3 Nano on one RTX 5090* | Every Vol.2 run through 1 October (commit `6af6168`). Its READMEs are the version before the claim → evidence tables were added; the tables are on `main` and in `vol1-nim-renewed`. |
+| `vol1-vol2-published` | Vol.1, *Why NIM?*, and Vol.2, *Nemotron 3 Nano on one RTX 5090* | Open this to see the repository as the two posts describe it: all data of both volumes, the Vol.1 FP8 recheck, and the READMEs with their claim → evidence tables. It points to the commit that adds this row. |
+| `vol2-nemotron-published` | Vol.2 data | Every Vol.2 run through 1 October (commit `6af6168`), without the README rewrite. |
 | `vol3-judges-baseline` | Vol.3 baseline data | The Vol.3 runs at the paths their harnesses were written with (commit `3efa794`, the last one before the directory renames). The judge study has not been published. |
-| `vol1-nim-published` | Vol.1, to rerun a harness byte for byte | The Vol.1 runs at the paths their harnesses were written with (commit `3efa794`, before the renames). It does not contain the FP8 recheck. |
+| `vol1-nim-published` | Vol.1 data as of 28 September | The Vol.1 runs at the paths their harnesses were written with (commit `3efa794`, before the renames); use it to rerun a Vol.1 harness byte for byte. It does not contain the FP8 recheck. |
 
 **Earlier tags.** These were pushed before the volumes took their current numbers and directory names. They are kept so that links already sent keep working; nothing new points to them.
 

@@ -1,6 +1,6 @@
 # Vol.1 (renewed 2026-09) · Why NIM? Llama 3.1 8B on one RTX 5090, from 1 to 128 concurrent requests
 
-> **Reproduce:** `git checkout vol1-nim-renewed`. That one tag holds every run of this volume, the 29 September FP8 recheck and this README. The harnesses are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
+> **Reproduce:** `git checkout vol1-vol2-published`. That tag is the repository as the Vol.1 and Vol.2 articles describe it: every run of this volume, the 29 September FP8 recheck and this README. The harnesses are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
 
 A question we keep getting from teams that run on a single workstation GPU: *why use NIM instead of just running Ollama?* So we measured it. Llama 3.1 8B Instruct, one RTX 5090, NIM 2.0.12, from one request at a time up to 128, with Ollama as the reference point. We also checked whether the faster configurations answer worse.
 
@@ -94,15 +94,16 @@ Every number above and in the forum post, with the file it comes from and the ke
 | GSM8K, 4-bit Ollama | −2.43 · −4.40 · −0.53 | `results/p63_gsm8k/analysis.json` | `comparisons.O-Q4.paired.{diff_pp,ci95_pp[0],ci95_pp[1]}` | rounds |
 | FP8 on GSM8K at 1 · 32 concurrent requests | 84.4% · 84.6% | `results/p62_quality/analysis.json` | `concurrency_fp8_gsm8k.accuracy_pct.{c1,c32}` | rounds |
 | Ollama picks 1 parallel slot by default | 1 | `results/p59_nim_value/analysis.json` | `arms.O-Q4-def.ollama_num_parallel.runner_from_log` | equals |
+| Slots × context has to fit in VRAM: the largest slot count that loaded fully on the GPU at context 8,192 (4-bit) | 16 | `results/p59_nim_value/analysis.json` | `arms.O-Q4.ollama_num_parallel.set_at_8192` | equals |
+| Pin `NIM_MODEL_PROFILE` by its 64-character id: the display form with its suffix is rejected | — | `../vol3-judges/results/p17_concurrency/README.md` | `passed verbatim, the recorded form is rejected by NIM` | text |
+| … the error NIM gave for the display form | — | `../vol3-judges/results/p28_judge_isolation/PREDICTION_V1_SUPERSEDED.md` | `NIM matched neither the id nor the description, and reported "no matching profile_id or profile description is found in manifest"` | text |
 | `localhost` cost about 2 s per request (median, ms) | 2,059.9 | `../vol3-judges/results/p20_coresidence_v2/analysis.json` | `conclusions.address_delay_ollama_localhost_minus_loopback.ttft_ms.median` | rounds |
 | Run it: the FP8 profile id | — | `scripts/p59_nim_value.py` | `"N-FP8":    {"kind": "nim", "profile": "c4789f7af56c770c1c88b73da666886365534d6980b6b922b41fd97036c77d73"}` | text |
 | Run it: the bf16 profile id and the environment | — | `scripts/p54_engine.py` | `N_MEASURED_ENV = {"NIM_MODEL_PROFILE": PROFILE, "NIM_MAX_MODEL_LEN": "8192", "VLLM_USE_V2_MODEL_RUNNER": "0"}` | text |
 | Without the runner switch: `UVA is not available` | — | `results/p54_engine/attempts_summary.json` | `RuntimeError: UVA is not available` | text |
 | The March post's two arms at 75% and 3.4% of the card's peak bandwidth | — | `../vol3-judges/BASELINE.md` | `sit at 75% and 3.4% of this card's peak` | text |
 
-Two notes in the post have no record in this repository and are operator notes: that a profile's display name with its suffix in parentheses is not accepted as `NIM_MODEL_PROFILE`, and that slots × context has to fit in VRAM for Ollama (the slot ladder that was run is in `results/p59_nim_value/README.md`).
-
-**How to check a row:** open the file, follow the key, compare. To recompute the analysis files from the raw rows, run the analysis script named in each result directory's README (for example `python scripts/p59_analyze.py`); the quality analyses reproduce byte for byte from the published per-item fields (`results/p62_quality/recompute_check.txt`).
+**How to check a row:** open the file, follow the key, compare. Or check every row at once: `python ../tools/check_claims.py README.md` (from this directory). To recompute the analysis files from the raw rows, run the analysis script named in each result directory's README (for example `python scripts/p59_analyze.py`); the quality analyses reproduce byte for byte from the published per-item fields (`results/p62_quality/recompute_check.txt`).
 
 ## How it was measured
 
