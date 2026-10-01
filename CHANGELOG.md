@@ -2,6 +2,15 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-10-01 · Tags consolidated to `vol1` `vol2` `vol3` `history`; release notes; the front page is a directory
+
+- **Four tags.** `vol1` and `vol2` open the repository as the Vol.1 and Vol.2 articles describe it; `vol3` holds the Vol.3 baseline data and will move once, on the day the judge study is published; `history` marks the commit that adds [`HISTORY.md`](HISTORY.md).
+- **Nine tags retired:** `vol1-vol2-published`, `vol2-nemotron-published`, `vol3-judges-baseline`, `vol1-nim-published`, `vol2-guardrails-published`, `vol3-nemotron-published`, `vol1-revisit-published`, `vol2-published`, `vol1b-published`. Their names, full hashes and contents are in `HISTORY.md`; every commit they pointed to is an ancestor of `main`, so nothing was removed but the names.
+- **The earlier sections of this file are left as written,** tag names included: they record what was true on their day. The table *Tags from earlier pushes* at the end says those tags stay on the remote; from today they do not.
+- **[`PATH_MAP.md`](PATH_MAP.md)** gives a full commit hash for a byte-for-byte rerun of each volume, instead of a tag name.
+- **`releases/vol1.md`, `releases/vol2.md`:** the text of the two GitHub Releases, kept in the repository.
+- **Front page:** a Volumes table that points to each volume's page and Release; the volumes' numbers are no longer repeated there.
+
 ## 2026-10-01 · READMEs rewritten around the articles' headlines; claim → evidence tables; tag `vol1-vol2-published`
 
 - **Vol.1 and Vol.2 READMEs** now open the way the articles do: the headline (Vol.1: *Why NIM?*; Vol.2: *Nemotron 3 Nano on one RTX 5090*), a short summary, the `docker run` that was measured and the main table. No number changed.

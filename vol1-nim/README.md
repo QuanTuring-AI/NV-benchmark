@@ -1,6 +1,6 @@
 # Vol.1 (renewed 2026-09) · Why NIM? Llama 3.1 8B on one RTX 5090, from 1 to 128 concurrent requests
 
-> **Reproduce:** `git checkout vol1-vol2-published`. That tag is the repository as the Vol.1 and Vol.2 articles describe it: every run of this volume, the 29 September FP8 recheck and this README. The harnesses are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
+> **Reproduce:** `git checkout vol1`. That tag is the repository as the Vol.1 article describes it: every run of this volume, the 29 September FP8 recheck and this README. The harnesses are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
 
 A question we keep getting from teams that run on a single workstation GPU: *why use NIM instead of just running Ollama?* So we measured it. Llama 3.1 8B Instruct, one RTX 5090, NIM 2.0.12, from one request at a time up to 128, with Ollama as the reference point. We also checked whether the faster configurations answer worse.
 
