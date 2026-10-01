@@ -15,6 +15,10 @@ A question we keep getting from teams that run on a single workstation GPU: *why
 
 *All throughput numbers: synthetic chat requests, 200 tokens in / 200 out, closed loop, one engine on the GPU at a time. MLPerf server target: p99 TTFT ≤ 2 s and p99 TPOT ≤ 100 ms.*
 
+![Why NIM on one RTX 5090](figures/cover_vol1.png)
+
+*One RTX 5090 · Llama 3.1 8B Instruct · synthetic chat 200/200 · closed loop · NIM 2.0.12 (vLLM 0.27.1) / Ollama 0.34.4*
+
 ## Run it
 
 This is the configuration we measured (FP8, NIM's own choice on this card):
@@ -50,7 +54,9 @@ For bf16, use profile `092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab4662
 
 ![Llama 3.1 8B on one RTX 5090: total output throughput against concurrent requests for NIM FP8, NIM bf16, Ollama 4-bit and Ollama 16-bit](figures/throughput_concurrency_light.png)
 
-*Figure added on 2026-10-01; drawn from the data at tag `vol1` by [`figures/plot_throughput_concurrency.py`](figures/plot_throughput_concurrency.py), in a light and a dark version (SVG and PNG). Every point is listed with its source file and key in [`figures/throughput_concurrency_points.json`](figures/throughput_concurrency_points.json).*
+*Dashed segments: this run has no level between 1 and 8; the diamonds at 2 and 4 come from a separate run.*
+
+*Figure added on 2026-10-01, revised 2026-10-02; drawn from the data at tag `vol1` by [`figures/plot_throughput_concurrency.py`](figures/plot_throughput_concurrency.py), in a light and a dark version (SVG and PNG). Every point is listed with its source file and key in [`figures/throughput_concurrency_points.json`](figures/throughput_concurrency_points.json).*
 
 **Does faster mean worse answers?** The four configurations on the same task sets (lm-evaluation-harness 0.4.13, temperature 0, identical requests), each compared with bf16 NIM item by item:
 
