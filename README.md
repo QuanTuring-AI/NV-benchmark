@@ -91,7 +91,8 @@ A tag opens the whole repository as it was at one commit; all four point to the 
 
 ## Publications
 
-- NVIDIA Developer Forum · [Vol.1 thread (2026-03; revised 2026-09)](https://forums.developer.nvidia.com/t/365275)
+- NVIDIA Developer Forum · [Vol.1 thread (2026-10)](https://forums.developer.nvidia.com/t/why-nim-llama-3-1-8b-on-one-rtx-5090-from-1-to-128-concurrent-requests/384818)
+- NVIDIA Developer Forum · [March 2026 thread (superseded; see its reply #2)](https://forums.developer.nvidia.com/t/365275)
 <!-- website link: to be added on publication -->
 
 ## About QuanTuring
