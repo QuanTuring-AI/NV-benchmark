@@ -1,32 +1,137 @@
-# Vol.1 (renewed 2026-09) · 7.4× at 128 concurrent requests: what NIM buys you on one RTX 5090
-*For one user the 4-bit build is faster. From 4 users on NIM leads; at 128 it delivers 7.4× the throughput — 13.6× at matched precision — and still holds the server SLO. Both arms healthy this time.*
+# Vol.1 (renewed 2026-09) · Why NIM? Llama 3.1 8B on one RTX 5090, from 1 to 128 concurrent requests
 
-> **Reproduce:** `git checkout vol1-nim-published`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
+> **Reproduce:** `git checkout vol1-nim-renewed`. That one tag holds every run of this volume, the 29 September FP8 recheck and this README. The harnesses are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
 
-## 0 · Headline
+A question we keep getting from teams that run on a single workstation GPU: *why use NIM instead of just running Ollama?* So we measured it. Llama 3.1 8B Instruct, one RTX 5090, NIM 2.0.12, from one request at a time up to 128, with Ollama as the reference point. We also checked whether the faster configurations answer worse.
 
-Llama 3.1 8B Instruct on one RTX 5090. The concurrency results use synthetic chat requests (200 tokens in, 200 out) and the MLPerf v5.1 Llama 3.1-8B SLOs. Every arm passed its health gate.
+**TL;DR**
 
-1. **For one user, NIM is the engine it contains.** NIM 2.0.12 and upstream vLLM 0.27.1 (the build inside it) ran the same weight files at the same precision. They wrote the same 50 answers byte for byte at the same speed: rate ratio 0.990 [0.963, 1.020]. → §A
-2. **For one user, precision decides the speed.** The 4-bit build reads fewer bytes per token and decodes faster than a 16-bit one. At comparable 16-bit precision, NIM bf16 and 16-bit Ollama differ by 1.10× in total throughput for one user. → §D · `results/p59_nim_value/`
-3. **From 4 concurrent requests on, NIM leads on total throughput and on each user's speed, and the lead grows with load.**
-   - The crossing lies between 2 and 4 concurrent requests.
-   - At 8 requests the lead is 3.5×: 607 vs 175 tok/s total, and 77 vs 24 tok/s per user end to end.
-   - At 128 requests it is 7.4×.
-   - All against the fastest 4-bit configuration we could build with Ollama (16 slots). → §D · `results/p62_levels/` · `results/p59_nim_value/`
-4. **NIM kept the MLPerf v5.1 server SLO up to 128 concurrent requests.** In the same sweep (1, 8, 16, 32, 64 and 128 concurrent requests), none of the Ollama configurations we tested kept it beyond 1. → `results/p59_nim_value/`
-5. **At comparable precision, the single-user gap is precision and the multi-user gap is the engine.** 16-bit Ollama and bf16 NIM serve 79 vs 87 tok/s for one user, and 402 vs 5,458 at 128. → `results/p59_nim_value/`
-6. **General-knowledge accuracy held. On multi-step math the 4-bit build lost measurably, and FP8's loss could not be separated from zero.**
-   - MMLU (2,850-question sample): FP8, 16-bit Ollama and 4-bit were all within ±2 points of bf16 NIM.
-   - GSM8K: the 4-bit build scored −2.4 points (95% CI −4.4 to −0.5) and FP8 −1.5 points (CI −3.1 to 0.0).
-   - Serving 32 requests at once did not change FP8's GSM8K accuracy measurably.
+- **One user: Ollama's 4-bit build is faster** (172–183 vs 87 tok/s), because it reads about 3.3× fewer bytes per token. NIM itself adds nothing on top of the vLLM it ships with: same weights, same speed, the same 50 answers byte for byte.
+- **Once requests overlap, NIM pulls ahead.** The crossover is between 2 and 4 concurrent requests. NIM is 3.5× ahead at 8 and **7.4× at 128** (5,458 vs 741 tok/s, against the fastest Ollama configuration we could build).
+- **NIM held the MLPerf Inference server latency target up to 128 concurrent requests.** None of the Ollama configurations held it past one.
+- **NIM's default on this card is FP8.** It gives another 1.5× over bf16 (9,062 tok/s at 128). MMLU showed no measurable change; GSM8K was 1.5 points lower, which we could not separate from zero.
 
-   → §E · `results/p62_quality/` · `results/p63_gsm8k/`
-7. **NIM's own profile choice on this card is FP8.**
-   - Speed: it was the fastest configuration at every concurrency level, 151 vs 87 tok/s for one user and 8,713 vs 5,458 at 128.
-   - Accuracy: 1.5 points lower on GSM8K (95% CI −3.1 to 0.0), and within ±2 points on MMLU.
+*All throughput numbers: synthetic chat requests, 200 tokens in / 200 out, closed loop, one engine on the GPU at a time. MLPerf server target: p99 TTFT ≤ 2 s and p99 TPOT ≤ 100 ms.*
 
-   → §D · §E
+## Run it
+
+This is the configuration we measured (FP8, NIM's own choice on this card):
+
+```bash
+docker run -d --gpus all -p 8000:8000 \
+  -e NGC_API_KEY \
+  -e NIM_MODEL_PROFILE=c4789f7af56c770c1c88b73da666886365534d6980b6b922b41fd97036c77d73 \
+  -e NIM_MAX_MODEL_LEN=8192 \
+  -e VLLM_USE_V2_MODEL_RUNNER=0 \
+  -v ~/.cache/nim:/opt/nim/.cache \
+  nvcr.io/nim/meta/llama-3.1-8b-instruct:2.0.12
+```
+
+For bf16, use profile `092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab46626366f90`. On this host (Docker Desktop on WSL2) this Llama image needs `VLLM_USE_V2_MODEL_RUNNER=0`; without it, start-up fails with `UVA is not available`.
+
+## Results
+
+**Total throughput, tok/s** (Llama 3.1 8B, synthetic chat 200/200, 25 September run)
+
+| Concurrent requests | 1 | 8 | 32 | 128 |
+|---|---|---|---|---|
+| Ollama, 4-bit, 16 slots (tuned) | 172 | 175 | 755 | 741 |
+| Ollama, 16-bit, 8 slots (tuned) | 79 | 317 | 390 | 402 |
+| **NIM, bf16** | 87 | 607 | 2,262 | **5,458** |
+| **NIM, FP8** (default) | 151 | 1,099 | 3,817 | **8,713** |
+
+**p99 time to first token** at 128 concurrent requests: NIM bf16 1.84 s, NIM FP8 0.75 s, tuned 4-bit Ollama 31.9 s.
+
+*A later recheck of FP8 with the card otherwise idle measured 9,062 tok/s at 128, 1.50× bf16 NIM in the same window (section D below).*
+
+**Does faster mean worse answers?** The four configurations on the same task sets (lm-evaluation-harness 0.4.13, temperature 0, identical requests), each compared with bf16 NIM item by item:
+
+| vs bf16 NIM (points, 95% CI) | FP8 NIM | 16-bit Ollama | 4-bit Ollama |
+|---|---|---|---|
+| MMLU, 2,850-question sample (bf16 NIM: 68.9%) | −0.04 [−0.81, +0.74] | +0.11 [−0.53, +0.74] | −0.25 [−1.23, +0.74] |
+| GSM8K, all 1,319 (bf16 NIM: 85.6%) | −1.52 [−3.11, 0.00] | −1.29 [−2.88, +0.30] | **−2.43 [−4.40, −0.53]** |
+
+General knowledge held everywhere. On multi-step math, the 4-bit build lost a measurable 2.4 points. Running 32 requests at once did not change FP8's accuracy (84.4% vs 84.6% on GSM8K).
+
+**Why NIM pulls ahead.** For one user, precision decides the speed; once requests overlap, the engine does. At matched 16-bit precision, Ollama and NIM are within 10% for one user (79 vs 87 tok/s); at 128 the gap is 13.6× (402 vs 5,458). What NIM adds on top of the vLLM inside it is the configuration: it picks a profile for the card (FP8 here) and ships it pinned in one image.
+
+## Claim → evidence
+
+Every number above and in the forum post, with the file it comes from and the key inside that file. Paths are relative to this directory. `Check` says how the number relates to the stored value: `rounds` (the stored value rounds to it), `equals`, or `text` (the quoted text is in the file).
+
+**P59** below is `results/p59_nim_value/analysis.json` (the 25 September run); arm names: `N-BF16`, `N-FP8` (NIM), `O-Q4` (Ollama 4-bit, 16 slots), `O-Q4-def` (Ollama 4-bit, slots left to Ollama), `O-FP16` (Ollama 16-bit, 8 slots); `C` is the chat profile.
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| One user, Ollama 4-bit, tuned · default slots | 172 · 183 | `results/p59_nim_value/analysis.json` | `levels.{O-Q4,O-Q4-def}\|C\|main.1.total_tps` | rounds |
+| One user, NIM bf16 | 87 | `results/p59_nim_value/analysis.json` | `levels.N-BF16\|C\|main.1.total_tps` | rounds |
+| The 4-bit build reads about 3.3× fewer bytes per token | 3.3× | `results/p59_nim_value/analysis.json` | `arms.N-BF16.gate_health.bytes_per_token / arms.O-Q4.gate_health.bytes_per_token` | rounds |
+| NIM and the vLLM inside it: same speed (rate ratio) | 0.99 | `results/p54_engine/single/analysis.json` | `conclusions.V_over_N.generation_rate.ratio_of_means` | rounds |
+| … the same 50 answers byte for byte | 50 / 50 | `results/p54_engine/README.md` | `Responses byte-identical (SHA-256 of the streamed text) \| \| \| **50 / 50**` | text |
+| The crossover is between 2 and 4 | "between 2 and 4: N-BF16 ahead from 4" | `results/p62_levels/analysis.json` | `crossings.N-BF16 vs O-Q4\|C\|total_tps.crossings[0]` | equals |
+| 3.5× ahead at 8 | 3.5× | `results/p59_nim_value/analysis.json` | `levels.N-BF16\|C\|main.8.total_tps / levels.O-Q4\|C\|main.8.total_tps` | rounds |
+| 7.4× at 128 | 7.4× | `results/p59_nim_value/analysis.json` | `levels.N-BF16\|C\|main.128.total_tps / levels.O-Q4\|C\|main.128.total_tps` | rounds |
+| NIM held the server target at 128 (bf16) | true | `results/p59_nim_value/analysis.json` | `levels.N-BF16\|C\|main.128.in_server_slo` | equals |
+| NIM held the server target at 128 (FP8) | true | `results/p59_nim_value/analysis.json` | `levels.N-FP8\|C\|main.128.in_server_slo` | equals |
+| No Ollama configuration held it past one: 4-bit tuned, at 8 | false | `results/p59_nim_value/analysis.json` | `levels.O-Q4\|C\|main.8.in_server_slo` | equals |
+| … 4-bit default slots, at 8 | false | `results/p59_nim_value/analysis.json` | `levels.O-Q4-def\|C\|main.8.in_server_slo` | equals |
+| … 16-bit, at 8 | false | `results/p59_nim_value/analysis.json` | `levels.O-FP16\|C\|main.8.in_server_slo` | equals |
+| FP8 gives another 1.5× over bf16 (clean window) | 1.50× | `results/p78_fp8_clean/analysis.json` | `R2.value` | rounds |
+| FP8 at 128, clean window | 9,062 | `results/p78_fp8_clean/analysis.json` | `tok_s.N-FP8\|128` | rounds |
+| Table: Ollama 4-bit, 16 slots, at 1 · 8 · 32 · 128 | 172 · 175 · 755 · 741 | `results/p59_nim_value/analysis.json` | `levels.O-Q4\|C\|main.{1,8,32,128}.total_tps` | rounds |
+| Table: Ollama 16-bit, 8 slots | 79 · 317 · 390 · 402 | `results/p59_nim_value/analysis.json` | `levels.O-FP16\|C\|main.{1,8,32,128}.total_tps` | rounds |
+| Table: NIM bf16 | 87 · 607 · 2,262 · 5,458 | `results/p59_nim_value/analysis.json` | `levels.N-BF16\|C\|main.{1,8,32,128}.total_tps` | rounds |
+| Table: NIM FP8 | 151 · 1,099 · 3,817 · 8,713 | `results/p59_nim_value/analysis.json` | `levels.N-FP8\|C\|main.{1,8,32,128}.total_tps` | rounds |
+| p99 TTFT at 128, s: NIM bf16 · NIM FP8 · tuned 4-bit Ollama | 1.84 · 0.75 · 31.9 | `results/p59_nim_value/analysis.json` | `levels.{N-BF16,N-FP8,O-Q4}\|C\|main.128.ttft_p99_ms / 1000` | rounds |
+| Matched 16-bit precision at 128 | 13.6× | `results/p59_nim_value/analysis.json` | `levels.N-BF16\|C\|main.128.total_tps / levels.O-FP16\|C\|main.128.total_tps` | rounds |
+| MMLU accuracy, bf16 NIM | 68.9% | `results/p62_quality/analysis.json` | `cells.N-BF16\|mmlu.accuracy_pct` | rounds |
+| MMLU, FP8 NIM vs bf16: difference · CI low · CI high | −0.04 · −0.81 · +0.74 | `results/p62_quality/analysis.json` | `paired_vs_ref.N-FP8\|mmlu.paired.{diff_pp,ci95_pp[0],ci95_pp[1]}` | rounds |
+| MMLU, 16-bit Ollama | +0.11 · −0.53 · +0.74 | `results/p62_quality/analysis.json` | `paired_vs_ref.O-FP16\|mmlu.paired.{diff_pp,ci95_pp[0],ci95_pp[1]}` | rounds |
+| MMLU, 4-bit Ollama | −0.25 · −1.23 · +0.74 | `results/p62_quality/analysis.json` | `paired_vs_ref.O-Q4\|mmlu.paired.{diff_pp,ci95_pp[0],ci95_pp[1]}` | rounds |
+| GSM8K accuracy, bf16 NIM | 85.6% | `results/p63_gsm8k/analysis.json` | `cells.N-BF16.accuracy_pct` | rounds |
+| GSM8K, FP8 NIM | −1.52 · −3.11 · 0.00 | `results/p63_gsm8k/analysis.json` | `comparisons.N-FP8.paired.{diff_pp,ci95_pp[0],ci95_pp[1]}` | rounds |
+| GSM8K, 16-bit Ollama | −1.29 · −2.88 · +0.30 | `results/p63_gsm8k/analysis.json` | `comparisons.O-FP16.paired.{diff_pp,ci95_pp[0],ci95_pp[1]}` | rounds |
+| GSM8K, 4-bit Ollama | −2.43 · −4.40 · −0.53 | `results/p63_gsm8k/analysis.json` | `comparisons.O-Q4.paired.{diff_pp,ci95_pp[0],ci95_pp[1]}` | rounds |
+| FP8 on GSM8K at 1 · 32 concurrent requests | 84.4% · 84.6% | `results/p62_quality/analysis.json` | `concurrency_fp8_gsm8k.accuracy_pct.{c1,c32}` | rounds |
+| Ollama picks 1 parallel slot by default | 1 | `results/p59_nim_value/analysis.json` | `arms.O-Q4-def.ollama_num_parallel.runner_from_log` | equals |
+| `localhost` cost about 2 s per request (median, ms) | 2,059.9 | `../vol3-judges/results/p20_coresidence_v2/analysis.json` | `conclusions.address_delay_ollama_localhost_minus_loopback.ttft_ms.median` | rounds |
+| Run it: the FP8 profile id | — | `scripts/p59_nim_value.py` | `"N-FP8":    {"kind": "nim", "profile": "c4789f7af56c770c1c88b73da666886365534d6980b6b922b41fd97036c77d73"}` | text |
+| Run it: the bf16 profile id and the environment | — | `scripts/p54_engine.py` | `N_MEASURED_ENV = {"NIM_MODEL_PROFILE": PROFILE, "NIM_MAX_MODEL_LEN": "8192", "VLLM_USE_V2_MODEL_RUNNER": "0"}` | text |
+| Without the runner switch: `UVA is not available` | — | `results/p54_engine/attempts_summary.json` | `RuntimeError: UVA is not available` | text |
+| The March post's two arms at 75% and 3.4% of the card's peak bandwidth | — | `../vol3-judges/BASELINE.md` | `sit at 75% and 3.4% of this card's peak` | text |
+
+Two notes in the post have no record in this repository and are operator notes: that a profile's display name with its suffix in parentheses is not accepted as `NIM_MODEL_PROFILE`, and that slots × context has to fit in VRAM for Ollama (the slot ladder that was run is in `results/p59_nim_value/README.md`).
+
+**How to check a row:** open the file, follow the key, compare. To recompute the analysis files from the raw rows, run the analysis script named in each result directory's README (for example `python scripts/p59_analyze.py`); the quality analyses reproduce byte for byte from the published per-item fields (`results/p62_quality/recompute_check.txt`).
+
+## How it was measured
+
+- **Decided before the run.** Each run has a pre-registration file (`prediction_*.json`) with its thresholds, predictions and the SHA-256 of the harness, frozen and hashed (`.sha256`) before the first container starts. A failed prediction is reported as failed.
+- **Both arms must be healthy.** A single-stream generation rate implies a memory bandwidth (bytes read per token × tokens per second). An arm must reach at least 40% of the card's 1,792 GB/s before any ratio is computed (`arms.<arm>.gate_health`); Ollama arms must also show 100% GPU in `ollama ps`.
+- **Closed-loop concurrency.** AIPerf 0.11.0 keeps exactly N requests in flight; synthetic prompts with fixed input and output lengths (`ignore_eos`), 60 s per level after a discarded warm-up level, a fresh prompt set per level, and a detector that refuses a sweep whose calibration prompt hits the prefix cache.
+- **The latency target is fixed first.** MLPerf Inference v5.1, Llama 3.1-8B server scenario: p99 TTFT ≤ 2 s and p99 TPOT ≤ 100 ms. A level is inside or outside; the ceiling is the largest level inside.
+- **Quality is compared item by item.** The same requests go to every arm (0 request-hash mismatches); the paired difference against bf16 NIM carries a 95% interval, and the method is checked on itself (bf16 against bf16: 0.00 [−0.83, +0.83] on GSM8K).
+- **Clean-window rechecks.** The headline cells were measured again with an idle-card gate before every cell (utilization ≤ 2% and ≤ 45 W over 10 s).
+- **The hash chain.** `python ../tools/bound_files.py --history` lists every recorded SHA-256 and verifies the file it binds, as it stood beside its pre-registration.
+
+## Measurement conditions and what is not explained
+
+Stated plainly, because a reader who reruns this will meet the same things.
+
+- **The 25 September run had other load on the desktop GPU.** Its idle sample before the first container read 19% utilization and 50 W, and its levels ended at 3–23% utilization (`results/p59_nim_value/ctx.txt`; `levels.jsonl` → `gpu_end`; summarised in `results/p70_clean_recheck/README.md`). The card drives the desktop, and which desktop applications were open was not recorded.
+- **Re-measured with the card idle, the numbers are 5–12% higher and the ratios hold.** On 27 September (`results/p70_clean_recheck/`): bf16 NIM 6,043 tok/s at 128 (5,458 before), 4-bit Ollama 780 (741), 16-bit Ollama 440 (402); the published ratios reproduce within 6%. The tables above keep the 25 September values because they are the complete sweep.
+- **FP8 had no clean-window figure until 29 September.** On 27 September its arm was refused by the prefix-cache detector: after a container start, the first of two different prompts is slow for a reason that is not a cache. With a detector that separates the two cases, pre-registered, FP8 measured 9,062 tok/s at 128 (`results/p78_fp8_clean/`). Why the first request after a start is slow is unexplained.
+- **FP8's prefill time depends on the prompt's content.** The server's own histogram shows 138 ms for the harness's prompts and 220 ms for AIPerf's prompts of the same length; bf16 shows no such gap (`results/p62_rag/`). The cause was not found, so the RAG-profile conclusion for FP8 is null.
+- **The 4-bit build's total stays flat from 1 to 9 concurrent requests** (175–188 tok/s with 16 slots) and then steps up. The pre-registered explanation failed; the cause is not determined (`results/p62_levels/`).
+- **Session to session, the same cell moves.** Anchors repeated in a later session were 0.955–1.146 of the first run (`results/p62_levels/analysis.json` → `anchors_vs_p59`).
+- **Two quality cells are null by their own gates.** In the first quality run, GSM8K and IFEval reached the output cap on 2.0–3.3% of items against a gate of 1%; GSM8K was measured again with a larger cap (`results/p63_gsm8k/`), IFEval stays descriptive.
+- **Windows and WSL2.** On this host `localhost` resolves to IPv6 first and costs about 2 s per request against a server that listens on IPv4 only; every run addresses `127.0.0.1`. The card also drives the Windows desktop, so "idle" is checked by a gate on utilization and power before each cell rather than assumed.
+
+## Full tables and the detailed write-up
+
+What follows is the write-up section by section. Full level tables, failed predictions and voided runs are in each result directory's README: `results/p54_engine/` (NIM against the vLLM inside it), `results/p59_nim_value/` (the concurrency sweep), `results/p62_levels/`, `results/p62_rag/`, `results/p62_quality/`, `results/p63_gsm8k/`, `results/p70_clean_recheck/`, `results/p78_fp8_clean/`. The re-examination of the March 2026 post is in [`../vol3-judges/BASELINE.md`](../vol3-judges/BASELINE.md), section 12.
+
+### Ratios by concurrency
 
 | Concurrent requests | NIM bf16 ÷ 4-bit (16 slots), total | NIM FP8 ÷ 4-bit, total | NIM bf16 ÷ 16-bit, total (matched precision) | NIM bf16 ÷ 4-bit, per-user end-to-end |
 |---|---|---|---|---|

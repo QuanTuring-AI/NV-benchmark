@@ -1,6 +1,6 @@
 <div align="center">
 
-# 7.4× at 128 concurrent requests: what NIM buys you on one RTX 5090
+# NIM on one RTX 5090: Llama 3.1 8B and Nemotron 3 Nano, measured
 
 ### QuanTuring · NV-benchmark · Llama 3.1 8B and Nemotron on a single RTX 5090 (Blackwell, sm_120)
 
@@ -28,60 +28,54 @@ Every number that leaves this repository is quoted with its measurement boundary
 
 Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md). It is kept exactly as published and is not modified. The comparison that led it is closed out, as an account of how it was measured, in [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §12.
 
-## The series
+## The volumes
 
-| Volume | Question | Directory | Status |
-|---|---|---|---|
-| **Vol.1 (renewed 2026-09)** | Does NIM change one user's speed? Where does serving start to pay? Does answer quality hold? | [`vol1-nim/`](vol1-nim/README.md) | this release |
-| **Vol.2** | NIM + Nemotron: two deployment options on 32 GB | [`vol2-nemotron/`](vol2-nemotron/README.md) | data published 2026-09-25; write-up to follow |
-| **Vol.3** | Judges in NeMo Guardrails on NIM 2.0.12 | [`vol3-judges/`](vol3-judges/README.md) | baseline data published 2026-09-19; the judge study is in progress |
-| Vol.4–5 | NeMo Retriever and Nemotron in a RAG system | not yet created | planned |
-| Vol.1 · March 2026 original (archived) | NIM against Ollama, and NeMo Guardrails' latency, as first published | [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) | frozen |
+**Vol.1 · [Why NIM? Llama 3.1 8B on one RTX 5090, from 1 to 128 concurrent requests](vol1-nim/README.md)**
+For one user the 4-bit Ollama build is faster; from 4 concurrent requests on NIM leads, 7.4× at 128, and it holds the MLPerf server latency target the whole way. NIM's FP8 default adds another 1.5×, with no measurable change on MMLU.
+→ [`vol1-nim/README.md`](vol1-nim/README.md) · tag `vol1-nim-renewed`
+
+**Vol.2 · [Nemotron 3 Nano on one RTX 5090 with NIM: ~300 tok/s, flat to 120k context, 128 concurrent requests](vol2-nemotron/README.md)**
+It fits in 21–25 GiB, generates about 300 tok/s at any context length up to 120k, keeps the server latency target up to 128 concurrent chat requests (8 with long RAG-shaped prompts), and scores 95.7% on GSM8K with reasoning on.
+→ [`vol2-nemotron/README.md`](vol2-nemotron/README.md) · tag `vol2-nemotron-published`
+
+**Vol.3 · [Judges in NeMo Guardrails on NIM 2.0.12](vol3-judges/README.md)** (baseline data; the judge study is in progress)
+With Llama 3.1 8B as its own judge, NeMo Guardrails 0.23.0 blocks the same adversarial prompts as 0.21.0 on this set (42 / 45, with 0 / 90 false blocks); the time it adds comes from the judge's answer length.
+→ [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §2, §8 · tag `vol3-judges-baseline`
+
+**Vol.1 · March 2026 original (archived)** is in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md), frozen as published. Vol.4–5 (NeMo Retriever and Nemotron in a RAG system) are planned.
+
+Each volume's README has the same shape: the headline and a run command first, then a **claim → evidence** table (every number, its file, its key), how it was measured, and the measurement conditions including what we could not explain.
 
 *Directories were renamed on 2026-09-28 to match the volume numbers, and again on 2026-09-29 when Vol.2 and Vol.3 swapped places: [`PATH_MAP.md`](PATH_MAP.md) maps every old path, and [`CHANGELOG.md`](CHANGELOG.md) records both changes.*
 
+## How to check a number
+
+1. **Open the tag** of the article you are reading (table below), on GitHub or with `git checkout <tag>`.
+2. **Find the number** in that volume's README, in the *Claim → evidence* table. Each row gives a file and a key.
+3. **Open the file and follow the key.** The files are JSON; a key such as `levels.N-BF16|C|main.128.total_tps` is a path through it. The stored value should round to the number in the article.
+4. **Recompute it if you want to.** Each result directory's README names the analysis script that produced its `analysis.json` from the raw rows; the scripts run on the published files alone.
+5. **Check that nothing was edited after the fact.** `python tools/bound_files.py --history` lists every file a pre-registration binds by SHA-256 and verifies it.
+
 ### Tags
 
-| Tag | Volume | Commit | Note |
-|---|---|---|---|
-| `vol1-nim-published` | Vol.1 | `3efa794` | rerun Vol.1 here |
-| `vol2-nemotron-published` | Vol.2 | `6af6168` | rerun Vol.2 here; also holds the Vol.1 FP8 clean-window recheck |
-| `vol3-judges-baseline` | Vol.3 | `3efa794` | rerun the Vol.3 baseline here; the judge study has not been published |
+| Tag | Which article it is for | What you see when you open it |
+|---|---|---|
+| `vol1-nim-renewed` | Vol.1, *Why NIM?* | Every Vol.1 run, the 29 September FP8 recheck, and the READMEs with their claim → evidence tables. It points to the commit that adds this row. |
+| `vol2-nemotron-published` | Vol.2, *Nemotron 3 Nano on one RTX 5090* | Every Vol.2 run through 1 October (commit `6af6168`). Its READMEs are the version before the claim → evidence tables were added; the tables are on `main` and in `vol1-nim-renewed`. |
+| `vol3-judges-baseline` | Vol.3 baseline data | The Vol.3 runs at the paths their harnesses were written with (commit `3efa794`, the last one before the directory renames). The judge study has not been published. |
+| `vol1-nim-published` | Vol.1, to rerun a harness byte for byte | The Vol.1 runs at the paths their harnesses were written with (commit `3efa794`, before the renames). It does not contain the FP8 recheck. |
 
-`vol1-nim-published` and `vol3-judges-baseline` point to the last commit before the renames that holds their volumes' runs, so every path in those runs is correct there. `vol2-nemotron-published` points to a commit after the renames, because it includes the runs of 29 September – 1 October; there, [`PATH_MAP.md`](PATH_MAP.md) maps the paths the earlier harnesses were written with.
+**Earlier tags.** These were pushed before the volumes took their current numbers and directory names. They are kept so that links already sent keep working; nothing new points to them.
 
-*Earlier tags and every change to this repository: [`CHANGELOG.md`](CHANGELOG.md).*
+| Tag | Commit | What it holds |
+|---|---|---|
+| `vol2-guardrails-published` | `3efa794` | Vol.3, in `vol1b/` |
+| `vol3-nemotron-published` | `e4f0ec5` | Vol.2, in `vol2/` |
+| `vol1-revisit-published` | `f6b73b2` | Vol.1 (renewed), in `vol1a-revisit/` |
+| `vol2-published` | `e4f0ec5` | Vol.2, in `vol2/` |
+| `vol1b-published` | `40dfce0` | Vol.3, in `vol1b/` |
 
-## Headline results (Vol.1)
-
-Llama 3.1 8B Instruct, one RTX 5090, synthetic chat requests (200 tokens in, 200 out), MLPerf server SLO. Each line links to its table.
-
-- **One user: NIM is the engine it contains.** NIM 2.0.12 and upstream vLLM 0.27.1 ran the same bf16 weights. At temperature 0 they wrote 50 of 50 answers byte-identical, at a generation-rate ratio of 0.990 [0.963, 1.020]. → [`vol1-nim/README.md` §A](vol1-nim/README.md)
-- **For one user the 4-bit build is faster; NIM leads from 4 on.** Against the fastest 4-bit configuration we could build with Ollama (16 slots), NIM bf16's total throughput overtakes it between 2 and 4 concurrent requests. → [§D](vol1-nim/README.md) · [`results/p62_levels/`](vol1-nim/results/p62_levels/README.md)
-- **At 128 concurrent requests, NIM delivers:**
-  - 7.4× the 4-bit build's total throughput with NIM bf16;
-  - 11.8× with NIM's own FP8 choice (*FP8 figures are from the 25 September run. A clean-window recheck on 29 September measured 9,062 tok/s at 128 concurrent requests: 11.6× the clean-window 4-bit figure and 1.50× bf16 NIM in the same window — [`vol1-nim/results/p78_fp8_clean/`](vol1-nim/results/p78_fp8_clean/)*);
-  - 13.6× at matched 16-bit precision.
-
-  NIM was still inside the server SLO at 128. In the same sweep (1, 8, 16, 32, 64 and 128 concurrent requests) the Ollama configurations were outside it from 8 on. → [`vol1-nim/README.md` §0](vol1-nim/README.md) · [`results/p59_nim_value/`](vol1-nim/results/p59_nim_value/README.md)
-
-  *A clean-window recheck on 27 September reproduced these ratios within 6% (7.7× and 13.7× at 128 concurrent requests); absolute throughput was 3–13% higher in every cell it measured.* → [`results/p70_clean_recheck/`](vol1-nim/results/p70_clean_recheck/README.md)
-- **Answer quality.**
-  - MMLU (2,850-item sample): every faster configuration is within ±2 pp of NIM bf16.
-  - GSM8K: the 4-bit build −2.43 pp [−4.40, −0.53]; NIM FP8 −1.52 pp [−3.11, 0.00]. Both are undetermined against ±2 pp.
-
-  → [§E](vol1-nim/README.md) · [`results/p63_gsm8k/`](vol1-nim/results/p63_gsm8k/README.md)
-- **Nemotron (Vol.2).**
-  - Fit: both deployment options fit the 32 GB card (22,909 / 25,972 MiB in use at their smallest passing budgets).
-  - Speed: the MoE option generates 4.14× faster per token and finishes an answer about 2.9× sooner.
-  - Concurrency: on the chat profile it stays inside the server SLO up to 128 concurrent requests (the same ceiling on a gated re-run). The dense option's engine exits under concurrent load: over two nights all 8 of its containers ended with the same error — twice at 16 concurrent requests, five times at 32, once at 64 — while upstream vLLM 0.30.0 on the same weights ran 16, 32 and 64 without an engine exit.
-
-  → [`vol2-nemotron/BASELINE.md`](vol2-nemotron/BASELINE.md) §A–§C
-- **Judges (Vol.3).** Baseline data; the judge study is in progress.
-  - With Llama 3.1 8B as its own judge, NeMo Guardrails 0.23.0 blocks the same adversarial prompts as 0.21.0 on this set: 42 / 45, with 0 / 90 false blocks.
-  - The time it adds per request comes from the judge's answer length: by default 0.23.0 lets the self-check judge answer with up to 1,024 tokens, where 0.21.0 asked for 3.
-
-  → [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §2, §8
+*Every change to this repository: [`CHANGELOG.md`](CHANGELOG.md).*
 
 ## How to read a number here
 
@@ -98,14 +92,14 @@ Llama 3.1 8B Instruct, one RTX 5090, synthetic chat requests (200 tokens in, 200
 1. Clone with `git -c core.autocrlf=false clone …`. SHA-bound files are stored byte for byte (`.gitattributes`).
 2. Verify the hash chain: `python tools/bound_files.py --history` lists every file a pre-registration or sidecar binds and checks each one in the commit where its pre-registration was frozen; it also reports whether the file at today's path is the same blob.
 3. Each results directory's README gives its harness, runner and environment variables. The analysers run on the published files alone.
-4. To rerun a harness byte for byte, check out its volume's tag (above). Frozen harnesses import each other by the paths they were written with, and those paths exist only at the tag.
+4. To rerun a harness byte for byte, check out a tag that holds it at the paths it was written with (`vol1-nim-published`, `vol3-judges-baseline`, or the earlier tags above); at later tags, [`PATH_MAP.md`](PATH_MAP.md) gives the mapping. Frozen harnesses import each other by the paths they were written with, and those paths exist only at those tags.
 
 ## Deployment notes (RTX 5090)
 
 | Topic | Where |
 |---|---|
 | Pin the profile. On this card NIM 2.0.12 selects its FP8 profile when nothing is set, and for these models it offers vLLM profiles only. | [`vol1-nim/README.md` §B](vol1-nim/README.md) · [`vol2-nemotron/results/p50_availability/`](vol2-nemotron/results/p50_availability/README.md) |
-| `VLLM_USE_V2_MODEL_RUNNER=0` on Docker Desktop / WSL2 (the default runner fails with "UVA is not available") | [`vol1-nim/README.md` §B](vol1-nim/README.md) |
+| `VLLM_USE_V2_MODEL_RUNNER=0` for the Llama 3.1 8B image on Docker Desktop / WSL2 (its default runner fails with "UVA is not available"). The Nemotron 3 Nano image started without it. | [`vol1-nim/README.md` §B](vol1-nim/README.md) · [`vol2-nemotron/README.md`](vol2-nemotron/README.md) (claim → evidence, *Run it* rows) |
 | `NIM_MAX_MODEL_LEN=8192` (the default context does not leave room for the KV cache) | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) §3 |
 | NGC key without a trailing space · PowerShell single-line commands · Windows console encoding (cp950) with multilingual output | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) §4–§6 |
 | NeMo Guardrails self-check prompts | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) (Guardrails section) · [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §8–§9 |

@@ -2,6 +2,15 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-10-01 · READMEs rewritten around the articles' headlines; claim → evidence tables; tag `vol1-nim-renewed`
+
+- **Vol.1 and Vol.2 READMEs** now open the way the articles do: the headline (Vol.1: *Why NIM?*; Vol.2: *Nemotron 3 Nano on one RTX 5090*), a short summary, the `docker run` that was measured and the main table. No number changed.
+- **Claim → evidence tables.** Every number in the two articles has a row with its file and the key inside it ([`vol1-nim/README.md`](vol1-nim/README.md), [`vol2-nemotron/README.md`](vol2-nemotron/README.md)). Where the stored value rounds differently from an earlier text, the table follows the file: the 4-bit build reads 3.3× fewer bytes per token, and bf16 NIM scores 68.9% on the MMLU sample.
+- **Measurement conditions and what is not explained** have their own section in each README: other load on the desktop GPU, the part of a container that Windows can move to system RAM, container-to-container and session-to-session differences, the slow phase after READY, and the runs that are null by their own rules.
+- **Root README:** three lines per volume, a *How to check a number* walk-through, and the tags described by which article each one is for.
+- **One statement narrowed:** `VLLM_USE_V2_MODEL_RUNNER=0` is needed by the Llama 3.1 8B image on this host; the Nemotron 3 Nano image started without it.
+- **Tag** `vol1-nim-renewed`: one tag for the Vol.1 article, holding every Vol.1 run, the FP8 recheck and these READMEs. No pushed tag was moved.
+
 ## 2026-10-01 · Vol.2: answer quality, NIM against upstream vLLM, the concurrency sweeps repeated; Vol.1: FP8 in a clean window
 
 - **Vol.2, answer quality:** GSM8K and an MMLU sample for both Nemotron options with reasoning on and off (P78). → [`vol2-nemotron/BASELINE.md`](vol2-nemotron/BASELINE.md) §H · `vol2-nemotron/results/p78_quality/`
