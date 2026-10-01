@@ -45,10 +45,10 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 | Tag | Volume | Commit | Note |
 |---|---|---|---|
 | `vol1-nim-published` | Vol.1 | `3efa794` | rerun Vol.1 here |
-| `vol2-nemotron-published` | Vol.2 | `e4f0ec5` | rerun Vol.2 here |
+| `vol2-nemotron-published` | Vol.2 | `6af6168` | rerun Vol.2 here; also holds the Vol.1 FP8 clean-window recheck |
 | `vol3-judges-baseline` | Vol.3 | `3efa794` | rerun the Vol.3 baseline here; the judge study has not been published |
 
-Each tag points to the last commit before the renames that holds its volume's runs, so every path in those runs is correct there.
+`vol1-nim-published` and `vol3-judges-baseline` point to the last commit before the renames that holds their volumes' runs, so every path in those runs is correct there. `vol2-nemotron-published` points to a commit after the renames, because it includes the runs of 29 September – 1 October; there, [`PATH_MAP.md`](PATH_MAP.md) maps the paths the earlier harnesses were written with.
 
 *Earlier tags and every change to this repository: [`CHANGELOG.md`](CHANGELOG.md).*
 
@@ -60,7 +60,7 @@ Llama 3.1 8B Instruct, one RTX 5090, synthetic chat requests (200 tokens in, 200
 - **For one user the 4-bit build is faster; NIM leads from 4 on.** Against the fastest 4-bit configuration we could build with Ollama (16 slots), NIM bf16's total throughput overtakes it between 2 and 4 concurrent requests. → [§D](vol1-nim/README.md) · [`results/p62_levels/`](vol1-nim/results/p62_levels/README.md)
 - **At 128 concurrent requests, NIM delivers:**
   - 7.4× the 4-bit build's total throughput with NIM bf16;
-  - 11.8× with NIM's own FP8 choice (*FP8 figures are from the 25 September run; a clean-window recheck is pending*);
+  - 11.8× with NIM's own FP8 choice (*FP8 figures are from the 25 September run. A clean-window recheck on 29 September measured 9,062 tok/s at 128 concurrent requests: 11.6× the clean-window 4-bit figure and 1.50× bf16 NIM in the same window — [`vol1-nim/results/p78_fp8_clean/`](vol1-nim/results/p78_fp8_clean/)*);
   - 13.6× at matched 16-bit precision.
 
   NIM was still inside the server SLO at 128. In the same sweep (1, 8, 16, 32, 64 and 128 concurrent requests) the Ollama configurations were outside it from 8 on. → [`vol1-nim/README.md` §0](vol1-nim/README.md) · [`results/p59_nim_value/`](vol1-nim/results/p59_nim_value/README.md)

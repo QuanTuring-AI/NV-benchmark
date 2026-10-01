@@ -37,7 +37,7 @@ Llama 3.1 8B Instruct on one RTX 5090. The concurrency results use synthetic cha
 | 64 | 5.1 | 8.0 | 9.4 | 4.1 |
 | **128** | **7.4** (5,458 / 741) | **11.8**¹ (8,713 / 741) | **13.6** (5,458 / 402) | **4.1** (45 / 11) |
 
-¹ *FP8 figures are from the 25 September run; a clean-window recheck is pending.*
+¹ *FP8 figures are from the 25 September run. A clean-window recheck on 29 September measured 9,062 tok/s at 128 concurrent requests: 11.6× the clean-window 4-bit figure and 1.50× bf16 NIM in the same window (`results/p78_fp8_clean/`, section D).*
 
 > Every ratio above is a division of two cells in `results/p59_nim_value/README.md`. At 128 concurrent requests NIM was still inside the MLPerf server SLO; the Ollama arms had left it at 8, so the ratios above 8 compare a configuration that is serving with one that is queueing. A ratio is a function of concurrency, not a property of an engine, and is quoted only with the concurrency, the precision of both arms, the input shape (synthetic chat, 200 in / 200 out) and whether the SLO held.
 
@@ -116,6 +116,24 @@ A single-user comparison cannot stand for a serving engine; this run adds the co
   - **N-BF16:** calibration passes, and the server SLO holds at 1 concurrent request (p99 TTFT 353 ms), not at 8 (2,229 ms) (`rag.N-BF16.conclusion`).
   - **N-FP8:** the conclusion stays **null**. Its calibration failed again without any prefix-cache hit. The server's own TTFT histogram places the gap in the server: 138 ms for the harness's prompts against 220 ms for AIPerf's prompts of the same length, and AIPerf agrees with the server. The FP8 arm's prefill time depends on the prompt content (BF16's does not: 309 against 302 ms), for a reason this run cannot see (`server_side_reading`).
 
+**FP8 at 128 concurrent requests with the card otherwise idle (P78, 2026-09-29, `results/p78_fp8_clean/`).** The 27 September clean-window recheck (`results/p70_clean_recheck/`) has no FP8 figure: its FP8 arm was refused by the prefix-cache detector. This run repeats that arm with a detector that tells a warm-up from a cache hit, pre-registered before the first container, and with NIM bf16 at 128 in the same window as an anchor. Image, profiles, context length 8,192, chat profile and 60 s levels are unchanged.
+
+- **Window:** 2026-09-29, 21:59–22:21 (+0800). The card read 0% and 11.4 W before the run, and the idle-card gate (utilization ≤ 2% and power ≤ 45 W over 10 s) passed before each of the four measured cells (`analysis.json` → `g8_all_pass`, `g8_cells`).
+- **Detector:** its positive control (the same prompt sent twice) fired on both containers (`detector.<arm>.pass`).
+
+| Configuration | Concurrent requests | Total tok/s (`analysis.json` → `tok_s`) |
+|---|---:|---:|
+| NIM FP8 | 1 | 160.5 |
+| NIM FP8 | 32 | 4,018.0 |
+| NIM FP8 | 128 | **9,061.9** |
+| NIM bf16 (same window) | 128 | 6,049.7 |
+
+- **R1 · FP8 ÷ the 4-bit build, both in a clean window:** 9,061.9 / 780.24 = **11.61**, where 780.24 tok/s is the 4-bit build at 128 in the 27 September clean window (`results/p70_clean_recheck/analysis.json` → `cells.O-Q4|128.total_tps`). Pre-registered band [10.5, 13.5]: pass.
+- **R2 · FP8 ÷ bf16 in the same window:** 9,061.9 / 6,049.7 = **1.498**. Band [1.45, 1.75]: pass.
+- **R3 · the anchor:** bf16 at 128 is 6,049.7 tok/s against 6,043.3 on 27 September (0.11% apart; band ±5%): pass.
+
+The 25 September figures in section 0 (8,713 tok/s, 11.8×) are left as published; they divide by that day's 4-bit figure (741 tok/s), and the 11.61 above divides by the clean-window one.
+
 ## E · Answer quality: is the faster configuration faster because it answers worse? (`results/p62_quality/`, `results/p63_gsm8k/`)
 
 lm-evaluation-harness 0.4.13 was run against the four configurations: N-BF16, N-FP8, O-Q4 (`ollama show`: Q4_K_M) and O-FP16. It used the same task configuration and request bodies on every arm (0 request-hash mismatches over every item).
@@ -145,4 +163,4 @@ Details, gates, predictions: `results/p62_quality/README.md` and `results/p63_gs
 
 ## Files
 
-`../vol1-nim/results/p54_engine/` (pre-registration, stack record, start attempts, single-stream and concurrency runs, analyses) · `results/p59_nim_value/` (section D) · `results/p62_levels/`, `results/p62_rag/` (section D, follow-ups) · `results/p62_quality/`, `results/p63_gsm8k/` (section E). P62 and P63 harnesses, analysers and runners: `scripts/p62_*.py`, `scripts/p63_*.py`, `scripts/run_p62_*.sh`, `scripts/run_p63_gsm8k.sh`. Harness `../vol1-nim/scripts/p54_engine.py`; analysis `../vol1-nim/scripts/p54_single_analyze.py`, `p54_conc_analyze.py`, `p54_attempts_analyze.py`; runner `../vol1-nim/scripts/run_p54_engine.sh`.
+`../vol1-nim/results/p54_engine/` (pre-registration, stack record, start attempts, single-stream and concurrency runs, analyses) · `results/p59_nim_value/` (section D) · `results/p62_levels/`, `results/p62_rag/` (section D, follow-ups) · `results/p78_fp8_clean/` (section D, FP8 in a clean window; harness `scripts/p78_fp8_clean.py`, analysis `../vol2-nemotron/scripts/p78_analyze.py`) · `results/p62_quality/`, `results/p63_gsm8k/` (section E). P62 and P63 harnesses, analysers and runners: `scripts/p62_*.py`, `scripts/p63_*.py`, `scripts/run_p62_*.sh`, `scripts/run_p63_gsm8k.sh`. Harness `../vol1-nim/scripts/p54_engine.py`; analysis `../vol1-nim/scripts/p54_single_analyze.py`, `p54_conc_analyze.py`, `p54_attempts_analyze.py`; runner `../vol1-nim/scripts/run_p54_engine.sh`.

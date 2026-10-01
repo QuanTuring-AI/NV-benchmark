@@ -2,11 +2,19 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-10-01 · Vol.2: answer quality, NIM against upstream vLLM, the concurrency sweeps repeated; Vol.1: FP8 in a clean window
+
+- **Vol.2, answer quality:** GSM8K and an MMLU sample for both Nemotron options with reasoning on and off (P78). → [`vol2-nemotron/BASELINE.md`](vol2-nemotron/BASELINE.md) §H · `vol2-nemotron/results/p78_quality/`
+- **Vol.2, NIM against the engine it contains, on Nemotron 3 Nano** (P78). → `BASELINE.md` §I · `vol2-nemotron/results/p78_nim_vs_vllm/`
+- **Vol.2, the concurrency sweeps repeated on a gated night** (P80), after an audit of the earlier runs' end-of-cell GPU records (P78) and a diagnosis of a slow morning run (P79). Four of the six sweeps reproduce their SLO ceilings by the original runs' own rules; both values are published side by side. The dense option's engine exit is counted over two nights instead of being stated as a ceiling at 32. → `BASELINE.md` §C, §J · [`vol2-nemotron/results/p80_rerun/`](vol2-nemotron/results/p80_rerun/README.md) · `results/p78_audit/` · `results/p79_host_state/`
+- **Vol.1, FP8 at 128 concurrent requests with the card otherwise idle** (P78, measured 29 September): 9,062 tok/s, 11.6× the clean-window 4-bit figure and 1.50× bf16 NIM in the same window. The two notes that announced this recheck are replaced by its result. → [`vol1-nim/README.md`](vol1-nim/README.md) §D · `vol1-nim/results/p78_fp8_clean/`
+- **Tag** `vol2-nemotron-published` now points to `6af6168`, the commit that holds the runs above. It had been set to `e4f0ec5` on 2026-09-29 and was not pushed before today, so no pushed tag was moved. Two sentences were written while the tag still pointed to `e4f0ec5` and read wrongly at the new commit: `vol2-nemotron/README.md` says these runs "were added after the `vol2-nemotron-published` tag" (they are in it), and the two FP8 notes say "pending" (replaced on `main` by the commit after it). `vol3-judges-baseline` (`3efa794`) is pushed today as set on 2026-09-29.
+
 ## 2026-09-29 · Vol.2 and Vol.3 swapped; directories renamed again; this changelog
 
 - **Vol.2 and Vol.3 swapped places** so that the reading order is NIM (Vol.1), then Nemotron on NIM (Vol.2), then judges (Vol.3): a reader meets Nemotron before reading about Nemotron as a judge.
 - **Directories renamed to match**, as pure moves (1,228 files): `vol3-nemotron/` → [`vol2-nemotron/`](vol2-nemotron/README.md), `vol2-guardrails/` → [`vol3-judges/`](vol3-judges/README.md). Neither new name had been used before. [`PATH_MAP.md`](PATH_MAP.md) follows every path through both renames.
-- **Tags** `vol2-nemotron-published` (`e4f0ec5`) and `vol3-judges-baseline` (`3efa794`). This tag marks the baseline data; the judge study has not been published. The two tags pushed on 2026-09-28 for these volumes stay as they were (see the table below).
+- **Tags** `vol2-nemotron-published` (`6af6168`; set to `e4f0ec5` on this day and moved on 2026-10-01 before it was ever pushed, see above) and `vol3-judges-baseline` (`3efa794`). This tag marks the baseline data; the judge study has not been published. The two tags pushed on 2026-09-28 for these volumes stay as they were (see the table below).
 - **Vol.3** is titled as baseline data. Its Llama judge measurements (the Guardrails version bridge, the self-check `max_tokens` setting, the rails under load) are the baseline for a judge study that is in progress.
 - **Vol.1:** its README no longer carries a Guardrails point, and it names no other volume.
 - **This changelog** was added, and the README lists only the current tags.
