@@ -1,0 +1,75 @@
+#!/usr/bin/env python3
+"""Vol.2 · P79 · write the pre-registration for the host-state diagnosis (before the first container of T1).
+usage: p79_gen_prediction.py "<$(date +%FT%T%z)>"   -> vol2-nemotron/results/p79_host_state/prediction_p79_host_state.json
+The freeze step scans the file for red-line strings before its .sha256 sidecar is written."""
+import hashlib, json, os, sys
+
+HERE = os.path.dirname(os.path.abspath(__file__)); REPO = os.path.abspath(os.path.join(HERE, "..", ".."))
+OUT = os.path.join(HERE, "..", "results", "p79_host_state"); os.makedirs(OUT, exist_ok=True)
+h = lambda p: hashlib.sha256(open(p, "rb").read()).hexdigest()  # noqa: E731
+rel = lambda p: os.path.relpath(p, REPO).replace(os.sep, "/")  # noqa: E731
+BOUND = [os.path.join(HERE, f) for f in ("p79_host_state.py", "p79_judge.py", "p79_gen_prediction.py", "p53_concurrency_v2.py", "p50_footprint.py")] + \
+        [os.path.join(REPO, "tools", f) for f in ("g8_gate.py", "host_gate.py", "overwrite_gate.py")]
+P55 = "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl"
+G6 = "vol2-nemotron/results/p78_clean_rerun/levels.jsonl"
+
+p = {
+    "ticket": "P79", "written_at": sys.argv[1], "written_before": "the first container of T1 (p79_host_state.py --phase T1)",
+    "purpose": "diagnosis only: why the P78 G6 re-run of the s256 sweeps (2026-09-30 06:49-08:46) was 6-20x slower than P55 (2026-09-23) with the same image, profile, container settings and AIPerf command. Nothing measured here feeds a table.",
+    "hypotheses": {
+        "H1_host_state": "after about 7 days of host uptime some state in the Windows GPU driver / WSL GPU path makes CUDA work slow; a host reboot restores it. Predicts: T1 both settings abnormal, T2 both normal.",
+        "H2_setting": "NIM_MAX_MODEL_LEN 8192 is slow on today's host regardless of time. Predicts: K8 abnormal and K16 normal, in T1 and in T2.",
+        "H3_transient": "something on the host during 06:49-08:56 (a scheduled task, an update, a scan) has since gone. Predicts: T1 both normal.",
+    },
+    "design": {
+        "phases": {"T1": "before the host reboot", "T2": "after the host reboot (Steam not running, no container, G8 passes first)"},
+        "order_per_phase": ["K8", "K16", "K8"],
+        "why_K8_twice": "separates 'the first container is slow' from 'the setting is slow'",
+        "settings": {"K8": "Nemotron 3 Nano, NIM 2.0.12, NVFP4 profile, NIM_MAX_MODEL_LEN 8192 (as p55_concurrency_a2_256 main and P78 s256)",
+                     "K16": "the same with NIM_MAX_MODEL_LEN 16384 (as P78 G4's N3)",
+                     "one_variable": "both are started by p50_footprint.start (the docker run of P55 and P78 G6); only NIM_MAX_MODEL_LEN differs"},
+        "per_container": ["one short request after READY",
+                          "P55's 120 s c=1 warm-up level (profile R), discarded: this NIM serves at about half speed for 10-50 s after READY",
+                          "three 60 s cells, p53_concurrency_v2's AIPerf command unchanged (the command P55 ran): R c=1, C c=1, C c=128"],
+        "recorded": ["nvidia-smi timestamp, SM and memory clocks, active throttle reasons, power, utilization every 500 ms for the container's whole life",
+                     "WSL kernel log: lines containing dxg, and dxgkio_make_resident failures; WSL VM start time; after READY and before stop",
+                     "per-process and adapter GPU memory from the Windows counters every 10 s and at every cell start/end (nvidia-smi under WDDM does not show the desktop compositor's share)",
+                     "G8 and the host record per cell; the container logs",
+                     "sha256 of every P78 G6 result file before and after the phase (they must be unchanged)"],
+    },
+    "references": {
+        "R_c1_ttft_p50_ms": {"value": 156.0, "source": f"{P55} line 15 (2026-09-23T18:41:31, 156.2 ms)",
+                             "note": "line 15 is P55's discarded 120 s warm-up level; the measured R c=1 row is line 16 (18:44:15) at 157.7 ms. The ticket's value is used."},
+        "C_c128_itl_p50_ms": {"value": 30.7, "source": f"{P55} line 9 (2026-09-23T18:06:14)"},
+        "C_c1_itl_p50_ms": {"value": 3.2, "source": f"{P55} line 2 (2026-09-23T17:55:56, 3.15 ms)"},
+    },
+    "rules": {
+        "cell_normal": "value <= 2 x reference (2x allows day-to-day drift). C c=128: 2 x 30.7 = 61.4 ms (the ticket writes 61).",
+        "cell_abnormal": "R c=1 TTFT p50 >= 1,000 ms, or C c=128 ITL p50 >= 120 ms (about a third of this morning's values, so this morning's state lands inside)",
+        "cell_grey": "between the two; reported as grey, not assigned to either side",
+        "C_c1": "the ticket gives no abnormal line: normal within 2x, otherwise grey",
+        "container": "normal when R c=1 and C c=128 are both normal; abnormal when either is abnormal; otherwise grey",
+        "judge": "vol2-nemotron/scripts/p79_judge.py (self_test includes the positive control and two mutation tests)",
+        "positive_control": f"this morning's s256_R c=1 TTFT p50 3,356.9 ms ({G6} line 13) must classify as abnormal",
+    },
+    "branches": [
+        {"T1": "both settings abnormal", "T2": "both normal", "reading": "H1 (a reboot restores)", "next": "host uptime becomes a measurement condition; the sentinel gate applies from now on; the s256 and v2 sweeps and G5 are re-run on a freshly rebooted host on another night (not in P79)"},
+        {"T1": "both settings normal", "T2": "(run anyway)", "reading": "H3 (transient, gone)", "next": "T2 confirms a reboot does not move the normal values; re-runs scheduled separately"},
+        {"T1": "K8 abnormal, K16 normal", "T2": "the same", "reading": "H2 (setting)", "next": "T2 still run to rule out an interaction; the two start logs compared in full at zero GPU"},
+        {"T1": "any", "T2": "either setting still abnormal", "reading": "a reboot does not restore: none of the three is enough", "next": "stop and report; no driver, image or setting change"},
+        {"T1": "grey", "T2": "grey", "reading": "reported as is", "next": "not assigned"},
+    ],
+    "state_before_T1_disclosed": [
+        "Windows has been up since 2026-09-23 (7 days). The WSL VM was restarted with `wsl --shutdown` at 2026-09-30 09:13 during an earlier check, so the WSL start time and the dxg line counts cover only the time since then.",
+        "Earlier checks this morning (outside this pre-registration, fresh container, NIM default max length, not 16384, P78 G4's AIPerf command): 09:05 c=1 280 tok/s, c=128 2,786 tok/s (ITL p50 41.7 ms); 09:23, after the WSL restart, c=1 276, c=128 886 tok/s (ITL p50 112.1 ms). G4 at 05:38: 300 and 3,572.",
+        "The WSL kernel log since 09:14:50 holds one `dxgkio_make_resident: Ioctl failed: -12` at 09:18:10, during the second check's container start.",
+        "Windows GPU counters with no container: the desktop compositor's dedicated-memory commitment 7.9 GB, the adapter's resident dedicated total 0.7 GB. During the G6 run at 08:10: container 30.5 GB dedicated plus 0.62 GB shared (system memory).",
+        "Attempt 1 of this pre-registration (frozen 2026-09-30T09:39:01, sidecar b40461d5...) stopped 3 s into T1, before any container: the harness decoded Windows command output as UTF-8 on a non-UTF-8 console code page. That file and its outputs are kept under logs/attempt1_20260930T093940/; the harness now decodes with the system code page, and this file was generated and frozen again.",
+        "Attempt 2 (frozen 2026-09-30T09:40:57, sidecar 2887b97d...) was stopped at 09:53 in its first container, after the discarded warm-up level and before any measured cell: G8 kept failing because the 500 ms nvidia-smi logger this ticket requires lifts the idle utilization reading from 2.0% to 2.5% (measured at 09:55 with no container), over G8's 2% line, so every cell would have waited 15 minutes. G8 is now one 10 s attempt per cell, recorded and not waited on (the cell ran either way in both versions). Kept under logs/attempt2_20260930T095444/.",
+        "Seen in attempt 2's first container (K8) before this freeze: during its start the WSL kernel log gained one make_resident failure (1 -> 2, at 09:44:35) and the container held 0.367 GiB in system memory at READY; its discarded warm-up level (R, c=1, 120 s) read TTFT p50 165.1 ms, which is inside the normal line. A start with a residency failure was therefore not slow at R c=1 in that container.",
+    ],
+    "harness_sha256": {rel(f): h(f) for f in BOUND},
+}
+path = os.path.join(OUT, "prediction_p79_host_state.json")
+json.dump(p, open(path, "w", encoding="utf-8", newline="\n"), ensure_ascii=False, indent=1)
+print("written", rel(path), "binds", len(p["harness_sha256"]), "files")

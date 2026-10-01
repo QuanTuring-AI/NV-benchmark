@@ -1,0 +1,111 @@
+{
+ "ticket": "P80",
+ "written_at": "2026-09-30T23:39:55+0800",
+ "written_before": "the first container of the P80 night (p80_rerun.py, real run)",
+ "scope": "the gates added to the P78 G6 and G5 runs; the P78 pre-registrations of those runs (prediction_p78_clean_rerun.json, prediction_p78_n2_upstream.json) stay in force unchanged",
+ "order": [
+  "s256_C",
+  "s256_R",
+  "v2_A2_C",
+  "v2_A2_R",
+  "v2_A1_C",
+  "v2_A1_R",
+  "G5"
+ ],
+ "results": "vol2-nemotron/results/p80_rerun/ (a new directory; the stopped P78 G6 data in p78_clean_rerun/ are not touched)",
+ "host": {
+  "windows_boot": "2026-09-30T13:28:30",
+  "note": "the host was rebooted at 13:28 on 2026-09-30 for P79 T2 and not again before this night (the owner's decision); P79 found no effect of uptime (T1 at day 7 and T2 after the reboot, 18/18 normal)"
+ },
+ "sentinel_G9": {
+  "when": "per group, after the discarded 120 s warm-up level and the calibration, before the first measured level",
+  "probes": "two 30 s AIPerf levels with p53_concurrency_v2's command: long input (profile R) at c=1, TTFT p50; short input (profile C) at the group's reference level, ITL p50",
+  "rule": "each value <= 2 x its reference (tools/container_sentinel.py speed_check)",
+  "fail": "the container is restarted once and probed again; a second failure makes the group null (reported, the next group runs)",
+  "references": {
+   "s256_C, s256_R": {
+    "R_c1_ttft_p50_ms": [
+     157.66,
+     "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl line 16"
+    ],
+    "short_level": 128,
+    "C_c128_itl_p50_ms": [
+     30.7,
+     "vol2-nemotron/results/p55_concurrency_a2_256/levels.jsonl line 9"
+    ]
+   },
+   "v2_A2_C, v2_A2_R": {
+    "R_c1_ttft_p50_ms": [
+     144.06,
+     "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl line 36"
+    ],
+    "short_level": 32,
+    "C_c32_itl_p50_ms": [
+     19.4,
+     "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl line 30"
+    ],
+    "why_32": "the sweep's max_num_seqs is 32; its original was measured there"
+   },
+   "v2_A1_C, v2_A1_R": {
+    "R_c1_ttft_p50_ms": [
+     318.93,
+     "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl line 13"
+    ],
+    "short_level": 16,
+    "C_c16_itl_p50_ms": [
+     19.69,
+     "vol2-nemotron/results/p53_concurrency_v2/levels.jsonl line 6"
+    ],
+    "why_16": "this engine exits at 32 (P53); 16 is its highest level with a measured original"
+   },
+   "G5": "no reference (a new engine on this model): the two probes are recorded and not judged"
+  },
+  "reference_rows": "the measured rows of the original main sweeps, not their discarded warm-up rows (P79 used the warm-up row's 156 ms as its ticket wrote; this file uses the measured row)",
+  "layer_1": "make_resident failures and the container's system-memory share at READY: recorded only (P79: present at every one of 7 normal loads)"
+ },
+ "arm_health": {
+  "when": "before and after every measured cell",
+  "probe": "c=1 for 10 s: streamed requests (p78_n2_upstream.one, max_tokens 400, one fixed prompt), generation-rate median",
+  "rule": "after / before < 0.8 -> the cell is marked, the container restarted (warm-up level and calibration again) and the cell run once more; still < 0.8 -> the cell is null; the next cell runs",
+  "not_applied": "a cell whose engine died (A1's engine exit at 32 is its ceiling, as in P53)"
+ },
+ "records_only": [
+  "nvidia-smi every 500 ms (timestamp, SM and memory clocks, active throttle reasons, power, utilization, memory used) for each container's whole life, paused for each 10 s G8 sample",
+  "before and after every cell: the container's system-memory share, the desktop compositor's commitment, the WSL make_resident count (tools/container_sentinel.py)",
+  "the Windows GPU counters every 10 s, reduced (p80_postrun.reduce_map): no desktop process names are written"
+ ],
+ "g8": "unchanged from P78 (before every cell, retried up to 15 min, a cell whose G8 did not pass is null). The 500 ms logger is paused during each 10 s G8 sample: it lifts the idle utilization reading from 2.0% to 2.5% (P79, 09:55), over G8's 2% line",
+ "time_gate": "no new group, cell or context step once the stop time (--stop, default 08:00, before noon) is reached; an extension is a new --stop value written into run_start with --stop-reason",
+ "judge": {
+  "program": "vol2-nemotron/scripts/p80_judge.py (self_test: the positive control and two mutation tests)",
+  "cell": "speed_ratio = total tok/s / the original main sweep at the same level; abnormal <= 0.5, normal >= 0.8, grey between; no original -> 'no original'",
+  "shape": "the morning shape of 2026-09-30: utilization median >= 95% and power median <= 200 W over the cell's nvidia-smi rows, and speed_ratio <= 0.5 -> flagged; the cell is run to its end and recorded (P80 section 2)",
+  "positive_control": "this morning's s256_R c=1 (99.8 vs 273.5 tok/s) and s256_C c=128 (543.3 vs 3,902.1 tok/s), vol2-nemotron/results/p78_clean_rerun/levels.jsonl lines 13 and 9, must be abnormal",
+  "p78_predictions_judged": "s256_C P1 and P2 (prediction_p78_clean_rerun.json); G5 P1-P3 (prediction_p78_n2_upstream.json); every other sweep is recorded beside its original"
+ },
+ "branches": {
+  "all_seven_normal": "the Vol.2 concurrency numbers are taken from this night; the dirty P53 / P55 cells are marked in the README as replaced by P80",
+  "sentinel_fails_twice": "that group null, reported, the next group runs",
+  "morning_shape_again": "the cell runs to its end; its full clock and memory curves are attached to the report",
+  "g5_fails_to_start": "what was tried and where it stopped is written; no other version is tried"
+ },
+ "refrozen": "an earlier freeze (2026-09-30T19:46:38, sidecar 3cee6f4e...) is kept under logs/superseded_*; p80_rerun.py then gained one test-only flag, --sentinel-scale (refused without --test), so that the path 'sentinel fails, restart, fails again, group null, next group' could be run with the real command line; nothing else changed and no real container had started",
+ "harness_sha256": {
+  "vol2-nemotron/scripts/p80_rerun.py": "0baa7f97a7691e0caa7d00b64f8c39d1709281ec32644d05282e9fc9b77a2df6",
+  "vol2-nemotron/scripts/p80_judge.py": "0c77a58fe8e21bd3b395369ae19f1af6f2fae5bdece3527d5e66bb340f1b091e",
+  "vol2-nemotron/scripts/p80_gen_prediction.py": "89adc1fe228635f18b55a284e0d2ca13318d6e4111e99ff181e85912f3fd0fc4",
+  "vol2-nemotron/scripts/p80_postrun.py": "ad66406e3f7b482b723377de23e9cd2ee897b7a628440b31b32e331e92900391",
+  "vol2-nemotron/scripts/p78_clean_rerun.py": "b6663f00d4652a90f4c6869b265a2255a5cc149e520a725c8b5efda90fc750f9",
+  "vol2-nemotron/scripts/p78_n2_upstream.py": "8adbc063d877ebd5fd8cfbbb41499c553dab41b495b96edced58f3ab188d673c",
+  "vol2-nemotron/scripts/p78_engines.py": "889186f5125b59a9ed85accc2492ad1562c3b8b2ac2f35bc093032d35c300828",
+  "vol2-nemotron/scripts/p78_quality.py": "5117a84b49d4b1b9dc563c73a579c7783fcbf438868bfde6cbcb8c4cc38b6884",
+  "vol2-nemotron/scripts/p78_nim_vs_vllm.py": "af6112d6bd964e89bdce91566eae992dd740dab22719a6aae3be8b5fcd6d4788",
+  "vol2-nemotron/scripts/p53_concurrency_v2.py": "f7eabd113b8deeec2bdb554632eeafb8d41441039335d96cca8f420f522c6dba",
+  "vol2-nemotron/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+  "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb",
+  "tools/host_gate.py": "3ff71b506d7c44b0c3519d70f9124b633dc26ac72aa5466ccac9b291ca4876bd",
+  "tools/overwrite_gate.py": "e4d0a7ef16da29849bea9a36c826b6c4146e1888a071e989e41641c40a139d32",
+  "tools/container_sentinel.py": "62d483939314a50a8c34f95153c8edc248b0b35addf0a7423edd190bd97ce518",
+  "tools/renumber_dirs.py": "a9cf6c421ef2d6084d08e11c49554902dfac6dd1814684da8c4a21280a4fe5ca"
+ }
+}

@@ -1,0 +1,209 @@
+{
+ "what": "the first line matching each pattern in each container log of the P80 night; the logs themselves stay on the machine (their SHA-256 is given)",
+ "patterns": {
+  "fallback": "Falling back to V0 Engine",
+  "engine_init": "Initializing a V[01] LLM engine",
+  "mamba_cache_frame": "mamba_cache\\.py\\\", line \\d+, in current_run_tensors",
+  "pop_frame": "constant_size_cache\\.py\\\", line \\d+, in _assign_seq_id_to_cache_index",
+  "error": "^IndexError: pop from empty list",
+  "engine_dead": "Engine loop is not running.*IndexError\\('pop from empty list'\\)"
+ },
+ "logs": {
+  "p80-g5-0.container.log.txt": {
+   "sha256": "80dfa59c05e1553be34630ef5647ed5d112dbed9bc2bf35c39ef82b2835a5add",
+   "lines": 3179,
+   "first_match": {
+    "fallback": null,
+    "engine_init": {
+     "line": 13,
+     "text": "(EngineCore pid=72) INFO 09-30 22:01:36 [core.py:123] Initializing a V1 LLM engine (v0.30.0) with config: ...",
+     "matching_lines": 1
+    },
+    "mamba_cache_frame": null,
+    "pop_frame": null,
+    "error": null,
+    "engine_dead": null
+   }
+  },
+  "p80-s256-c-1.container.log.txt": {
+   "sha256": "a0667cc89780fb537c173e84213f25b63b835f7961a2fc784d88af7552aae882",
+   "lines": 803,
+   "first_match": {
+    "fallback": null,
+    "engine_init": null,
+    "mamba_cache_frame": null,
+    "pop_frame": null,
+    "error": null,
+    "engine_dead": null
+   }
+  },
+  "p80-s256-r-1.container.log.txt": {
+   "sha256": "66f75e8015456691ca9d646000775a60303e693d56bedda5efa5df7841b74236",
+   "lines": 803,
+   "first_match": {
+    "fallback": null,
+    "engine_init": null,
+    "mamba_cache_frame": null,
+    "pop_frame": null,
+    "error": null,
+    "engine_dead": null
+   }
+  },
+  "p80-v2-a1-c-1.container.log.txt": {
+   "sha256": "37573f64ed5bdd174d564b494ae75530ee8a98b2e4f9f3ee28ba3794b0b060df",
+   "lines": 926,
+   "first_match": {
+    "fallback": {
+     "line": 71,
+     "text": "INFO 2026-09-30 20:49:54.247 arg_utils.py:1705] Mamba is experimental on VLLM_USE_V1=1. Falling back to V0 Engine.",
+     "matching_lines": 1
+    },
+    "engine_init": {
+     "line": 84,
+     "text": "INFO 2026-09-30 20:50:08.227 llm_engine.py:228] Initializing a V0 LLM engine (v0.10.0) with config: ...",
+     "matching_lines": 1
+    },
+    "mamba_cache_frame": null,
+    "pop_frame": null,
+    "error": null,
+    "engine_dead": {
+     "line": 429,
+     "text": "vllm.engine.multiprocessing.MQEngineDeadError: Engine loop is not running. Inspect the stacktrace to find the original error: IndexError('pop from empty list').",
+     "matching_lines": 13
+    }
+   }
+  },
+  "p80-v2-a1-r-1.container.log.txt": {
+   "sha256": "43053e04a782b924c93abfc9c58ad52cfb82abc71eadb9ea4799175cc90d2762",
+   "lines": 926,
+   "first_match": {
+    "fallback": {
+     "line": 71,
+     "text": "INFO 2026-09-30 21:08:35.691 arg_utils.py:1705] Mamba is experimental on VLLM_USE_V1=1. Falling back to V0 Engine.",
+     "matching_lines": 1
+    },
+    "engine_init": {
+     "line": 84,
+     "text": "INFO 2026-09-30 21:08:49.403 llm_engine.py:228] Initializing a V0 LLM engine (v0.10.0) with config: ...",
+     "matching_lines": 1
+    },
+    "mamba_cache_frame": {
+     "line": 472,
+     "text": "File \"/opt/nim/llm/.venv/lib/python3.12/site-packages/vllm/model_executor/models/mamba_cache.py\", line 72, in current_run_tensors",
+     "matching_lines": 2
+    },
+    "pop_frame": {
+     "line": 480,
+     "text": "File \"/opt/nim/llm/.venv/lib/python3.12/site-packages/vllm/model_executor/models/constant_size_cache.py\", line 102, in _assign_seq_id_to_cache_index",
+     "matching_lines": 2
+    },
+    "error": {
+     "line": 483,
+     "text": "IndexError: pop from empty list",
+     "matching_lines": 2
+    },
+    "engine_dead": {
+     "line": 429,
+     "text": "vllm.engine.multiprocessing.MQEngineDeadError: Engine loop is not running. Inspect the stacktrace to find the original error: IndexError('pop from empty list').",
+     "matching_lines": 3
+    }
+   }
+  },
+  "p80-v2-a1-r-11.container.log.txt": {
+   "sha256": "a20d978f9e7fc52fc078ced0ea457c40c7fdc993b5c3dc1062f654612e35ba20",
+   "lines": 926,
+   "first_match": {
+    "fallback": {
+     "line": 71,
+     "text": "INFO 2026-09-30 21:29:29.54 arg_utils.py:1705] Mamba is experimental on VLLM_USE_V1=1. Falling back to V0 Engine.",
+     "matching_lines": 1
+    },
+    "engine_init": {
+     "line": 84,
+     "text": "INFO 2026-09-30 21:29:43.51 llm_engine.py:228] Initializing a V0 LLM engine (v0.10.0) with config: ...",
+     "matching_lines": 1
+    },
+    "mamba_cache_frame": {
+     "line": 472,
+     "text": "File \"/opt/nim/llm/.venv/lib/python3.12/site-packages/vllm/model_executor/models/mamba_cache.py\", line 72, in current_run_tensors",
+     "matching_lines": 2
+    },
+    "pop_frame": {
+     "line": 480,
+     "text": "File \"/opt/nim/llm/.venv/lib/python3.12/site-packages/vllm/model_executor/models/constant_size_cache.py\", line 102, in _assign_seq_id_to_cache_index",
+     "matching_lines": 2
+    },
+    "error": {
+     "line": 483,
+     "text": "IndexError: pop from empty list",
+     "matching_lines": 2
+    },
+    "engine_dead": {
+     "line": 429,
+     "text": "vllm.engine.multiprocessing.MQEngineDeadError: Engine loop is not running. Inspect the stacktrace to find the original error: IndexError('pop from empty list').",
+     "matching_lines": 3
+    }
+   }
+  },
+  "p80-v2-a1-r-12.container.log.txt": {
+   "sha256": "a210e25b56fc804d7f02026aa824801addc6c9cc3ad53c14d208f4d87a19a8d3",
+   "lines": 926,
+   "first_match": {
+    "fallback": {
+     "line": 71,
+     "text": "INFO 2026-09-30 21:43:40.721 arg_utils.py:1705] Mamba is experimental on VLLM_USE_V1=1. Falling back to V0 Engine.",
+     "matching_lines": 1
+    },
+    "engine_init": {
+     "line": 84,
+     "text": "INFO 2026-09-30 21:43:54.316 llm_engine.py:228] Initializing a V0 LLM engine (v0.10.0) with config: ...",
+     "matching_lines": 1
+    },
+    "mamba_cache_frame": {
+     "line": 472,
+     "text": "File \"/opt/nim/llm/.venv/lib/python3.12/site-packages/vllm/model_executor/models/mamba_cache.py\", line 72, in current_run_tensors",
+     "matching_lines": 1
+    },
+    "pop_frame": {
+     "line": 480,
+     "text": "File \"/opt/nim/llm/.venv/lib/python3.12/site-packages/vllm/model_executor/models/constant_size_cache.py\", line 102, in _assign_seq_id_to_cache_index",
+     "matching_lines": 1
+    },
+    "error": {
+     "line": 483,
+     "text": "IndexError: pop from empty list",
+     "matching_lines": 1
+    },
+    "engine_dead": {
+     "line": 429,
+     "text": "vllm.engine.multiprocessing.MQEngineDeadError: Engine loop is not running. Inspect the stacktrace to find the original error: IndexError('pop from empty list').",
+     "matching_lines": 9
+    }
+   }
+  },
+  "p80-v2-a2-c-1.container.log.txt": {
+   "sha256": "f8ec039b21814a2ce768979551548baf3d806d141249feec5d5dac2d94d37445",
+   "lines": 803,
+   "first_match": {
+    "fallback": null,
+    "engine_init": null,
+    "mamba_cache_frame": null,
+    "pop_frame": null,
+    "error": null,
+    "engine_dead": null
+   }
+  },
+  "p80-v2-a2-r-1.container.log.txt": {
+   "sha256": "074ed231b5327fa58a538f95c947a57dcde9240b5c9a1ece9d0b8998a6747fba",
+   "lines": 803,
+   "first_match": {
+    "fallback": null,
+    "engine_init": null,
+    "mamba_cache_frame": null,
+    "pop_frame": null,
+    "error": null,
+    "engine_dead": null
+   }
+  }
+ }
+}

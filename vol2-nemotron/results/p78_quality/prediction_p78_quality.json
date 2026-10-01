@@ -1,0 +1,170 @@
+{
+  "written_at": "2026-09-29T21:58:54+0800",
+  "experiment": "P78 G2 / G3 (and G4's quality arms) · answer quality of Nemotron 3 Nano (NIM 2.0.12, NVFP4) and Nemotron Nano 9B v2 (NIM 1.12.2, bf16), reasoning on and off",
+  "tasks": {
+    "gsm8k": "gsm8k_cot_llama, all 1,319 test items, 8-shot multi-turn",
+    "mmlu": "mmlu_llama restricted to P62's 50 x 57 sample (2,850 items), 5-shot"
+  },
+  "lm_eval": "0.4.13 (pinned venv), local-chat-completions, --apply_chat_template, --fewshot_as_multiturn, temperature 0, in chunks of 110 GSM8K items / 5 MMLU subjects, each chunk in its own process",
+  "request_changes_by_the_proxy": [
+    "stop removed",
+    "mmlu_llama's trailing assistant 'The best answer is' removed, with continue_final_message and add_generation_prompt",
+    "max_tokens 8192 with reasoning on, 1024 with reasoning off",
+    "reasoning off: Nemotron 3 Nano and the upstream arms on its weights: chat_template_kwargs {enable_thinking: false}; Nemotron Nano 9B v2: system message '/no_think'",
+    "content null from the server -> '' passed to lm-eval, recorded"
+  ],
+  "engines": {
+    "N3": "NIM 2.0.12, NVFP4 profile, NIM_MAX_MODEL_LEN 16384, max_num_seqs image default (256), concurrency 16",
+    "N2": "NIM 1.12.2, bf16 profile, NIM_MAX_MODEL_LEN 16384, NIM_MAX_NUM_SEQS 32, concurrency 16 (the engine exits when concurrency reaches the cap)",
+    "V3B1 / V3B2": "G4's upstream arms, reasoning off x GSM8K only (see prediction_p78_nim_vs_vllm.json)"
+  },
+  "cells": {
+    "N3": [
+      [
+        "on_gsm8k_1",
+        "gsm8k",
+        "on",
+        16,
+        null
+      ],
+      [
+        "on_mmlu",
+        "mmlu",
+        "on",
+        16,
+        null
+      ],
+      [
+        "off_gsm8k",
+        "gsm8k",
+        "off",
+        16,
+        null
+      ],
+      [
+        "off_mmlu",
+        "mmlu",
+        "off",
+        16,
+        null
+      ],
+      [
+        "on_gsm8k_2",
+        "gsm8k",
+        "on",
+        16,
+        null
+      ],
+      [
+        "off_gsm8k_c1_first200",
+        "gsm8k",
+        "off",
+        1,
+        200
+      ]
+    ],
+    "N2": [
+      [
+        "on_gsm8k_1",
+        "gsm8k",
+        "on",
+        16,
+        null
+      ],
+      [
+        "on_mmlu",
+        "mmlu",
+        "on",
+        16,
+        null
+      ],
+      [
+        "off_gsm8k",
+        "gsm8k",
+        "off",
+        16,
+        null
+      ],
+      [
+        "off_mmlu",
+        "mmlu",
+        "off",
+        16,
+        null
+      ],
+      [
+        "on_gsm8k_2",
+        "gsm8k",
+        "on",
+        16,
+        null
+      ]
+    ],
+    "V3B1": [
+      [
+        "off_gsm8k",
+        "gsm8k",
+        "off",
+        16,
+        null
+      ]
+    ],
+    "V3B2": [
+      [
+        "off_gsm8k",
+        "gsm8k",
+        "off",
+        16,
+        null
+      ]
+    ]
+  },
+  "scoring": "p78_scorer.py on the whole output (reasoning channel, then content): the LAST match of 'final answer is <number>' (GSM8K, normalised as lm-eval does) or 'best answer is <A-D>' (MMLU); no match -> wrong and counted as no_answer; an output that hit the cap is scored from what it holds. Its self-test (11 controls) and mutation test ('first match wins' must fail) passed before this file was written.",
+  "arm_health": "single-stream generation rate x bytes read per token (N3 3,590,938,272; N2 17,776,454,656; p50_speed analysis.json) / 1,792 GB/s; below 10% -> the arm is null. Warm-up: until 220 tok/s (N3, P55) or 300 s",
+  "gates_and_branches": {
+    "truncation": "any HTTP 400 from the engine in a cell -> that cell is null (the measurement is broken)",
+    "cap": "an item that hit max_tokens is the model's behaviour: scored as it is, its share reported beside the accuracy",
+    "engine_exit": "log tail kept, container started again, the cell resumes at the chunk that failed; a second exit in the same cell -> that cell null; the number of exits is reported",
+    "hung_chunk": "timeout = max(600 s, 3 x the cell's mean seconds per item x items) (first chunk: every item at the cap at the single-stream rate per stream); stopped and retried once",
+    "self_consistency": "per model: on x GSM8K run 1 vs run 2, paired difference over items, 95% CI (mean +- 1.96 sd / sqrt n); if the CI is not inside [-2, +2] pp, every equivalence verdict of that model is null (differences still reported)",
+    "reasoning_really_off": "per model and task: median completion tokens with reasoning off <= 50% of reasoning on; else that model's off cells are null",
+    "join": "every item joined to one proxy record by the sha256 of the messages lm-eval sent; unjoined items reported, a chunk with unjoined items is retried"
+  },
+  "statistics": "accuracy per cell; paired differences on the same items with 95% CI (mean +- 1.96 sd / sqrt n); completion-token distribution, cap share, no-answer share, seconds per item, total tok/s",
+  "predictions": {
+    "Q1_N3_gsm8k_on": "accuracy >= 88%",
+    "Q1_N2_gsm8k_on": "accuracy >= 85%",
+    "Q1_N3_mmlu_on": "accuracy >= 75%",
+    "Q1_N2_mmlu_on": "accuracy >= 70%",
+    "Q2_gsm8k_on_minus_off": "> 0 with the 95% CI above 0, for both models",
+    "Q2_mmlu_on_minus_off": "within [-2, +6] pp, for both models",
+    "Q2_tokens": "median completion tokens off <= 25% of on (GSM8K), for both models",
+    "Q2_cap_share_on": "N3 <= 5%, N2 <= 10% of items at the 8,192 cap",
+    "C1_concurrency": "N3 off x GSM8K first 200 items at c=1 vs the same items at c=16: accuracy difference within +-3 pp; share of byte-identical outputs recorded"
+  },
+  "inputs_sha256": {
+    "vol1-nim/results/p62_quality/mmlu_sample_ids.json": "8adc9a7103c6557f97c34ef10050857310c369e50d397d42966989b5ff28835f"
+  },
+  "harness_sha256": {
+    "vol2-nemotron/scripts/p78_quality.py": "5117a84b49d4b1b9dc563c73a579c7783fcbf438868bfde6cbcb8c4cc38b6884",
+    "vol2-nemotron/scripts/p78_lmeval_chunk.py": "23dd27a7f610540a2eff85d8d8b72d5c4ff7cc7d198f2314b458df1924d0f197",
+    "vol2-nemotron/scripts/p78_scorer.py": "c633ea89d09a32ff477b40691d7b860e93fa02cd4d1c975568f690897a0db0eb",
+    "vol2-nemotron/scripts/p78_engines.py": "889186f5125b59a9ed85accc2492ad1562c3b8b2ac2f35bc093032d35c300828",
+    "vol2-nemotron/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+    "vol2-nemotron/scripts/run_p78.sh": "39de1514142b5b1b96b3841c883b07e03e8cf16187f902dc55461ed73a3a1d0b",
+    "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb",
+    "tools/host_gate.py": "3ff71b506d7c44b0c3519d70f9124b633dc26ac72aa5466ccac9b291ca4876bd",
+    "tools/overwrite_gate.py": "e4d0a7ef16da29849bea9a36c826b6c4146e1888a071e989e41641c40a139d32",
+    "tools/renumber_dirs.py": "a9cf6c421ef2d6084d08e11c49554902dfac6dd1814684da8c4a21280a4fe5ca"
+  },
+  "written_before": "the stage's first GPU cell (run_p78.sh refuses a stage whose prediction or .sha256 is missing or changed, or whose results exist)",
+  "window": "the night of 2026-09-29 to 30; the user closes Steam and other heavy host load before the run",
+  "gates_every_cell": {
+    "G8": "tools/g8_gate.py before every measured cell: median GPU utilization <= 2% and median power <= 45 W over 10 s; retried every 60 s up to 15 min; a cell whose G8 did not pass is null, recorded",
+    "host": "tools/host_gate.py: a CPU-work calibration before the run and, per cell, wall time, system CPU busy share, this process's CPU share, children's CPU seconds and a work probe at the cell's end; recorded, not a gate (no measured threshold exists yet)",
+    "no_overwrite": "tools/overwrite_gate.py after every cell: tracked files unchanged and new files only under this stage's results directory, else the stage stops (exit 4) and the cell is void",
+    "old_directory_gate": "tools/renumber_dirs.py check-old-dirs before every stage: a harness written for old paths must not recreate an old directory",
+    "exit_code": "the runner writes each harness's exit code into the stage's results directory"
+  },
+  "deadline": "08:00: a stage or cell not started by then is not started; finished cells are kept; what is left is listed in the report"
+}

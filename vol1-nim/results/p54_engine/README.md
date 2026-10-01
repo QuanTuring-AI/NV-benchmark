@@ -16,7 +16,7 @@
 
 ## A · Single stream (`single/`)
 
-Four alternating blocks, N, V, N, V, on the 50 questions of the Vol.2 sample (positions 0–24, then 25–49). p53_answer's request: `max_tokens` 4096, temperature 0, top_p 0.9, streaming with usage, 2 s between requests. Per block: a discarded "Hello" and three discarded questions. 00:40–01:06. **All preconditions held** (no errors, the served model of each block, 50 rows per arm alternating, one container up and it is the block's own, the six labels on every row).
+Four alternating blocks, N, V, N, V, on the 50 questions of the co-residence sample (`../../../vol3-judges/results/p20_coresidence/sample.json`; positions 0–24, then 25–49). p53_answer's request: `max_tokens` 4096, temperature 0, top_p 0.9, streaming with usage, 2 s between requests. Per block: a discarded "Hello" and three discarded questions. 00:40–01:06. **All preconditions held** (no errors, the served model of each block, 50 rows per arm alternating, one container up and it is the block's own, the six labels on every row).
 
 | | N | V | V over N, ratio of means [95% CI over questions] |
 |---|---|---|---|

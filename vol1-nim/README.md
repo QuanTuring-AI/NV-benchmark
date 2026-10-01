@@ -27,7 +27,6 @@ Llama 3.1 8B Instruct on one RTX 5090. The concurrency results use synthetic cha
    - Accuracy: 1.5 points lower on GSM8K (95% CI −3.1 to 0.0), and within ±2 points on MMLU.
 
    → §D · §E
-8. **NeMo Guardrails 0.23.0 blocks the same prompts as 0.21.0** (42/45 adversarial, 0/90 false blocks on this set), but asks the judge for up to 1,024 tokens instead of 3. That one default costs about 1.5 s per request, and setting it back is one line. → `../vol2-guardrails/BASELINE.md` §2, §8
 
 | Concurrent requests | NIM bf16 ÷ 4-bit (16 slots), total | NIM FP8 ÷ 4-bit, total | NIM bf16 ÷ 16-bit, total (matched precision) | NIM bf16 ÷ 4-bit, per-user end-to-end |
 |---|---|---|---|---|
@@ -38,19 +37,19 @@ Llama 3.1 8B Instruct on one RTX 5090. The concurrency results use synthetic cha
 | 64 | 5.1 | 8.0 | 9.4 | 4.1 |
 | **128** | **7.4** (5,458 / 741) | **11.8**¹ (8,713 / 741) | **13.6** (5,458 / 402) | **4.1** (45 / 11) |
 
-¹ *FP8 figures are from the 25 September run; a clean-window recheck is pending.*
+¹ *FP8 figures are from the 25 September run. A clean-window recheck on 29 September measured 9,062 tok/s at 128 concurrent requests: 11.6× the clean-window 4-bit figure and 1.50× bf16 NIM in the same window (`results/p78_fp8_clean/`, section D).*
 
 > Every ratio above is a division of two cells in `results/p59_nim_value/README.md`. At 128 concurrent requests NIM was still inside the MLPerf server SLO; the Ollama arms had left it at 8, so the ratios above 8 compare a configuration that is serving with one that is queueing. A ratio is a function of concurrency, not a property of an engine, and is quoted only with the concurrency, the precision of both arms, the input shape (synthetic chat, 200 in / 200 out) and whether the SLO held.
 
 ## Scope
 
-Vol.1 as first published (2026-03) is `../benchmark/` and is not changed by anything here; this directory is the renewed Vol.1. This directory holds the write-up of a revisit that asks a narrower question than the March 2026 Vol.1's E2 did: on one card, one model, one set of weight files and one precision, what does the NIM container's pre-selected configuration amount to against the same inference engine started by hand? The measurements live in `../vol1-nim/results/p54_engine/`; the section of record is in `../vol3-nemotron/BASELINE.md`.
+Vol.1 as first published (2026-03) is `../benchmark/` and is not changed by anything here; this directory is the renewed Vol.1. This directory holds the write-up of a revisit that asks a narrower question than the March 2026 Vol.1's E2 did: on one card, one model, one set of weight files and one precision, what does the NIM container's pre-selected configuration amount to against the same inference engine started by hand? The measurements live in `../vol1-nim/results/p54_engine/`; the section of record is in `../vol2-nemotron/BASELINE.md`.
 
 **Codes.** P54, P59, P62 and P63 (and the Q1–Q4 inside P62) are this lab's run identifiers: one per measurement request, numbered in order. They appear in directory, script and pre-registration names so that a file can be traced to the run that produced it. They carry no other meaning, and each run's README states what it measured.
 
 **Setup.** Llama 3.1 8B Instruct, bf16, one RTX 5090 (32,607 MiB, 1,792 GB/s, driver 591.86), both arms from the same snapshot of the NIM cache: 16,060,556,376 bytes of safetensors, the same file hashes in both containers (`stack.json`, hashed inside a container through the same mount both arms use).
 
-- **Arm N** is the NIM container: NIM 2.0.12, profile `092ed421…` (bf16), `NIM_MAX_MODEL_LEN` 8192 and `VLLM_USE_V2_MODEL_RUNNER=0`. This is Vol.2's baseline configuration.
+- **Arm N** is the NIM container: NIM 2.0.12, profile `092ed421…` (bf16), `NIM_MAX_MODEL_LEN` 8192 and `VLLM_USE_V2_MODEL_RUNNER=0`.
 - **Arm V** is the upstream `vllm/vllm-openai:v0.27.1` container. It has the same vLLM build commit (`6e448d0e`) and the same torch, CUDA, flashinfer, triton and transformers as the engine inside N.
 - **V's engine arguments are NIM's own.** They are the argument list NIM resolves for N's configuration (`nim-serve --dry-run`), with four edits: the model path; NIM's internal port and host; and NIM's two server-layer middlewares, which do not exist outside NIM.
 
@@ -58,7 +57,7 @@ What still differs is listed in the pre-registration and in `../vol1-nim/results
 
 ## A · Single stream: the same engine, the same answers
 
-Four alternating blocks (N, V, N, V) over the 50 questions of the Vol.2 sample, one request at a time, `max_tokens` 4096, temperature 0, top_p 0.9, streaming with usage; 2026-09-24 00:40–01:06. All preconditions held.
+Four alternating blocks (N, V, N, V) over the 50 questions of the co-residence sample (the file is named in `results/p54_engine/README.md`), one request at a time, `max_tokens` 4096, temperature 0, top_p 0.9, streaming with usage; 2026-09-24 00:40–01:06. All preconditions held.
 
 | | N · NIM 2.0.12 | V · vLLM 0.27.1 | V over N (ratio of means, 95% CI over questions) |
 |---|---|---|---|
@@ -73,7 +72,7 @@ Four alternating blocks (N, V, N, V) over the 50 questions of the Vol.2 sample, 
 
 **Concurrency, the same.** With `p53_concurrency_v2`'s harness and SLOs unchanged (`../vol1-nim/results/p54_engine/README.md`), the chat profile (200/200) gives both arms the same ceilings: **256** concurrent requests inside the MLPerf server SLO and **32** inside the interactive one, at about 6,100–6,300 tok/s at the top. The fresh-container repeats agree within 0.2%, and the 3–5% gap in the main sweeps is container to container. The RAG profile (3,500/500) has **no conclusion**. The harness's own calibration prompt hits vLLM's prefix cache on this model, and its pre-registered gate refuses the sweep. That defect is the harness's, not either engine's. Its level tables show both arms running out of KV cache at 26–39 sequences. V is 7–8% ahead there, in line with the 10.7% more KV cache it sized for itself at start.
 
-This is what the physics allows. A healthy engine decoding one stream reads the weights once per token, so two healthy engines on one card, one model and one precision can differ by little. The ratio that originally led the March 2026 Vol.1 belongs to that configuration: two engines, two precisions, and one arm largely outside GPU memory (`../vol2-guardrails/BASELINE.md`, section 12).
+This is what the physics allows. A healthy engine decoding one stream reads the weights once per token, so two healthy engines on one card, one model and one precision can differ by little. The ratio that originally led the March 2026 Vol.1 belongs to that configuration: two engines, two precisions, and one arm largely outside GPU memory (the account that closes the March 2026 comparison: [`../CHANGELOG.md`](../CHANGELOG.md), 2026-09-19).
 
 ## B · What it takes to get a serving configuration
 
@@ -88,7 +87,7 @@ Two findings about this host (Docker Desktop on WSL2). **Left to itself, NIM sel
 
 ## C · Was anything else resident on the card during E3? (read from the code and the records, no GPU)
 
-Vol.2 (`../vol2-guardrails/BASELINE.md`, section 12) showed that in the March 2026 Vol.1's E2 the comparison engine's model ran largely outside GPU memory. A later reading of E3 (NIM alone against NIM + NeMo Guardrails, the source of the published `+2.1%`) called it "not co-resident" because E3's time to first token was 51 ms where the co-resident E2 measured 221 ms. That was an inference from a timing. The question here is whether the code and the records say it.
+The account that closes the March 2026 comparison ([`../CHANGELOG.md`](../CHANGELOG.md), 2026-09-19) showed that in the March 2026 Vol.1's E2 the comparison engine's model ran largely outside GPU memory. A later reading of E3 (NIM alone against NIM + NeMo Guardrails, the source of the published `+2.1%`) called it "not co-resident" because E3's time to first token was 51 ms where the co-resident E2 measured 221 ms. That was an inference from a timing. The question here is whether the code and the records say it.
 
 **What the code says.**
 
@@ -103,7 +102,7 @@ Vol.2 (`../vol2-guardrails/BASELINE.md`, section 12) showed that in the March 20
 
 **Answer: ③ cannot be determined from the code and the records.** Nothing in E3 loaded the comparison engine's model. Whether it was still resident at 09:08 depends on two things that were not recorded: the comparison server's keep-loaded setting (its default unloads an idle model after five minutes, which would have emptied the card long before E3; a server-side setting can extend that indefinitely), and whether any other client used that server during the 7 h 23 min. The timing argument (51 ms against 221 ms) is consistent with an empty card and remains an inference.
 
-**If it was resident**, the direction is known and the size is not: NIM-only latency would carry the co-residence cost in the denominator, so the published `+2.1%` would understate the rail's relative overhead. No corrected figure is computed here. The Vol.2 re-measurement of the rail on NIM 2.0.12 alone on the card (`../vol2-guardrails/BASELINE.md`) does not depend on this question.
+**If it was resident**, the direction is known and the size is not: NIM-only latency would carry the co-residence cost in the denominator, so the published `+2.1%` would understate the rail's relative overhead. No corrected figure is computed here. The later re-measurement of the rail on NIM 2.0.12 alone on the card does not depend on this question.
 
 ## D · Several users at once: NIM against Ollama (`results/p59_nim_value/`)
 
@@ -116,6 +115,24 @@ A single-user comparison cannot stand for a serving engine; this run adds the co
 - **The RAG profile for the NIM arms, with prefix-cache reuse counted on the server** (`results/p62_rag/`). The positive control (the same prompt twice) fired on all four containers at 99.5–99.9%; no calibration request showed more than 0.9%.
   - **N-BF16:** calibration passes, and the server SLO holds at 1 concurrent request (p99 TTFT 353 ms), not at 8 (2,229 ms) (`rag.N-BF16.conclusion`).
   - **N-FP8:** the conclusion stays **null**. Its calibration failed again without any prefix-cache hit. The server's own TTFT histogram places the gap in the server: 138 ms for the harness's prompts against 220 ms for AIPerf's prompts of the same length, and AIPerf agrees with the server. The FP8 arm's prefill time depends on the prompt content (BF16's does not: 309 against 302 ms), for a reason this run cannot see (`server_side_reading`).
+
+**FP8 at 128 concurrent requests with the card otherwise idle (P78, 2026-09-29, `results/p78_fp8_clean/`).** The 27 September clean-window recheck (`results/p70_clean_recheck/`) has no FP8 figure: its FP8 arm was refused by the prefix-cache detector. This run repeats that arm with a detector that tells a warm-up from a cache hit, pre-registered before the first container, and with NIM bf16 at 128 in the same window as an anchor. Image, profiles, context length 8,192, chat profile and 60 s levels are unchanged.
+
+- **Window:** 2026-09-29, 21:59–22:21 (+0800). The card read 0% and 11.4 W before the run, and the idle-card gate (utilization ≤ 2% and power ≤ 45 W over 10 s) passed before each of the four measured cells (`analysis.json` → `g8_all_pass`, `g8_cells`).
+- **Detector:** its positive control (the same prompt sent twice) fired on both containers (`detector.<arm>.pass`).
+
+| Configuration | Concurrent requests | Total tok/s (`analysis.json` → `tok_s`) |
+|---|---:|---:|
+| NIM FP8 | 1 | 160.5 |
+| NIM FP8 | 32 | 4,018.0 |
+| NIM FP8 | 128 | **9,061.9** |
+| NIM bf16 (same window) | 128 | 6,049.7 |
+
+- **R1 · FP8 ÷ the 4-bit build, both in a clean window:** 9,061.9 / 780.24 = **11.61**, where 780.24 tok/s is the 4-bit build at 128 in the 27 September clean window (`results/p70_clean_recheck/analysis.json` → `cells.O-Q4|128.total_tps`). Pre-registered band [10.5, 13.5]: pass.
+- **R2 · FP8 ÷ bf16 in the same window:** 9,061.9 / 6,049.7 = **1.498**. Band [1.45, 1.75]: pass.
+- **R3 · the anchor:** bf16 at 128 is 6,049.7 tok/s against 6,043.3 on 27 September (0.11% apart; band ±5%): pass.
+
+The 25 September figures in section 0 (8,713 tok/s, 11.8×) are left as published; they divide by that day's 4-bit figure (741 tok/s), and the 11.61 above divides by the clean-window one.
 
 ## E · Answer quality: is the faster configuration faster because it answers worse? (`results/p62_quality/`, `results/p63_gsm8k/`)
 
@@ -146,4 +163,4 @@ Details, gates, predictions: `results/p62_quality/README.md` and `results/p63_gs
 
 ## Files
 
-`../vol1-nim/results/p54_engine/` (pre-registration, stack record, start attempts, single-stream and concurrency runs, analyses) · `results/p59_nim_value/` (section D) · `results/p62_levels/`, `results/p62_rag/` (section D, follow-ups) · `results/p62_quality/`, `results/p63_gsm8k/` (section E). P62 and P63 harnesses, analysers and runners: `scripts/p62_*.py`, `scripts/p63_*.py`, `scripts/run_p62_*.sh`, `scripts/run_p63_gsm8k.sh`. Harness `../vol1-nim/scripts/p54_engine.py`; analysis `../vol1-nim/scripts/p54_single_analyze.py`, `p54_conc_analyze.py`, `p54_attempts_analyze.py`; runner `../vol1-nim/scripts/run_p54_engine.sh`.
+`../vol1-nim/results/p54_engine/` (pre-registration, stack record, start attempts, single-stream and concurrency runs, analyses) · `results/p59_nim_value/` (section D) · `results/p62_levels/`, `results/p62_rag/` (section D, follow-ups) · `results/p78_fp8_clean/` (section D, FP8 in a clean window; harness `scripts/p78_fp8_clean.py`, analysis `../vol2-nemotron/scripts/p78_analyze.py`) · `results/p62_quality/`, `results/p63_gsm8k/` (section E). P62 and P63 harnesses, analysers and runners: `scripts/p62_*.py`, `scripts/p63_*.py`, `scripts/run_p62_*.sh`, `scripts/run_p63_gsm8k.sh`. Harness `../vol1-nim/scripts/p54_engine.py`; analysis `../vol1-nim/scripts/p54_single_analyze.py`, `p54_conc_analyze.py`, `p54_attempts_analyze.py`; runner `../vol1-nim/scripts/run_p54_engine.sh`.

@@ -1,0 +1,159 @@
+{
+  "written_at": "2026-09-29T21:58:56+0800",
+  "experiment": "P78 G6 · Vol.2 concurrency sweeps whose levels ended with other GPU load (Z3 audit, clean-window fingerprint: utilization 0%, 26-42 W at level end) and that feed a Vol.2 number, repeated with the GPU idle",
+  "sweeps_in_priority_order": {
+    "s256_C": {
+      "arm": "A2",
+      "env": {
+        "NIM_MAX_MODEL_LEN": "8192"
+      },
+      "profile": "C",
+      "levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512
+      ],
+      "source": "p55_concurrency_a2_256 C main"
+    },
+    "s256_R": {
+      "arm": "A2",
+      "env": {
+        "NIM_MAX_MODEL_LEN": "8192"
+      },
+      "profile": "R",
+      "levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64,
+        128,
+        256,
+        512
+      ],
+      "source": "p55_concurrency_a2_256 R main"
+    },
+    "v2_A2_C": {
+      "arm": "A2",
+      "env": {
+        "NIM_MAX_MODEL_LEN": "8192",
+        "NIM_PASSTHROUGH_ARGS": "--max-num-seqs 32"
+      },
+      "profile": "C",
+      "levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64
+      ],
+      "source": "p53_concurrency_v2 A2 C main"
+    },
+    "v2_A2_R": {
+      "arm": "A2",
+      "env": {
+        "NIM_MAX_MODEL_LEN": "8192",
+        "NIM_PASSTHROUGH_ARGS": "--max-num-seqs 32"
+      },
+      "profile": "R",
+      "levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64
+      ],
+      "source": "p53_concurrency_v2 A2 R main"
+    },
+    "v2_A1_C": {
+      "arm": "A1",
+      "env": {
+        "NIM_MAX_MODEL_LEN": "8192",
+        "NIM_MAX_NUM_SEQS": "32"
+      },
+      "profile": "C",
+      "levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64
+      ],
+      "source": "p53_concurrency_v2 A1 C main"
+    },
+    "v2_A1_R": {
+      "arm": "A1",
+      "env": {
+        "NIM_MAX_MODEL_LEN": "8192",
+        "NIM_MAX_NUM_SEQS": "32"
+      },
+      "profile": "R",
+      "levels": [
+        1,
+        2,
+        4,
+        8,
+        16,
+        32,
+        64
+      ],
+      "source": "p53_concurrency_v2 A1 R main"
+    }
+  },
+  "unchanged": "image, profile id, environment of the original run; p53_concurrency_v2's calibration and level runner imported unchanged; level durations by its rule",
+  "added": "G8 before every level; host record per level; no-overwrite check after every level",
+  "original_results": "not changed; each sweep writes under its own directory",
+  "predictions": {
+    "P1": "s256_C: the largest level inside the MLPerf server SLO is 128, as in the original",
+    "P2": "s256_C: total tok/s at every level >= 0.95 x the original's (other load can only have slowed the original)",
+    "record": "every other sweep that runs: its levels beside the original's"
+  },
+  "s256_C_original_total_tok_s": {
+    "1": 300.1,
+    "2": 464.9,
+    "4": 732.5,
+    "8": 1088.2,
+    "16": 1543.2,
+    "32": 2238.0,
+    "64": 2990.6,
+    "128": 3902.1,
+    "256": 3998.8,
+    "512": 3992.9
+  },
+  "harness_sha256": {
+    "vol2-nemotron/scripts/p78_clean_rerun.py": "b6663f00d4652a90f4c6869b265a2255a5cc149e520a725c8b5efda90fc750f9",
+    "vol2-nemotron/scripts/p53_concurrency_v2.py": "f7eabd113b8deeec2bdb554632eeafb8d41441039335d96cca8f420f522c6dba",
+    "vol2-nemotron/scripts/p53_concurrency.py": "3858baaf99a7aa200c3c391b15cbcbf5c5e12fa8feb6fb2df11e2f89403dd7aa",
+    "vol2-nemotron/scripts/p50_footprint.py": "b563c7562ba2f50334d360ad98eded34aae26f59aed8e57dffc3c61f6838b0bc",
+    "vol2-nemotron/scripts/run_p78.sh": "39de1514142b5b1b96b3841c883b07e03e8cf16187f902dc55461ed73a3a1d0b",
+    "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb",
+    "tools/host_gate.py": "3ff71b506d7c44b0c3519d70f9124b633dc26ac72aa5466ccac9b291ca4876bd",
+    "tools/overwrite_gate.py": "e4d0a7ef16da29849bea9a36c826b6c4146e1888a071e989e41641c40a139d32",
+    "tools/renumber_dirs.py": "a9cf6c421ef2d6084d08e11c49554902dfac6dd1814684da8c4a21280a4fe5ca"
+  },
+  "written_before": "the stage's first GPU cell (run_p78.sh refuses a stage whose prediction or .sha256 is missing or changed, or whose results exist)",
+  "window": "the night of 2026-09-29 to 30; the user closes Steam and other heavy host load before the run",
+  "gates_every_cell": {
+    "G8": "tools/g8_gate.py before every measured cell: median GPU utilization <= 2% and median power <= 45 W over 10 s; retried every 60 s up to 15 min; a cell whose G8 did not pass is null, recorded",
+    "host": "tools/host_gate.py: a CPU-work calibration before the run and, per cell, wall time, system CPU busy share, this process's CPU share, children's CPU seconds and a work probe at the cell's end; recorded, not a gate (no measured threshold exists yet)",
+    "no_overwrite": "tools/overwrite_gate.py after every cell: tracked files unchanged and new files only under this stage's results directory, else the stage stops (exit 4) and the cell is void",
+    "old_directory_gate": "tools/renumber_dirs.py check-old-dirs before every stage: a harness written for old paths must not recreate an old directory",
+    "exit_code": "the runner writes each harness's exit code into the stage's results directory"
+  },
+  "deadline": "08:00: a stage or cell not started by then is not started; finished cells are kept; what is left is listed in the report"
+}
