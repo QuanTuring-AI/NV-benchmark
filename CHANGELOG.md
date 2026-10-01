@@ -2,6 +2,12 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-10-01 · `HISTORY.md` renamed to `CHRONICLE.md`; the fourth tag is `chronicle`
+
+- **Renamed the same day, before any article or Release was published.** "History" already means the commit history in git; the file is a chronicle of this repository's tags. → [`CHRONICLE.md`](CHRONICLE.md)
+- **Tags:** `chronicle` replaces `history`. `vol1`, `vol2` and `vol3` were moved from `75c1efc` to the commit that makes this rename, so that all four open the same state. From here on they do not move, except `vol3` once, on the day the judge study is published.
+- **The section below is left as written:** it names the tag `history` and links `HISTORY.md`, which is now `CHRONICLE.md`.
+
 ## 2026-10-01 · Tags consolidated to `vol1` `vol2` `vol3` `history`; release notes; the front page is a directory
 
 - **Four tags.** `vol1` and `vol2` open the repository as the Vol.1 and Vol.2 articles describe it; `vol3` holds the Vol.3 baseline data and will move once, on the day the judge study is published; `history` marks the commit that adds [`HISTORY.md`](HISTORY.md).
