@@ -15,6 +15,16 @@
 
 ---
 
+## Volumes
+
+| Volume | Topic | Page | Release |
+|---|---|---|---|
+| **Vol.1** | Why NIM? Llama 3.1 8B on one RTX 5090, 1 to 128 concurrent requests | [`vol1-nim/README.md`](vol1-nim/README.md) | [Releases → `vol1`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol1) |
+| **Vol.2** | Nemotron 3 Nano on one RTX 5090 with NIM | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) | [Releases → `vol2`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol2) |
+| **Vol.3** | NIM × NeMo Guardrails baseline (study in progress) | [`vol3-judges/README.md`](vol3-judges/README.md) | at publication |
+
+Each volume's page opens with its headline and a run command, then gives a **claim → evidence** table (every number, its file, its key), how it was measured, and the measurement conditions including what we could not explain. The March 2026 original of Vol.1 is archived in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md), frozen as published; Vol.4–5 (NeMo Retriever and Nemotron in a RAG system) are planned.
+
 ## What this repository is
 
 Measurements of NVIDIA's inference stack on one workstation GPU. The stack covers NIM, NeMo Guardrails and Nemotron. Each volume follows the same method:
@@ -28,26 +38,6 @@ Every number that leaves this repository is quoted with its measurement boundary
 
 Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md). It is kept exactly as published and is not modified. The comparison that led it is closed out, as an account of how it was measured, in [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §12.
 
-## The volumes
-
-**Vol.1 · [Why NIM? Llama 3.1 8B on one RTX 5090, from 1 to 128 concurrent requests](vol1-nim/README.md)**
-For one user the 4-bit Ollama build is faster; from 4 concurrent requests on NIM leads, 7.4× at 128, and it holds the MLPerf server latency target the whole way. NIM's FP8 default adds another 1.5×, with no measurable change on MMLU.
-→ [`vol1-nim/README.md`](vol1-nim/README.md) · tag `vol1-vol2-published`
-
-**Vol.2 · [Nemotron 3 Nano on one RTX 5090 with NIM: ~300 tok/s, flat to 120k context, 128 concurrent requests](vol2-nemotron/README.md)**
-It fits in 21–25 GiB, generates about 300 tok/s at any context length up to 120k, keeps the server latency target up to 128 concurrent chat requests (8 with long RAG-shaped prompts), and scores 95.7% on GSM8K with reasoning on.
-→ [`vol2-nemotron/README.md`](vol2-nemotron/README.md) · tag `vol1-vol2-published`
-
-**Vol.3 · [Judges in NeMo Guardrails on NIM 2.0.12](vol3-judges/README.md)** (baseline data; the judge study is in progress)
-With Llama 3.1 8B as its own judge, NeMo Guardrails 0.23.0 blocks the same adversarial prompts as 0.21.0 on this set (42 / 45, with 0 / 90 false blocks); the time it adds comes from the judge's answer length.
-→ [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §2, §8 · tag `vol3-judges-baseline`
-
-**Vol.1 · March 2026 original (archived)** is in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md), frozen as published. Vol.4–5 (NeMo Retriever and Nemotron in a RAG system) are planned.
-
-Each volume's README has the same shape: the headline and a run command first, then a **claim → evidence** table (every number, its file, its key), how it was measured, and the measurement conditions including what we could not explain.
-
-*Directories were renamed on 2026-09-28 to match the volume numbers, and again on 2026-09-29 when Vol.2 and Vol.3 swapped places: [`PATH_MAP.md`](PATH_MAP.md) maps every old path, and [`CHANGELOG.md`](CHANGELOG.md) records both changes.*
-
 ## How to check a number
 
 1. **Open the tag** of the article you are reading (table below), on GitHub or with `git checkout <tag>`.
@@ -59,24 +49,16 @@ Each volume's README has the same shape: the headline and a run command first, t
 
 ### Tags
 
-| Tag | Which article it is for | What you see when you open it |
-|---|---|---|
-| `vol1-vol2-published` | Vol.1, *Why NIM?*, and Vol.2, *Nemotron 3 Nano on one RTX 5090* | Open this to see the repository as the two posts describe it: all data of both volumes, the Vol.1 FP8 recheck, and the READMEs with their claim → evidence tables. It points to the commit that adds this row. |
-| `vol2-nemotron-published` | Vol.2 data | Every Vol.2 run through 1 October (commit `6af6168`), without the README rewrite. |
-| `vol3-judges-baseline` | Vol.3 baseline data | The Vol.3 runs at the paths their harnesses were written with (commit `3efa794`, the last one before the directory renames). The judge study has not been published. |
-| `vol1-nim-published` | Vol.1 data as of 28 September | The Vol.1 runs at the paths their harnesses were written with (commit `3efa794`, before the renames); use it to rerun a Vol.1 harness byte for byte. It does not contain the FP8 recheck. |
+| Tag | What it is |
+|---|---|
+| `vol1` | Vol.1, *Why NIM?* — the repository as the article describes it |
+| `vol2` | Vol.2, *Nemotron 3 Nano on one RTX 5090* — the repository as the article describes it |
+| `vol3` | Vol.3 baseline data (NIM × NeMo Guardrails). The judge study is not yet published; this tag moves once, on the day it is |
+| `history` | The commit that adds [`HISTORY.md`](HISTORY.md): every earlier tag, its full hash and what it held |
 
-**Earlier tags.** These were pushed before the volumes took their current numbers and directory names. They are kept so that links already sent keep working; nothing new points to them.
+A tag opens the whole repository as it was at one commit; `vol1` and `vol2` point to the same one, the commit that adds this table. Earlier tags were retired on 2026-10-01 and are listed in [`HISTORY.md`](HISTORY.md).
 
-| Tag | Commit | What it holds |
-|---|---|---|
-| `vol2-guardrails-published` | `3efa794` | Vol.3, in `vol1b/` |
-| `vol3-nemotron-published` | `e4f0ec5` | Vol.2, in `vol2/` |
-| `vol1-revisit-published` | `f6b73b2` | Vol.1 (renewed), in `vol1a-revisit/` |
-| `vol2-published` | `e4f0ec5` | Vol.2, in `vol2/` |
-| `vol1b-published` | `40dfce0` | Vol.3, in `vol1b/` |
-
-*Every change to this repository: [`CHANGELOG.md`](CHANGELOG.md).*
+*Directories were renamed on 2026-09-28 and 2026-09-29: [`PATH_MAP.md`](PATH_MAP.md) maps every old path. Every change to this repository: [`CHANGELOG.md`](CHANGELOG.md).*
 
 ## How to read a number here
 
@@ -93,7 +75,7 @@ Each volume's README has the same shape: the headline and a run command first, t
 1. Clone with `git -c core.autocrlf=false clone …`. SHA-bound files are stored byte for byte (`.gitattributes`).
 2. Verify the hash chain: `python tools/bound_files.py --history` lists every file a pre-registration or sidecar binds and checks each one in the commit where its pre-registration was frozen; it also reports whether the file at today's path is the same blob.
 3. Each results directory's README gives its harness, runner and environment variables. The analysers run on the published files alone.
-4. To rerun a harness byte for byte, check out a tag that holds it at the paths it was written with (`vol1-nim-published`, `vol3-judges-baseline`, or the earlier tags above); at later tags, [`PATH_MAP.md`](PATH_MAP.md) gives the mapping. Frozen harnesses import each other by the paths they were written with, and those paths exist only at those tags.
+4. To rerun a harness byte for byte at the paths it was written with, check out the commit that [`PATH_MAP.md`](PATH_MAP.md) gives for its volume (a full hash). Frozen harnesses import each other by the paths they were written with, and those paths exist only at those commits; at the current tags, `PATH_MAP.md` gives the mapping.
 
 ## Deployment notes (RTX 5090)
 
