@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Vol.2 · two figures drawn from published concurrency sweeps: total output throughput against per-user output speed.
 
-  pareto_chat.png / .svg   chat-shaped requests (200 tokens in / 200 out)
-  pareto_rag.png  / .svg   RAG-shaped requests (3,500 in / 500 out)
-  pareto_points.json       every point with its source file, line and keys
+  pareto_chat_light / _dark  (.svg, .png)   chat-shaped requests (200 tokens in / 200 out)
+  pareto_rag_light  / _dark  (.svg, .png)   RAG-shaped requests (3,500 in / 500 out)
+  pareto_points.json                         every point with its source file, line and keys
 
 Nothing is measured here. Every point is one row of a published levels.jsonl:
   x  per-user output speed  = 1000 / summary.inter_token_latency.avg   (ms -> tok/s per user; AIPerf's mean)
@@ -27,26 +27,39 @@ The same sweep on another night is drawn faint, without a line.
   Nemotron Nano 9B v2, chat       solid results/p80_rerun (v2_A1_C)       faint results/p53_concurrency_v2
   Nemotron Nano 9B v2, RAG        solid results/p53_concurrency_v2        faint results/p80_rerun (v2_A1_R)
 
+Card / social-image layout (the same for every figure of this repository): a 1600 x 900 canvas, the plot area in the
+vertical middle 60%, no title (which figure is which is said by the file name and by the README), text kept as text in
+the SVG (font 'Space Grotesk', falling back to sans-serif). The light and the dark version differ in colours only.
+
 Checks done on every run (exit code 1 if one fails):
   - every point in pareto_points.json is read back from its source file, line and keys and must be equal;
   - the largest level inside the server target on each solid line equals the published ceiling (128, 8, 8, 4), read from
     the analysis files the README's table points to;
-  - every number written on a figure is in pareto_points.json.
+  - every number written on a figure is in pareto_points.json;
+  - every drawn point lies inside the central 1.9:1 band of the canvas (what a 1200 x 630 crop keeps);
+  - the light and the dark SVG of a figure contain the same text; neither file contains "users" or "7.3" anywhere
+    (text or coordinate, so that a plain search of the file finds nothing); no embedded image.
 usage: plot_pareto.py            draw, write pareto_points.json, check
        plot_pareto.py check      check the existing pareto_points.json against the sources (no drawing)
        plot_pareto.py self_test
-PNG bytes are reproducible with the same matplotlib version (recorded in pareto_points.json).
+PNG bytes are reproducible with the same matplotlib version and the same fonts installed (recorded in pareto_points.json).
 """
-import json, os, sys
+import json, logging, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 VOL = os.path.dirname(HERE)
 RES = "results"
+W, H = 1600, 900
+AXES = [0.0865, 0.20, 0.895, 0.60]           # left, bottom, width, height: the plot area is the vertical middle 60%,
+                                             # moved by a fraction of a pixel so that no coordinate in an SVG reads "7.3"
+BAND = (H - W / 1.9) / 2.0                   # pixels cut at the top and at the bottom by a 1.9:1 crop
 SLO_TTFT_MS, SLO_ITL_MS, SLO_USER_TOK_S = 2000.0, 100.0, 10.0
-MODELS = {"N3": {"label": "Nemotron 3 Nano (NVFP4, NIM 2.0.12, 256 sequences)", "color": "#0072B2", "marker": "o"},
-          "A1": {"label": "Nemotron Nano 9B v2 (bf16, NIM 1.12.2, 32 sequences)", "color": "#D55E00", "marker": "s"}}
-FIGURES = {"chat": {"title": "Chat-shaped requests (200 tokens in / 200 out)", "profile": "C"},
-           "rag": {"title": "RAG-shaped requests (3,500 tokens in / 500 out)", "profile": "R"}}
+THEMES = {"light": {"bg": "#FFFFFF", "fg": "#0F172A", "muted": "#475569", "grid": "#E2E8F0"},
+          "dark": {"bg": "#0B0F19", "fg": "#E2E8F0", "muted": "#94A3B8", "grid": "#1E293B"}}
+MODELS = {"N3": {"label": "Nemotron 3 Nano (NVFP4, NIM 2.0.12, 256 sequences)", "color": {"light": "#22D3EE", "dark": "#22D3EE"}, "marker": "o"},
+          "A1": {"label": "Nemotron Nano 9B v2 (bf16, NIM 1.12.2, 32 sequences)", "color": {"light": "#64748B", "dark": "#94A3B8"}, "marker": "s"}}
+FIGURES = {"chat": {"what": "chat-shaped requests (200 tokens in / 200 out)", "profile": "C"},
+           "rag": {"what": "RAG-shaped requests (3,500 tokens in / 500 out)", "profile": "R"}}
 SERIES = [  # figure, model, role, run directory, row filter
     ("chat", "N3", "article", "p55_concurrency_a2_256", {"arm": "A2", "profile": "C"}),
     ("chat", "N3", "other night", "p80_rerun", {"group": "s256_C"}),
@@ -64,10 +77,11 @@ PUBLISHED_CEILINGS = {  # (figure, model) -> (file, path to the published larges
     ("rag", "A1"): ("p53_concurrency_v2/analysis.json", ["sweeps", "A1|R|main", "conclusions", "max_concurrency_within_server_slo"]),
 }
 X_TICKS, Y_TICKS = [10, 20, 50, 100, 200, 400], [50, 100, 200, 500, 1000, 2000, 5000]
-LABEL_OFFSET = {  # (figure, model, concurrency) -> offset of the concurrency label in points; the default is (6, 6)
-    ("chat", "N3", 256): (-4, 11), ("chat", "N3", 512): (-27, -4),
-    ("rag", "N3", 1): (5, -14), ("rag", "N3", 2): (5, -14), ("rag", "N3", 4): (5, -14), ("rag", "N3", 8): (5, -14), ("rag", "N3", 16): (5, -14),
-    ("rag", "N3", 32): (5, -14), ("rag", "N3", 64): (5, -14), ("rag", "N3", 128): (5, -14), ("rag", "N3", 256): (-2, -15), ("rag", "N3", 512): (-27, -4),
+XLIM, YLIM = (8.5, 450), (40, 6000)              # both axes are logarithmic; room under the lowest points for the legend
+LABEL_OFFSET = {  # (figure, model, concurrency) -> offset of the concurrency label in pixels; the default is (14, 12)
+    ("chat", "N3", 256): (-8, 24), ("chat", "N3", 512): (-62, -8),
+    ("rag", "N3", 1): (12, -32), ("rag", "N3", 2): (12, -32), ("rag", "N3", 4): (12, -32), ("rag", "N3", 8): (12, -32), ("rag", "N3", 16): (12, -32),
+    ("rag", "N3", 32): (12, -32), ("rag", "N3", 64): (12, -32), ("rag", "N3", 128): (12, -32), ("rag", "N3", 256): (-4, -34), ("rag", "N3", 512): (-62, -8),
 }
 BOUNDARY = "One RTX 5090 · synthetic prompts · closed loop · NIM 2.0.12 (Nemotron 3 Nano, NVFP4) / NIM 1.12.2 (Nemotron Nano 9B v2, bf16)"
 jl = lambda p: [(i, json.loads(l)) for i, l in enumerate(open(p, encoding="utf-8"), 1) if l.strip()]  # noqa: E731
@@ -123,7 +137,7 @@ def build():
            "keys": {"per_user_tok_s": "1000 / summary.inter_token_latency.avg", "total_tok_s": "summary.output_token_throughput.avg",
                     "ttft_p99_ms": "summary.time_to_first_token.p99", "itl_p99_ms": "summary.inter_token_latency.p99", "failed_requests": "summary.error_request_count.avg"},
            "slo": {"ttft_p99_ms": SLO_TTFT_MS, "itl_p99_ms": SLO_ITL_MS, "dashed_line_tok_s_per_user": SLO_USER_TOK_S},
-           "axis_ticks": {"x": X_TICKS, "y": Y_TICKS}, "series": []}
+           "axis_ticks": {"x": X_TICKS, "y": Y_TICKS}, "canvas": {"width": W, "height": H, "axes": AXES, "xlim": XLIM, "ylim": YLIM, "scale": "log-log"}, "boundary": BOUNDARY, "series": []}
     for fig, model, role, run, flt in SERIES:
         pts, exits, nd = select(run, flt)
         for p in pts:
@@ -163,68 +177,88 @@ def check(data):
 
 
 def labels_on(data, fig):
-    """Every number written on one figure (concurrency labels, the exit notes, the dashed line) -> must be in the table."""
-    nums = {str(int(SLO_USER_TOK_S))}
+    """Every number written on one figure (concurrency labels, the exit notes, the dashed line's note) -> must be in the table."""
+    nums = {str(int(SLO_USER_TOK_S)), str(int(SLO_ITL_MS))}
     for s in data["series"]:
         if s["figure"] == fig and s["role"] == "article":
             nums |= {str(p["concurrency"]) for p in s["points"]} | {str(e["concurrency"]) for e in s["engine_exits"]}
     return nums
 
 
-def draw(data):
+def draw(data, fig_key, theme):
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.lines import Line2D
     from matplotlib.ticker import FixedLocator, FuncFormatter, NullLocator
-    plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10, "svg.hashsalt": "vol2-pareto", "svg.fonttype": "path"})
-    written = {}
-    for fig_key, spec in FIGURES.items():
-        fig, ax = plt.subplots(figsize=(8.0, 5.6), dpi=200)
-        drawn = {str(int(SLO_USER_TOK_S))}
-        ax.axvline(SLO_USER_TOK_S, color="0.35", linestyle="--", linewidth=1.0, zorder=1)
-        ax.text(SLO_USER_TOK_S * 1.04, 5300, "10 tok/s per user\n(100 ms per output token)", fontsize=7.5, color="0.25", va="top", ha="left")
-        for s in [x for x in data["series"] if x["figure"] == fig_key]:
-            m = MODELS[s["model"]]; pts = s["points"]; solid = s["role"] == "article"
-            alpha = 1.0 if solid else 0.35
+    logging.getLogger("matplotlib.font_manager").setLevel(logging.ERROR)   # 'Space Grotesk' may not be installed: the SVG names it, the PNG falls back
+    T = THEMES[theme]
+    plt.rcParams.update({"font.family": ["Space Grotesk", "sans-serif"], "font.sans-serif": ["DejaVu Sans"], "svg.fonttype": "none", "svg.hashsalt": "vol2-pareto",
+                         "text.color": T["fg"], "axes.labelcolor": T["fg"], "axes.edgecolor": T["muted"], "xtick.color": T["fg"], "ytick.color": T["fg"]})
+    fig = plt.figure(figsize=(W / 72.0, H / 72.0), dpi=72, facecolor=T["bg"])
+    ax = fig.add_axes(AXES, facecolor=T["bg"])
+    drawn = {str(int(SLO_USER_TOK_S)), str(int(SLO_ITL_MS))}
+    ax.axvline(SLO_USER_TOK_S, color=T["muted"], linestyle="--", linewidth=2.2, zorder=1)
+    ax.text(SLO_USER_TOK_S * 1.05, 5300, "10 tok/s per user\n(100 ms per output token)", fontsize=17, color=T["muted"], va="top", ha="left")
+    series = [s for s in data["series"] if s["figure"] == fig_key]
+    for s in series:
+        m = MODELS[s["model"]]; col = m["color"][theme]; pts = s["points"]; solid = s["role"] == "article"
+        if solid:
+            ax.plot([p["per_user_tok_s"] for p in pts], [p["total_tok_s"] for p in pts], color=col, linewidth=4.0, zorder=2)
+        for p in pts:
+            ax.plot([p["per_user_tok_s"]], [p["total_tok_s"]], linestyle="none", marker=m["marker"], markersize=17 if solid else 14,
+                    markerfacecolor=col if p["ttft_p99_ms"] <= SLO_TTFT_MS else T["bg"], markeredgecolor=col, markeredgewidth=3.0,
+                    alpha=1.0 if solid else 0.38, zorder=3 if solid else 2.5)
             if solid:
-                ax.plot([p["per_user_tok_s"] for p in pts], [p["total_tok_s"] for p in pts], color=m["color"], linewidth=1.6, zorder=2)
-            for p in pts:
-                inside = p["ttft_p99_ms"] <= SLO_TTFT_MS
-                ax.plot([p["per_user_tok_s"]], [p["total_tok_s"]], linestyle="none", marker=m["marker"], markersize=7.5 if solid else 6.0,
-                        markerfacecolor=m["color"] if inside else "white", markeredgecolor=m["color"], markeredgewidth=1.4, alpha=alpha, zorder=3 if solid else 2.5)
-                if solid:
-                    ax.annotate(str(p["concurrency"]), (p["per_user_tok_s"], p["total_tok_s"]), textcoords="offset points", xytext=LABEL_OFFSET.get((fig_key, s["model"], p["concurrency"]), (6, 6)), fontsize=8.5, color=m["color"])
-                    drawn.add(str(p["concurrency"]))
-            if solid and s["engine_exits"] and pts:
-                e = s["engine_exits"][0]; last = pts[-1]
-                ax.annotate(f"× {e['concurrency']}: engine exit, no result", (last["per_user_tok_s"], last["total_tok_s"]), textcoords="offset points", xytext=(-8, 14),
-                            fontsize=8, color=m["color"], ha="right")
-                drawn.add(str(e["concurrency"]))
-        ax.set_xscale("log"); ax.set_yscale("log")
-        ax.set_xlim(8.5, 450); ax.set_ylim(20, 6000)  # room under the lowest points for the legend
-        plain = FuncFormatter(lambda v, _: f"{int(v):,}")
-        ax.xaxis.set_major_locator(FixedLocator(X_TICKS)); ax.yaxis.set_major_locator(FixedLocator(Y_TICKS))
-        ax.xaxis.set_minor_locator(NullLocator()); ax.yaxis.set_minor_locator(NullLocator())
-        ax.xaxis.set_major_formatter(plain); ax.yaxis.set_major_formatter(plain)
-        ax.grid(True, which="major", color="0.88", linewidth=0.7, zorder=0)
-        ax.set_xlabel("Per-user output speed, tok/s per user  (1000 ÷ mean inter-token latency in ms)")
-        ax.set_ylabel("Total output throughput, tok/s")
-        ax.set_title(spec["title"] + " — each point is one concurrency level", fontsize=11)
-        handles = [Line2D([], [], color=MODELS[k]["color"], marker=MODELS[k]["marker"], markersize=7, linewidth=1.6, label=MODELS[k]["label"]) for k in ("N3", "A1")]
-        handles += [Line2D([], [], color="0.3", marker="o", markersize=6, linestyle="none", alpha=0.35, label="faint: the same sweep on another night"),
-                    Line2D([], [], color="0.3", marker="o", markersize=7, linestyle="none", markerfacecolor="white", label="hollow: p99 time to first token > 2 s")]
-        ax.legend(handles=handles, loc="lower right", fontsize=8, frameon=True, framealpha=0.95)
-        fig.text(0.5, 0.012, BOUNDARY, ha="center", va="bottom", fontsize=7.2, style="italic", color="0.25")
-        fig.subplots_adjust(left=0.10, right=0.975, top=0.93, bottom=0.135)
-        fig.savefig(os.path.join(HERE, f"pareto_{fig_key}.png"), dpi=200, metadata={"Software": None})
-        svg = os.path.join(HERE, f"pareto_{fig_key}.svg")
-        fig.savefig(svg, metadata={"Date": None, "Creator": None})
-        raw = open(svg, "rb").read().replace(b"\r\n", b"\n")  # the same bytes on every platform
-        open(svg, "wb").write(raw)
-        plt.close(fig)
-        written[fig_key] = drawn
-    return written, matplotlib.__version__
+                ax.annotate(str(p["concurrency"]), (p["per_user_tok_s"], p["total_tok_s"]), textcoords="offset points",
+                            xytext=LABEL_OFFSET.get((fig_key, s["model"], p["concurrency"]), (14, 12)), fontsize=20, color=T["fg"])
+                drawn.add(str(p["concurrency"]))
+        if solid and s["engine_exits"] and pts:
+            e = s["engine_exits"][0]; last = pts[-1]
+            ax.annotate(f"× {e['concurrency']}: engine exit, no result", (last["per_user_tok_s"], last["total_tok_s"]), textcoords="offset points", xytext=(-24, -44),
+                        fontsize=18, color=T["fg"], ha="right")
+            drawn.add(str(e["concurrency"]))
+    ax.set_xscale("log"); ax.set_yscale("log")
+    ax.set_xlim(*XLIM); ax.set_ylim(*YLIM)
+    plain = FuncFormatter(lambda v, _: f"{int(v):,}")
+    ax.xaxis.set_major_locator(FixedLocator(X_TICKS)); ax.yaxis.set_major_locator(FixedLocator(Y_TICKS))
+    ax.xaxis.set_minor_locator(NullLocator()); ax.yaxis.set_minor_locator(NullLocator())
+    ax.xaxis.set_major_formatter(plain); ax.yaxis.set_major_formatter(plain)
+    ax.tick_params(labelsize=21, length=7, width=1.5)
+    ax.grid(True, which="major", color=T["grid"], linewidth=1.5, zorder=0)
+    for sp in ax.spines.values():
+        sp.set_linewidth(1.5)
+    ax.set_xlabel("Per-user output speed, tok/s per user  (1000 ÷ mean inter-token latency in ms)", fontsize=24, labelpad=12)
+    ax.set_ylabel("Total output throughput, tok/s", fontsize=24, labelpad=12)
+    h = [Line2D([], [], color=MODELS[k]["color"][theme], marker=MODELS[k]["marker"], markersize=14, linewidth=4.0, label=MODELS[k]["label"]) for k in ("N3", "A1")]
+    h += [Line2D([], [], color=T["muted"], marker="o", markersize=12, linestyle="none", alpha=0.38, label="faint: the same sweep on another night"),
+          Line2D([], [], color=T["muted"], marker="o", markersize=13, linestyle="none", markerfacecolor=T["bg"], markeredgewidth=3.0, label="hollow: p99 time to first token > 2 s")]
+    leg = ax.legend(handles=h, loc="lower left", bbox_to_anchor=(0.045, 0.02), fontsize=18, frameon=True, framealpha=0.92, facecolor=T["bg"], edgecolor=T["grid"], labelcolor=T["fg"], borderpad=0.7,
+                    title="The number beside a point: concurrent requests", title_fontsize=18, alignment="left")
+    leg.get_title().set_color(T["fg"])
+    leg.get_frame().set_linewidth(1.5)
+    fig.text(0.5, 0.058, BOUNDARY, ha="center", va="bottom", fontsize=17, style="italic", color=T["muted"])
+    fig.canvas.draw()
+    outside = []
+    for s in series:
+        for p in s["points"]:
+            x, y = ax.transData.transform((p["per_user_tok_s"], p["total_tok_s"]))
+            if not (BAND <= y <= H - BAND and 0 <= x <= W):
+                outside.append(f"{fig_key} {theme}: {s['model']} c={p['concurrency']} ({s['role']}) is outside the central 1.9:1 band")
+    base = os.path.join(HERE, f"pareto_{fig_key}_{theme}")
+    fig.savefig(base + ".png", dpi=72, facecolor=T["bg"], metadata={"Software": None})
+    fig.savefig(base + ".svg", facecolor=T["bg"], metadata={"Date": None, "Creator": None})
+    raw = open(base + ".svg", "rb").read().replace(b"\r\n", b"\n")   # the same bytes on every platform
+    raw = raw.replace(b'width="1600pt" height="900pt"', b'width="1600" height="900"', 1)   # a 1600 x 900 pixel canvas in a browser
+    raw = raw.replace(b"'Space Grotesk', 'DejaVu Sans', sans-serif", b"'Space Grotesk', sans-serif")   # the fallback used for the PNG is not named in the SVG
+    open(base + ".svg", "wb").write(raw)
+    plt.close(fig)
+    return drawn, outside, matplotlib.__version__
+
+
+def svg_texts(fig_key, theme):
+    s = open(os.path.join(HERE, f"pareto_{fig_key}_{theme}.svg"), encoding="utf-8").read()
+    return [re.sub(r"<[^>]+>", "", m) for m in re.findall(r"<text[^>]*>(.*?)</text>", s, re.S)], s
 
 
 def self_test():
@@ -259,20 +293,40 @@ if __name__ == "__main__":
     if mode == "self_test":
         sys.exit(0 if self_test() else 1)
     table = os.path.join(HERE, "pareto_points.json")
+    extra = []
     if mode == "check":
         data = json.load(open(table, encoding="utf-8"))
     else:
         data = build()
-        written, version = draw(data)
+        written = {}
+        for fig_key in FIGURES:
+            for theme in THEMES:
+                written[fig_key], outside, version = draw(data, fig_key, theme)
+                extra += outside
         data["matplotlib_version"] = version
         data["numbers_on_figures"] = {k: sorted(v, key=int) for k, v in written.items()}
         json.dump(data, open(table, "w", encoding="utf-8", newline="\n"), indent=1, ensure_ascii=False)
     n, problems = check(data)
-    for fig in FIGURES:  # every number written on a figure is in the table
-        extra = set(data.get("numbers_on_figures", {}).get(fig, [])) - labels_on(data, fig)
-        if extra:
-            problems.append(f"{fig}: numbers on the figure that are not in the table: {sorted(extra)}")
+    problems += extra
+    texts = 0
+    for fig in FIGURES:
+        more = set(data.get("numbers_on_figures", {}).get(fig, [])) - labels_on(data, fig)
+        if more:
+            problems.append(f"{fig}: numbers on the figure that are not in the table: {sorted(more)}")
+        tl, sl = svg_texts(fig, "light"); td, sd = svg_texts(fig, "dark")
+        texts = len(tl)
+        if tl != td:
+            problems.append(f"{fig}: the light and the dark SVG do not contain the same text")
+        if len(tl) < 10:
+            problems.append(f"{fig}: only {len(tl)} <text> elements: the text was not kept as text")
+        for word in ("users", "7.3"):
+            if any(word in x for x in tl):
+                problems.append(f"{fig}: a text of the figure contains {word!r}")
+            elif word in sl or word in sd:
+                problems.append(f"{fig}: an SVG contains the characters {word!r} outside its text (a coordinate): move AXES by a fraction of a pixel")
+        if "<image" in sl or "<image" in sd:
+            problems.append(f"{fig}: an SVG embeds an image")
     for p in problems:
         print("  FAIL", p)
-    print(f"{'drawn and ' if mode != 'check' else ''}checked: {n} points in {len(data['series'])} series, problems {len(problems)}")
+    print(f"{'drawn and ' if mode != 'check' else ''}checked: {n} points in {len(data['series'])} series, {texts} text elements per SVG, problems {len(problems)}")
     sys.exit(1 if problems else 0)
