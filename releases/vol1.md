@@ -1,3 +1,9 @@
+Forum post: <https://forums.developer.nvidia.com/t/why-nim-llama-3-1-8b-on-one-rtx-5090-from-1-to-128-concurrent-requests/384818>
+
+![Why NIM on one RTX 5090](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol1-nim/figures/cover_vol1.png)
+
+![Total output throughput against the number of concurrent requests, for NIM FP8, NIM bf16, Ollama 4-bit and Ollama 16-bit](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol1-nim/figures/throughput_concurrency_light.png)
+
 Llama 3.1 8B Instruct on one RTX 5090 with NIM 2.0.12, from one request at a time up to 128, with Ollama as the reference point.
 
 - **One user: Ollama's 4-bit build is faster** (172–183 vs 87 tok/s), because it reads about 3.3× fewer bytes per token. NIM adds nothing on top of the vLLM it ships with: same weights, same speed, the same 50 answers byte for byte.

@@ -1,5 +1,7 @@
 # Vol.1 (renewed 2026-09) · Why NIM? Llama 3.1 8B on one RTX 5090, from 1 to 128 concurrent requests
 
+Forum post: <https://forums.developer.nvidia.com/t/why-nim-llama-3-1-8b-on-one-rtx-5090-from-1-to-128-concurrent-requests/384818>
+
 > **Reproduce:** `git checkout vol1`. That tag is the repository as the Vol.1 article describes it: every run of this volume, the 29 September FP8 recheck and this README. The harnesses are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
 
 A question we keep getting from teams that run on a single workstation GPU: *why use NIM instead of just running Ollama?* So we measured it. Llama 3.1 8B Instruct, one RTX 5090, NIM 2.0.12, from one request at a time up to 128, with Ollama as the reference point. We also checked whether the faster configurations answer worse.
@@ -12,6 +14,10 @@ A question we keep getting from teams that run on a single workstation GPU: *why
 - **NIM's default on this card is FP8.** It gives another 1.5× over bf16 (9,062 tok/s at 128). MMLU showed no measurable change; GSM8K was 1.5 points lower, which we could not separate from zero.
 
 *All throughput numbers: synthetic chat requests, 200 tokens in / 200 out, closed loop, one engine on the GPU at a time. MLPerf server target: p99 TTFT ≤ 2 s and p99 TPOT ≤ 100 ms.*
+
+![Why NIM on one RTX 5090](figures/cover_vol1.png)
+
+*One RTX 5090 · Llama 3.1 8B Instruct · synthetic chat 200/200 · closed loop · NIM 2.0.12 (vLLM 0.27.1) / Ollama 0.34.4*
 
 ## Run it
 
@@ -43,6 +49,14 @@ For bf16, use profile `092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab4662
 **p99 time to first token** at 128 concurrent requests: NIM bf16 1.84 s, NIM FP8 0.75 s, tuned 4-bit Ollama 31.9 s.
 
 *A later recheck of FP8 with the card otherwise idle measured 9,062 tok/s at 128, 1.50× bf16 NIM in the same window (section D below).*
+
+**The same sweep as a curve.** Total output throughput against the number of concurrent requests, both on logarithmic axes. A line is the run of the table above; the diamonds at 1, 2 and 4 are a separate run that located the crossover; the faint markers are the rechecks with the card otherwise idle; a hollow marker means the p99 time to first token is over 2 s, outside the MLPerf server target.
+
+![Llama 3.1 8B on one RTX 5090: total output throughput against concurrent requests for NIM FP8, NIM bf16, Ollama 4-bit and Ollama 16-bit](figures/throughput_concurrency_light.png)
+
+*Dashed segments: this run has no level between 1 and 8; the diamonds at 2 and 4 come from a separate run.*
+
+*Figure added on 2026-10-01, revised 2026-10-02; drawn from the data at tag `vol1` by [`figures/plot_throughput_concurrency.py`](figures/plot_throughput_concurrency.py), in a light and a dark version (SVG and PNG). Every point is listed with its source file and key in [`figures/throughput_concurrency_points.json`](figures/throughput_concurrency_points.json).*
 
 **Does faster mean worse answers?** The four configurations on the same task sets (lm-evaluation-harness 0.4.13, temperature 0, identical requests), each compared with bf16 NIM item by item:
 

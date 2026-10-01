@@ -1,0 +1,887 @@
+{
+ "what": "the points of pareto_chat and pareto_rag; x = 1000 / summary.inter_token_latency.avg, y = summary.output_token_throughput.avg, hollow marker when summary.time_to_first_token.p99 > 2000 ms",
+ "keys": {
+  "per_user_tok_s": "1000 / summary.inter_token_latency.avg",
+  "total_tok_s": "summary.output_token_throughput.avg",
+  "ttft_p99_ms": "summary.time_to_first_token.p99",
+  "itl_p99_ms": "summary.inter_token_latency.p99",
+  "failed_requests": "summary.error_request_count.avg"
+ },
+ "slo": {
+  "ttft_p99_ms": 2000.0,
+  "itl_p99_ms": 100.0,
+  "dashed_line_tok_s_per_user": 10.0
+ },
+ "axis_ticks": {
+  "x": [
+   10,
+   20,
+   50,
+   100,
+   200,
+   400
+  ],
+  "y": [
+   50,
+   100,
+   200,
+   500,
+   1000,
+   2000,
+   5000
+  ]
+ },
+ "canvas": {
+  "width": 1600,
+  "height": 900,
+  "axes": [
+   0.0865,
+   0.2,
+   0.895,
+   0.6
+  ],
+  "xlim": [
+   8.5,
+   450
+  ],
+  "ylim": [
+   40,
+   6000
+  ],
+  "scale": "log-log"
+ },
+ "boundary": "One RTX 5090 · synthetic prompts · closed loop · NIM 2.0.12 (Nemotron 3 Nano, NVFP4) / NIM 1.12.2 (Nemotron Nano 9B v2, bf16)",
+ "series": [
+  {
+   "figure": "chat",
+   "model": "N3",
+   "model_label": "Nemotron 3 Nano (NVFP4, NIM 2.0.12, 256 sequences)",
+   "role": "article",
+   "run": "results/p55_concurrency_a2_256",
+   "filter": {
+    "arm": "A2",
+    "profile": "C"
+   },
+   "points": [
+    {
+     "concurrency": 1,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 2,
+     "per_user_tok_s": 317.0772222120401,
+     "total_tok_s": 300.0836909529549,
+     "ttft_p99_ms": 41.238085,
+     "itl_p99_ms": 3.186373346703297,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 2,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 3,
+     "per_user_tok_s": 247.20756652035334,
+     "total_tok_s": 464.9091374784304,
+     "ttft_p99_ms": 58.625501,
+     "itl_p99_ms": 4.194244699390101,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 4,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 4,
+     "per_user_tok_s": 193.7711217251198,
+     "total_tok_s": 732.5143802768232,
+     "ttft_p99_ms": 107.83788299999999,
+     "itl_p99_ms": 5.4834503008725015,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 8,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 5,
+     "per_user_tok_s": 142.67168477732386,
+     "total_tok_s": 1088.2055071754153,
+     "ttft_p99_ms": 106.46875999999999,
+     "itl_p99_ms": 7.365781764705882,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 16,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 6,
+     "per_user_tok_s": 101.52407091899256,
+     "total_tok_s": 1543.190824598723,
+     "ttft_p99_ms": 176.79993,
+     "itl_p99_ms": 10.37599301188948,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 32,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 7,
+     "per_user_tok_s": 73.73537880058606,
+     "total_tok_s": 2237.996127584979,
+     "ttft_p99_ms": 358.727422,
+     "itl_p99_ms": 14.57215306857143,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 64,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 8,
+     "per_user_tok_s": 49.87507593776443,
+     "total_tok_s": 2990.587635630844,
+     "ttft_p99_ms": 568.853168,
+     "itl_p99_ms": 21.737589806763282,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 128,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 9,
+     "per_user_tok_s": 33.144462255495476,
+     "total_tok_s": 3902.067683002496,
+     "ttft_p99_ms": 1054.3474959999999,
+     "itl_p99_ms": 32.61811490058479,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 256,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 10,
+     "per_user_tok_s": 29.288953821148965,
+     "total_tok_s": 3998.829601328298,
+     "ttft_p99_ms": 7555.083333,
+     "itl_p99_ms": 37.43615167040358,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 512,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 11,
+     "per_user_tok_s": 28.561899826319017,
+     "total_tok_s": 3992.865351205378,
+     "ttft_p99_ms": 19537.082772,
+     "itl_p99_ms": 37.2244789271028,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    }
+   ],
+   "engine_exits": [],
+   "not_drawn": []
+  },
+  {
+   "figure": "chat",
+   "model": "N3",
+   "model_label": "Nemotron 3 Nano (NVFP4, NIM 2.0.12, 256 sequences)",
+   "role": "other night",
+   "run": "results/p80_rerun",
+   "filter": {
+    "group": "s256_C"
+   },
+   "points": [
+    {
+     "concurrency": 1,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 4,
+     "per_user_tok_s": 289.6753618889344,
+     "total_tok_s": 275.2057717852319,
+     "ttft_p99_ms": 54.42633299999997,
+     "itl_p99_ms": 3.5415790726867336,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 2,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 5,
+     "per_user_tok_s": 210.21047068762638,
+     "total_tok_s": 398.9470881687617,
+     "ttft_p99_ms": 84.16323700000002,
+     "itl_p99_ms": 4.950770700457001,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 4,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 6,
+     "per_user_tok_s": 155.4048925962233,
+     "total_tok_s": 593.828395551328,
+     "ttft_p99_ms": 108.96981199999999,
+     "itl_p99_ms": 6.826614384805691,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 8,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 7,
+     "per_user_tok_s": 108.65552688532065,
+     "total_tok_s": 833.234381709828,
+     "ttft_p99_ms": 118.76941,
+     "itl_p99_ms": 9.748692748826624,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 16,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 8,
+     "per_user_tok_s": 76.12834179748506,
+     "total_tok_s": 1164.8701761977031,
+     "ttft_p99_ms": 205.299025,
+     "itl_p99_ms": 13.955195020026842,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 32,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 9,
+     "per_user_tok_s": 54.30902670406358,
+     "total_tok_s": 1643.5247972573384,
+     "ttft_p99_ms": 492.8356759999998,
+     "itl_p99_ms": 19.688816468749998,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 64,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 10,
+     "per_user_tok_s": 38.00224079317044,
+     "total_tok_s": 2273.5013626536524,
+     "ttft_p99_ms": 697.749064,
+     "itl_p99_ms": 28.374370786411127,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 128,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 11,
+     "per_user_tok_s": 27.32763686511125,
+     "total_tok_s": 3188.0907575571046,
+     "ttft_p99_ms": 1421.54601,
+     "itl_p99_ms": 39.26340069673373,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 256,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 12,
+     "per_user_tok_s": 24.207927428774454,
+     "total_tok_s": 3305.4898719289295,
+     "ttft_p99_ms": 9406.285831999992,
+     "itl_p99_ms": 44.46948827635532,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 512,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 13,
+     "per_user_tok_s": 23.75146588491265,
+     "total_tok_s": 3326.729924260335,
+     "ttft_p99_ms": 23687.860177999988,
+     "itl_p99_ms": 44.583169781634076,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    }
+   ],
+   "engine_exits": [],
+   "not_drawn": []
+  },
+  {
+   "figure": "chat",
+   "model": "A1",
+   "model_label": "Nemotron Nano 9B v2 (bf16, NIM 1.12.2, 32 sequences)",
+   "role": "article",
+   "run": "results/p80_rerun",
+   "filter": {
+    "group": "v2_A1_C"
+   },
+   "points": [
+    {
+     "concurrency": 1,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 50,
+     "per_user_tok_s": 77.22238852492475,
+     "total_tok_s": 75.88295253494714,
+     "ttft_p99_ms": 172.19539000000015,
+     "itl_p99_ms": 13.269442996322422,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 2,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 51,
+     "per_user_tok_s": 77.25289594860949,
+     "total_tok_s": 148.91011700193067,
+     "ttft_p99_ms": 72.611605,
+     "itl_p99_ms": 13.28940568960511,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 4,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 52,
+     "per_user_tok_s": 70.49762010780634,
+     "total_tok_s": 274.2192092128248,
+     "ttft_p99_ms": 97.952248,
+     "itl_p99_ms": 14.939081292219651,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 8,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 53,
+     "per_user_tok_s": 61.95722605890517,
+     "total_tok_s": 472.09810081349207,
+     "ttft_p99_ms": 180.827245,
+     "itl_p99_ms": 16.87828702217782,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    }
+   ],
+   "engine_exits": [
+    {
+     "concurrency": 16,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 54,
+     "reason": "no result: the engine had exited"
+    }
+   ],
+   "not_drawn": []
+  },
+  {
+   "figure": "chat",
+   "model": "A1",
+   "model_label": "Nemotron Nano 9B v2 (bf16, NIM 1.12.2, 32 sequences)",
+   "role": "other night",
+   "run": "results/p53_concurrency_v2",
+   "filter": {
+    "arm": "A1",
+    "profile": "C"
+   },
+   "points": [
+    {
+     "concurrency": 1,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 2,
+     "per_user_tok_s": 75.31386001934074,
+     "total_tok_s": 74.01440311804566,
+     "ttft_p99_ms": 69.53908,
+     "itl_p99_ms": 13.568549833333332,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 2,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 3,
+     "per_user_tok_s": 74.88795759418211,
+     "total_tok_s": 145.5601541882979,
+     "ttft_p99_ms": 74.980376,
+     "itl_p99_ms": 13.88597267006456,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 4,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 4,
+     "per_user_tok_s": 70.0014429727275,
+     "total_tok_s": 271.3289348084492,
+     "ttft_p99_ms": 120.44373999999992,
+     "itl_p99_ms": 14.801117596428396,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 8,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 5,
+     "per_user_tok_s": 61.231457959967635,
+     "total_tok_s": 466.4416239126673,
+     "ttft_p99_ms": 334.458719,
+     "itl_p99_ms": 17.15759843901523,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 16,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 6,
+     "per_user_tok_s": 51.059845228037105,
+     "total_tok_s": 776.8847390567853,
+     "ttft_p99_ms": 434.115587,
+     "itl_p99_ms": 20.632360611561783,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    }
+   ],
+   "engine_exits": [
+    {
+     "concurrency": 32,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 7,
+     "reason": "no result: the engine had exited"
+    }
+   ],
+   "not_drawn": []
+  },
+  {
+   "figure": "rag",
+   "model": "N3",
+   "model_label": "Nemotron 3 Nano (NVFP4, NIM 2.0.12, 256 sequences)",
+   "role": "article",
+   "run": "results/p55_concurrency_a2_256",
+   "filter": {
+    "arm": "A2",
+    "profile": "R"
+   },
+   "points": [
+    {
+     "concurrency": 1,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 16,
+     "per_user_tok_s": 301.9653495897319,
+     "total_tok_s": 273.53743476701175,
+     "ttft_p99_ms": 251.55889599999998,
+     "itl_p99_ms": 3.65005879138322,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 2,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 17,
+     "per_user_tok_s": 223.31356820178306,
+     "total_tok_s": 404.73398269703,
+     "ttft_p99_ms": 306.78613599999994,
+     "itl_p99_ms": 4.855631206339405,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 4,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 18,
+     "per_user_tok_s": 167.08856758458708,
+     "total_tok_s": 625.7999505152028,
+     "ttft_p99_ms": 519.874867,
+     "itl_p99_ms": 6.298061757415299,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 8,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 19,
+     "per_user_tok_s": 109.96851466036989,
+     "total_tok_s": 803.9949773134736,
+     "ttft_p99_ms": 1250.896052,
+     "itl_p99_ms": 9.844276556501944,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 16,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 20,
+     "per_user_tok_s": 73.3431535847799,
+     "total_tok_s": 1045.8859409617396,
+     "ttft_p99_ms": 2638.9624490000006,
+     "itl_p99_ms": 16.015420426045655,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 32,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 21,
+     "per_user_tok_s": 46.19953154647841,
+     "total_tok_s": 1278.6116567042557,
+     "ttft_p99_ms": 5207.536129999999,
+     "itl_p99_ms": 25.99438738339021,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 64,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 22,
+     "per_user_tok_s": 27.208495146307172,
+     "total_tok_s": 1504.370872744439,
+     "ttft_p99_ms": 10675.001596,
+     "itl_p99_ms": 42.24568900049898,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 128,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 23,
+     "per_user_tok_s": 18.915790984464657,
+     "total_tok_s": 2133.351743143903,
+     "ttft_p99_ms": 19845.039482000007,
+     "itl_p99_ms": 58.22083189263464,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 256,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 24,
+     "per_user_tok_s": 14.468990558120002,
+     "total_tok_s": 1884.2618969530697,
+     "ttft_p99_ms": 51903.10530599999,
+     "itl_p99_ms": 74.55568078779315,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 512,
+     "source": "results/p55_concurrency_a2_256/levels.jsonl",
+     "line": 25,
+     "per_user_tok_s": 13.938170288741029,
+     "total_tok_s": 1856.5537577548657,
+     "ttft_p99_ms": 119796.05059900001,
+     "itl_p99_ms": 76.43274309292397,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    }
+   ],
+   "engine_exits": [],
+   "not_drawn": []
+  },
+  {
+   "figure": "rag",
+   "model": "N3",
+   "model_label": "Nemotron 3 Nano (NVFP4, NIM 2.0.12, 256 sequences)",
+   "role": "other night",
+   "run": "results/p80_rerun",
+   "filter": {
+    "group": "s256_R"
+   },
+   "points": [
+    {
+     "concurrency": 1,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 17,
+     "per_user_tok_s": 319.11774145088566,
+     "total_tok_s": 290.26854104188965,
+     "ttft_p99_ms": 205.07388599999996,
+     "itl_p99_ms": 3.1603300107406422,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 2,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 18,
+     "per_user_tok_s": 234.0146339706929,
+     "total_tok_s": 429.71095282568916,
+     "ttft_p99_ms": 256.89051100000006,
+     "itl_p99_ms": 4.617876219820932,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 4,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 19,
+     "per_user_tok_s": 169.40478314445429,
+     "total_tok_s": 634.5685919325862,
+     "ttft_p99_ms": 540.538604,
+     "itl_p99_ms": 6.30599581820003,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 8,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 20,
+     "per_user_tok_s": 119.12430250612202,
+     "total_tok_s": 883.2859180308174,
+     "ttft_p99_ms": 1014.8914400000006,
+     "itl_p99_ms": 9.054650061701947,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 16,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 21,
+     "per_user_tok_s": 79.04534849318692,
+     "total_tok_s": 1131.2839882883884,
+     "ttft_p99_ms": 2119.1971140000005,
+     "itl_p99_ms": 14.468451376694906,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 32,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 22,
+     "per_user_tok_s": 51.16816775012372,
+     "total_tok_s": 1408.3084158353108,
+     "ttft_p99_ms": 4878.930527999999,
+     "itl_p99_ms": 21.965763792546237,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 64,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 23,
+     "per_user_tok_s": 31.347665138000245,
+     "total_tok_s": 1742.3523334837632,
+     "ttft_p99_ms": 9018.174604000002,
+     "itl_p99_ms": 35.31777858877032,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 128,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 24,
+     "per_user_tok_s": 19.392367423255433,
+     "total_tok_s": 2146.13084992538,
+     "ttft_p99_ms": 17704.409135,
+     "itl_p99_ms": 56.1956164077354,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 256,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 25,
+     "per_user_tok_s": 17.081380693186272,
+     "total_tok_s": 2246.3614715127296,
+     "ttft_p99_ms": 43535.044791999986,
+     "itl_p99_ms": 65.42249044914914,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 512,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 26,
+     "per_user_tok_s": 16.13830609079862,
+     "total_tok_s": 2165.767282032391,
+     "ttft_p99_ms": 104400.01333799995,
+     "itl_p99_ms": 66.89539135756964,
+     "failed_requests": 1.0,
+     "inside_server_target_on_ttft": false
+    }
+   ],
+   "engine_exits": [],
+   "not_drawn": []
+  },
+  {
+   "figure": "rag",
+   "model": "A1",
+   "model_label": "Nemotron Nano 9B v2 (bf16, NIM 1.12.2, 32 sequences)",
+   "role": "article",
+   "run": "results/p53_concurrency_v2",
+   "filter": {
+    "arm": "A1",
+    "profile": "R"
+   },
+   "points": [
+    {
+     "concurrency": 1,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 13,
+     "per_user_tok_s": 76.22808403566879,
+     "total_tok_s": 72.58775195118059,
+     "ttft_p99_ms": 350.325355,
+     "itl_p99_ms": 13.187786393286009,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 2,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 14,
+     "per_user_tok_s": 73.92645561495058,
+     "total_tok_s": 136.534935559644,
+     "ttft_p99_ms": 630.5720599999999,
+     "itl_p99_ms": 13.912866427602395,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 4,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 15,
+     "per_user_tok_s": 63.9114715310325,
+     "total_tok_s": 234.05685488547928,
+     "ttft_p99_ms": 1415.054899,
+     "itl_p99_ms": 16.213727818417425,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 8,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 16,
+     "per_user_tok_s": 50.95214671645057,
+     "total_tok_s": 365.1567403098449,
+     "ttft_p99_ms": 2507.112976,
+     "itl_p99_ms": 20.85452526403835,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 16,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 17,
+     "per_user_tok_s": 36.01782390742813,
+     "total_tok_s": 513.5584169271516,
+     "ttft_p99_ms": 5434.274043999998,
+     "itl_p99_ms": 33.385482061834864,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    }
+   ],
+   "engine_exits": [
+    {
+     "concurrency": 32,
+     "source": "results/p53_concurrency_v2/levels.jsonl",
+     "line": 18,
+     "reason": "no result: the engine had exited"
+    }
+   ],
+   "not_drawn": []
+  },
+  {
+   "figure": "rag",
+   "model": "A1",
+   "model_label": "Nemotron Nano 9B v2 (bf16, NIM 1.12.2, 32 sequences)",
+   "role": "other night",
+   "run": "results/p80_rerun",
+   "filter": {
+    "group": "v2_A1_R"
+   },
+   "points": [
+    {
+     "concurrency": 1,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 59,
+     "per_user_tok_s": 76.72666944460406,
+     "total_tok_s": 73.18928847009504,
+     "ttft_p99_ms": 348.30204399999997,
+     "itl_p99_ms": 13.124994194898903,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 2,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 60,
+     "per_user_tok_s": 74.11476021215758,
+     "total_tok_s": 137.0345907987788,
+     "ttft_p99_ms": 621.9802949999998,
+     "itl_p99_ms": 13.903570662900188,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 4,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 61,
+     "per_user_tok_s": 64.13744536087806,
+     "total_tok_s": 235.1418103887302,
+     "ttft_p99_ms": 1271.9596549999999,
+     "itl_p99_ms": 16.11516730537433,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": true
+    },
+    {
+     "concurrency": 8,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 62,
+     "per_user_tok_s": 51.10827715839768,
+     "total_tok_s": 361.28369698402264,
+     "ttft_p99_ms": 2523.432848,
+     "itl_p99_ms": 20.80251216063202,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    },
+    {
+     "concurrency": 16,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 65,
+     "per_user_tok_s": 36.423448344411455,
+     "total_tok_s": 514.1488150254929,
+     "ttft_p99_ms": 7145.961466999997,
+     "itl_p99_ms": 34.831648637293085,
+     "failed_requests": 0,
+     "inside_server_target_on_ttft": false
+    }
+   ],
+   "engine_exits": [
+    {
+     "concurrency": 64,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 69,
+     "reason": "no result: the engine had exited"
+    }
+   ],
+   "not_drawn": [
+    {
+     "concurrency": 32,
+     "source": "results/p80_rerun/levels.jsonl",
+     "line": 68,
+     "reason": "null by the run's arm-health rule (events.jsonl, level_null)"
+    }
+   ]
+  }
+ ],
+ "matplotlib_version": "3.10.9",
+ "numbers_on_figures": {
+  "chat": [
+   "1",
+   "2",
+   "4",
+   "8",
+   "10",
+   "16",
+   "32",
+   "64",
+   "100",
+   "128",
+   "256",
+   "512"
+  ],
+  "rag": [
+   "1",
+   "2",
+   "4",
+   "8",
+   "10",
+   "16",
+   "32",
+   "64",
+   "100",
+   "128",
+   "256",
+   "512"
+  ]
+ }
+}
