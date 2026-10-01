@@ -1,0 +1,1866 @@
+{
+  "schema_version": "1.0",
+  "aiperf_version": "0.11.0",
+  "benchmark_id": "58e72f28fa4c",
+  "summary": {
+    "endpoints_configured": [
+      "http://localhost:8000/metrics"
+    ],
+    "endpoints_successful": [
+      "http://localhost:8000/metrics"
+    ],
+    "start_time": "2026-10-01T03:17:54.569314",
+    "end_time": "2026-10-01T03:18:54.562689",
+    "endpoint_info": {
+      "http://localhost:8000/metrics": {
+        "total_fetches": 190,
+        "first_fetch_ns": 1790795870213052200,
+        "last_fetch_ns": 1790795934574170500,
+        "avg_fetch_latency_ms": 4.982611052631579,
+        "unique_updates": 190,
+        "first_update_ns": 1790795870213052200,
+        "last_update_ns": 1790795934574170500,
+        "duration_seconds": 64.3611183,
+        "avg_update_interval_ms": 340.5350174603175,
+        "median_update_interval_ms": 331.3379
+      }
+    }
+  },
+  "metrics": {
+    "http_request_duration_highr_seconds": {
+      "type": "histogram",
+      "description": "Latency with many buckets but no API specific labels. Made for more accurate percentile calculations.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "stats": {
+            "count": 55,
+            "sum": 122.0778245800011,
+            "avg": 2.219596810545475,
+            "count_rate": 0.9147653527992251,
+            "sum_rate": 2.030410259470666,
+            "p1_estimate": 0.645,
+            "p5_estimate": 1.8740384356959652,
+            "p10_estimate": 1.9350748617887543,
+            "p25_estimate": 2.076436789586905,
+            "p50_estimate": 2.2828161214715488,
+            "p75_estimate": 2.4275243259344874,
+            "p90_estimate": 2.52712166196659,
+            "p95_estimate": 2.616482737508036,
+            "p99_estimate": 2.833825827967644
+          },
+          "buckets": {
+            "0.01": 0,
+            "0.025": 0,
+            "0.05": 0,
+            "0.075": 0,
+            "0.1": 0,
+            "0.25": 0,
+            "0.5": 1,
+            "0.75": 1,
+            "1.0": 2,
+            "1.5": 2,
+            "2.0": 9,
+            "2.5": 48,
+            "3.0": 55,
+            "3.5": 55,
+            "4.0": 55,
+            "4.5": 55,
+            "5.0": 55,
+            "7.5": 55,
+            "10.0": 55,
+            "30.0": 55,
+            "60.0": 55,
+            "+Inf": 55
+          }
+        }
+      ]
+    },
+    "http_request_duration_seconds": {
+      "type": "histogram",
+      "description": "Latency with only few buckets by handler. Made to be only used if aggregation by handler is important.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "handler": "/v1/chat/completions",
+            "method": "POST"
+          },
+          "stats": {
+            "count": 55,
+            "sum": 122.0778245800011,
+            "avg": 2.219596810545475,
+            "count_rate": 0.9147653527992251,
+            "sum_rate": 2.030410259470666,
+            "p1_estimate": 0.543,
+            "p5_estimate": 1.0345569500769236,
+            "p10_estimate": 1.1678480432307718,
+            "p25_estimate": 1.567721322692317,
+            "p50_estimate": 2.234176788461559,
+            "p75_estimate": 2.9006322542308,
+            "p90_estimate": 3.3005055336923452,
+            "p95_estimate": 3.4337966268461932,
+            "p99_estimate": 3.540429501369272
+          },
+          "buckets": {
+            "0.1": 0,
+            "0.5": 1,
+            "1.0": 2,
+            "+Inf": 55
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "handler": "/v1/models",
+            "method": "GET"
+          },
+          "stats": {
+            "count": 0
+          },
+          "buckets": {
+            "0.1": 0,
+            "0.5": 0,
+            "1.0": 0,
+            "+Inf": 0
+          }
+        }
+      ]
+    },
+    "http_requests": {
+      "type": "counter",
+      "description": "Total number of requests by method, status and handler.",
+      "unit": "requests",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "handler": "/v1/chat/completions",
+            "method": "POST",
+            "status": "2xx"
+          },
+          "stats": {
+            "total": 55.0,
+            "rate": 0.9147653527992251
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "handler": "/v1/models",
+            "method": "GET",
+            "status": "2xx"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "process_cpu_seconds": {
+      "type": "counter",
+      "description": "Total user and system CPU time spent in seconds.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "stats": {
+            "total": 5.6200000000000045,
+            "rate": 0.09347238695875726
+          }
+        }
+      ]
+    },
+    "process_max_fds": {
+      "type": "gauge",
+      "description": "Maximum number of open file descriptors.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "stats": {
+            "avg": 1048576.0,
+            "min": 1048576.0,
+            "max": 1048576.0,
+            "std": 0.0,
+            "p1": 1048576.0,
+            "p5": 1048576.0,
+            "p10": 1048576.0,
+            "p25": 1048576.0,
+            "p50": 1048576.0,
+            "p75": 1048576.0,
+            "p90": 1048576.0,
+            "p95": 1048576.0,
+            "p99": 1048576.0
+          }
+        }
+      ]
+    },
+    "process_open_fds": {
+      "type": "gauge",
+      "description": "Number of open file descriptors.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "stats": {
+            "avg": 46.988950276243095,
+            "min": 45.0,
+            "max": 47.0,
+            "std": 0.14865882924943327,
+            "p1": 47.0,
+            "p5": 47.0,
+            "p10": 47.0,
+            "p25": 47.0,
+            "p50": 47.0,
+            "p75": 47.0,
+            "p90": 47.0,
+            "p95": 47.0,
+            "p99": 47.0
+          }
+        }
+      ]
+    },
+    "process_resident_memory_bytes": {
+      "type": "gauge",
+      "description": "Resident memory size in bytes.",
+      "unit": "bytes",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "stats": {
+            "avg": 1862496595.4475138,
+            "min": 1862148096.0,
+            "max": 1863065600.0,
+            "std": 350036.3939622466,
+            "p1": 1862148096.0,
+            "p5": 1862148096.0,
+            "p10": 1862148096.0,
+            "p25": 1862148096.0,
+            "p50": 1862377472.0,
+            "p75": 1862836224.0,
+            "p90": 1863065600.0,
+            "p95": 1863065600.0,
+            "p99": 1863065600.0
+          }
+        }
+      ]
+    },
+    "process_start_time_seconds": {
+      "type": "gauge",
+      "description": "Start time of the process since unix epoch in seconds.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "stats": {
+            "avg": 1790795093.31,
+            "min": 1790795093.31,
+            "max": 1790795093.31,
+            "std": 0.0,
+            "p1": 1790795093.31,
+            "p5": 1790795093.31,
+            "p10": 1790795093.31,
+            "p25": 1790795093.31,
+            "p50": 1790795093.31,
+            "p75": 1790795093.31,
+            "p90": 1790795093.31,
+            "p95": 1790795093.31,
+            "p99": 1790795093.31
+          }
+        }
+      ]
+    },
+    "process_virtual_memory_bytes": {
+      "type": "gauge",
+      "description": "Virtual memory size in bytes.",
+      "unit": "bytes",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "stats": {
+            "avg": 98715906048.0,
+            "min": 98715906048.0,
+            "max": 98715906048.0,
+            "std": 0.0,
+            "p1": 98715906048.0,
+            "p5": 98715906048.0,
+            "p10": 98715906048.0,
+            "p25": 98715906048.0,
+            "p50": 98715906048.0,
+            "p75": 98715906048.0,
+            "p90": 98715906048.0,
+            "p95": 98715906048.0,
+            "p99": 98715906048.0
+          }
+        }
+      ]
+    },
+    "python_gc_collections": {
+      "type": "counter",
+      "description": "Number of times this generation was collected",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "generation": "0"
+          },
+          "stats": {
+            "total": 1.0,
+            "rate": 0.016632097323622273
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "generation": "1"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "generation": "2"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "python_gc_objects_collected": {
+      "type": "counter",
+      "description": "Objects collected during gc",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "generation": "0"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "generation": "1"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "generation": "2"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "python_gc_objects_uncollectable": {
+      "type": "counter",
+      "description": "Uncollectable objects found during GC",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "generation": "0"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "generation": "1"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "generation": "2"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "python_info": {
+      "type": "gauge",
+      "description": "Python platform information",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "implementation": "CPython",
+            "major": "3",
+            "minor": "12",
+            "patchlevel": "3",
+            "version": "3.12.3"
+          },
+          "stats": {
+            "avg": 1.0,
+            "min": 1.0,
+            "max": 1.0,
+            "std": 0.0,
+            "p1": 1.0,
+            "p5": 1.0,
+            "p10": 1.0,
+            "p25": 1.0,
+            "p50": 1.0,
+            "p75": 1.0,
+            "p90": 1.0,
+            "p95": 1.0,
+            "p99": 1.0
+          }
+        }
+      ]
+    },
+    "vllm:cache_config_info": {
+      "type": "gauge",
+      "description": "Information of the LLMEngine CacheConfig",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "_block_size_resolved": "True",
+            "block_size": "4176",
+            "cache_dtype": "fp8_e4m3",
+            "calculate_kv_scales": "False",
+            "enable_prefix_caching": "False",
+            "engine": "0",
+            "gpu_memory_utilization": "0.92",
+            "is_attention_free": "False",
+            "kv_cache_dtype_skip_layers": "[]",
+            "kv_cache_max_concurrency": "122.16666666666667",
+            "kv_cache_memory_bytes": "None",
+            "kv_cache_size_tokens": "1000789",
+            "kv_offloading_backend": "native",
+            "kv_offloading_size": "None",
+            "kv_sharing_fast_prefill": "False",
+            "mamba_block_size": "8192",
+            "mamba_cache_dtype": "auto",
+            "mamba_cache_mode": "none",
+            "mamba_page_size_padded": "None",
+            "mamba_ssm_cache_dtype": "float32",
+            "num_cpu_blocks": "None",
+            "num_gpu_blocks": "733",
+            "num_gpu_blocks_override": "None",
+            "prefix_caching_hash_algo": "sha256",
+            "prefix_match_unit": "None",
+            "replayssm_buffer_len": "16",
+            "skip_page_size_padded": "None",
+            "sliding_window": "None",
+            "use_replayssm": "False",
+            "user_specified_block_size": "False",
+            "user_specified_mamba_block_size": "False"
+          },
+          "stats": {
+            "avg": 1.0,
+            "min": 1.0,
+            "max": 1.0,
+            "std": 0.0,
+            "p1": 1.0,
+            "p5": 1.0,
+            "p10": 1.0,
+            "p25": 1.0,
+            "p50": 1.0,
+            "p75": 1.0,
+            "p90": 1.0,
+            "p95": 1.0,
+            "p99": 1.0
+          }
+        }
+      ]
+    },
+    "vllm:e2e_request_latency_seconds": {
+      "type": "histogram",
+      "description": "Histogram of e2e request latency in seconds.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 120.77226853370667,
+            "avg": 2.278722047805786,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 2.0086961242472534,
+            "p1_estimate": 1.8688560140872763,
+            "p5_estimate": 1.9166050393854541,
+            "p10_estimate": 1.972435373578753,
+            "p25_estimate": 2.099376912470217,
+            "p50_estimate": 2.298130737410651,
+            "p75_estimate": 2.4327102458035506,
+            "p90_estimate": 2.531722665968396,
+            "p95_estimate": 2.6256389115605905,
+            "p99_estimate": 2.8348439281181266
+          },
+          "buckets": {
+            "0.3": 0,
+            "0.5": 0,
+            "0.8": 0,
+            "1.0": 0,
+            "1.5": 0,
+            "2.0": 7,
+            "2.5": 46,
+            "5.0": 53,
+            "10.0": 53,
+            "15.0": 53,
+            "20.0": 53,
+            "30.0": 53,
+            "40.0": 53,
+            "50.0": 53,
+            "60.0": 53,
+            "120.0": 53,
+            "240.0": 53,
+            "480.0": 53,
+            "960.0": 53,
+            "1920.0": 53,
+            "7680.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:engine_sleep_state": {
+      "type": "gauge",
+      "description": "Engine sleep state; awake = 0 means engine is sleeping; awake = 1 means engine is awake; weights_offloaded = 1 means sleep level 1; discard_all = 1 means sleep level 2.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano",
+            "sleep_state": "awake"
+          },
+          "stats": {
+            "avg": 1.0,
+            "min": 1.0,
+            "max": 1.0,
+            "std": 0.0,
+            "p1": 1.0,
+            "p5": 1.0,
+            "p10": 1.0,
+            "p25": 1.0,
+            "p50": 1.0,
+            "p75": 1.0,
+            "p90": 1.0,
+            "p95": 1.0,
+            "p99": 1.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano",
+            "sleep_state": "discard_all"
+          },
+          "stats": {
+            "avg": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "std": 0.0,
+            "p1": 0.0,
+            "p5": 0.0,
+            "p10": 0.0,
+            "p25": 0.0,
+            "p50": 0.0,
+            "p75": 0.0,
+            "p90": 0.0,
+            "p95": 0.0,
+            "p99": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano",
+            "sleep_state": "weights_offloaded"
+          },
+          "stats": {
+            "avg": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "std": 0.0,
+            "p1": 0.0,
+            "p5": 0.0,
+            "p10": 0.0,
+            "p25": 0.0,
+            "p50": 0.0,
+            "p75": 0.0,
+            "p90": 0.0,
+            "p95": 0.0,
+            "p99": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:estimated_flops_per_gpu": {
+      "type": "counter",
+      "description": "Estimated number of floating point operations per GPU (for Model Flops Utilization calculations).",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:estimated_read_bytes_per_gpu": {
+      "type": "counter",
+      "description": "Estimated number of bytes read from memory per GPU (for Model Flops Utilization calculations).",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:estimated_write_bytes_per_gpu": {
+      "type": "counter",
+      "description": "Estimated number of bytes written to memory per GPU (for Model Flops Utilization calculations).",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:external_prefix_cache_hits": {
+      "type": "counter",
+      "description": "External prefix cache hits from KV connector cross-instance cache sharing, in terms of number of cached tokens.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:external_prefix_cache_queries": {
+      "type": "counter",
+      "description": "External prefix cache queries from KV connector cross-instance cache sharing, in terms of number of queried tokens.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:generation_tokens": {
+      "type": "counter",
+      "description": "Number of generation tokens processed.",
+      "unit": "tokens",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 25886.0,
+            "rate": 430.5384713192862
+          }
+        }
+      ]
+    },
+    "vllm:inter_token_latency_seconds": {
+      "type": "histogram",
+      "description": "Histogram of inter-token latency in seconds.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 25832,
+            "sum": 110.58228742206484,
+            "avg": 0.004280825620240974,
+            "count_rate": 429.6403380638106,
+            "sum_rate": 1.8392153666725537,
+            "p1_estimate": 0.0018464763857933353,
+            "p5_estimate": 0.0018560335300148536,
+            "p10_estimate": 0.0018679799602917516,
+            "p25_estimate": 0.002655945928859256,
+            "p50_estimate": 0.00397077992273772,
+            "p75_estimate": 0.005285613916616183,
+            "p90_estimate": 0.006074514312943262,
+            "p95_estimate": 0.006337481111718954,
+            "p99_estimate": 0.006547854550739508
+          },
+          "buckets": {
+            "0.01": 25726,
+            "0.025": 25726,
+            "0.05": 25727,
+            "0.075": 25774,
+            "0.1": 25830,
+            "0.15": 25832,
+            "0.2": 25832,
+            "0.3": 25832,
+            "0.4": 25832,
+            "0.5": 25832,
+            "0.75": 25832,
+            "1.0": 25832,
+            "2.5": 25832,
+            "5.0": 25832,
+            "7.5": 25832,
+            "10.0": 25832,
+            "20.0": 25832,
+            "40.0": 25832,
+            "80.0": 25832,
+            "+Inf": 25832
+          }
+        }
+      ]
+    },
+    "vllm:iteration_tokens_total": {
+      "type": "histogram",
+      "description": "Histogram of number of tokens per engine_step.",
+      "unit": "tokens",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 13147,
+            "sum": 210715.0,
+            "avg": 16.027610861793566,
+            "count_rate": 218.66218351366206,
+            "sum_rate": 3504.6323875470675,
+            "p1_estimate": 0.35208107674563066,
+            "p5_estimate": 1.1284566614509324,
+            "p10_estimate": 1.1284566614509324,
+            "p25_estimate": 1.1284566614509324,
+            "p50_estimate": 2.0316328909591292,
+            "p75_estimate": 3.8448028152970863,
+            "p90_estimate": 4.93270476989986,
+            "p95_estimate": 5.295338754767451,
+            "p99_estimate": 5.585445942661524
+          },
+          "buckets": {
+            "1.0": 405,
+            "8.0": 13093,
+            "16.0": 13093,
+            "32.0": 13093,
+            "64.0": 13093,
+            "128.0": 13093,
+            "256.0": 13093,
+            "512.0": 13093,
+            "1024.0": 13093,
+            "2048.0": 13093,
+            "4096.0": 13146,
+            "8192.0": 13147,
+            "16384.0": 13147,
+            "+Inf": 13147
+          }
+        }
+      ]
+    },
+    "vllm:kv_cache_usage_perc": {
+      "type": "gauge",
+      "description": "KV-cache usage. 1 means 100 percent usage.",
+      "unit": "ratio",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "avg": 0.013283820909941737,
+            "min": 0.0,
+            "max": 0.015027322404371546,
+            "std": 0.0021748260245930875,
+            "p1": 0.006830601092896127,
+            "p5": 0.006830601092896127,
+            "p10": 0.013661202185792365,
+            "p25": 0.013661202185792365,
+            "p50": 0.013661202185792365,
+            "p75": 0.013661202185792365,
+            "p90": 0.015027322404371546,
+            "p95": 0.015027322404371546,
+            "p99": 0.015027322404371546
+          }
+        }
+      ]
+    },
+    "vllm:mm_cache_hits": {
+      "type": "counter",
+      "description": "Multi-modal cache hits, in terms of number of cached items.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:mm_cache_queries": {
+      "type": "counter",
+      "description": "Multi-modal cache queries, in terms of number of queried items.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:num_preemptions": {
+      "type": "counter",
+      "description": "Cumulative number of preemption from the engine.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:num_requests_running": {
+      "type": "gauge",
+      "description": "Number of requests in model execution batches.",
+      "unit": "requests",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "avg": 1.9116022099447514,
+            "min": 0.0,
+            "max": 2.0,
+            "std": 0.30354969718607144,
+            "p1": 1.0,
+            "p5": 1.0,
+            "p10": 2.0,
+            "p25": 2.0,
+            "p50": 2.0,
+            "p75": 2.0,
+            "p90": 2.0,
+            "p95": 2.0,
+            "p99": 2.0
+          }
+        }
+      ]
+    },
+    "vllm:num_requests_waiting": {
+      "type": "gauge",
+      "description": "Number of requests waiting to be processed.",
+      "unit": "requests",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "avg": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "std": 0.0,
+            "p1": 0.0,
+            "p5": 0.0,
+            "p10": 0.0,
+            "p25": 0.0,
+            "p50": 0.0,
+            "p75": 0.0,
+            "p90": 0.0,
+            "p95": 0.0,
+            "p99": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:num_requests_waiting_by_reason": {
+      "type": "gauge",
+      "description": "Number of waiting requests by reason. Reason labels: 'capacity' = waiting for scheduling capacity; 'deferred' = deferred by transient constraints (LoRA budget, KV transfer, blocked status). Sum of all reasons equals vllm:num_requests_waiting.",
+      "unit": "requests",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano",
+            "reason": "capacity"
+          },
+          "stats": {
+            "avg": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "std": 0.0,
+            "p1": 0.0,
+            "p5": 0.0,
+            "p10": 0.0,
+            "p25": 0.0,
+            "p50": 0.0,
+            "p75": 0.0,
+            "p90": 0.0,
+            "p95": 0.0,
+            "p99": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano",
+            "reason": "deferred"
+          },
+          "stats": {
+            "avg": 0.0,
+            "min": 0.0,
+            "max": 0.0,
+            "std": 0.0,
+            "p1": 0.0,
+            "p5": 0.0,
+            "p10": 0.0,
+            "p25": 0.0,
+            "p50": 0.0,
+            "p75": 0.0,
+            "p90": 0.0,
+            "p95": 0.0,
+            "p99": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:prefix_cache_hits": {
+      "type": "counter",
+      "description": "Prefix cache hits, in terms of number of cached tokens.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:prefix_cache_queries": {
+      "type": "counter",
+      "description": "Prefix cache queries, in terms of number of queried tokens.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:prompt_tokens": {
+      "type": "counter",
+      "description": "Number of prefill tokens processed.",
+      "unit": "tokens",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 184829.0,
+            "rate": 3074.0939162277814
+          }
+        }
+      ]
+    },
+    "vllm:prompt_tokens_by_source": {
+      "type": "counter",
+      "description": "Number of prompt tokens by source.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano",
+            "source": "external_kv_transfer"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano",
+            "source": "local_cache_hit"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano",
+            "source": "local_compute"
+          },
+          "stats": {
+            "total": 184829.0,
+            "rate": 3074.0939162277814
+          }
+        }
+      ]
+    },
+    "vllm:prompt_tokens_cached": {
+      "type": "counter",
+      "description": "Number of cached prompt tokens (local + external).",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:request_decode_time_seconds": {
+      "type": "histogram",
+      "description": "Histogram of time spent in DECODE phase for request.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 111.58406757599823,
+            "avg": 2.1053597655848724,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 1.8558770716896473,
+            "p1_estimate": 1.3913107936157716,
+            "p5_estimate": 1.617775573406646,
+            "p10_estimate": 1.7631884476112745,
+            "p25_estimate": 2.0011210725528823,
+            "p50_estimate": 2.1196897244681407,
+            "p75_estimate": 2.288948393404255,
+            "p90_estimate": 2.4128072022550997,
+            "p95_estimate": 2.454093471872048,
+            "p99_estimate": 2.5617037469691684
+          },
+          "buckets": {
+            "0.3": 0,
+            "0.5": 0,
+            "0.8": 0,
+            "1.0": 0,
+            "1.5": 1,
+            "2.0": 12,
+            "2.5": 52,
+            "5.0": 53,
+            "10.0": 53,
+            "15.0": 53,
+            "20.0": 53,
+            "30.0": 53,
+            "40.0": 53,
+            "50.0": 53,
+            "60.0": 53,
+            "120.0": 53,
+            "240.0": 53,
+            "480.0": 53,
+            "960.0": 53,
+            "1920.0": 53,
+            "7680.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:request_generation_tokens": {
+      "type": "histogram",
+      "description": "Number of generation tokens processed.",
+      "unit": "tokens",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 26180.0,
+            "avg": 493.9622641509434,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 435.42830793243115,
+            "p1_estimate": 387.36864588204946,
+            "p5_estimate": 399.19264907523507,
+            "p10_estimate": 413.97265306671704,
+            "p25_estimate": 458.312665041163,
+            "p50_estimate": 497.178325149415,
+            "p75_estimate": 529.4416148361252,
+            "p90_estimate": 569.6525787476604,
+            "p95_estimate": 584.1083820846796,
+            "p99_estimate": 595.673024754295
+          },
+          "buckets": {
+            "1.0": 0,
+            "2.0": 0,
+            "5.0": 0,
+            "10.0": 0,
+            "20.0": 0,
+            "50.0": 0,
+            "100.0": 0,
+            "200.0": 0,
+            "500.0": 28,
+            "1000.0": 53,
+            "2000.0": 53,
+            "5000.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:request_inference_time_seconds": {
+      "type": "histogram",
+      "description": "Histogram of time spent in RUNNING phase for request.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 120.14501766000103,
+            "avg": 2.266887125660397,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 1.998263626669454,
+            "p1_estimate": 1.8539807923948601,
+            "p5_estimate": 1.902972530671076,
+            "p10_estimate": 1.964212203516346,
+            "p25_estimate": 2.0909224749601534,
+            "p50_estimate": 2.2820140105712414,
+            "p75_estimate": 2.424255808293487,
+            "p90_estimate": 2.5228904370136456,
+            "p95_estimate": 2.6113461640662967,
+            "p99_estimate": 2.8224483712265265
+          },
+          "buckets": {
+            "0.3": 0,
+            "0.5": 0,
+            "0.8": 0,
+            "1.0": 0,
+            "1.5": 0,
+            "2.0": 7,
+            "2.5": 46,
+            "5.0": 53,
+            "10.0": 53,
+            "15.0": 53,
+            "20.0": 53,
+            "30.0": 53,
+            "40.0": 53,
+            "50.0": 53,
+            "60.0": 53,
+            "120.0": 53,
+            "240.0": 53,
+            "480.0": 53,
+            "960.0": 53,
+            "1920.0": 53,
+            "7680.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:request_max_num_generation_tokens": {
+      "type": "histogram",
+      "description": "Histogram of maximum number of requested generation tokens.",
+      "unit": "tokens",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 26180.0,
+            "avg": 493.9622641509434,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 435.42830793243115,
+            "p1_estimate": 387.36864588204946,
+            "p5_estimate": 399.19264907523507,
+            "p10_estimate": 413.97265306671704,
+            "p25_estimate": 458.312665041163,
+            "p50_estimate": 497.178325149415,
+            "p75_estimate": 529.4416148361252,
+            "p90_estimate": 569.6525787476604,
+            "p95_estimate": 584.1083820846796,
+            "p99_estimate": 595.673024754295
+          },
+          "buckets": {
+            "1.0": 0,
+            "2.0": 0,
+            "5.0": 0,
+            "10.0": 0,
+            "20.0": 0,
+            "50.0": 0,
+            "100.0": 0,
+            "200.0": 0,
+            "500.0": 28,
+            "1000.0": 53,
+            "2000.0": 53,
+            "5000.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:request_params_max_tokens": {
+      "type": "histogram",
+      "description": "Histogram of the max_tokens request parameter.",
+      "unit": "tokens",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 26180.0,
+            "avg": 493.9622641509434,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 435.42830793243115,
+            "p1_estimate": 387.36864588204946,
+            "p5_estimate": 399.19264907523507,
+            "p10_estimate": 413.97265306671704,
+            "p25_estimate": 458.312665041163,
+            "p50_estimate": 497.178325149415,
+            "p75_estimate": 529.4416148361252,
+            "p90_estimate": 569.6525787476604,
+            "p95_estimate": 584.1083820846796,
+            "p99_estimate": 595.673024754295
+          },
+          "buckets": {
+            "1.0": 0,
+            "2.0": 0,
+            "5.0": 0,
+            "10.0": 0,
+            "20.0": 0,
+            "50.0": 0,
+            "100.0": 0,
+            "200.0": 0,
+            "500.0": 28,
+            "1000.0": 53,
+            "2000.0": 53,
+            "5000.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:request_params_n": {
+      "type": "histogram",
+      "description": "Histogram of the n request parameter.",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 53.0,
+            "avg": 1.0,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 0.8815011581519806,
+            "p1_estimate": 0.41924528301886793,
+            "p5_estimate": 0.45849056603773586,
+            "p10_estimate": 0.5075471698113208,
+            "p25_estimate": 0.6547169811320754,
+            "p50_estimate": 0.9,
+            "p75_estimate": 1.0,
+            "p90_estimate": 1.0,
+            "p95_estimate": 1.0,
+            "p99_estimate": 1.0
+          },
+          "buckets": {
+            "1.0": 53,
+            "2.0": 53,
+            "5.0": 53,
+            "10.0": 53,
+            "20.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:request_prefill_kv_computed_tokens": {
+      "type": "histogram",
+      "description": "Histogram of new KV tokens computed during prefill (excluding cached tokens).",
+      "unit": "tokens",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 181584.0,
+            "avg": 3426.1132075471696,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 3020.122760412627,
+            "p1_estimate": 2494.828751677671,
+            "p5_estimate": 2570.8519725649767,
+            "p10_estimate": 2665.8809986741094,
+            "p25_estimate": 2950.968077001507,
+            "p50_estimate": 3426.1132075471696,
+            "p75_estimate": 3901.258338092832,
+            "p90_estimate": 4186.34541642023,
+            "p95_estimate": 4281.374442529363,
+            "p99_estimate": 4357.397663416668
+          },
+          "buckets": {
+            "1.0": 0,
+            "2.0": 0,
+            "5.0": 0,
+            "10.0": 0,
+            "20.0": 0,
+            "50.0": 0,
+            "100.0": 0,
+            "200.0": 0,
+            "500.0": 0,
+            "1000.0": 0,
+            "2000.0": 0,
+            "5000.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:request_prefill_time_seconds": {
+      "type": "histogram",
+      "description": "Histogram of time spent in PREFILL phase for request.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 8.560950084000979,
+            "avg": 0.16152736007549015,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 0.14238655497977656,
+            "p1_estimate": 0.11355117463555324,
+            "p5_estimate": 0.11728497711586049,
+            "p10_estimate": 0.12195223021624456,
+            "p25_estimate": 0.13595398951739673,
+            "p50_estimate": 0.15929025501931704,
+            "p75_estimate": 0.18262652052123735,
+            "p90_estimate": 0.1966282798223895,
+            "p95_estimate": 0.20129553292277358,
+            "p99_estimate": 0.2619412880321247
+          },
+          "buckets": {
+            "0.3": 52,
+            "0.5": 53,
+            "0.8": 53,
+            "1.0": 53,
+            "1.5": 53,
+            "2.0": 53,
+            "2.5": 53,
+            "5.0": 53,
+            "10.0": 53,
+            "15.0": 53,
+            "20.0": 53,
+            "30.0": 53,
+            "40.0": 53,
+            "50.0": 53,
+            "60.0": 53,
+            "120.0": 53,
+            "240.0": 53,
+            "480.0": 53,
+            "960.0": 53,
+            "1920.0": 53,
+            "7680.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:request_prompt_tokens": {
+      "type": "histogram",
+      "description": "Number of prefill tokens processed.",
+      "unit": "tokens",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 181584.0,
+            "avg": 3426.1132075471696,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 3020.122760412627,
+            "p1_estimate": 2494.828751677671,
+            "p5_estimate": 2570.8519725649767,
+            "p10_estimate": 2665.8809986741094,
+            "p25_estimate": 2950.968077001507,
+            "p50_estimate": 3426.1132075471696,
+            "p75_estimate": 3901.258338092832,
+            "p90_estimate": 4186.34541642023,
+            "p95_estimate": 4281.374442529363,
+            "p99_estimate": 4357.397663416668
+          },
+          "buckets": {
+            "1.0": 0,
+            "2.0": 0,
+            "5.0": 0,
+            "10.0": 0,
+            "20.0": 0,
+            "50.0": 0,
+            "100.0": 0,
+            "200.0": 0,
+            "500.0": 0,
+            "1000.0": 0,
+            "2000.0": 0,
+            "5000.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:request_queue_time_seconds": {
+      "type": "histogram",
+      "description": "Histogram of time spent in WAITING phase for request.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 0.00021327700187612209,
+            "avg": 4.024094375021171e-6,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 3.547243852094033e-6,
+            "p1_estimate": 0.0,
+            "p5_estimate": 4.182556301672609e-6,
+            "p10_estimate": 4.182556301672609e-6,
+            "p25_estimate": 4.182556301672609e-6,
+            "p50_estimate": 4.182556301672609e-6,
+            "p75_estimate": 4.182556301672609e-6,
+            "p90_estimate": 4.182556301672609e-6,
+            "p95_estimate": 4.182556301672609e-6,
+            "p99_estimate": 4.182556301672609e-6
+          },
+          "buckets": {
+            "0.3": 53,
+            "0.5": 53,
+            "0.8": 53,
+            "1.0": 53,
+            "1.5": 53,
+            "2.0": 53,
+            "2.5": 53,
+            "5.0": 53,
+            "10.0": 53,
+            "15.0": 53,
+            "20.0": 53,
+            "30.0": 53,
+            "40.0": 53,
+            "50.0": 53,
+            "60.0": 53,
+            "120.0": 53,
+            "240.0": 53,
+            "480.0": 53,
+            "960.0": 53,
+            "1920.0": 53,
+            "7680.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:request_success": {
+      "type": "counter",
+      "description": "Count of successfully processed requests.",
+      "unit": "requests",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "finished_reason": "abort",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "finished_reason": "error",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "finished_reason": "length",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 53.0,
+            "rate": 0.8815011581519806
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "finished_reason": "repetition",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        },
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "finished_reason": "stop",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "total": 0.0,
+            "rate": 0.0
+          }
+        }
+      ]
+    },
+    "vllm:request_time_per_output_token_seconds": {
+      "type": "histogram",
+      "description": "Histogram of time_per_output_token_seconds per request.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 53,
+            "sum": 0.2261773527995956,
+            "avg": 0.0042674972226338795,
+            "count_rate": 0.8815011581519806,
+            "sum_rate": 0.0037618037441621253,
+            "p1_estimate": 0.001944594160984591,
+            "p5_estimate": 0.0019589413266280476,
+            "p10_estimate": 0.0021483597440559122,
+            "p25_estimate": 0.0029380106718226487,
+            "p50_estimate": 0.004254095551433876,
+            "p75_estimate": 0.005570180431045103,
+            "p90_estimate": 0.00635983135881184,
+            "p95_estimate": 0.006623048334734085,
+            "p99_estimate": 0.006833621915471882
+          },
+          "buckets": {
+            "0.01": 53,
+            "0.025": 53,
+            "0.05": 53,
+            "0.075": 53,
+            "0.1": 53,
+            "0.15": 53,
+            "0.2": 53,
+            "0.3": 53,
+            "0.4": 53,
+            "0.5": 53,
+            "0.75": 53,
+            "1.0": 53,
+            "2.5": 53,
+            "5.0": 53,
+            "7.5": 53,
+            "10.0": 53,
+            "20.0": 53,
+            "40.0": 53,
+            "80.0": 53,
+            "+Inf": 53
+          }
+        }
+      ]
+    },
+    "vllm:time_to_first_token_seconds": {
+      "type": "histogram",
+      "description": "Histogram of time to first token in seconds.",
+      "unit": "seconds",
+      "series": [
+        {
+          "endpoint_url": "http://localhost:8000/metrics",
+          "labels": {
+            "engine": "0",
+            "model_name": "nvidia/nemotron-3-nano"
+          },
+          "stats": {
+            "count": 54,
+            "sum": 9.110794067382812,
+            "avg": 0.16871840865523727,
+            "count_rate": 0.8981332554756029,
+            "sum_rate": 0.15153161362419137,
+            "p1_estimate": 0.12313318940506122,
+            "p5_estimate": 0.1267731809761216,
+            "p10_estimate": 0.1313231704399471,
+            "p25_estimate": 0.14497313883142351,
+            "p50_estimate": 0.16772308615055087,
+            "p75_estimate": 0.19047303346967825,
+            "p90_estimate": 0.20412300186115467,
+            "p95_estimate": 0.20867299132498013,
+            "p99_estimate": 0.23757426806498078
+          },
+          "buckets": {
+            "0.001": 0,
+            "0.005": 0,
+            "0.01": 0,
+            "0.02": 0,
+            "0.04": 0,
+            "0.06": 0,
+            "0.08": 0,
+            "0.1": 0,
+            "0.25": 53,
+            "0.5": 54,
+            "0.75": 54,
+            "1.0": 54,
+            "2.5": 54,
+            "5.0": 54,
+            "7.5": 54,
+            "10.0": 54,
+            "20.0": 54,
+            "40.0": 54,
+            "80.0": 54,
+            "160.0": 54,
+            "640.0": 54,
+            "2560.0": 54,
+            "+Inf": 54
+          }
+        }
+      ]
+    }
+  },
+  "input_config": {
+    "models": {
+      "items": [
+        {
+          "name": "nvidia/nemotron-3-nano"
+        }
+      ]
+    },
+    "endpoint": {
+      "urls": [
+        "http://localhost:8000"
+      ],
+      "type": "chat",
+      "streaming": true,
+      "use_server_token_count": true,
+      "extra": {
+        "ignore_eos": true,
+        "temperature": 0
+      }
+    },
+    "datasets": [
+      {
+        "name": "main",
+        "type": "synthetic",
+        "random_seed": 20260923,
+        "prompts": {
+          "isl": {
+            "mean": 3500.0,
+            "stddev": 300.0
+          },
+          "osl": {
+            "mean": 500.0,
+            "stddev": 50.0
+          }
+        }
+      }
+    ],
+    "phases": [
+      {
+        "name": "warmup",
+        "type": "concurrency",
+        "exclude_from_results": true,
+        "requests": 2,
+        "concurrency": 2
+      },
+      {
+        "name": "profiling",
+        "type": "concurrency",
+        "duration": 60.0,
+        "concurrency": 2,
+        "grace_period": 0.0
+      }
+    ],
+    "artifacts": {
+      "dir": "<HOME>\\QuanTuring\\dev\\NV-benchmark\\vol2-nemotron\\results\\p80_rerun\\s256_R\\A2_R_main\\c0002",
+      "records": [
+        "jsonl"
+      ],
+      "auto_plot": false,
+      "plot_required": false
+    },
+    "tokenizer": {
+      "name": "<HOME>/.cache/nim/tokenizers\\a2"
+    },
+    "gpu_telemetry": {
+      "enabled": false
+    },
+    "server_metrics": {
+      "enabled": true,
+      "urls": [],
+      "formats": [
+        "json",
+        "csv"
+      ]
+    },
+    "network_latency": {
+      "enabled": false
+    },
+    "otel": {},
+    "mlflow": {},
+    "wandb": {},
+    "runtime": {
+      "ui": "none"
+    }
+  }
+}

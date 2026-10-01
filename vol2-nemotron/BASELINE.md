@@ -41,6 +41,8 @@ Per answer A2 is about 2.9× faster, not 4.15×, because it writes 1.4× as many
 
 Engine environment fields for both arms (MoE backend, `mamba_ssm_cache_dtype`, CUDA graph mode, `max_num_seqs`, `max_tokens`), quoted from the startup logs or marked "not disclosed", are in `results/p50_speed/README.md`.
 
+**Cross-check of the single-stream rates (P78).** The four cells of the speed run do not match the idle-card fingerprint in their end-of-cell GPU record (`results/p78_audit/`), and the run was not repeated. The same quantity was measured again in P78, where an idle-card gate passed before every cell: A1 72.9 tok/s here against 72.4 at the arm-health probe that opens the P78 quality run (`results/p78_quality/analysis.json`, `arm_health.N2`; 0.7% apart); A2 305.1 here against 316.8 at the health probe of the NIM arm in `results/p78_nim_vs_vllm/` (`events_public.jsonl`, kind `health`) and a 50-question median of 292.5 (`analysis.json`, `P2`) — within ±4%. The footprint cells were not re-run either.
+
 **A2 needs a warm-up after READY (P55, `results/p55_a2_slow_phase/`, no GPU run).** In some containers A2's first requests after READY run at roughly half its steady rate. In the records on disk the slow phase that ended lasted at most **7 requests, 33 s**. Two containers were still slow after 6 and 7 requests (31–36 s) when stopped. Nothing in the container logs coincides with it: autotuning ends 12–21 s before READY, and the engine logs nothing after READY. So the cause is unverified. Every long slow phase was in the first A2 container of its run; shorter ones (1–3 requests) also appeared later. For a demo or a measurement, send warm-up requests until the rate has held steady for three requests in a row; in this volume that took 11–18 requests and about a minute. A1 showed no slow phase.
 
 ## C · How many at once — concurrency (`results/p53_concurrency/`)
@@ -49,12 +51,12 @@ Closed-loop AIPerf 0.11.0, levels 1–64, two synthetic profiles (**C** chat 200
 
 | Arm · profile | Largest c inside the server SLO | inside the interactive SLO | Throughput at that c · saturation | Ceiling |
 |---|---|---|---|---|
-| A1 · bf16 · 1.12.2 · seqs 32 · `max_tokens` 200 · **C** | **16** (p99 TTFT 434 ms, p99 ITL 20.6 ms) | **16** | 777 tok/s · not reached before the crash | **engine crash at c=32** (`IndexError` in the Mamba constant-size cache; 3 of 4 containers at 32, the fourth at 64) |
+| A1 · bf16 · 1.12.2 · seqs 32 · `max_tokens` 200 · **C** | **16** (p99 TTFT 434 ms, p99 ITL 20.6 ms) — P80 re-run: **8** (engine exit at c=16) | **16** — P80: **8** | 777 tok/s · not reached before the crash | **engine crash at c=32** (`IndexError` in the Mamba constant-size cache; 3 of 4 containers at 32, the fourth at 64) — P80: at c=16 in 2 of 4 containers, at c=32 in the other 2 |
 | A1 · … · `max_tokens` 500 · **R** | **4** (c=8: p99 TTFT 2.5 s) | **1** (c=2: 631 ms) | 234 tok/s · not reached | engine crash at c=32 |
 | A2 · NVFP4 · 2.0.12 · seqs 32 · `max_tokens` 200 · **C** | **32** (p99 TTFT 379 ms, p99 ITL 22.2 ms) | **32** | **1,540 tok/s** · saturates at 32 (1,490 at 64) | reached at c=64: queueing (p99 TTFT 4.6 s, ITL unchanged) |
 | A2 · … · `max_tokens` 500 · **R** | **8** (p99 TTFT 1.0 s) | **4** (492 ms) | 884 tok/s · saturates at 32 (1,462 → 1,464) | reached at c=16 (p99 TTFT 2.1 s); p99 ITL < 24 ms up to c=64 |
 
-A1 does not reach a latency ceiling on the chat profile: it dies first, at concurrency = `max_num_seqs`, because its NIM 1.12.2 vLLM V0 build keeps one Mamba-state slot per sequence and the free list empties when 32 sequences are placed in one step. A2 (vLLM 0.27.1) queues instead. On the RAG profile both arms are bound by prefill queueing (TTFT), not decode: A2's p99 ITL never exceeds 24 ms while its p99 TTFT passes 2 s at c=16. Fresh-container repeats agree with the main sweeps within 0.3–3.5% on A2. Calibration: ITL within 1–3% on every sweep; TTFT within 1% on A1 and 12–14 ms on A2. No sentence of the form "serves N users" follows from any of this.
+A1 does not reach a latency ceiling on the chat profile: its engine exits first. In this run that happened at concurrency = `max_num_seqs` (32); the P80 re-run below saw the same exit at 16 as well, so the level is not fixed at the cap. The traceback ends where the engine takes a free Mamba-state slot from an empty list (`constant_size_cache.py`, `free_cache_indices.pop()`); this NIM 1.12.2 image logs that it falls back to vLLM's V0 engine for this model. A2 (vLLM 0.27.1) queues instead. On the RAG profile both arms are bound by prefill queueing (TTFT), not decode: A2's p99 ITL never exceeds 24 ms while its p99 TTFT passes 2 s at c=16. Fresh-container repeats agree with the main sweeps within 0.3–3.5% on A2. Calibration: ITL within 1–3% on every sweep; TTFT within 1% on A1 and 12–14 ms on A2. No sentence of the form "serves N users" follows from any of this.
 
 **A2 with its sequence cap raised (P55: `results/p55_concurrency_a2_256/`, `…_128/`, `…_064/`, `results/p55_capture_control/`).** The 32 above is the cap both arms shared, not A2's ceiling. The same harness, profiles, SLOs and rules, run again on A2 at `max_num_seqs` 64, 128 and 256 (the image default, nothing passed); each run pre-registered, all preconditions held, no engine death:
 
@@ -66,6 +68,19 @@ A1 does not reach a latency ceiling on the chat profile: it dies first, at concu
 | **256 (image default)** | **128 · 32** | **2,238 · 3,999** | **8 · 2** | **the KV block pool: 146 running, 99.7% of 733 blocks** |
 
 Three readings. (1) **On the chat profile A2 keeps p99 TTFT under 2 s up to 128 concurrent requests at the image default, and the interactive ceiling stays at 32 (16 at cap 64).** On the RAG profile the server ceiling is 8 at every cap: long prompts queue for prefill whatever the cap. (2) **At the default cap the ceiling on this card is about 146 concurrent sequences, set by the KV block pool, not the cap.** The pool is counted per sequence: 5 cache groups (1 attention and 4 Mamba, after one padding layer), one block each below 4,176 tokens, and 733 / 5 ≈ 146. This is derived from the model config and the startup log and matches the running gauge at every cap: 87.3% at 128, 42.4% at 64. The engine's "3.06 million KV tokens" is not this model's capacity. (3) **At a fixed concurrency, the rate follows the CUDA-graph capture size that vLLM derives from the cap** (min(2 × cap, 512) tokens). At cap 256, lowering only the capture size to cap 32's (64) cut the chat-profile rate to 0.47× at c=32 and 0.49× at c=16 in one session (`results/p55_capture_control/`). The measurement covers that direction only. The size of the differences between the sweeps is not explained by it alone, and containers of one configuration differed by up to 31% at c=64. For a deployment: lowering the cap to "reserve" speed for fewer users makes this image slower, not faster.
+
+**The main sweeps repeated on a gated night (P80: `results/p80_rerun/`, 2026-10-01).** Most cells of the two runs above do not match the idle-card fingerprint in their end-of-cell GPU record (`results/p78_audit/`), so their six main sweeps were run again with an idle-card gate before every cell, a speed sentinel per container and an arm-health probe around every cell. Each re-run is judged by the analysis function of the run it repeats (`scripts/p80_slo.py`). Both values are given; neither replaces the other.
+
+| Sweep (main container) | Largest c in server · interactive SLO: original | P80 | Throughput, P80 ÷ original, lowest–highest level ratio |
+|---|---|---|---|
+| A2 · cap 256 · **C** (`p55_concurrency_a2_256`) | 128 · 32 | **128 · 32** | 0.73–0.92 (c=32: 2,238 → 1,644 tok/s; c=128: 3,902 → 3,188) |
+| A2 · cap 256 · **R** | 8 · 2 | null by the run's own rule P1 (one failed request of 2,579 at c=512); the SLO test alone: 8 · 2 | 1.01–1.19 |
+| A2 · cap 32 · **C** (`p53_concurrency_v2`) | 32 · 32 | **32 · 32** | 0.97–1.00 |
+| A2 · cap 32 · **R** | 8 · 4 | **8 · 4** | 0.97–1.01 |
+| A1 · cap 32 · **C** | 16 · 16 | **8 · 8** (engine exit at c=16) | 1.01–1.03 at c=1–8 |
+| A1 · cap 32 · **R** | 4 · 1 | **4 · 1** | 0.99–1.01 at c=1–16 |
+
+Three readings. (1) **Four of the six sweeps reproduce their SLO ceilings exactly;** the fifth (A2 · cap 256 · R) has the original's values under the SLO test and a null conclusion under its own precondition, and the sixth (A1 · C) is lower because the engine exited one level earlier, not because it was slower. (2) **One container was 8–27% below its original at every level while the next one, from the same image with the same settings on the same night, was not** (12–16% apart on the identical sentinel probes); the cause was not identified, the amount of the container's GPU memory held in system RAM at READY does not separate the two, and the SLO ceilings are the same. Throughput figures at a given concurrency therefore carry a container-to-container spread of this size (the cap-64 sweep above already showed 31% at c=64). (3) **The A1 engine exit is not tied to c=32.** Over the two nights all eight A1 containers ended with the same `IndexError('pop from empty list')`: twice at c=16, five times at c=32 (in two of them after the level had completed), once at c=64. Upstream vLLM 0.30.0 on the same weights ran 16, 32 and 64 without an engine exit (817 / 1,318 / 1,807 tok/s, p99 TTFT 339 / 665 / 1,273 ms; a different engine version and build, not a single-variable comparison). The A1 containers' logs record a fall-back to vLLM's V0 engine (v0.10.0) and the upstream container's log a V1 engine (v0.30.0); the lines are quoted with their line numbers in `results/p80_rerun/engine_log_excerpts.json`.
 
 ## D · Does long context hold — depth sweep (`results/p53_longctx/`)
 
@@ -128,6 +143,58 @@ Llama 3.1 8B Instruct, bf16, one RTX 5090, the same weight files. **N** is NIM 2
 | Settings to the first serving start · in the measured configuration | 3 (bf16 profile, context length, V1 runner) · 3 | 2 (context length, V1 runner) · 6 |
 
 On this card and precision the two arms are the same engine within the run-to-run spread, down to the text they write. The pre-registered ratio V over N is 0.990 [0.963, 1.020] for generation rate and 1.012 [1.004, 1.019] for answer time. On this host (Docker Desktop on WSL2), NIM selects its FP8 profile when nothing is set, and both engines' default model runner fails with `UVA is not available`. The 7.3× of the March 2026 Vol.1 belongs to that configuration: two engines, two precisions, one arm largely outside GPU memory (`../vol3-judges/BASELINE.md`, section 12).
+
+## H · Are the answers right — answer quality and the reasoning switch (`results/p78_quality/`)
+
+GSM8K (`gsm8k_cot_llama`, all 1,319 test items, 8-shot) and MMLU (`mmlu_llama` on a fixed 50 × 57 sample, 2,850 items, 5-shot) through lm-eval 0.4.13 at temperature 0, client concurrency 16, each model with its reasoning on (`max_tokens` 8,192) and off (1,024; Nemotron 3 Nano: `chat_template_kwargs {enable_thinking: false}`; Nemotron Nano 9B v2: the system message `/no_think`). Scored on the whole output by the last "final answer is …" / "best answer is …" match; no match counts as wrong. Idle-card gate before every cell; all cells kept. The two columns are two deployment options, not one variable changed.
+
+| | Nemotron 3 Nano · NVFP4 · NIM 2.0.12 · cap 256 | Nemotron Nano 9B v2 · bf16 · NIM 1.12.2 · seqs 32 |
+|---|---|---|
+| GSM8K, reasoning on (run 1 · run 2) | **95.68%** · 95.60% | **95.15%** · 94.92% |
+| GSM8K, reasoning off | 90.22% | 89.46% |
+| MMLU sample, reasoning on | **88.00%** | **84.04%** |
+| MMLU sample, reasoning off | 75.75% | 74.84% |
+| on − off, GSM8K (paired, 95% CI) | +5.46 pp [4.02, 6.90] | +5.69 pp [4.12, 7.25] |
+| on − off, MMLU | **+12.25 pp** [10.78, 13.71] | **+9.19 pp** [7.71, 10.68] |
+| Median completion tokens on GSM8K, off · on | 117 · 300 (39%) | 104 · 331 (31%) |
+| Items at the 8,192-token cap, reasoning on | ≤ 0.67% | ≤ 0.46% |
+| Run 2 − run 1, same cell (GSM8K on) | −0.08 pp [−0.93, 0.78]; 20 of 1,319 outputs byte-identical | −0.23 pp [−0.48, 0.03]; 1,120 of 1,319 |
+
+Pre-registered predictions: the four accuracy floors pass (≥ 88% / ≥ 75% and ≥ 85% / ≥ 70%); "reasoning helps on GSM8K" passes for both; the cap share passes. **Two predictions fail for both models, and both were wrong about the model, not about the measurement.** "MMLU on − off within [−2, +6] pp": the measured gain is 9–12 points — reasoning helps on multiple choice far more than the band allowed. "Completion tokens with reasoning off ≤ 25% of on (GSM8K)": measured 31–39% — with reasoning off both models still write out worked steps (a median of 104–117 tokens) before the answer.
+
+**Concurrency and the answer (C1), inconclusive.** Nemotron 3 Nano, reasoning off, the first 200 GSM8K items at client concurrency 1 against the same items at 16: 95.0% vs 93.0%, difference 2.0 pp [−0.39, 4.39], 29 of 200 outputs byte-identical. The pre-registered line was "within ±3 pp" and did not say how to read an interval that straddles it. The rule used — pass if the whole interval is inside, fail if the point is outside, otherwise inconclusive — **was added after the run** and is marked so in `analysis.json`; it is not a pre-registered rule.
+
+Two things the run showed that it was not designed to measure. Nemotron 3 Nano at temperature 0 does not repeat its own text (20 of 1,319 identical between two runs of one cell) while its accuracy does repeat. And the 9B v2 container slowed down over the night: the same GSM8K cell took a median 7.6 s per item at the start and 29.6 s four hours later in the same container, with accuracy unchanged (95.15% → 94.92%); its timing figures are therefore not stationary and are not quoted.
+
+## I · NIM against the engine it contains, on Nemotron 3 Nano (`results/p78_nim_vs_vllm/`)
+
+Section G's question on this volume's model. Nemotron 3 Nano NVFP4, the same weight files, one session: **N3** is NIM 2.0.12 (`NIM_MAX_MODEL_LEN` 16,384); **V3B1** is `vllm/vllm-openai:v0.27.1` (the version inside the NIM) given only the snapshot path; **V3B2** is the same image started with NIM's own resolved vLLM argument list.
+
+| | N3 (NIM) | V3B1 (upstream, bare) | V3B2 (upstream, NIM's arguments) |
+|---|---|---|---|
+| Arm health, single stream, tok/s | 316.8 | 311.1 | 317.9 |
+| Generation rate, median over 50 questions (`max_tokens` 4096) | 292.5 | 287.5 | 295.6 |
+| Chat profile, tok/s at c = 1 · 8 · 32 · 64 · 128 | 300 · 1,062 · 2,152 · 2,801 · 3,572 | 296 · 1,069 · 2,043 · 2,716 · 3,506 | 303 · 1,072 · 2,188 · 2,823 · 3,679 |
+| Inside the server SLO at every level to 128 | yes (p99 TTFT 1,189 ms at 128) | yes (1,209 ms) | yes (1,057 ms) |
+| GSM8K, reasoning off | 90.22% | 90.83% (+0.61 pp [−0.58, 1.80]) | 90.75% (+0.53 pp [−0.65, 1.71]) |
+| Responses byte-identical to N3's, of 50 | — | 1 | 1 |
+| Each arm repeating its own text, of 10 | 0 | 0 | 0 |
+
+Pre-registered: V3B2 over N3 single-stream rate 1.01 (band [0.95, 1.05], pass); throughput ratio at every level 1.01–1.03 (band [0.90, 1.10], pass). The byte-identity prediction (≥ 45 of 50) is **not interpretable**: no arm repeats its own text, so a difference between arms cannot be attributed to the engine. **What was measured is that NIM is not slower than the engine it contains, on this model and card. What was not measured is NIM choosing settings a user would otherwise get wrong:** the bare upstream arm set the same values by itself (Mamba cache dtype float32, MoE backend `FLASHINFER_CUTLASS`, CUDA graphs `FULL_AND_PIECEWISE`, attention `FLASHINFER`, KV cache `float8_e4m3fn`, read from both upstream start logs; NIM's own log at its default level prints none of them).
+
+## J · Was the card idle — end-of-cell GPU state and the host (`results/p78_audit/`, `results/p79_host_state/`)
+
+`results/p78_audit/` applies one fingerprint — utilization 0% and 26–42 W — to the end-of-cell GPU record of every measured cell of the P50, P53 and P55 runs above: 12 cells match, 176 do not, 23 have no such record. A cell that does not match is not shown to be wrong; it is a cell for which an idle card at its end could not be shown. `z3_audit.md` lists every cell with its record and the written number it feeds. What was done about them:
+
+| Cells | Status |
+|---|---|
+| Main sweeps of `p53_concurrency_v2` (26 cells, 21 not matching) and `p55_concurrency_a2_256` (20 cells, 15 not matching) | **re-measured in P80** with an idle-card gate before every cell; both values are published (section C, `results/p80_rerun/`) |
+| Single-stream rates of `p50_speed` | not re-run; cross-checked against P78's gated cells (section B) |
+| Everything else: footprint, answer time, long context, the first concurrency run, caps 64 and 128, the capture control, the fresh-container repeats, the Guardrails and judge cells (no per-cell record) | not re-run; they keep the audit's label |
+
+The P78 and P80 cells were gated before each cell (utilization ≤ 2% and ≤ 45 W over 10 s), which is a different check from the audit's end-of-cell fingerprint.
+
+`results/p79_host_state/` is the diagnosis of the stopped re-run of 2026-09-30 morning (throughput 6–20× below the originals, utilization near 100% at 140–180 W; kept on the machine, not published). The same configuration was measured in fresh containers before a reboot (host up 7 days) and after it: 18 of 18 cells normal. The cause of the morning's state was not identified. Every one of the six container loads behind those 18 cells left one WSL `make_resident` failure and 0.367 GiB of the container's GPU allocation in system RAM, so neither signal separates a slow container from a normal one; they are recorded, not gated on, and the gate used in P80 is a speed probe against the original run's values.
 
 ## What this volume does not do
 

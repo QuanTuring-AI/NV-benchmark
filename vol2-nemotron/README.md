@@ -37,7 +37,15 @@ vol2-nemotron/
 │   ├── p55_capture_control.py · p55_capture_control_analyze.py · p55_capture_control_gen_prediction.py · run_p55_capture_control.sh   # A2 at cap 256 with only the CUDA-graph capture size lowered
 │   ├── p55_judge_thinking.py · p55_judge_thinking_analyze.py · p55_judge_thinking_gen_prediction.py · run_p55_judge_thinking.sh   # Nemotron 3 Nano judge with enable_thinking false: direct, then through Guardrails
 │   ├── p55_depth.py · p55_depth_analyze.py · p55_depth_gen_prediction.py · run_p55_depth.sh   # A1 CUDA-graph control and ~120k-token depth on both arms
-│   └── p55_a2_slow_phase.py   # A2's slow first phase after READY, from records on disk (no GPU)
+│   ├── p55_a2_slow_phase.py   # A2's slow first phase after READY, from records on disk (no GPU)
+│   ├── p78_quality.py · p78_lmeval_chunk.py · p78_scorer.py · p78_engines.py · p78_gen_prediction.py · p78_analyze.py · run_p78.sh   # P78: answer quality with reasoning on / off (lm-eval), engine launchers, the analysis of all P78 stages
+│   ├── p78_nim_vs_vllm.py     # P78: Nemotron 3 Nano on NIM 2.0.12 against upstream vLLM 0.27.1 on the same files
+│   ├── p78_clean_rerun.py · p78_n2_upstream.py   # P78: the sweep definitions that P80 runs (six concurrency sweeps; the 9B v2 weights on upstream vLLM)
+│   ├── p78_mock_openai.py     # the mock server used for the harness tests
+│   ├── p79_host_state.py · p79_judge.py · p79_gen_prediction.py   # P79: the same configuration before and after a reboot, with the Windows GPU counters
+│   ├── p80_rerun.py · p80_judge.py · p80_gen_prediction.py   # P80: the sweeps above with a sentinel per container and arm health around every cell; per-cell verdicts
+│   ├── p80_slo.py             # P80: the re-run sweeps judged by the original runs' analysis functions (written after the run)
+│   └── p80_postrun.py         # public event files and recompute checks for the P78 / P79 results
 └── results/
     ├── e7/                 # E7 arm results + pre-registrations (+ c/ for C)
     ├── e8/                 # E8 reranker result
@@ -58,10 +66,16 @@ vol2-nemotron/
     ├── p55_a1_capture/     # A1's rate step past 8k tokens: CUDA graphs off at ~4k and ~14k (attribution measured)
     ├── p55_longctx_120k/   # both arms at ~120k prompt tokens
     ├── p55_a2_slow_phase/  # A2's slow first phase after READY: what the records can and cannot say (no GPU)
+    ├── p78_quality/        # GSM8K and an MMLU sample, both models, reasoning on and off: per-item scores, analysis
+    ├── p78_nim_vs_vllm/    # Nemotron 3 Nano: NIM 2.0.12 vs upstream vLLM 0.27.1 (bare, and with NIM's arguments)
+    ├── p78_audit/          # the end-of-cell GPU record of every P50 / P53 / P55 cell against one idle-card fingerprint (no GPU run)
+    ├── p78_clean_rerun/ · p78_n2_upstream/   # pre-registrations only: the runs themselves are in p80_rerun/
+    ├── p79_host_state/     # the same configuration before and after a host reboot (T1, T2): 18 cells, Windows GPU memory counters, 500 ms nvidia-smi logs
+    ├── p80_rerun/          # six concurrency sweeps repeated on a gated night, and the 9B v2 weights on upstream vLLM 0.30.0
     └── logs/               # pre-launch GPU context lines + NIM startup logs
 ```
 
-Per-request raw rows (`*.rows.jsonl`) are not included.
+Per-request raw rows (`*.rows.jsonl`) are not included. P78, P79 and P80 (2026-09-29 to 2026-10-01) were added after the `vol2-nemotron-published` tag.
 
 ---
 
@@ -96,6 +110,11 @@ Per-request raw rows (`*.rows.jsonl`) are not included.
 | **A1 CUDA-graph control** (P55) | A1 at ~4k and ~14k tokens with CUDA graphs switched off (`NIM_DISABLE_CUDA_GRAPH`), and the capture-limit setting the image does not deliver | `results/p55_a1_capture/README.md` · `requests.jsonl` · `events.jsonl` · `analysis.json` | `results/p55_a1_capture/prediction_p55_a1_capture.json` (+ `.sha256`) |
 | **Long context, ~120k** (P55) | Both arms at ~120k prompt tokens (`NIM_MAX_MODEL_LEN` 131072) | `results/p55_longctx_120k/README.md` · `requests.jsonl` · `events.jsonl` · `analysis.json` · `analysis_ref_order_addendum_first.json` | `results/p55_longctx_120k/prediction_p55_longctx_120k.json` (+ `.sha256`) |
 | **A2 slow first phase** (P55, no GPU) | Request records and saved container logs of earlier runs read for a mechanism and a warm-up count | `results/p55_a2_slow_phase/README.md` · `slow_phase.json` | — (analysis of existing records) |
+| **Answer quality, reasoning on / off** (P78) | GSM8K (1,319 items) and an MMLU sample (2,850 items) through lm-eval 0.4.13 at temperature 0, each model with reasoning on and off; one repeated cell per model; one cell at client concurrency 1 | `results/p78_quality/items.jsonl` (one row per item: score, tokens, cap, no text) · `analysis.json` · `durations.json` · `events_public.jsonl` · `recompute_check.txt` | `results/p78_quality/prediction_p78_quality.json` + `.sha256` |
+| **NIM vs upstream vLLM on Nemotron 3 Nano** (P78) | NIM 2.0.12 against `vllm/vllm-openai:v0.27.1` bare and with NIM's argument list: 50 single requests, chat profile at c = 1 / 8 / 32 / 64 / 128, GSM8K with reasoning off | `results/p78_nim_vs_vllm/requests.jsonl` (response digests, no text) · `levels.jsonl` · `analysis.json` · `events_public.jsonl` | `results/p78_nim_vs_vllm/prediction_p78_nim_vs_vllm.json` + `.sha256` |
+| **End-of-cell GPU state** (P78, no GPU) | One idle-card fingerprint applied to the end-of-cell GPU record of every P50 / P53 / P55 cell, and which written number each cell feeds | `results/p78_audit/z3_audit.md` · `z3_audit.json` · `z3_audit.py` | — (reads the committed tree) |
+| **Host state** (P79) | The cap-256 configuration in fresh containers before (T1) and after (T2) a host reboot: R c=1, C c=1, C c=128 per container, with Windows GPU memory counters and 500 ms `nvidia-smi` logs | `results/p79_host_state/T1/` · `T2/` (`levels.jsonl` · `judge.json` · `events_public.jsonl` · `windows_gpu_memory_public.jsonl`) · `sentinel_replay.json` | `results/p79_host_state/prediction_p79_host_state.json` + `.sha256` |
+| **Concurrency re-run on a gated night** (P80) | The main sweeps of the second concurrency run and of the cap-256 run again, with an idle-card gate, a speed sentinel per container and arm health around every cell; the 9B v2 weights on upstream vLLM 0.30.0 at c = 16 / 32 / 64 | `results/p80_rerun/README.md` · `levels.jsonl` · `events.jsonl` · `judge.json` · `slo_ceilings.json` · `engine_log_excerpts.json` · `recompute_check.txt` | `results/p80_rerun/prediction_p80_gates.json` + `.sha256` (gates) · `results/p78_clean_rerun/prediction_p78_clean_rerun.json` · `results/p78_n2_upstream/prediction_p78_n2_upstream.json` (the sweeps) |
 
 The Guardrails, E9, S6 and judge-with-reasoning-off rows are measurements of Nemotron on NIM and stay here; the judge topic itself is the subject of Vol.3 ([`../vol3-judges/`](../vol3-judges/README.md)).
 
@@ -158,6 +177,11 @@ The other pre-registrations ship with a `.sha256` file written at registration t
 | Concurrency, first run — AIPerf closed-loop requests completed over 36 levels (`p53_concurrency`) | 4,995 | ❌ different unit (closed-loop levels; conclusions null) |
 | Concurrency, second run — completed over 33 levels (+ 576 in discarded warm-up levels) (`p53_concurrency_v2`) | 5,145 | ❌ different unit (closed-loop levels) |
 | Footprint — container starts (`p50_footprint` 15, addenda 6 + 8) | 29 | ❌ different unit |
+| Answer quality — scored items over 13 cells (`p78_quality/items.jsonl`) | 22,152 | ❌ different unit (accuracy items, not latency points) |
+| NIM vs upstream vLLM — 60 single requests × 3 arms (50 questions + 10 self-repeats) (`p78_nim_vs_vllm/requests.jsonl`) | 180 | ❌ not added to the totals above |
+| NIM vs upstream vLLM — completed over 15 levels (+ 540 in discarded warm-up levels) | 8,917 | ❌ different unit (closed-loop levels) |
+| Host state — completed over 18 levels, T1 3,522 + T2 3,593 (+ 390 in warm-up levels) (`p79_host_state`) | 7,115 | ❌ different unit (closed-loop levels) |
+| Concurrency re-run — completed over 49 measured level rows (+ 1,843 in 14 sentinel probes, 619 in warm-up levels) (`p80_rerun`) | 18,717 | ❌ different unit (closed-loop levels) |
 | E8 — 300 SciFact queries × 5 runs (retrieval quality + rerank latency) | counted separately | ❌ different unit |
 | C — 30 questions × 3 cells (diagnostic) | — | ❌ |
 | S6 — 24 items (judge diagnostic) | — | ❌ |

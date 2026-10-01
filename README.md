@@ -74,7 +74,7 @@ Llama 3.1 8B Instruct, one RTX 5090, synthetic chat requests (200 tokens in, 200
 - **Nemotron (Vol.2).**
   - Fit: both deployment options fit the 32 GB card (22,909 / 25,972 MiB in use at their smallest passing budgets).
   - Speed: the MoE option generates 4.14× faster per token and finishes an answer about 2.9× sooner.
-  - Concurrency: on the chat profile it stays inside the server SLO up to 128 concurrent requests, where the dense option's engine crashes at 32.
+  - Concurrency: on the chat profile it stays inside the server SLO up to 128 concurrent requests (the same ceiling on a gated re-run). The dense option's engine exits under concurrent load: over two nights all 8 of its containers ended with the same error — twice at 16 concurrent requests, five times at 32, once at 64 — while upstream vLLM 0.30.0 on the same weights ran 16, 32 and 64 without an engine exit.
 
   → [`vol2-nemotron/BASELINE.md`](vol2-nemotron/BASELINE.md) §A–§C
 - **Judges (Vol.3).** Baseline data; the judge study is in progress.
