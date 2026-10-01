@@ -2,6 +2,13 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-10-02 · Figures for Vol.1 and Vol.2; the Vol.1 forum link; a correction in `PATH_MAP.md`
+
+- **Figures, drawn from data already published; nothing was measured for them.** Vol.1: total output throughput against the number of concurrent requests, and a cover illustration without text or numbers ([`vol1-nim/figures/`](vol1-nim/figures/)). Vol.2: total throughput against per-user speed, one figure for chat-shaped and one for RAG-shaped requests ([`vol2-nemotron/figures/`](vol2-nemotron/figures/)). Each data figure comes in a light and a dark version (SVG and PNG), with the script that draws it and a table that gives the source file and key of every point; the scripts read every point back from its source on each run. No tag moved: the figures are on `main`, not at `vol1` or `vol2`.
+- **Vol.1 forum post:** the link to the article of 2026-10-01 is on the front page, at the top of [`vol1-nim/README.md`](vol1-nim/README.md) and in `releases/vol1.md`.
+- **`PATH_MAP.md` corrected.** The Vol.2 row named a commit made after the directory renames, where none of the earlier paths exist. All three rows now name `3efa794`, the last commit before the renames, where every path in the first column of the map exists. Files added after the renames have no row: they were written at the current paths and are reproduced at the current tags.
+- **`releases/vol1.md`** now shows the cover illustration and the throughput figure.
+
 ## 2026-10-01 · `HISTORY.md` renamed to `CHRONICLE.md`; the fourth tag is `chronicle`
 
 - **Renamed the same day, before any article or Release was published.** "History" already means the commit history in git; the file is a chronicle of this repository's tags. → [`CHRONICLE.md`](CHRONICLE.md)
