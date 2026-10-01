@@ -6,6 +6,7 @@ Every change to this repository that reached `main`, newest first. Volumes are n
 
 - **Cover illustration** for Vol.2, without text or numbers ([`vol2-nemotron/figures/cover_vol2.png`](vol2-nemotron/figures/cover_vol2.png)), shown in the README and in `releases/vol2.md` together with the chat figure.
 - **Wording on the two Vol.2 figures:** the horizontal axis and the note at the dashed line now read *per request* where they read *per user*. A closed-loop sweep counts concurrent requests, not people. Only the words changed: every point is where it was, and `pareto_points.json` is byte for byte the same (its key names are unchanged).
+- **Dark version shown.** The READMEs and the release notes of both volumes now show the dark version of each data figure, the one the Vol.1 forum post uses. The light versions stay in the two `figures/` directories.
 
 ## 2026-10-02 · Figures for Vol.1 and Vol.2; the Vol.1 forum link; a correction in `PATH_MAP.md`
 

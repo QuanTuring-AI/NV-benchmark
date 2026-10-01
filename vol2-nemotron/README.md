@@ -57,13 +57,13 @@ The two models differ in architecture, precision and NIM version. Read this as t
 
 Chat-shaped requests (200 tokens in / 200 out):
 
-![Chat-shaped requests: total output throughput against per-request output speed, one point per concurrency level](figures/pareto_chat_light.png)
+![Chat-shaped requests: total output throughput against per-request output speed, one point per concurrency level](figures/pareto_chat_dark.png)
 
 *The faint chat points of Nemotron 3 Nano sit 8–27% lower; see "Two consecutive containers can differ" below.*
 
 RAG-shaped requests (3,500 tokens in / 500 out):
 
-![RAG-shaped requests: total output throughput against per-request output speed, one point per concurrency level](figures/pareto_rag_light.png)
+![RAG-shaped requests: total output throughput against per-request output speed, one point per concurrency level](figures/pareto_rag_dark.png)
 
 *Figures added on 2026-10-01, revised 2026-10-02; they are drawn from the data at tag `vol2` by [`figures/plot_pareto.py`](figures/plot_pareto.py), in a light and a dark version (SVG and PNG). Every point is listed with its source file and line in [`figures/pareto_points.json`](figures/pareto_points.json). Per-request speed is 1000 ÷ the mean inter-token latency in ms.*
 
