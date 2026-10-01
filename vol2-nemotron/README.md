@@ -49,6 +49,14 @@ That is the NVFP4 profile, everything else at the image default; this is what th
 
 The two models differ in architecture, precision and NIM version. Read this as two deployment options on one card, not a race.
 
+**Concurrency as a curve.** Each point is one concurrency level of a sweep, labelled with that level. Higher means more tokens per second from the card in total; further left means each request's own stream is slower. A solid line is the sweep the table above takes its number from; the faint points are the same sweep on another night; a hollow marker means the p99 time to first token is over 2 s, outside the MLPerf server target.
+
+![Chat-shaped requests: total output throughput against per-user output speed, one point per concurrency level](figures/pareto_chat.png)
+
+![RAG-shaped requests: total output throughput against per-user output speed, one point per concurrency level](figures/pareto_rag.png)
+
+*Figures added on 2026-10-01; they are drawn from the data at tag `vol2` by [`figures/plot_pareto.py`](figures/plot_pareto.py). Every point is listed with its source file and line in [`figures/pareto_points.json`](figures/pareto_points.json). Per-user speed is 1000 ÷ the mean inter-token latency in ms.*
+
 **What NIM adds here.** We ran Nemotron 3 Nano's weights three ways: in the NIM container, in upstream vLLM 0.27.1 with only the model path, and in upstream vLLM with NIM's own arguments. With NIM's arguments, throughput was within 3% of NIM at every concurrency from 1 to 128; with only the model path it was within 5%. GSM8K accuracy was the same. Upstream vLLM picks the same settings by itself; what NIM gives you is the profile chosen for the card and a pinned image.
 
 ## Claim → evidence
