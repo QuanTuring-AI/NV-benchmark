@@ -10,7 +10,8 @@ NIM FP8, NIM bf16, Ollama 4-bit (16 slots), Ollama 16-bit (8 slots).
 
 What is drawn:
   line and round markers   the run the article's table uses: results/p59_nim_value/analysis.json,
-                           levels.<arm>|C|main.<c>.total_tps at c = 1, 8, 16, 32, 64, 128
+                           levels.<arm>|C|main.<c>.total_tps at c = 1, 8, 16, 32, 64, 128. The line is dashed between
+                           1 and 8, where this run has no level, and solid from 8
   diamonds, no line        a separate run that measured 1, 2 and 4: results/p62_levels/analysis.json (the source of
                            "the crossover is between 2 and 4")
   faint markers, no line   the clean-window rechecks: results/p70_clean_recheck/analysis.json (cells.<arm>|<c>) and
@@ -26,7 +27,8 @@ The two versions differ in colours only.
 
 Checks done on every run (exit code 1 if one fails):
   - every point is read back from its source file and key and must be equal;
-  - the 16 totals of the article's table (1 / 8 / 32 / 128 for the four configurations) are points of the solid lines;
+  - the 16 totals of the article's table (1 / 8 / 32 / 128 for the four configurations) are points of the lines;
+  - the run of the lines has no level between 1 and 8 in its own file (what the dashed part of a line says);
   - every drawn point lies inside the central 1.9:1 band of the canvas (what a 1200 x 630 crop keeps);
   - the light and the dark SVG contain the same text; neither file contains "users" or "7.3" anywhere (text or
     coordinate, so that a plain search of the file finds nothing); no embedded image;
@@ -34,7 +36,8 @@ Checks done on every run (exit code 1 if one fails):
 usage: plot_throughput_concurrency.py            draw, write the points file, check
        plot_throughput_concurrency.py check      check the existing points file against the sources (no drawing)
        plot_throughput_concurrency.py self_test
-PNG bytes are reproducible with the same matplotlib version and the same fonts installed (recorded in the points file).
+PNG bytes are reproducible with the same matplotlib version and the same font; the points file records both
+("matplotlib_version", "png_font": the font the PNG was drawn with, which is the fallback when 'Space Grotesk' is not installed).
 """
 import json, logging, os, re, sys
 
@@ -55,6 +58,8 @@ ARMS = {  # arm -> label, colour per theme, marker of the solid line
     "O-Q4": {"label": "Ollama 4-bit (16 slots)", "color": {"light": "#94A3B8", "dark": "#94A3B8"}},
     "O-FP16": {"label": "Ollama 16-bit (8 slots)", "color": {"light": "#64748B", "dark": "#CBD5E1"}},
 }
+DASHED_TO = 8                                # a line is dashed from 1 to this level: the run has no level in between
+DASHES = (2.4, 1.7)                          # dash and gap, in units of the line width
 LABELLED = ("N-FP8", "N-BF16")               # concurrency labels on the NIM lines only; the x axis gives the others
 X_TICKS = [1, 2, 4, 8, 16, 32, 64, 128]
 Y_TICKS = [100, 200, 500, 1000, 2000, 5000, 10000]
@@ -116,7 +121,8 @@ def build():
                           "total_tok_s": load(p59)["levels"]["O-Q4-def|C|main"][str(c)]["total_tps"], "reason": "Ollama with its default slot count is not drawn"})
     return {"what": "the points of throughput_concurrency: x = concurrent requests, y = total output tok/s, hollow marker when p99 TTFT > 2000 ms",
             "slo": {"ttft_p99_ms": SLO_TTFT_MS}, "axis_ticks": {"x": X_TICKS, "y": Y_TICKS}, "canvas": {"width": W, "height": H, "axes": AXES, "xlim": XLIM, "ylim": YLIM, "scale": "log-log"},
-            "boundary": BOUNDARY, "points": series, "not_drawn": not_drawn}
+            "boundary": BOUNDARY, "line_style": {"dashed": [1, DASHED_TO], "solid_from": DASHED_TO, "reason": "the run of the lines has no level between 1 and 8"},
+            "points": series, "not_drawn": not_drawn}
 
 
 def check(data):
@@ -130,7 +136,11 @@ def check(data):
         for c, v in zip((1, 8, 32, 128), vals):
             got = art.get((arm, c))
             if got is None or abs(got - v) > 0.5 + 1e-6:
-                problems.append(f"the article's {v} ({arm}, c={c}) is not a point of the solid line (found {got})")
+                problems.append(f"the article's {v} ({arm}, c={c}) is not a point of the line (found {got})")
+    for arm in ARMS:
+        between = sorted(int(k) for k in load(f"{RES}/p59_nim_value/analysis.json")["levels"][f"{arm}|C|main"] if 1 < int(k) < DASHED_TO)
+        if between:
+            problems.append(f"{arm}: the run of the line has levels {between} between 1 and {DASHED_TO}; the dashed part says it has none")
     for ver, rel in VERSIONS:
         if ver not in BOUNDARY or ver not in open(os.path.join(VOL, RES, rel), encoding="utf-8").read():
             problems.append(f"version {ver} of the boundary line is not in {RES}/{rel}")
@@ -154,7 +164,9 @@ def draw(data, theme):
         col = spec["color"][theme]
         pts = [p for p in data["points"] if p["arm"] == arm]
         art = sorted((p for p in pts if p["role"] == "article"), key=lambda p: p["concurrency"])
-        ax.plot([p["concurrency"] for p in art], [p["total_tok_s"] for p in art], color=col, linewidth=4.0, zorder=2)
+        head, tail = [p for p in art if p["concurrency"] <= DASHED_TO], [p for p in art if p["concurrency"] >= DASHED_TO]
+        ax.plot([p["concurrency"] for p in head], [p["total_tok_s"] for p in head], color=col, linewidth=4.0, zorder=2, dashes=DASHES, dash_capstyle="butt")
+        ax.plot([p["concurrency"] for p in tail], [p["total_tok_s"] for p in tail], color=col, linewidth=4.0, zorder=2)
         for p in pts:
             solid = p["role"] == "article"
             marker, size, alpha, z = ("o", 17, 1.0, 4) if solid else (("D", 14, 1.0, 3) if p["role"] == "separate run" else ("o", 14, 0.38, 2.5))
@@ -177,7 +189,8 @@ def draw(data, theme):
     ax.set_xlabel("Number of concurrent requests", fontsize=24, labelpad=12)
     ax.set_ylabel("Total output throughput, tok/s", fontsize=24, labelpad=12)
     h = [Line2D([], [], color=s["color"][theme], marker="o", markersize=14, linewidth=4.0, label=s["label"]) for s in ARMS.values()]
-    h += [Line2D([], [], color=T["muted"], marker="D", markersize=12, linestyle="none", label="c = 1, 2, 4: separate run"),
+    h += [Line2D([], [], color=T["muted"], linewidth=4.0, dashes=DASHES, dash_capstyle="butt", label="dashed: no level between 1 and 8 in this run"),
+          Line2D([], [], color=T["muted"], marker="D", markersize=12, linestyle="none", label="c = 1, 2, 4: separate run"),
           Line2D([], [], color=T["muted"], marker="o", markersize=12, linestyle="none", alpha=0.38, label="faint: clean-window recheck"),
           Line2D([], [], color=T["muted"], marker="o", markersize=13, linestyle="none", markerfacecolor=T["bg"], markeredgewidth=3.0, label="hollow: p99 time to first token > 2 s")]
     leg = ax.legend(handles=h, loc="upper left", fontsize=18, frameon=True, framealpha=0.92, facecolor=T["bg"], edgecolor=T["grid"], labelcolor=T["fg"], borderpad=0.7)
@@ -194,7 +207,9 @@ def draw(data, theme):
     raw = raw.replace(b"'Space Grotesk', 'DejaVu Sans', sans-serif", b"'Space Grotesk', sans-serif")   # the fallback used for the PNG is not named in the SVG
     open(base + ".svg", "wb").write(raw)
     plt.close(fig)
-    return drawn, outside, matplotlib.__version__
+    from matplotlib import font_manager
+    font = font_manager.get_font(font_manager.findfont(font_manager.FontProperties(family=plt.rcParams["font.family"]))).family_name
+    return drawn, outside, matplotlib.__version__, font
 
 
 def svg_texts(theme):
@@ -220,6 +235,11 @@ def self_test():
     t("the null FP8 cells of the 27 September recheck are not points", [d["concurrency"] for d in data["not_drawn"] if d["arm"] == "N-FP8" and "null" in d["reason"]], [1, 32, 128])
     t("FP8 in the clean window is a faint point at 128 (rounds to 9,062)", [round(p["total_tok_s"]) for p in data["points"] if p["arm"] == "N-FP8" and p["role"] == "clean-window recheck" and p["concurrency"] == 128], [9062])
     t("Ollama with default slots is listed, not drawn", (sum(d["arm"] == "O-Q4-def" for d in data["not_drawn"]), any(p["arm"] == "O-Q4-def" for p in data["points"])), (6, False))
+    global DASHED_TO
+    keep, DASHED_TO = DASHED_TO, 16
+    t("negative control: a dashed part reaching 16 is reported for the four lines (the run has a level at 8)", len([x for x in check(data)[1] if "dashed" in x]), 4)
+    DASHED_TO = keep
+    t("the separate run has the levels 2 and 4 that the run of the lines lacks", sorted({p["concurrency"] for p in data["points"] if p["role"] == "separate run"}), [1, 2, 4])
     print("SELF-TEST " + ("PASS" if ok else "FAIL"))
     return ok
 
@@ -236,9 +256,10 @@ if __name__ == "__main__":
     else:
         data = build()
         for theme in THEMES:
-            drawn, outside, version = draw(data, theme)
+            drawn, outside, version, font = draw(data, theme)
             extra += [f"{theme}: {p['arm']} c={p['concurrency']} ({p['role']}) is outside the central 1.9:1 band" for p in outside]
         data["matplotlib_version"] = version
+        data["png_font"] = font
         data["numbers_on_figure"] = sorted(drawn, key=int)
         json.dump(data, open(table, "w", encoding="utf-8", newline="\n"), indent=1, ensure_ascii=False)
     n, problems = check(data)
