@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
-"""Vol.2 · two figures drawn from published concurrency sweeps: total output throughput against per-user output speed.
+"""Vol.2 · two figures drawn from published concurrency sweeps: total output throughput against per-request output speed.
 
   pareto_chat_light / _dark  (.svg, .png)   chat-shaped requests (200 tokens in / 200 out)
   pareto_rag_light  / _dark  (.svg, .png)   RAG-shaped requests (3,500 in / 500 out)
   pareto_points.json                         every point with its source file, line and keys
 
 Nothing is measured here. Every point is one row of a published levels.jsonl:
-  x  per-user output speed  = 1000 / summary.inter_token_latency.avg   (ms -> tok/s per user; AIPerf's mean)
+  x  per-request output speed = 1000 / summary.inter_token_latency.avg  (ms -> tok/s per request; AIPerf's mean)
   y  total output throughput = summary.output_token_throughput.avg       (tok/s)
 A marker is hollow when summary.time_to_first_token.p99 > 2,000 ms (outside the MLPerf server target on TTFT). The
-dashed vertical line is 10 tok/s per user, the speed that corresponds to 100 ms per output token; the target itself is
+dashed vertical line is 10 tok/s per request, the speed that corresponds to 100 ms per output token; the target itself is
 on the p99, the axis is the mean.
 
 Which rows are points (the rules, applied by select()):
@@ -37,7 +37,7 @@ Checks done on every run (exit code 1 if one fails):
     the analysis files the README's table points to;
   - every number written on a figure is in pareto_points.json;
   - every drawn point lies inside the central 1.9:1 band of the canvas (what a 1200 x 630 crop keeps);
-  - the light and the dark SVG of a figure contain the same text; neither file contains "users" or "7.3" anywhere
+  - the light and the dark SVG of a figure contain the same text; neither file contains the word "user" (or "users", any case) or "7.3" anywhere
     (text or coordinate, so that a plain search of the file finds nothing); no embedded image.
 usage: plot_pareto.py            draw, write pareto_points.json, check
        plot_pareto.py check      check the existing pareto_points.json against the sources (no drawing)
@@ -53,6 +53,7 @@ W, H = 1600, 900
 AXES = [0.0865, 0.20, 0.895, 0.60]           # left, bottom, width, height: the plot area is the vertical middle 60%,
                                              # moved by a fraction of a pixel so that no coordinate in an SVG reads "7.3"
 BAND = (H - W / 1.9) / 2.0                   # pixels cut at the top and at the bottom by a 1.9:1 crop
+# The points file keeps its key names (per_user_tok_s, dashed_line_tok_s_per_user): they name the speed of one request's stream.
 SLO_TTFT_MS, SLO_ITL_MS, SLO_USER_TOK_S = 2000.0, 100.0, 10.0
 THEMES = {"light": {"bg": "#FFFFFF", "fg": "#0F172A", "muted": "#475569", "grid": "#E2E8F0"},
           "dark": {"bg": "#0B0F19", "fg": "#E2E8F0", "muted": "#94A3B8", "grid": "#1E293B"}}
@@ -199,7 +200,7 @@ def draw(data, fig_key, theme):
     ax = fig.add_axes(AXES, facecolor=T["bg"])
     drawn = {str(int(SLO_USER_TOK_S)), str(int(SLO_ITL_MS))}
     ax.axvline(SLO_USER_TOK_S, color=T["muted"], linestyle="--", linewidth=2.2, zorder=1)
-    ax.text(SLO_USER_TOK_S * 1.05, 5300, "10 tok/s per user\n(100 ms per output token)", fontsize=17, color=T["muted"], va="top", ha="left")
+    ax.text(SLO_USER_TOK_S * 1.05, 5300, "10 tok/s per request\n(100 ms per output token)", fontsize=17, color=T["muted"], va="top", ha="left")
     series = [s for s in data["series"] if s["figure"] == fig_key]
     for s in series:
         m = MODELS[s["model"]]; col = m["color"][theme]; pts = s["points"]; solid = s["role"] == "article"
@@ -228,7 +229,7 @@ def draw(data, fig_key, theme):
     ax.grid(True, which="major", color=T["grid"], linewidth=1.5, zorder=0)
     for sp in ax.spines.values():
         sp.set_linewidth(1.5)
-    ax.set_xlabel("Per-user output speed, tok/s per user  (1000 ÷ mean inter-token latency in ms)", fontsize=24, labelpad=12)
+    ax.set_xlabel("Per-request output speed, tok/s per request  (1000 ÷ mean inter-token latency in ms)", fontsize=24, labelpad=12)
     ax.set_ylabel("Total output throughput, tok/s", fontsize=24, labelpad=12)
     h = [Line2D([], [], color=MODELS[k]["color"][theme], marker=MODELS[k]["marker"], markersize=14, linewidth=4.0, label=MODELS[k]["label"]) for k in ("N3", "A1")]
     h += [Line2D([], [], color=T["muted"], marker="o", markersize=12, linestyle="none", alpha=0.38, label="faint: the same sweep on another night"),
@@ -319,11 +320,11 @@ if __name__ == "__main__":
             problems.append(f"{fig}: the light and the dark SVG do not contain the same text")
         if len(tl) < 10:
             problems.append(f"{fig}: only {len(tl)} <text> elements: the text was not kept as text")
-        for word in ("users", "7.3"):
-            if any(word in x for x in tl):
-                problems.append(f"{fig}: a text of the figure contains {word!r}")
-            elif word in sl or word in sd:
-                problems.append(f"{fig}: an SVG contains the characters {word!r} outside its text (a coordinate): move AXES by a fraction of a pixel")
+        for name, pattern in (("the word 'user' or 'users'", r"\busers?\b"), ("'7.3'", r"7\.3")):
+            if any(re.search(pattern, x, re.I) for x in tl):
+                problems.append(f"{fig}: a text of the figure contains {name}")
+            elif re.search(pattern, sl, re.I) or re.search(pattern, sd, re.I):
+                problems.append(f"{fig}: an SVG contains {name} outside its text (for '7.3', a coordinate: change the layout by a fraction of a pixel)")
         if "<image" in sl or "<image" in sd:
             problems.append(f"{fig}: an SVG embeds an image")
     for p in problems:
