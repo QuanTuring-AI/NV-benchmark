@@ -1,6 +1,6 @@
-# History of this repository's tags
+# Chronicle of this repository's tags
 
-Until 2026-10-01 this repository had nine tags. They were named after the volume numbers and the directory names of their day; three of them pointed to the same commit, and one carried a volume number that changed two days later. A reader could not tell which one to open. They were replaced by four: `vol1`, `vol2`, `vol3` and `history`.
+Until 2026-10-01 this repository had nine tags. They were named after the volume numbers and the directory names of their day; three of them pointed to the same commit, and one carried a volume number that changed two days later. A reader could not tell which one to open. They were replaced by four: `vol1`, `vol2`, `vol3` and `chronicle`.
 
 **Nothing was removed but the names.** Every commit in the table below is an ancestor of `main`, so every earlier state of the repository is still in it. To see one, use its full hash:
 
@@ -24,6 +24,10 @@ git checkout <full hash>
 
 The hashes in this table were written by a script from `git rev-parse <tag>^{}` before the tags were removed.
 
+## One more name, used for an hour
+
+This file was first added as `HISTORY.md`, and the fourth tag was first called `history` (commit `75c1efc207751fab76493ca133ea9aeee233f182`). Both were renamed the same day, before any article or Release was published: "history" already means the commit history in git, and this file is a chronicle of the tags. `vol1`, `vol2` and `vol3` were first created on that commit too and were moved, with the fourth tag, to the commit that renames this file, so that all four open the same state.
+
 ## The four tags
 
 | Tag | What it is |
@@ -31,8 +35,8 @@ The hashes in this table were written by a script from `git rev-parse <tag>^{}` 
 | `vol1` | Vol.1, *Why NIM?* — the repository as the article describes it |
 | `vol2` | Vol.2, *Nemotron 3 Nano on one RTX 5090* — the repository as the article describes it |
 | `vol3` | Vol.3 baseline data (NIM × NeMo Guardrails). The judge study is not yet published |
-| `history` | The commit that adds this file |
+| `chronicle` | The commit that gives this file its name |
 
-All four were created on 2026-10-01 on the commit that adds this file. **`vol3` will move once**, on the day the judge study is published, to the commit that holds it. After that, none of the four moves.
+All four were created on 2026-10-01 and moved once the same day, for the rename described above, to the commit that renames this file to `CHRONICLE.md`. From that commit on they do not move, with one exception: **`vol3` will move once**, on the day the judge study is published, to the commit that holds it.
 
 To rerun a harness byte for byte at the paths it was written with, [`PATH_MAP.md`](PATH_MAP.md) gives the commit for each volume.

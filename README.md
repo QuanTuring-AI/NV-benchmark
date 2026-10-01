@@ -54,9 +54,9 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 | `vol1` | Vol.1, *Why NIM?* — the repository as the article describes it |
 | `vol2` | Vol.2, *Nemotron 3 Nano on one RTX 5090* — the repository as the article describes it |
 | `vol3` | Vol.3 baseline data (NIM × NeMo Guardrails). The judge study is not yet published; this tag moves once, on the day it is |
-| `history` | The commit that adds [`HISTORY.md`](HISTORY.md): every earlier tag, its full hash and what it held |
+| `chronicle` | The chronicle of this repository's tags, [`CHRONICLE.md`](CHRONICLE.md): every earlier tag, its full hash and what it held |
 
-A tag opens the whole repository as it was at one commit; `vol1` and `vol2` point to the same one, the commit that adds this table. Earlier tags were retired on 2026-10-01 and are listed in [`HISTORY.md`](HISTORY.md).
+A tag opens the whole repository as it was at one commit; all four point to the same one. Earlier tags were retired on 2026-10-01 and are listed in [`CHRONICLE.md`](CHRONICLE.md).
 
 *Directories were renamed on 2026-09-28 and 2026-09-29: [`PATH_MAP.md`](PATH_MAP.md) maps every old path. Every change to this repository: [`CHANGELOG.md`](CHANGELOG.md).*
 
