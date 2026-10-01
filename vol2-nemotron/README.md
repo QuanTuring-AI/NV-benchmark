@@ -1,9 +1,138 @@
-# Vol.2 — Evidence Index
+# Vol.2 · Nemotron 3 Nano on one RTX 5090 with NIM: ~300 tok/s, flat to 120k context, 128 concurrent requests
 
-> **Reproduce:** `git checkout vol2-nemotron-published`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
+> **Reproduce:** `git checkout vol1-vol2-published`. That tag is the repository as the Vol.1 and Vol.2 articles describe it: every run of this volume through 2026-10-01 and this README. The harnesses are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
+
+We wanted to know what Nemotron 3 Nano (30B total / 3.5B active, hybrid Mamba-2 + MoE) actually does on a single RTX 5090. So we ran it through NIM 2.0.12 with the NVFP4 profile and measured five things: memory, speed, long context, concurrency and answer quality. Nemotron Nano 9B v2, the other Nemotron option NIM offers for this card, is in the tables as a reference point.
+
+**TL;DR**
+
+- **It fits with room to spare.** About 21 GiB at 32 sequences, about 25 GiB at the image default of 256 (4k context). The FP8 build does not fit in 32 GB, so NVFP4 is the option on this card.
+- **~300 tok/s for a single stream.** That is 4.1× the 9B v2 in tokens per second. An answer comes back 2.9× faster, because Nemotron 3 Nano writes about 1.4× more tokens before it stops.
+- **The speed does not drop with context.** 305 tok/s with 1k tokens of context, 308 tok/s with 120k.
+- **128 concurrent chat requests inside the MLPerf Inference server latency target.** With long RAG-shaped prompts the limit is 8.
+- **The answers are good, and the reasoning switch matters.** With reasoning on: 95.7% on GSM8K and 88.0% on a 2,850-question MMLU sample. With reasoning off: 5.5 points lower on GSM8K and 12.3 lower on MMLU.
+
+*Concurrency numbers: synthetic prompts, closed loop. Chat = 200 tokens in / 200 out; RAG-shaped = 3,500 in / 500 out. MLPerf server target = p99 TTFT ≤ 2 s and p99 TPOT ≤ 100 ms.*
+
+## Run it
+
+```bash
+docker run -d --gpus all -p 8000:8000 \
+  -e NGC_API_KEY \
+  -e NIM_MODEL_PROFILE=1fba9ecfcfb4cde28d4ce3fd55c40bca89a5a613e25e98f057befe6a7e99eada \
+  -e NIM_MAX_MODEL_LEN=8192 \
+  -v ~/.cache/nim:/opt/nim/.cache \
+  nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12
+```
+
+That is the NVFP4 profile, everything else at the image default; this is what the concurrency runs set, and nothing else. To turn reasoning off for a request:
+
+```json
+{"model": "nvidia/nemotron-3-nano",
+ "messages": [{"role": "user", "content": "..."}],
+ "chat_template_kwargs": {"enable_thinking": false}}
+```
+
+## Results
+
+| | **Nemotron 3 Nano** (NVFP4, NIM 2.0.12) | Nemotron Nano 9B v2 (bf16, NIM 1.12.2) |
+|---|---|---|
+| Memory the container adds at its smallest working budget (4k context, 32 sequences) | **21.0 GiB** | 21.9 GiB |
+| Single-stream generation, median | **305 tok/s** | 73 tok/s |
+| Time to finish an answer, median (`max_tokens` 4096) | **7.3 s** | 20.1 s |
+| Generation at ~1k / ~14k / ~120k tokens of context | **305 / 315 / 308 tok/s** | 72 / 45 / 52 tok/s |
+| Most concurrent chat requests inside the MLPerf server target | **128** (image default, 256 sequences) | 8 (32 sequences) |
+| Same, RAG-shaped prompts | **8** | 4 |
+| GSM8K · MMLU sample, reasoning on | **95.7% · 88.0%** | 95.2% · 84.0% |
+
+*Each concurrency sweep was run twice on different nights. The limits are the same both times, with two exceptions: the 9B v2 chat row shows the lower second run (16 the first time; its engine exited at 16 the second), and the second run of the RAG-shaped sweep of Nemotron 3 Nano is void by its own rule (one failed request) while its latency test gives the same 8.*
+
+The two models differ in architecture, precision and NIM version. Read this as two deployment options on one card, not a race.
+
+**What NIM adds here.** We ran Nemotron 3 Nano's weights three ways: in the NIM container, in upstream vLLM 0.27.1 with only the model path, and in upstream vLLM with NIM's own arguments. With NIM's arguments, throughput was within 3% of NIM at every concurrency from 1 to 128; with only the model path it was within 5%. GSM8K accuracy was the same. Upstream vLLM picks the same settings by itself; what NIM gives you is the profile chosen for the card and a pinned image.
+
+## Claim → evidence
+
+Every number above and in the forum post, with the file it comes from and the key inside that file. Paths are relative to this directory. `Check`: `rounds` (the stored value rounds to the number), `approx` (within 5%), `equals`, or `text` (the quoted text is in the file).
+
+In the files, **A2** and **N3** are Nemotron 3 Nano (NIM 2.0.12, NVFP4); **A1** and **N2** are Nemotron Nano 9B v2 (NIM 1.12.2, bf16); `C` is the chat profile, `R` the RAG-shaped one.
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| Memory at 32 sequences, GiB (Nemotron 3 Nano) | 21.0 | `results/p50_footprint_addendum2/analysis.json` | `conclusions.per_arm.A2.min_viable.delta_ready_mib / 1024` | rounds |
+| Memory at the image default of 256 sequences, GiB | 25 | `results/p50_footprint/analysis.json` | `conclusions.per_arm.A2.min_viable.delta_ready_mib / 1024` | rounds |
+| Memory, 9B v2 at 32 sequences, GiB | 21.9 | `results/p50_footprint/analysis.json` | `conclusions.per_arm.A1.min_viable.delta_ready_mib / 1024` | rounds |
+| The FP8 build does not fit (it never became ready) | false | `results/p50_footprint/analysis.json` | `conclusions.per_arm.A2FP8.default_viable` | equals |
+| ~300 tok/s for a single stream | ~300 | `results/p50_speed/analysis.json` | `conclusions.per_arm.A2.generation_rate.p50` | approx |
+| Single-stream generation, median: Nemotron 3 Nano · 9B v2 | 305 · 73 | `results/p50_speed/analysis.json` | `conclusions.per_arm.{A2,A1}.generation_rate.p50` | rounds |
+| 4.1× the 9B v2 in tokens per second | 4.1× | `results/p50_speed/analysis.json` | `conclusions.A2_over_A1.generation_rate.ratio_of_means` | rounds |
+| An answer comes back 2.9× faster | 2.9× | `results/p53_answer/analysis.json` | `1 / conclusions.A2_over_A1.total_latency_ms.ratio_of_means` | rounds |
+| … because it writes about 1.4× more tokens | 1.4× | `results/p53_answer/analysis.json` | `conclusions.A2_over_A1.completion_tokens.ratio_of_means` | rounds |
+| Time to finish an answer, median, s: Nemotron 3 Nano · 9B v2 | 7.3 · 20.1 | `results/p53_answer/analysis.json` | `conclusions.per_arm.{A2,A1}.total_latency_ms.p50 / 1000` | rounds |
+| Generation at ~1k · ~14k tokens of context (Nemotron 3 Nano) | 305 · 315 | `results/p53_longctx_addendum/analysis.json` | `per_arm.A2.depths.{1024,16384}.generation_tps_p50` | rounds |
+| … at ~120k | 308 | `results/p55_longctx_120k/analysis.json` | `conditions.a2_120k.generation_tps_p50` | rounds |
+| 9B v2 at ~1k · ~14k | 72 · 45 | `results/p53_longctx/analysis.json` | `per_arm.A1.depths.{1024,16384}.generation_tps_p50` | rounds |
+| 9B v2 at ~120k | 52 | `results/p55_longctx_120k/analysis.json` | `conditions.a1_120k.generation_tps_p50` | rounds |
+| 128 concurrent chat requests inside the server target (first night) | 128 | `results/p55_concurrency_a2_256/analysis.json` | `sweeps.A2\|C\|main.conclusions.max_concurrency_within_server_slo` | equals |
+| … the same on the second night | 128 | `results/p80_rerun/slo_ceilings.json` | `groups.s256_C.p80.conclusions.max_concurrency_within_server_slo` | equals |
+| RAG-shaped prompts: the limit is 8 (first night) | 8 | `results/p55_concurrency_a2_256/analysis.json` | `sweeps.A2\|R\|main.conclusions.max_concurrency_within_server_slo` | equals |
+| … second night: void by its own rule | null | `results/p80_rerun/slo_ceilings.json` | `groups.s256_R.p80.conclusions` | equals |
+| … second night, the latency test alone | 8 | `results/p80_rerun/slo_ceilings.json` | `groups.s256_R.p80.largest_level_inside_slo_without_p1.server` | equals |
+| 9B v2, chat: 16 the first night | 16 | `results/p53_concurrency_v2/analysis.json` | `sweeps.A1\|C\|main.conclusions.max_concurrency_within_server_slo` | equals |
+| 9B v2, chat: 8 the second night (shown in the table) | 8 | `results/p80_rerun/slo_ceilings.json` | `groups.v2_A1_C.p80.conclusions.max_concurrency_within_server_slo` | equals |
+| 9B v2, RAG-shaped: 4, both nights | 4 · 4 | `results/p53_concurrency_v2/analysis.json` | `{sweeps.A1\|R\|main.conclusions.max_concurrency_within_server_slo,results/p80_rerun/slo_ceilings.json::groups.v2_A1_R.p80.conclusions.max_concurrency_within_server_slo}` | rounds |
+| GSM8K · MMLU sample, reasoning on (Nemotron 3 Nano) | 95.7% · 88.0% | `results/p78_quality/analysis.json` | `cells.N3\|{on_gsm8k_1,on_mmlu}.accuracy_pct` | rounds |
+| GSM8K · MMLU sample, reasoning on (9B v2) | 95.2% · 84.0% | `results/p78_quality/analysis.json` | `cells.N2\|{on_gsm8k_1,on_mmlu}.accuracy_pct` | rounds |
+| Reasoning off: points lower on GSM8K · MMLU | 5.5 · 12.3 | `results/p78_quality/analysis.json` | `models.N3.{Q2_gsm8k_on_minus_off,Q2_mmlu_on_minus_off}.diff_pp` | rounds |
+| On MMLU the median answer fell from 198 tokens to 7 | 198 · 7 | `results/p78_quality/analysis.json` | `models.N3.reasoning_really_off.mmlu.{on_median,off_median}` | rounds |
+| Upstream vLLM with NIM's arguments ÷ NIM, at 1 · 8 · 32 · 64 · 128 | 1.01 · 1.01 · 1.02 · 1.01 · 1.03 | `results/p78_nim_vs_vllm/analysis.json` | `P4.ratio_V3B2_over_N3_by_level.{1,8,32,64,128}` | rounds |
+| Upstream vLLM with only the model path ÷ NIM, lowest level ratio (c=32) | 0.95 | `results/p78_nim_vs_vllm/analysis.json` | `tok_s_by_level.V3B1\|32 / tok_s_by_level.N3\|32` | rounds |
+| GSM8K the same: upstream arms minus NIM, points | +0.61 · +0.53 | `results/p78_quality/analysis.json` | `G4_quality_arms_vs_N3_off_gsm8k.{V3B1,V3B2}.diff_pp` | rounds |
+| About 14.6 MiB of Mamba state per sequence | 14.6 | `results/p50_footprint/analysis.json` | `(conclusions.per_arm.A2.min_viable.budget_mib - results/p50_footprint_addendum2/analysis.json::conclusions.per_arm.A2.min_viable.budget_mib) / 224` | rounds |
+| Warm up: ten to twenty requests, about a minute | — | `BASELINE.md` | `that took 11–18 requests and about a minute` | text |
+| … the first requests ran at about half speed | — | `BASELINE.md` | `run at roughly half its steady rate` | text |
+| 9B v2 image: the engine exited at 16 (two containers) | 16 · 16 | `results/p80_rerun/slo_ceilings.json` | `a1_engine_exits.containers[{0,1}].engine_exit.level` | rounds |
+| … and at 32 (two containers) | 32 · 32 | `results/p80_rerun/slo_ceilings.json` | `a1_engine_exits.containers[{2,3}].engine_exit.level` | rounds |
+| The same weights on upstream vLLM 0.30.0 did not exit at 16 | false | `results/p80_rerun/slo_ceilings.json` | `G5_levels[0].engine_dead` | equals |
+| … at 32 | false | `results/p80_rerun/slo_ceilings.json` | `G5_levels[1].engine_dead` | equals |
+| … at 64 | false | `results/p80_rerun/slo_ceilings.json` | `G5_levels[2].engine_dead` | equals |
+| Run it: the NVFP4 profile id | — | `scripts/p50_footprint.py` | `"profile": "1fba9ecfcfb4cde28d4ce3fd55c40bca89a5a613e25e98f057befe6a7e99eada", "precision": "nvfp4"` | text |
+| Run it: the only environment the concurrency runs set | — | `scripts/p55_concurrency_a2.py` | `env = {"NIM_MAX_MODEL_LEN": "8192"}` | text |
+| Nemotron 3 Nano starts on this host without the runner switch | — | `results/p80_rerun/events.jsonl` | `"name": "p80-s256-c-1", "ready": true, "reason": null, "env": {"NIM_MAX_MODEL_LEN": "8192"}` | text |
+| NIM 1.12.2 is the newest tag offered for the 9B v2 | — | `results/p50_availability/README.md` | `A1's newest image is NIM 1.12.2` | text |
+
+**How to check a row:** open the file, follow the key, compare. Or check every row at once: `python ../tools/check_claims.py README.md` (from this directory). To recompute: each result directory's README names its analysis script (for example `python scripts/p80_slo.py` rebuilds `results/p80_rerun/slo_ceilings.json`); `results/p78_quality/recompute_check.txt` and `results/p80_rerun/recompute_check.txt` show the analysis files reproduced byte for byte from the published inputs.
+
+## How it was measured
+
+- **Decided before the run.** Each run has a pre-registration file (`prediction_*.json`) with its thresholds, predictions and the SHA-256 of the harness, frozen and hashed before the first container starts. Failed predictions are reported as failed (two in the quality run, one in the re-run sweeps).
+- **Both arms must be healthy.** A single-stream generation rate implies a memory bandwidth; an arm under 10% of the card's 1,792 GB/s fails the gate and no ratio is reported (measured: 61% and 72%).
+- **Closed-loop concurrency.** AIPerf 0.11.0 keeps exactly N requests in flight; synthetic prompts with fixed lengths (`ignore_eos`), 60 s per level after a discarded warm-up level, an instrument calibration at c=1 that gates every sweep.
+- **The latency target is fixed first.** MLPerf Inference v5.1, Llama 3.1-8B server scenario (p99 TTFT ≤ 2 s and p99 TPOT ≤ 100 ms): another model's ruler, the same on every row. A sweep's conclusion is null if any live level has a failed request, the calibration fails, or the sequence cap is not the intended one.
+- **Quality is scored item by item.** lm-evaluation-harness 0.4.13 at temperature 0; reasoning on and off are compared on the same items with a 95% interval; one cell per model is run twice.
+- **Re-run on a gated night.** The main sweeps were repeated with an idle-card gate before every cell (utilization ≤ 2% and ≤ 45 W over 10 s), a speed sentinel per container and a single-stream health probe around every cell, and judged by the original runs' own analysis functions (`results/p80_rerun/`).
+- **The hash chain.** `python ../tools/bound_files.py --history` lists every recorded SHA-256 and verifies the file it binds.
+
+## Measurement conditions and what is not explained
+
+Stated plainly, because a reader who reruns this will meet the same things. Details are in [`BASELINE.md`](BASELINE.md) §C, §H, §I, §J and [`results/p80_rerun/README.md`](results/p80_rerun/README.md).
+
+- **The card also drives the Windows desktop.** Most cells of the first runs cannot be shown to have ended on an idle card: of 211 cells, 12 match an idle fingerprint at their end, 176 do not, 23 have no record (`results/p78_audit/`). The main concurrency sweeps were therefore repeated behind an idle-card gate; both values are published side by side.
+- **A desktop application can push part of the container out of GPU memory.** With a NIM container at its default budget, under 1 GiB of the card stays free (`results/p80_rerun/events.jsonl`, `container_start` → `state_after`: 30.8–31.0 GiB in use of 31.84). In a harness test on 30 September another program took a little more GPU memory while a container was serving, and Windows moved part of the container's allocation to system memory. Single-request speed stayed normal; high-concurrency throughput collapsed, with the GPU showing 100% utilization at low power. That test's records are kept on the machine and are not published. The published runs record the same Windows GPU counters every 10 s (`results/p80_rerun/windows_gpu_memory_public.jsonl`).
+- **One whole run was 6–20× slow and its cause is unexplained.** The first attempt at the re-run, on the morning of 30 September with nobody at the machine, showed that same shape (utilization near 100% at 140–180 W). The same configuration measured before and after a reboot was normal in 18 of 18 cells (`results/p79_host_state/`). The slow run is not published.
+- **Two consecutive containers can differ.** On the gated night one container ran 8–27% below its first-night values at every level and the next one, from the same image with the same settings, did not; on identical probes they were 12–16% apart. The memory the container held in system RAM at READY does not separate them. The latency limits were the same.
+- **Session to session, absolute rates move.** The 9B v2's single-stream rate ran up to about 20% above earlier runs in one later session (`BASELINE.md` §D), and containers of one configuration differed by up to 31% at 64 concurrent requests in the sequence-cap runs (§C).
+- **Nemotron 3 Nano needs a warm-up after READY.** In some containers its first requests run at roughly half the steady rate; where the slow phase ended it had lasted at most 7 requests and 33 s, and nothing in the container log coincides with it (`results/p55_a2_slow_phase/`).
+- **One second-night sweep is void by its own rule.** The RAG-shaped sweep had one failed request of 2,579 at 512 concurrent requests, far above its limit of 8; the rule "no failed request at any live level" makes its conclusion null.
+- **The 9B v2 engine exits under concurrent load.** Over two nights all eight of its containers ended with the same error: twice at 16 concurrent requests, five times at 32, once at 64. Its container also slowed down over four hours of continuous load (a GSM8K cell took 7.6 s per item at the start and 29.6 s later, accuracy unchanged), so its timing figures from that night are not quoted.
+- **Nemotron 3 Nano does not repeat its own text at temperature 0** (20 of 1,319 answers identical between two runs of one cell), while its accuracy repeats (95.68% and 95.60%). Byte-identity between NIM and upstream vLLM could therefore not be tested on this model.
+- **Two predictions about the reasoning switch failed.** The MMLU gain from reasoning (9–12 points) is larger than predicted, and answers with reasoning off are 31–39% as long as with it on, not under 25%.
+
+## Evidence index
+
+The rest of this file is the index: which file belongs to which experiment, where its measurement boundary is recorded, and how data points are counted. Full tables, failed predictions and voided runs are in [`BASELINE.md`](BASELINE.md), [`FOOTPRINT.md`](FOOTPRINT.md) and each result directory's README. Run identifiers (P50, P53, P55, P78, P79, P80, E7, E9, S6) name one measurement request each and appear in directory, script and pre-registration names; they carry no other meaning.
 
 > **The March 2026 Vol.1 lives in [`../benchmark/`](../benchmark/)** (question sets, harness, results). It is published evidence and is not modified here.
-> This directory holds the Vol.2 harness and results. This file is an **index**: which file belongs to which experiment, where its measurement boundary is recorded, and how data points are counted. This README contains measurement boundaries for data in this directory. It does not contain conclusions; those are for the write-up. **This index covers Vol.2 evidence. Its data is published (2026-09-25); the write-up is to follow.**
 
 ---
 
@@ -75,7 +204,7 @@ vol2-nemotron/
     └── logs/               # pre-launch GPU context lines + NIM startup logs
 ```
 
-Per-request raw rows (`*.rows.jsonl`) are not included. P78, P79 and P80 (2026-09-29 to 2026-10-01) were added after the `vol2-nemotron-published` tag.
+Per-request raw rows (`*.rows.jsonl`) are not included. P78, P79 and P80 (2026-09-29 to 2026-10-01) were added on 2026-10-01 and are in the `vol2-nemotron-published` tag.
 
 ---
 
