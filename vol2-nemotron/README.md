@@ -14,6 +14,10 @@ We wanted to know what Nemotron 3 Nano (30B total / 3.5B active, hybrid Mamba-2 
 
 *Concurrency numbers: synthetic prompts, closed loop. Chat = 200 tokens in / 200 out; RAG-shaped = 3,500 in / 500 out. MLPerf server target = p99 TTFT ≤ 2 s and p99 TPOT ≤ 100 ms.*
 
+![Nemotron 3 Nano on one RTX 5090](figures/cover_vol2.png)
+
+*One RTX 5090 · Nemotron 3 Nano via NIM 2.0.12 (NVFP4) · synthetic prompts, closed loop*
+
 ## Run it
 
 ```bash
@@ -53,15 +57,15 @@ The two models differ in architecture, precision and NIM version. Read this as t
 
 Chat-shaped requests (200 tokens in / 200 out):
 
-![Chat-shaped requests: total output throughput against per-user output speed, one point per concurrency level](figures/pareto_chat_light.png)
+![Chat-shaped requests: total output throughput against per-request output speed, one point per concurrency level](figures/pareto_chat_dark.png)
 
 *The faint chat points of Nemotron 3 Nano sit 8–27% lower; see "Two consecutive containers can differ" below.*
 
 RAG-shaped requests (3,500 tokens in / 500 out):
 
-![RAG-shaped requests: total output throughput against per-user output speed, one point per concurrency level](figures/pareto_rag_light.png)
+![RAG-shaped requests: total output throughput against per-request output speed, one point per concurrency level](figures/pareto_rag_dark.png)
 
-*Figures added on 2026-10-01; they are drawn from the data at tag `vol2` by [`figures/plot_pareto.py`](figures/plot_pareto.py), in a light and a dark version (SVG and PNG). Every point is listed with its source file and line in [`figures/pareto_points.json`](figures/pareto_points.json). Per-user speed is 1000 ÷ the mean inter-token latency in ms.*
+*Figures added on 2026-10-01, revised 2026-10-02; they are drawn from the data at tag `vol2` by [`figures/plot_pareto.py`](figures/plot_pareto.py), in a light and a dark version (SVG and PNG). Every point is listed with its source file and line in [`figures/pareto_points.json`](figures/pareto_points.json). Per-request speed is 1000 ÷ the mean inter-token latency in ms.*
 
 **What NIM adds here.** We ran Nemotron 3 Nano's weights three ways: in the NIM container, in upstream vLLM 0.27.1 with only the model path, and in upstream vLLM with NIM's own arguments. With NIM's arguments, throughput was within 3% of NIM at every concurrency from 1 to 128; with only the model path it was within 5%. GSM8K accuracy was the same. Upstream vLLM picks the same settings by itself; what NIM gives you is the profile chosen for the card and a pinned image.
 

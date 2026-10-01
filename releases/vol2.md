@@ -1,3 +1,7 @@
+![Nemotron 3 Nano on one RTX 5090](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol2-nemotron/figures/cover_vol2.png)
+
+![Chat-shaped requests: total output throughput against per-request output speed, one point per concurrency level](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol2-nemotron/figures/pareto_chat_dark.png)
+
 Nemotron 3 Nano (30B total / 3.5B active, NVFP4) on one RTX 5090 with NIM 2.0.12: memory, speed, long context, concurrency and answer quality. Nemotron Nano 9B v2 is shown as a reference point.
 
 - **It fits with room to spare:** about 21 GiB at 32 sequences, about 25 GiB at the image default of 256 (4k context).

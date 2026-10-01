@@ -52,7 +52,7 @@ For bf16, use profile `092ed4213624e774d24cdaf84e3b6222839bab2008a21d3c214ab4662
 
 **The same sweep as a curve.** Total output throughput against the number of concurrent requests, both on logarithmic axes. A line is the run of the table above; the diamonds at 1, 2 and 4 are a separate run that located the crossover; the faint markers are the rechecks with the card otherwise idle; a hollow marker means the p99 time to first token is over 2 s, outside the MLPerf server target.
 
-![Llama 3.1 8B on one RTX 5090: total output throughput against concurrent requests for NIM FP8, NIM bf16, Ollama 4-bit and Ollama 16-bit](figures/throughput_concurrency_light.png)
+![Llama 3.1 8B on one RTX 5090: total output throughput against concurrent requests for NIM FP8, NIM bf16, Ollama 4-bit and Ollama 16-bit](figures/throughput_concurrency_dark.png)
 
 *Dashed segments: this run has no level between 1 and 8; the diamonds at 2 and 4 come from a separate run.*
 
