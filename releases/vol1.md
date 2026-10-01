@@ -2,7 +2,7 @@ Forum post: <https://forums.developer.nvidia.com/t/why-nim-llama-3-1-8b-on-one-r
 
 ![Why NIM on one RTX 5090](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol1-nim/figures/cover_vol1.png)
 
-![Total output throughput against the number of concurrent requests, for NIM FP8, NIM bf16, Ollama 4-bit and Ollama 16-bit](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol1-nim/figures/throughput_concurrency_light.png)
+![Total output throughput against the number of concurrent requests, for NIM FP8, NIM bf16, Ollama 4-bit and Ollama 16-bit](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol1-nim/figures/throughput_concurrency_dark.png)
 
 Llama 3.1 8B Instruct on one RTX 5090 with NIM 2.0.12, from one request at a time up to 128, with Ollama as the reference point.
 
