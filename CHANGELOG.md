@@ -2,6 +2,11 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-10-02 · Vol.2 forum post published
+
+- **Vol.2 forum post:** the article was posted on the NVIDIA Developer Forum on 2026-10-02. The link is on the front page, at the top of [`vol2-nemotron/README.md`](vol2-nemotron/README.md) and in `releases/vol2.md`. → <https://forums.developer.nvidia.com/t/nemotron-3-nano-on-one-rtx-5090-with-nim-300-tok-s-flat-to-120k-context-128-concurrent-requests/384859>
+- **Where the figures are in the thread:** the cover illustration and the chat figure are in the post; the RAG figure is in reply #2, because a new forum account may attach two images per post.
+
 ## 2026-10-02 · Vol.2: a cover illustration; the figures say "per request"
 
 - **Cover illustration** for Vol.2, without text or numbers ([`vol2-nemotron/figures/cover_vol2.png`](vol2-nemotron/figures/cover_vol2.png)), shown in the README and in `releases/vol2.md` together with the chat figure.

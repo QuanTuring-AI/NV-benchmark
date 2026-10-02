@@ -1,5 +1,7 @@
 # Vol.2 · Nemotron 3 Nano on one RTX 5090 with NIM: ~300 tok/s, flat to 120k context, 128 concurrent requests
 
+Forum post: <https://forums.developer.nvidia.com/t/nemotron-3-nano-on-one-rtx-5090-with-nim-300-tok-s-flat-to-120k-context-128-concurrent-requests/384859>
+
 > **Reproduce:** `git checkout vol2`. That tag is the repository as the Vol.2 article describes it: every run of this volume through 2026-10-01 and this README. The harnesses are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory.
 
 We wanted to know what Nemotron 3 Nano (30B total / 3.5B active, hybrid Mamba-2 + MoE) actually does on a single RTX 5090. So we ran it through NIM 2.0.12 with the NVFP4 profile and measured five things: memory, speed, long context, concurrency and answer quality. Nemotron Nano 9B v2, the other Nemotron option NIM offers for this card, is in the tables as a reference point.
