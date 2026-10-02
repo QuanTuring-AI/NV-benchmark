@@ -45,7 +45,7 @@ That is the NVFP4 profile, everything else at the image default; this is what th
 |---|---|---|
 | Memory the container adds at its smallest working budget (4k context, 32 sequences) | **21.0 GiB** | 21.9 GiB |
 | Single-stream generation, median | **305 tok/s** | 73 tok/s |
-| Time to finish an answer, median (`max_tokens` 4096) | **7.3 s** | 20.1 s |
+| Time to finish an answer, median (`max_tokens` 4096) | **7.31 s** | 20.1 s |
 | Generation at ~1k / ~14k / ~120k tokens of context | **305 / 315 / 308 tok/s** | 72 / 45 / 52 tok/s |
 | Most concurrent chat requests inside the MLPerf server target | **128** (image default, 256 sequences) | 8 (32 sequences) |
 | Same, RAG-shaped prompts | **8** | 4 |
@@ -88,7 +88,7 @@ In the files, **A2** and **N3** are Nemotron 3 Nano (NIM 2.0.12, NVFP4); **A1** 
 | 4.1× the 9B v2 in tokens per second | 4.1× | `results/p50_speed/analysis.json` | `conclusions.A2_over_A1.generation_rate.ratio_of_means` | rounds |
 | An answer comes back 2.9× faster | 2.9× | `results/p53_answer/analysis.json` | `1 / conclusions.A2_over_A1.total_latency_ms.ratio_of_means` | rounds |
 | … because it writes about 1.4× more tokens | 1.4× | `results/p53_answer/analysis.json` | `conclusions.A2_over_A1.completion_tokens.ratio_of_means` | rounds |
-| Time to finish an answer, median, s: Nemotron 3 Nano · 9B v2 | 7.3 · 20.1 | `results/p53_answer/analysis.json` | `conclusions.per_arm.{A2,A1}.total_latency_ms.p50 / 1000` | rounds |
+| Time to finish an answer, median, s: Nemotron 3 Nano · 9B v2 | 7.31 · 20.1 | `results/p53_answer/analysis.json` | `conclusions.per_arm.{A2,A1}.total_latency_ms.p50 / 1000` | rounds |
 | Generation at ~1k · ~14k tokens of context (Nemotron 3 Nano) | 305 · 315 | `results/p53_longctx_addendum/analysis.json` | `per_arm.A2.depths.{1024,16384}.generation_tps_p50` | rounds |
 | … at ~120k | 308 | `results/p55_longctx_120k/analysis.json` | `conditions.a2_120k.generation_tps_p50` | rounds |
 | 9B v2 at ~1k · ~14k | 72 · 45 | `results/p53_longctx/analysis.json` | `per_arm.A1.depths.{1024,16384}.generation_tps_p50` | rounds |
@@ -98,11 +98,13 @@ In the files, **A2** and **N3** are Nemotron 3 Nano (NIM 2.0.12, NVFP4); **A1** 
 | RAG-shaped prompts: the limit is 8 (first night) | 8 | `results/p55_concurrency_a2_256/analysis.json` | `sweeps.A2\|R\|main.conclusions.max_concurrency_within_server_slo` | equals |
 | … second night: void by its own rule | null | `results/p80_rerun/slo_ceilings.json` | `groups.s256_R.p80.conclusions` | equals |
 | … second night, the latency test alone | 8 | `results/p80_rerun/slo_ceilings.json` | `groups.s256_R.p80.largest_level_inside_slo_without_p1.server` | equals |
+| RAG-shaped prompts: total throughput at its highest level, tok/s (first night, c=128 · second night, c=256) | 2,133 · 2,246 | `results/p55_concurrency_a2_256/analysis.json` | `{sweeps.A2\|R\|main.levels[7].output_tps,results/p80_rerun/slo_ceilings.json::groups.s256_R.levels[8].p80_tps}` | rounds |
 | 9B v2, chat: 16 the first night | 16 | `results/p53_concurrency_v2/analysis.json` | `sweeps.A1\|C\|main.conclusions.max_concurrency_within_server_slo` | equals |
 | 9B v2, chat: 8 the second night (shown in the table) | 8 | `results/p80_rerun/slo_ceilings.json` | `groups.v2_A1_C.p80.conclusions.max_concurrency_within_server_slo` | equals |
 | 9B v2, RAG-shaped: 4, both nights | 4 · 4 | `results/p53_concurrency_v2/analysis.json` | `{sweeps.A1\|R\|main.conclusions.max_concurrency_within_server_slo,results/p80_rerun/slo_ceilings.json::groups.v2_A1_R.p80.conclusions.max_concurrency_within_server_slo}` | rounds |
 | GSM8K · MMLU sample, reasoning on (Nemotron 3 Nano) | 95.7% · 88.0% | `results/p78_quality/analysis.json` | `cells.N3\|{on_gsm8k_1,on_mmlu}.accuracy_pct` | rounds |
 | GSM8K · MMLU sample, reasoning on (9B v2) | 95.2% · 84.0% | `results/p78_quality/analysis.json` | `cells.N2\|{on_gsm8k_1,on_mmlu}.accuracy_pct` | rounds |
+| … the MMLU sample: 2,850 questions | 2,850 | `results/p78_quality/analysis.json` | `cells.N3\|on_mmlu.items` | rounds |
 | Reasoning off: points lower on GSM8K · MMLU | 5.5 · 12.3 | `results/p78_quality/analysis.json` | `models.N3.{Q2_gsm8k_on_minus_off,Q2_mmlu_on_minus_off}.diff_pp` | rounds |
 | On MMLU the median answer fell from 198 tokens to 7 | 198 · 7 | `results/p78_quality/analysis.json` | `models.N3.reasoning_really_off.mmlu.{on_median,off_median}` | rounds |
 | Upstream vLLM with NIM's arguments ÷ NIM, at 1 · 8 · 32 · 64 · 128 | 1.01 · 1.01 · 1.02 · 1.01 · 1.03 | `results/p78_nim_vs_vllm/analysis.json` | `P4.ratio_V3B2_over_N3_by_level.{1,8,32,64,128}` | rounds |
