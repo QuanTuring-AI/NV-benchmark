@@ -2,7 +2,7 @@
 
 *Run on 2026-10-02, 04:26–06:18 (+0800), one judge container on the card at a time. Every judge read the same stored text; no answer was generated. This is working data of the judge study and has not been published as an article.*
 
-**What is in this directory, and what is not.** The per-arm summaries, the side-by-side table, the pre-registration, the checks and the run log are here. **The per-item verdict files are not in this commit**; their SHA-256 are recorded in each arm's `cells.jsonl` (`result_sha256`) and in `summary.json` (`files_read`). The text of the test sets, the judges' raw answers and their reasoning are not in this repository at all: files here carry item ids, SHA-256, lengths, labels and counts.
+**What is in this directory, and what is not.** The pre-registration, the run log, and for every arm its own directory with the per-item verdict files, the cell records, the prechecks and the summary. A per-item line holds the item id, the verdict, the rail's decision where there is one, token counts, the duration and SHA-256 values; each file's own SHA-256 is recorded in the arm's `cells.jsonl` (`result_sha256`) and in `summary.json` (`files_read`). The text of the test sets, the judges' raw answers and their reasoning are not in this repository: files here carry item ids, SHA-256, lengths, labels, verdicts and counts.
 
 **Scope rule.** Every figure is about one arm. Nothing here combines the per-item verdicts of two arms (no agreement between judges, no joint misses, no paired differences, no votes). [`table.md`](table.md) lists the arms side by side, each with its own Wilson 95% interval, and is built from the per-arm summaries only.
 
@@ -164,6 +164,7 @@ Full records: [`events.jsonl`](events.jsonl) (every gate, start, precheck and ce
 - Context 8,192 tokens for every server.
 - The second judging runs in a newly started container, after all first judgings.
 - Subset sizes: 200 per track at c=1; 200 input + 100 output for the second judging; 100 + 100 for the Guardrails path.
+- **Two requests were sent to a server during a timed cell.** To record the vLLM version, `GET /version` and `GET /v1/models` were sent by hand between 05:12:10 and 05:12:40; the J4 input c=1 cell ran from 05:12:14 to 05:12:32, so they very probably fell inside it. Neither request generates tokens; the cell (200 calls, p50 89 ms) was not repeated.
 - The vLLM version shown as `None` in `events.jsonl` (`vllm_version_in_log`) is a pattern in the runner that did not match this version's log line; the running server's own `/version` endpoint answered `0.20.2`.
 
 ## Files
@@ -174,10 +175,15 @@ items.jsonl · subsets.json · items_summary.json   the items (ids, labels, hash
 events.jsonl                      the run, step by step
 table.md · table.json             the arms side by side, from the summaries
 J0 … J6, J4G, J5G /
+  <track>_<mode>.jsonl            one line per judged item: item_id, verdict, status, rail (arms through Guardrails), finish_reason,
+                                  token counts, duration, SHA-256 of the answer and of the reasoning (no text). Modes: c1, c16,
+                                  stability (the second judging), gr_path (J4G / J5G)
   summary.json                    the arm's figures
   cells.jsonl                     one record per cell (window, counts, request shape, SHA-256 of its per-item file)
   precheck_<track>[_stability].json   controls, reasoning switch, connection check
   gr_config/                      the rail config as used (arms through Guardrails)
 ```
+
+To recompute an arm's figures from its per-item files: `python ../../scripts/p93_analyze.py --arm J4` (it reads that arm's directory, the item table and the subsets, and nothing else).
 
 Harness: `../../scripts/p93_*.py` (`p93_run.py` runs the whole plan; `p93_judge.py` one cell; `p93_analyze.py --arm X` one arm; `p93_table.py` the table; `p93_mock_server.py` is a stand-in server for harness tests only).
