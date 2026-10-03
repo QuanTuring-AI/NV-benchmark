@@ -117,6 +117,7 @@ Full records: [`events.jsonl`](events.jsonl) (every gate, start, precheck and ce
 
 - **The parser check is 100 items of one judge.** It shows that the rail's decisions follow the answers again; the judge's quality with reasoning on is the J2 line of the judge study (read from the answers, on the whole track).
 - **Other models, other NIM versions and other parser names were not tried.**
+- **The host was not left alone during the Llama Guard 3 cells.** While its four cells ran (23:00:18 to 23:02:26), short commands that had nothing to do with the run were started on the same host: web requests to other sites, small file reads, a listing of containers. None of them was a request to the model server. Their effect on the durations was not measured and the cells were not repeated. The verdict counts do not hang on timing: in each track the c=1 and the c=16 cell gave the same outcome for 200 of 200 items.
 - **No statement across judges.** Llama Guard 3's lines stand beside the other arms' lines, each with its own interval; whether two judges flag the same items is outside this study by design.
 - **A third cell exists in the harness and was not run.** `p102_cells.py n2` and `p102_analyze.py --arm N2R` are a path for Nemotron Nano 9B v2 at c=1. It was not in this run's plan and there is no result for it.
 
