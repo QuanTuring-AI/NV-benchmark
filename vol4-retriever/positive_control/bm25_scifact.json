@@ -1,0 +1,60 @@
+{
+ "what": "our metric program on Pyserini's BM25 ranking of BEIR SciFact, against the published scores",
+ "published": {
+  "source": "pyserini/2cr/beir.yaml, condition bm25-flat, dataset scifact",
+  "repository": "https://github.com/castorini/pyserini",
+  "commit": "2aa191adb329",
+  "commit_date": "2026-09-30",
+  "nDCG@10": 0.6789,
+  "R@100": 0.9253,
+  "R@1000": 0.9767,
+  "command": "python -m pyserini.search.lucene --threads 16 --batch-size 128 --index beir-v1.0.0-scifact.flat --topics beir-v1.0.0-scifact-test --output run.beir.bm25-flat.scifact.txt --output-format trec --hits 1000 --bm25 --remove-query"
+ },
+ "ranking": {
+  "file": "run.beir.bm25-flat.scifact.txt",
+  "sha256": "04cbcf1249e848ea915156359b49b56f6ccce781b01f3e89540eaf3b04859e19",
+  "lines": 294041,
+  "queries": 300,
+  "kept": "outside the repository (a ranking of a data set's passage ids)"
+ },
+ "qrels": {
+  "file": "scifact/qrels/test.tsv of the BEIR zip",
+  "sha256": "0864bb985e0ca2367ba217977e72004d549054b2b06666ed9d4825ac7c21284c",
+  "queries": 300,
+  "rows": 339
+ },
+ "ours": {
+  "program": "scripts/retrieval_metrics.py",
+  "nDCG@10": 0.6789094274508308,
+  "R@100": 0.9253333333333335,
+  "queries_scored": 300,
+  "queries_with_results": 300,
+  "metric_library": {
+   "distribution": "pytrec-eval-terrier",
+   "version": "0.5.10"
+  }
+ },
+ "rounded_to_four_decimals": {
+  "nDCG@10": 0.6789,
+  "R@100": 0.9253
+ },
+ "verdict": "identical to the published four decimals",
+ "controls_that_must_fail": {
+  "qrels_given_to_the_wrong_queries": {
+   "nDCG@10": 0.006666666666666667,
+   "R@100": 0.025,
+   "fails_as_it_should": true
+  },
+  "half_of_the_queries_removed_from_the_ranking": {
+   "nDCG@10": 0.3400601929816791,
+   "R@100": 0.4626666666666667,
+   "queries_counted_as_zero": 150,
+   "fails_as_it_should": true
+  }
+ },
+ "pyserini_own_evaluation_of_the_same_ranking": {
+  "ndcg_cut_10": 0.6789,
+  "recall_100": 0.9253,
+  "recall_1000": 0.9767
+ }
+}

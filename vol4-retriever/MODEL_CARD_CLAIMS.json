@@ -1,0 +1,116 @@
+{
+ "what": "Scores the publishers of the retrieval models report for them, copied from the model cards with their conditions. Nothing here was measured in this repository.",
+ "read_on": "2026-10-03",
+ "our_data_sets": ["BEIR SciFact (test)", "BEIR HotpotQA (test)", "MIRACL zh (dev)", "MIRACL ja (dev)"],
+ "summary": {
+  "cells_that_can_be_reproduced_on_our_data_sets": 0,
+  "why": "Every figure on the cards is an average over a group of data sets (Recall@5 or nDCG@10). HotpotQA is one member of a four-set average whose other members we do not hold; the MIRACL figures are on an internal, subsampled version over 26 languages; SciFact is not named in any group. No card gives a per-data-set value.",
+  "nearest_public_per_language_figures": "The public MTEB results repository holds, for nvidia/Nemotron-3-Embed-1B-BF16, per-language results on MIRACLRetrievalHardNegatives (dev): zh nDCG@10 0.64244, ja nDCG@10 0.74194. That task uses a reduced corpus with hard negatives, not the full MIRACL corpus; reproducing it needs that task's own data set."
+ },
+ "models": [
+  {
+   "model": "llama-nemotron-embed-1b-v2",
+   "nim_image": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2",
+   "card": {"url": "https://huggingface.co/nvidia/llama-nemotron-embed-1b-v2", "revision": "113abe4acafa848e77ead9c0623205e511932348", "file": "README.md"},
+   "conditions": {
+    "evaluated_with": "offline, on A100 GPUs, with the model's PyTorch checkpoint (the card says so; not with the NIM)",
+    "metric": "Recall@5, averaged over the data sets of each group",
+    "max_sequence_length_tokens": 8192,
+    "query_prefix_in_the_card_example": "query:",
+    "passage_prefix_in_the_card_example": "passage:",
+    "embedding_dimension": "2048 (384, 512, 768, 1024 or 2048 can be chosen)"
+   },
+   "claims": [
+    {"group": "NQ, HotpotQA, FiQA, TechQA", "metric": "average Recall@5", "variant": "embedding dim 2048", "value_percent": 68.60, "on_our_data_sets": false},
+    {"group": "NQ, HotpotQA, FiQA, TechQA", "metric": "average Recall@5", "variant": "embedding dim 384", "value_percent": 64.48, "on_our_data_sets": false},
+    {"group": "MIRACL, 15 languages + 11 translated (internal version with hard negatives, reduced corpus)", "metric": "average Recall@5", "variant": "embedding dim 2048", "value_percent": 60.75, "on_our_data_sets": false},
+    {"group": "MIRACL, 15 languages + 11 translated (internal version with hard negatives, reduced corpus)", "metric": "average Recall@5", "variant": "embedding dim 384", "value_percent": 58.62, "on_our_data_sets": false},
+    {"group": "MLQA, 42 cross-language pairs", "metric": "average Recall@5", "variant": "embedding dim 2048", "value_percent": 79.86, "on_our_data_sets": false},
+    {"group": "MLQA, 42 cross-language pairs", "metric": "average Recall@5", "variant": "embedding dim 384", "value_percent": 71.61, "on_our_data_sets": false},
+    {"group": "MLDR, 12 languages", "metric": "average Recall@5", "variant": "embedding dim 2048", "value_percent": 59.55, "on_our_data_sets": false},
+    {"group": "MLDR, 12 languages", "metric": "average Recall@5", "variant": "embedding dim 384", "value_percent": 54.77, "on_our_data_sets": false}
+   ],
+   "same_table_baseline": {"BM25, NQ + HotpotQA + FiQA + TechQA, average Recall@5": 44.67}
+  },
+  {
+   "model": "llama-nemotron-rerank-1b-v2",
+   "nim_image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2",
+   "card": {"url": "https://huggingface.co/nvidia/llama-nemotron-rerank-1b-v2", "revision": "828765652b05bd439c9789d2a6d093db1caa1443", "file": "README.md"},
+   "conditions": {
+    "pipeline": "the reranker applied to candidates retrieved by llama-nemotron-embed-1b-v2; the number of candidates is not stated on the card",
+    "metric": "Recall@5, averaged over the data sets of each group",
+    "max_sequence_length_tokens": 8192,
+    "prompt_template_in_the_card_example": "question:{query} \\n \\n passage:{passage}"
+   },
+   "claims": [
+    {"group": "NQ, HotpotQA, FiQA, TechQA", "metric": "average Recall@5", "variant": "embed-1b-v2 + rerank-1b-v2", "value_percent": 73.64, "on_our_data_sets": false},
+    {"group": "MIRACL, 15 languages + 11 translated (custom subsampled version)", "metric": "average Recall@5", "variant": "embed-1b-v2 + rerank-1b-v2", "value_percent": 65.80, "on_our_data_sets": false},
+    {"group": "MLQA, 42 cross-language pairs", "metric": "average Recall@5", "variant": "embed-1b-v2 + rerank-1b-v2", "value_percent": 86.83, "on_our_data_sets": false},
+    {"group": "MLDR", "metric": "average Recall@5", "variant": "embed-1b-v2 + rerank-1b-v2", "value_percent": 70.69, "on_our_data_sets": false}
+   ]
+  },
+  {
+   "model": "llama-nemotron-embed-vl-1b-v2",
+   "nim_image": "nvcr.io/nim/nvidia/llama-nemotron-embed-vl-1b-v2",
+   "card": {"url": "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2", "revision": "582e3bf72aee355e3c59ed89de53543c5b0657ee", "file": "README.md", "also": "https://build.nvidia.com/nvidia/llama-nemotron-embed-vl-1b-v2/modelcard"},
+   "conditions": {
+    "metric": "Recall@5, averaged",
+    "max_context_length_evaluated_tokens": 10240,
+    "text_modality_max_length_in_the_card_example": 8192,
+    "embedding_dimension": 2048
+   },
+   "claims": [
+    {"group": "BEIR retrieval + TechQA (text, chunk retrieval)", "metric": "average Recall@5", "value_percent": 69.19, "on_our_data_sets": false},
+    {"group": "MIRACL (text)", "metric": "average Recall@5", "value_percent": 60.48, "on_our_data_sets": false},
+    {"group": "MLQA (text)", "metric": "average Recall@5", "value_percent": 79.90, "on_our_data_sets": false},
+    {"group": "MLDR (text)", "metric": "average Recall@5", "value_percent": 60.09, "on_our_data_sets": false},
+    {"group": "average of the four text groups", "metric": "average Recall@5", "value_percent": 67.42, "on_our_data_sets": false},
+    {"group": "visual document retrieval: DC10k, Earnings V2, ViDoRe V1, V2, V3", "metric": "average Recall@5", "variant": "text", "value_percent": 71.04, "on_our_data_sets": false},
+    {"group": "visual document retrieval: DC10k, Earnings V2, ViDoRe V1, V2, V3", "metric": "average Recall@5", "variant": "image", "value_percent": 71.20, "on_our_data_sets": false},
+    {"group": "visual document retrieval: DC10k, Earnings V2, ViDoRe V1, V2, V3", "metric": "average Recall@5", "variant": "image + text", "value_percent": 73.24, "on_our_data_sets": false}
+   ]
+  },
+  {
+   "model": "nemotron-3-embed-1b",
+   "nim_image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b",
+   "card": {"url": "https://build.nvidia.com/nvidia/nemotron-3-embed-1b/modelcard", "open_weights": ["https://huggingface.co/nvidia/Nemotron-3-Embed-1B-BF16", "https://huggingface.co/nvidia/Nemotron-3-Embed-1B-NVFP4"]},
+   "conditions": {
+    "metric": "nDCG@10, averaged over each benchmark's tasks",
+    "evaluated_at_sequence_length_tokens": 4096,
+    "max_sequence_length_tokens": 32768,
+    "embedding_dimension": "2048 (the first 1024 or 512 can be kept; normalise again)",
+    "note": "the NVFP4 figure on RTEB was evaluated on a GB200 GPU"
+   },
+   "claims": [
+    {"group": "RTEB, 16 public tasks", "metric": "average nDCG@10", "variant": "BF16", "value_percent": 72.38, "on_our_data_sets": false},
+    {"group": "RTEB, 16 public tasks", "metric": "average nDCG@10", "variant": "NVFP4", "value_percent": 72.00, "on_our_data_sets": false},
+    {"group": "ViDoRe-V3, eight text data sets", "metric": "average nDCG@10", "variant": "BF16", "value_percent": 57.76, "on_our_data_sets": false},
+    {"group": "ViDoRe-V3, eight text data sets", "metric": "average nDCG@10", "variant": "NVFP4", "value_percent": 57.50, "on_our_data_sets": false},
+    {"group": "MMTEB (Retrieval)", "metric": "average nDCG@10", "variant": "BF16", "value_percent": 71.05, "on_our_data_sets": false},
+    {"group": "MMTEB (Retrieval)", "metric": "average nDCG@10", "variant": "NVFP4", "value_percent": 70.59, "on_our_data_sets": false}
+   ],
+   "third_party_hosted_results": {
+    "source": "https://github.com/embeddings-benchmark/results, results/nvidia__Nemotron-3-Embed-1B-BF16/f880174635613cff04033875fc6a69296cb72006/MIRACLRetrievalHardNegatives.json (repository commit 06d725d601e1, 2026-10-02)",
+    "task": "MIRACLRetrievalHardNegatives, dev split, MTEB 2.14.3",
+    "zh": {"ndcg_at_10": 0.64244, "recall_at_100": 0.99022},
+    "ja": {"ndcg_at_10": 0.74194, "recall_at_100": 0.99243},
+    "on_our_data_sets": false,
+    "why": "a reduced corpus with hard negatives, not the full MIRACL corpus"
+   }
+  },
+  {
+   "model": "llama-nemotron-embed-300m-v2",
+   "nim_image": "nvcr.io/nim/nvidia/llama-nemotron-embed-300m-v2",
+   "card": null,
+   "searched": ["https://build.nvidia.com/nvidia/llama-nemotron-embed-300m-v2/modelcard (the site's not-found page)", "https://build.nvidia.com/nvidia/llama-3_2-nemoretriever-300m-embed-v2/modelcard, the link the support matrix gives (the site's not-found page)", "the NGC catalog's model page (asks for a login)", "Hugging Face under nvidia/ with the current and the earlier name (no repository)"],
+   "claims": []
+  },
+  {
+   "model": "llama-nemotron-rerank-500m-v2",
+   "nim_image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-500m-v2",
+   "card": null,
+   "searched": ["https://build.nvidia.com/nvidia/llama-3_2-nemoretriever-500m-rerank-v2/modelcard, the link the support matrix gives (the site's not-found page)", "the NGC catalog's model page (asks for a login)", "Hugging Face under nvidia/ with the current and the earlier name (no repository)"],
+   "claims": []
+  }
+ ]
+}
