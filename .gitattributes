@@ -256,3 +256,11 @@ vol3-judges/results/p93_judges/J*/output_*.jsonl -text
 vol3-judges/scripts/p102_analyze.py -text
 vol3-judges/scripts/p102_cells.py -text
 vol3-judges/scripts/p102_run.py -text
+# P102 per-item files: each is bound by result_sha256 in LG3/cells.jsonl or in its setting's passthrough.json
+vol3-judges/results/p102_followup/LG3/input_*.jsonl -text
+vol3-judges/results/p102_followup/LG3/output_*.jsonl -text
+vol3-judges/results/p102_followup/passthrough/*/input_gr100.jsonl -text
+# Rail config files as used: each is bound by config.files in the cell and precheck records beside it. They are stored
+# with LF; without this rule a checkout that converts line endings writes them with CRLF and the digest no longer verifies.
+vol3-judges/results/p93_judges/J*/gr_config/*.yml -text
+vol3-judges/results/p102_followup/passthrough/*/gr_config/*.yml -text

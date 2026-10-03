@@ -21,6 +21,8 @@
 
 Sampling is greedy (temperature 0.0) for every arm. Guardrails is 0.24.1, the newest release on the day.
 
+*Added on 2026-10-03, in its own directory ([`../p102_followup/`](../p102_followup/README.md)): Llama Guard 3 8B as a reference arm on upstream vLLM, and a check of arm J2 with a reasoning parser on the server side.*
+
 ## The text
 
 | Set | Items used | Harmful / harmless | Licence |
@@ -97,7 +99,7 @@ Through Guardrails' content-safety rail, one call at a time on the 100-item inpu
 
 ### The rail and the verdict are not always the same thing
 
-For J2 (Nemotron 3 Nano with reasoning on, through the self-check rail) the library's action **blocked every item: 2,423 of 2,423 in the input track and 813 of 813 in the output track**, harmless ones included. The judge's own answers were readable: read after the reasoning, they flag 66.5% of the harmful Aegis prompts and 10.9% of the harmless ones. The cause is in how the reasoning arrives: this NIM returns the reasoning inline in the answer, closed by `</think>` with no opening tag (2,419 of 2,423 answers; the other 4 were cut by the output limit). Guardrails 0.24.1 removes a reasoning block only when both tags are present, logs the answer as malformed, and hands the whole text to the yes/no parser, which treats anything that is not a clean "no" as a block. With reasoning off (J3) the same rail's decisions follow the answers.
+For J2 (Nemotron 3 Nano with reasoning on, through the self-check rail) the library's action **blocked every item: 2,423 of 2,423 in the input track and 813 of 813 in the output track**, harmless ones included. The judge's own answers were readable: read after the reasoning, they flag 66.5% of the harmful Aegis prompts and 10.9% of the harmless ones. The cause is in how the reasoning arrives: this NIM returns the reasoning inline in the answer, closed by `</think>` with no opening tag (2,419 of 2,423 answers; the other 4 were cut by the output limit). Guardrails 0.24.1 removes a reasoning block only when both tags are present, logs the answer as malformed, and hands the whole text to the yes/no parser, which treats anything that is not a clean "no" as a block. With reasoning off (J3) the same rail's decisions follow the answers. A follow-up check started the same NIM with a reasoning parser (`NIM_PASSTHROUGH_ARGS="--reasoning-parser nemotron_v3"`): on 100 input items the rail then blocked 45 and allowed 55, after blocking 100 of 100 without the argument in the same session ([`../p102_followup/`](../p102_followup/README.md)).
 
 For J5G the reasoning arrives with both tags and the library removes it before parsing; the content-safety rail's decisions follow the answers there (no answer was left unparsed in the 200 items).
 
