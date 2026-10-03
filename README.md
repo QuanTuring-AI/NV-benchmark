@@ -1,8 +1,8 @@
 <div align="center">
 
-# NIM on one RTX 5090: Llama 3.1 8B and Nemotron 3 Nano, measured
+# NVIDIA's inference stack on one RTX 5090, measured
 
-### QuanTuring · NV-benchmark · Llama 3.1 8B and Nemotron on a single RTX 5090 (Blackwell, sm_120)
+### QuanTuring · NV-benchmark · Pre-registered measurements of NIM, Nemotron and NeMo Guardrails on a single RTX 5090 (Blackwell, sm_120), one volume at a time
 
 [![NVIDIA Inception](https://img.shields.io/badge/NVIDIA-Inception%20Member-76B900?logo=nvidia&logoColor=white)](https://www.nvidia.com/en-us/startups/)
 [![NVIDIA NIM](https://img.shields.io/badge/NVIDIA-NIM%202.0.12-76B900?logo=nvidia&logoColor=white)](#)
@@ -19,15 +19,17 @@
 
 | Volume | Topic | Page | Release |
 |---|---|---|---|
-| **Vol.1** | Why NIM? Llama 3.1 8B on one RTX 5090, 1 to 128 concurrent requests | [`vol1-nim/README.md`](vol1-nim/README.md) | [Releases → `vol1`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol1) |
-| **Vol.2** | Nemotron 3 Nano on one RTX 5090 with NIM | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) | [Releases → `vol2`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol2) |
-| **Vol.3** | NIM × NeMo Guardrails baseline (study in progress) | [`vol3-judges/README.md`](vol3-judges/README.md) | at publication |
+| **Vol.1** | **NIM for LLMs.** Why NIM? Llama 3.1 8B on one RTX 5090, 1 to 128 concurrent requests | [`vol1-nim/README.md`](vol1-nim/README.md) | [Releases → `vol1`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol1) |
+| **Vol.2** | **Nemotron on NIM.** Nemotron 3 Nano on one RTX 5090 with NIM | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) | [Releases → `vol2`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol2) |
+| **Vol.3** | **Judges in NeMo Guardrails on NIM.** Baseline data published; the judge study (verdict quality against latency) is in progress | [`vol3-judges/README.md`](vol3-judges/README.md) | at publication |
+| **Vol.4** | **NeMo Retriever.** Embedding and reranking NIMs on one card (planned) | — | — |
+| **Vol.5** | **The NVIDIA RAG Blueprint on one card.** The whole pipeline end to end (planned) | — | — |
 
-Each volume's page opens with its headline and a run command, then gives a **claim → evidence** table (every number, its file, its key), how it was measured, and the measurement conditions including what we could not explain. The March 2026 original of Vol.1 is archived in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md), frozen as published; Vol.4–5 (NeMo Retriever and Nemotron in a RAG system) are planned.
+Each volume's page opens with its headline and a run command, then gives a **claim → evidence** table (every number, its file, its key), how it was measured, and the measurement conditions including what we could not explain. The March 2026 original of Vol.1 is archived in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md), frozen as published.
 
 ## What this repository is
 
-Measurements of NVIDIA's inference stack on one workstation GPU. The stack covers NIM, NeMo Guardrails and Nemotron. Each volume follows the same method:
+Measurements of NVIDIA's inference stack on one workstation GPU. So far the stack covers NIM, Nemotron and NeMo Guardrails; NeMo Retriever and the RAG Blueprint come next. Each volume follows the same method:
 - Every measurement is pre-registered before its first container: predictions and rules in a file whose SHA-256 is fixed before the run.
 - Container images are recorded by digest.
 - Each arm passes a health gate: an engine that runs from system memory instead of the GPU is caught before any comparison.
