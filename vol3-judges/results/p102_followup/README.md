@@ -66,19 +66,21 @@ This was checked for one model, one NIM version and one parser name, on 100 item
 | The 45 Vol.1 questions (15 adversarial / 30 others) | 14 of 15 | 0 of 30 | 0 | — |
 | Aegis 2.0 responses (394 harmful / 419 harmless) | 51.3% [46.3, 56.2] (202) | 4.1% [2.5, 6.4] (17) | 0 | 0.743 / 0.659 |
 
-**What a verdict costs**
+**What a verdict costs** (this run; the same four cells were run twice more on 2026-10-04, and the three runs are side by side in [`../lg3_timing_repeats/`](../lg3_timing_repeats/README.md))
 
 | Track | c=1, per verdict p50 / p99 (200 items) | c=16, verdicts per second (whole track) | c=16, per verdict p50 / p99 | Output tokens p50 / p99 | Same outcome at c=1 and c=16 |
 |---|---|---|---|---|---|
 | Input | 51 ms / 106 ms | 98.1 (2,423 calls in 24.7 s) | 148 ms / 372 ms | 3 / 6 | 200 of 200 |
 | Output | 52 ms / 101 ms | 64.8 (813 calls in 12.5 s) | 232 ms / 399 ms | 3 / 6 | 200 of 200 |
 
+Over the three runs the c=16 rate stayed within 4% (input 98.1, 95.3, 94.6 verdicts per second; output 64.8, 64.1, 63.4); it is the figure to quote for this arm's speed. The c=1 median did not hold: 51, 60 and 66 ms on the input track, 52, 64 and 64 ms on the output track. It is given as that range and with its boundary: client wall time, a new connection per call, on a host whose published container port adds about 3 or about 19 ms to a call.
+
 **Limits of this arm**
 
 - **Its taxonomy is not the data sets' taxonomy.** The model card says Llama Guard 3 is trained to label 14 categories: the 13 hazards of the MLCommons taxonomy and code-interpreter abuse. The Aegis and XSTest labels follow those data sets' own definitions of harm. The figures say how often "unsafe under its own categories" coincides with the data set's label. The general-purpose judges of the judge study have the same kind of limit, for another reason (they were asked about a short company policy).
 - **The model card's own figures are on another test set.** The card of the pinned revision reports, for English and the unquantized model on Meta's internal test set for the MLCommons taxonomy: prompt classification F1 0.947 with a false-positive rate of 0.057; response classification F1 0.939 with 0.040. They are given here for scale only. This run neither reproduces nor contradicts them: the test sets and the label definitions differ.
 - **Durations are those of vLLM 0.20.2 with the bf16 weights**, a new connection per call, on this card. They are not durations of a NIM.
-- **One run per cell.** The c=1 and c=16 cells judged the same 200 items of each track with the same outcome; that shows the judge repeats itself at temperature 0.0, not an interval on its durations.
+- **One run per cell in this directory; three runs of the timed cells in all.** Here the c=1 and c=16 cells judged the same 200 items of each track with the same outcome. Across the three containers of the three runs, 2 to 4 of the 2,423 input items and 0 to 3 of the 813 output items came out differently ([`../lg3_timing_repeats/`](../lg3_timing_repeats/README.md)).
 
 ## Written before the run
 
@@ -117,7 +119,7 @@ Full records: [`events.jsonl`](events.jsonl) (every gate, start, precheck and ce
 
 - **The parser check is 100 items of one judge.** It shows that the rail's decisions follow the answers again; the judge's quality with reasoning on is the J2 line of the judge study (read from the answers, on the whole track).
 - **Other models, other NIM versions and other parser names were not tried.**
-- **The host was not left alone during the Llama Guard 3 cells.** While its four cells ran (23:00:18 to 23:02:26), short commands that had nothing to do with the run were started on the same host: web requests to other sites, small file reads, a listing of containers. None of them was a request to the model server. Their effect on the durations was not measured and the cells were not repeated. The verdict counts do not hang on timing: in each track the c=1 and the c=16 cell gave the same outcome for 200 of 200 items.
+- **The host was not left alone during the Llama Guard 3 cells of this run.** While its four cells ran (23:00:18 to 23:02:26), short commands that had nothing to do with the run were started on the same host: web requests to other sites, small file reads, a listing of containers. None of them was a request to the model server. The four cells were run again twice on 2026-10-04 with nothing started from the measuring session ([`../lg3_timing_repeats/`](../lg3_timing_repeats/README.md)): this run's c=1 medians are lower than both repeats, not higher, and its c=16 rates are within 4% of them. There is no sign that those commands slowed this run; what the repeats did show is that the c=1 median of this arm changes from session to session for a reason on the host's side of the connection.
 - **No statement across judges.** Llama Guard 3's lines stand beside the other arms' lines, each with its own interval; whether two judges flag the same items is outside this study by design.
 - **A third cell exists in the harness and was not run.** `p102_cells.py n2` and `p102_analyze.py --arm N2R` are a path for Nemotron Nano 9B v2 at c=1. It was not in this run's plan and there is no result for it.
 
