@@ -35,9 +35,19 @@ Machine-readable copy with every number, condition and source: [`MODEL_CARD_CLAI
 
 **Which figures fall on the data sets this volume uses (SciFact, HotpotQA, MIRACL zh and ja): none.** Every figure is an average over a group. HotpotQA is one of four members of a group; the cards' MIRACL figures are on an internal, subsampled version over 26 languages; SciFact is in no named group. A card figure can therefore not serve as a per-data-set target for this volume.
 
-The nearest public per-language figures are not on a card: the MTEB results repository holds, for `nvidia/Nemotron-3-Embed-1B-BF16`, `MIRACLRetrievalHardNegatives` (dev): zh nDCG@10 0.64244, ja 0.74194 (<https://github.com/embeddings-benchmark/results>, commit `06d725d601e1`). That task uses a reduced corpus, so it is a different measurement from the full MIRACL corpus.
+### What the MTEB results repository holds (kept apart from the cards)
 
-Open weights for the newest model exist under names that differ from the NIM's: `nvidia/Nemotron-3-Embed-1B-BF16` (revision `c0c9fea93ea4`) and `nvidia/Nemotron-3-Embed-1B-NVFP4` (revision `f630128278eb`), both under OpenMDW 1.1.
+<https://github.com/embeddings-benchmark/results> at commit `4abe26c645a2` (2026-10-03): 710 model folders, 12 of them NVIDIA's. Machine-readable copy: [`MODEL_CARD_CLAIMS.json`](MODEL_CARD_CLAIMS.json) → `mteb_results`.
+
+| Model of this volume | Folder | On SciFact, HotpotQA, MIRACL zh or ja |
+|---|---|---|
+| `llama-nemotron-embed-1b-v2`, `llama-nemotron-embed-300m-v2`, `llama-nemotron-rerank-1b-v2`, `llama-nemotron-rerank-500m-v2` | none | 0 results |
+| `llama-nemotron-embed-vl-1b-v2` | `nvidia__llama-nemotron-embed-vl-1b-v2` (19 result files) | 0: its `MIRACLRetrieval` file holds one language, Korean |
+| `nemotron-3-embed-1b` (open weights `nvidia/Nemotron-3-Embed-1B-BF16`) | `nvidia__Nemotron-3-Embed-1B-BF16` (118 result files) | 0 on the four data sets. It has `MIRACLRetrievalHardNegatives` for 18 languages, zh and ja among them; `MIRACLReranking` for German only; `LMEB_SciFact`, another packaging of SciFact (1,936 documents and queries together, against 5,183 passages and 300 test queries in the BEIR packaging); and a Dutch translation of SciFact |
+
+The two values this volume takes as its model-level reference come from the third row: `MIRACLRetrievalHardNegatives`, dev, nDCG@10 **0.64244 (zh)** and **0.74194 (ja)**. That task has a reduced corpus, so it is a different measurement from the full MIRACL corpus. Its conditions, each with its source: [`MTEB_REFERENCE.md`](MTEB_REFERENCE.md).
+
+Open weights for that model exist under names that differ from the NIM's: `nvidia/Nemotron-3-Embed-1B-BF16` and `nvidia/Nemotron-3-Embed-1B-NVFP4` (revision `f630128278eb`), both under OpenMDW 1.1 and neither gated. The published result names the BF16 revision `f880174635613cff04033875fc6a69296cb72006`; the repository's newest commit on the day (`c0c9fea93ea4`) differs from it in `README.md` only.
 
 ## 3 · What the support matrices say about this card and about WSL2
 
@@ -80,5 +90,6 @@ Pyserini's reproduction file for BEIR, `pyserini/2cr/beir.yaml` (<https://github
 | SciFact (BEIR packaging) | <https://github.com/allenai/scifact>; packaged by <https://github.com/beir-cellar/beir> | the BEIR zip, MD5 `5f7d1de60b170fc8027bb7898e2efca1` (the value in the BEIR README) | claims and annotations CC BY 4.0; abstracts ODC-By 1.0 |
 | HotpotQA (BEIR packaging) | <https://hotpotqa.github.io/>; packaged by BEIR | the BEIR zip, MD5 `f412724f78b0d91183a0e86805e16114` | CC BY-SA 4.0 |
 | MIRACL zh, ja | <https://github.com/project-miracl/miracl>; files from `miracl/miracl` (revision `5be20db9…9c00`) and `miracl/miracl-corpus` (revision `d921ec7e…8f0d`) on Hugging Face | dev split | Apache-2.0 |
+| MIRACL, reduced task of MTEB (`MIRACLRetrievalHardNegatives`), zh and ja | <https://huggingface.co/datasets/mteb/MIRACLRetrievalHardNegatives>, the data set the MTEB task definition names | revision `d7d94fa4b946cec4a27c84653aa0cf6b33f74a3c`, dev split; six parquet files (corpus, queries, qrels per language) | CC BY-SA 4.0 (the data-set card and the MTEB task definition) |
 
 No data set file is in this repository. The readers take the folder that holds the downloads as an argument.

@@ -1,0 +1,214 @@
+{
+ "what": "Pre-registration of the first GPU session of Vol.4 (NeMo Retriever on one RTX 5090) with two preparatory cells of Vol.5",
+ "draft": false,
+ "written_at": "2026-10-04T12:12:17+0800",
+ "session": {
+  "card": "one RTX 5090 (32 GB), Windows 11 + Docker Desktop (WSL2)",
+  "window": "2026-10-04, from the freeze of this file to 17:30 local time at the latest",
+  "order": "P1, P2, P3, P4 as listed below; a cell that has not started by 17:30 is not run and is reported as not run with its reason",
+  "no_positive_control_is_skipped_to_save_time": true
+ },
+ "rules": {
+  "timed_and_untimed": "A cell has a timed part (a throughput figure) and an untimed part (encoding or reranking the whole data set for the quality figures). A timed part is one blocking call during which nothing else is started on the host from this session; the idle-card gate runs right before it. Wall times of untimed parts are recorded and are not reported as speeds.",
+  "gate": "tools/g8_gate.py (utilization p50 <= 2 % and power p50 <= 45 W over 10 s) before every container start and every timed part. Each gate also records the memory the desktop holds on the card (when no container of the session is running) or the growth since the container reported ready, the number of game-launcher processes and the containers that are running. 512 MiB more desktop memory than at the first gate of the session is flagged in the record; it is not a stop.",
+  "start_conditions_of_a_timed_part": "the gate passes, no container of another session is running, no game-launcher process is running",
+  "stop": "if a game process or another session's container appears, the running cell finishes and no new cell starts",
+  "one_variable": "two cells that are compared differ in one thing; whatever else had to change is listed with the cell and is not absorbed",
+  "raw_output": "vectors, run files and container logs are kept outside the repository; the repository gets the metrics, the per-query values, the timings and the records"
+ },
+ "method_from_this_volume_on": {
+  "client": "the timing client runs in a container on the same Docker network as the NIM (image vol4-client:py312, built from client/Dockerfile), so that no host port forwarding is in the path; one kept connection; the batch size is fixed per cell",
+  "server_side": "where a NIM has a Prometheus endpoint (/v1/metrics) it is read before and after a timed part and kept beside the client's figure",
+  "why": "on this host a new connection to a published container port costs about 3 ms or about 19 ms (two clusters), in shares that drift between sessions; found in the judge study of Vol.3"
+ },
+ "data": {
+  "miracl-hn-zh / miracl-hn-ja": {
+   "source": "mteb/MIRACLRetrievalHardNegatives @ d7d94fa4b946cec4a27c84653aa0cf6b33f74a3c, dev (the non-v2 task of MTEB)",
+   "counts": "81,309 passages / 393 queries; 185,319 / 860; checked by retrieval_datasets.check_published_counts before every cell"
+  },
+  "beir-scifact": {
+   "source": "the BEIR zip, MD5 5f7d1de60b170fc8027bb7898e2efca1, test",
+   "counts": "5,183 passages / 300 queries"
+  },
+  "not_in_this_session": "HotpotQA and the full MIRACL corpus (millions of passages)",
+  "token_counts_known_before_the_run": {
+   "miracl-hn-zh": {
+    "file_sha256": "02a853670f3e92ea2d2aaa5ed96871abd451f533c5433bef9b0c8e0fe7012da7",
+    "queries_longer_than_4096": 0,
+    "passages_longer_than_4096": 1,
+    "passages": 81309,
+    "longest_passage_tokens": 4119,
+    "passage_tokens_total": 11730495
+   },
+   "miracl-hn-ja": {
+    "file_sha256": "df470d8a6af8a2a142d0e040db02990d2b8bdb74b6f5a8127d44f4bdf82e7de5",
+    "queries_longer_than_4096": 0,
+    "passages_longer_than_4096": 3,
+    "passages": 185319,
+    "longest_passage_tokens": 10427,
+    "passage_tokens_total": 30052275
+   },
+   "beir-scifact": {
+    "file_sha256": "0438ca9c7217f865a31e9e9ed116ad8add07e79b14b4b2de0614fb3d8469f49a",
+    "queries_longer_than_4096": 0,
+    "passages_longer_than_4096": 0,
+    "passages": 5183,
+    "longest_passage_tokens": 1905,
+    "passage_tokens_total": 1628358
+   }
+  }
+ },
+ "metrics": {
+  "quality": "nDCG@10 and Recall@100 by scripts/retrieval_metrics.py (pytrec_eval), after an exact cosine search over the whole corpus that keeps 1,000 per query (scripts/score_run.py); the same program for every cell",
+  "speed": "passages per second: the first 4,096 passages of the corpus in file order, 64 per request, one discarded pass over the first 4 batches, then 3 timed passes; the median of the three is the figure and all three are kept"
+ },
+ "P1_reference_arm": {
+  "what": "the open weights on the reduced MIRACL task, through this repository's own programs (not through MTEB), with the conditions of the published result as listed in MTEB_REFERENCE.md",
+  "weights": {
+   "repo": "nvidia/Nemotron-3-Embed-1B-BF16",
+   "revision": "f880174635613cff04033875fc6a69296cb72006",
+   "model_safetensors_sha256": "f959c3b04e66b42de280bfb97c140cb7e0bfe25e3ecb0b4464c68a8436b2d04f"
+  },
+  "environment": {
+   "python": "3.11.13",
+   "torch": "2.11.0+cu130",
+   "sentence-transformers": "5.4.1",
+   "transformers": "5.5.0",
+   "why_these": "the versions the model repository records it was saved with (config_sentence_transformers.json); the versions of the published MTEB result are not recorded anywhere"
+  },
+  "conditions": {
+   "loader": "SentenceTransformer(path, device='cuda', processor_kwargs={'model_max_length': 4096})",
+   "prefixes": {
+    "query": "query: ",
+    "passage": "passage: "
+   },
+   "passage_text": "title + ' ' + text, stripped",
+   "pooling_and_normalisation": "the model's own modules (mean pooling including the prompt, Normalize)",
+   "precision": "as stored (bfloat16)",
+   "batch": 16,
+   "batch_note": "the batch size of the published result is not recorded; 16 is what the same results folder records for most other tasks",
+   "search": "exact cosine, 1,000 per query"
+  },
+  "seen_before_the_freeze_on_the_cpu": "the loader gives max_seq_length 4096, bfloat16 parameters and the two prefixes; transformers prints 'Unrecognized keys in rope_parameters for rope_type=yarn: {apply_yarn_scaling}' while loading, so one configuration key of the model is not used by this transformers version",
+  "target": {
+   "zh_ndcg_at_10": 0.64244,
+   "ja_ndcg_at_10": 0.74194,
+   "source": "MTEB results repository, commit 4abe26c645a2adec358ce761c1dded42a5b6e6fa"
+  },
+  "branches_decided_in_advance": {
+   "a": "both languages within 0.005 of the target: this repository's path is accepted and the NIM cells on this task are a comparison against a reproduced reference",
+   "b": "a difference above 0.005 in either language: MTEB 2.14.3 itself is run once on zh with the same weights and conditions. MTEB reproduces and this path does not: this path is wrong, the NIM comparison on this task is stopped and that is reported. Neither reproduces: the environment differs in a condition that is not recorded; the difference is reported as measured, the NIM cells run and are labelled 'control not reproduced'. No parameter is tuned until the figure fits."
+  },
+  "expectation": "branch a. The risk that is known: the unrecorded conditions, and the configuration key this transformers version does not use."
+ },
+ "P1_nim_same_task": {
+  "image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2",
+  "image_digest": "nvcr.io/nim/nvidia/nemotron-3-embed-1b@sha256:16f49c13bc9ee101f4abfaba972b2dc2e587871ab7474913ac40dbf0bffb7d92",
+  "weights": "fetched earlier by the NIM's own download-only mode; model.safetensors byte-identical to the open weights",
+  "profiles": "the documentation of 2.x says there is no list-model-profiles step: kernels are picked at start-up and the precision can be set with NIM_ENGINE_PRECISION (fp16, fp8, nvfp4). The command is tried once and its answer is recorded.",
+  "cell_A": "the NIM as it starts with nothing set: the precision and engine it reports are recorded from its log",
+  "cell_B": "a precision equal to the reference arm's (bf16) if the NIM offers one. The documented values do not include bf16; if cell A did not run in fp16, one cell pinned to fp16 (the documented 16-bit value) is run and is labelled as fp16, not as bf16. If cell A already ran in fp16, there is no cell B.",
+  "request": {
+   "input_type": "query / passage on every request",
+   "truncate": "END",
+   "batch": 64,
+   "text": "as in the reference arm but without a prefix written by the client"
+  },
+  "variables_of_the_serving_path_checked_one_by_one": {
+   "input_type_and_prefix": "eight queries and eight passages: the NIM's vector with input_type against the reference arm's vector of the same text; the same text sent with the other input_type; the prefix written by the client in addition to input_type (is it applied twice)",
+   "truncation": "the number of passages and queries above 4,096 tokens is counted beforehand (above); one over-long input is sent with truncate END and with NONE and the answers are recorded",
+   "vector_size": "expected 2,048; a request with dimensions=1024 is sent once"
+  },
+  "controls": {
+   "positive": "the smoke step before a cell: finite vectors of unit length and expected size; a passage is nearest to itself when sent in another batch size",
+   "negative": "a query sent with input_type passage must not give the query-mode vector (cosine below 0.999 for at least one of eight); if it does, input_type has no effect and the cell is reported as such"
+  },
+  "branch_decided_in_advance": "the image does not start on this card (its support matrix does not list the RTX 50 series): the error text is the result of the cell and the session goes on",
+  "expectation": "it starts and runs in a 16-bit precision; nDCG@10 within 0.01 of the reference arm in both languages. Speed: recorded, no expectation."
+ },
+ "P2_method_cell": {
+  "what": "the same NIM, the same requests (the timed part on miracl-hn-zh), once with the client in the container on the Docker network and once with the client on the host through the published port (a new connection per request, and one kept connection)",
+  "reported": "passages per second and the per-request durations of each of the three ways, side by side",
+  "expectation": "per-request durations through the host port with a new connection per request fall into two groups about 16 ms apart; in the container they do not"
+ },
+ "P2_other_embedding_nims": {
+  "images": {
+   "llama-nemotron-embed-1b-v2": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2:1.13.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2@sha256:3c22c0bd8d36dcdee4c46ff371951bb83ec537361db5d6b5737b5c4ecbec92ae"
+   },
+   "llama-nemotron-embed-300m-v2": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-300m-v2:1.13.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-embed-300m-v2@sha256:1f0a7fc168919d7b84bb4edfb4a4da0c5828d11ee284f9fb8113242b3b35cbb4"
+   },
+   "llama-nemotron-embed-vl-1b-v2": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-vl-1b-v2:2.3.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-embed-vl-1b-v2@sha256:93a3f17fa7d0b5ef1d31765a1eab4662669483bf85f2101a2c460aedd9b45480"
+   }
+  },
+  "data": [
+   "beir-scifact",
+   "miracl-hn-zh",
+   "miracl-hn-ja"
+  ],
+  "request": "input_type on every request, truncate END, 64 per request",
+  "recorded_per_nim": "version, digest, the profile or precision it selects, seconds to ready, what it downloads at its first start, the card's memory once ready, the three figures per data set",
+  "targets": "none: no published per-data-set value exists for these models on these data sets (MODEL_CARD_CLAIMS.json). The figures are reported as measured; nothing is called a reproduction.",
+  "branch_decided_in_advance": "an image that does not start: its error text is recorded and the session goes on"
+ },
+ "P3_reranking": {
+  "images": {
+   "llama-nemotron-rerank-1b-v2": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2:1.10.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2@sha256:cab08cc2b620235f6d75bb7ee198d13352f61ae48285524e304f2904380ea8ca"
+   },
+   "llama-nemotron-rerank-500m-v2": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-500m-v2:1.10.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-rerank-500m-v2@sha256:3e39d44bdb3dd683d6a2ac8d7689b484aee6c18dc7e00c2064f19501742720f3"
+   }
+  },
+  "input": "the first 100 results per query of the P1 NIM (cell A) on beir-scifact, miracl-hn-zh and miracl-hn-ja",
+  "request": "one call per query with its 100 passages, truncate END",
+  "rule": "at most 512 passages per call; scores of separate calls are never combined",
+  "reported": "nDCG@10 before and after reranking, side by side; passage-query pairs per second (first 40 queries, 3 timed passes)",
+  "if_the_P1_NIM_did_not_run": "the first-stage ranking is the reference arm's, and that is stated with the figures"
+ },
+ "P4_vol5_preparation": {
+  "nano_context": {
+   "image": "nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12",
+   "image_digest": "nvcr.io/nim/nvidia/nemotron-3-nano@sha256:bd38d2d5438950b49427ee41944ee04f84cd38383265add8df2230480539e6f9",
+   "what": "the smallest memory budget with which Nemotron 3 Nano starts and answers, at 8,192 and at 16,384 tokens of context",
+   "method": "the method of Vol.2's footprint addendum (vol2-nemotron/results/p50_footprint_addendum2): same precision and same max_num_seqs, only the context changes. The program is that harness if it takes the context as an argument; otherwise a program written after this freeze from the same method, whose SHA-256 is written to the events file before its first container."
+  },
+  "ocr_smoke": {
+   "image": "nvcr.io/nim/nvidia/nemotron-ocr-v1:1.3.0",
+   "image_digest": "nvcr.io/nim/nvidia/nemotron-ocr-v1@sha256:a26c233f7ad7f675008fcfdcb743dc6f26f4d6838a6e23f887370d3db9df8304",
+   "what": "start the container, send one request with a public example image, record the HTTP status",
+   "why": "a forum report (topic 351835) says version 1.1.0 answers 500 on an RTX 5090 under WSL2",
+   "both_outcomes_are_results": true
+  },
+  "if_time_runs_out": "P4 is dropped as a whole and reported as not run"
+ },
+ "not_in_this_session": [
+  "HotpotQA and the full MIRACL corpus",
+  "the RAG Blueprint as a whole",
+  "a reference arm with the NVFP4 open weights",
+  "any further measurement for Vol.3"
+ ],
+ "client_image": {
+  "image": "vol4-client:py312",
+  "id": "sha256:508c8afd39e88409f5766df957acd0c8758ef453e32a3eda64e1bbcbff7afa8c"
+ },
+ "harness_sha256": {
+  "scripts/embed_cell.py": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "scripts/score_run.py": "a96f43db8df6dd4813ba25f850aac936b404a50e5d18d73c66c94d8a9318163b",
+  "scripts/rerank_cell.py": "689b3e791cd198e6b2a6e7dbaecf04157081c1383ff1259168f0579ef6e29fc1",
+  "scripts/run_step.py": "3468e40ba41085aff2233f6f526f43bf7bbed953894984ddc515b5ff1d10a143",
+  "scripts/retrieval_datasets.py": "699a7681569f61c9c66980a8ec91341b9e45a7836a28686cf7888b8bda174d18",
+  "scripts/retrieval_metrics.py": "db1ddd18f78484d998bdd700311fa4e67bfd62fc702a389a2ebddab3f77c61e5",
+  "scripts/nim_retrieval_clients.py": "706b960a71e583143969794f14138c93304dc6623d9c62fa1082866819a26cf2",
+  "client/Dockerfile": "886ebed74c074a9836f89c0a0d1bdad1bad5db737259b7d4900dbd24dd191dc7",
+  "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb"
+ },
+ "programs_written_after_the_freeze": "only the P4 programs, as stated there; each records its SHA-256 in the events file before its first use"
+}

@@ -6,13 +6,14 @@
 
 | Path | What it is |
 |---|---|
-| [`scripts/retrieval_datasets.py`](scripts/retrieval_datasets.py) | readers for BEIR SciFact, BEIR HotpotQA, MIRACL zh and ja: one interface for corpus, queries and qrels |
+| [`scripts/retrieval_datasets.py`](scripts/retrieval_datasets.py) | readers for BEIR SciFact, BEIR HotpotQA, MIRACL zh and ja, and the reduced MIRACL task of MTEB (zh and ja): one interface for corpus, queries and qrels |
 | [`scripts/retrieval_metrics.py`](scripts/retrieval_metrics.py) | nDCG@10 and Recall@100 with `pytrec_eval`; every definition that decides a digit is written at the top of the file |
 | [`scripts/nim_retrieval_clients.py`](scripts/nim_retrieval_clients.py) | the request bodies for the embedding and reranking NIMs, built from the OpenAPI files NVIDIA publishes |
 | [`scripts/mock_nim_server.py`](scripts/mock_nim_server.py) | a stand-in server for the client tests |
-| [`tests/`](tests/) | 36 unit tests (4 more run when the downloaded data sets are present) |
+| [`tests/`](tests/) | 40 unit tests (6 more run when the downloaded data sets are present) |
 | [`positive_control/`](positive_control/) | the tool check: Pyserini's BM25 on SciFact, scored by our metric program |
-| [`SOURCES.md`](SOURCES.md), [`MODEL_CARD_CLAIMS.json`](MODEL_CARD_CLAIMS.json) | what the documentation, the model cards and the issue trackers say, with links and the date they were read |
+| [`MTEB_REFERENCE.md`](MTEB_REFERENCE.md) | the model-level reference: two values from the public MTEB results, and every condition of them with the file it was read from |
+| [`SOURCES.md`](SOURCES.md), [`MODEL_CARD_CLAIMS.json`](MODEL_CARD_CLAIMS.json) | what the documentation, the model cards, the MTEB results repository and the issue trackers say, with links and the date they were read |
 
 ## The tool check
 
@@ -32,6 +33,14 @@ Before the metric program scores anything of ours, it has to give the published 
 
 This checks the metric program and the qrels reader. It says nothing about a NIM.
 
+## The model-level reference (not run yet)
+
+The tool check cannot show that a model is asked the right way: the prefix of a query and of a passage, where an over-long input is cut, how the similarity is computed. For that this volume uses two values someone else published for a model whose weights are open: the MTEB results repository's nDCG@10 of `nvidia/Nemotron-3-Embed-1B-BF16` on the task `MIRACLRetrievalHardNegatives`, **0.64244 (zh) and 0.74194 (ja)**.
+
+The plan has two steps, neither of which has been run: first the open weights on that task with the conditions of the published result, to see whether this harness arrives at the two values; then the NIM of the same model on the same task. [`MTEB_REFERENCE.md`](MTEB_REFERENCE.md) lists the conditions, each with its source, and the ones that are recorded nowhere.
+
+On the other data sets of this volume (SciFact, HotpotQA, the full MIRACL corpus in zh and ja) no published per-data-set score of these models exists; results there will be reported as measured, without a claim of having reproduced an official score.
+
 ## Run the tests
 
 ```bash
@@ -46,13 +55,19 @@ VOL4_DATASETS=/path/to/datasets python -m pytest vol4-retriever/tests -q
 
 ## What the tests can and cannot show
 
-- **The metric tests** work each small case out by hand in a comment and compare the digits. A mutation check was run against them: fifteen single changes to the code (a cut-off, the averaging rule, the tie order, a dropped zero judgement, an unsorted answer, …), each in a copy; the tests fail for all fifteen.
+- **The metric tests** work each small case out by hand in a comment and compare the digits. A mutation check was run against the tests: 22 single changes to the code (a cut-off, the averaging rule, the tie order, a dropped zero judgement, an unsorted answer, the reduced MIRACL task served from the full MIRACL corpus, …), each in a copy; the tests fail for all 22. The first run of that check found one test that passed with its rule broken (it claimed to check that an over-large corpus is refused without being read to the end, and did not count what was read); the test was corrected.
 - **The client tests run against a stand-in server.** The stand-in was written from the same published OpenAPI files as the client, so it checks the server we imagine. Which fields a real NIM needs, how it orders its answer, what it does with an over-long input and what an error looks like are settled by the first start of a real NIM, not by these tests.
 
 ## Data sets
 
 Read from a folder outside the repository (`--datasets DIR` or `VOL4_DATASETS`), in the layout their publishers ship. Sources, versions and licences are in [`SOURCES.md`](SOURCES.md) §6. The counts of the downloaded files match the published ones: SciFact 5,183 passages and 300 test queries; HotpotQA 5,233,329 and 7,405; MIRACL zh 4,934,368 and 393 dev queries; MIRACL ja 6,953,614 and 860.
 
+The reduced MIRACL task (`miracl-hn-zh`, `miracl-hn-ja`) has the same queries and judgements as MIRACL dev over a much smaller corpus: 81,309 passages (zh) and 185,319 (ja). Because nothing but the size of the corpus tells the two apart, the reader carries the published counts and `check_published_counts` refuses a corpus of another size:
+
+```bash
+python vol4-retriever/scripts/retrieval_datasets.py --datasets /path/to/datasets --name miracl-hn-zh --check-published
+```
+
 ## What the model cards do not give
 
-No model card reports a per-data-set score on the four data sets above: the cards give averages over groups of data sets ([`SOURCES.md`](SOURCES.md) §2). A check of the kind "our harness reproduces the card's number for this model on this data set" is therefore not available from the cards.
+No model card reports a per-data-set score on the four data sets above: the cards give averages over groups of data sets ([`SOURCES.md`](SOURCES.md) §2). A check of the kind "our harness reproduces the card's number for this model on this data set" is therefore not available from the cards. The public MTEB results repository has no result on those four data sets either, and no folder at all for four of the six models; what it does have is the reduced MIRACL task for one model, which is why that task was added ([`SOURCES.md`](SOURCES.md) §2, [`MODEL_CARD_CLAIMS.json`](MODEL_CARD_CLAIMS.json) → `mteb_results`).
