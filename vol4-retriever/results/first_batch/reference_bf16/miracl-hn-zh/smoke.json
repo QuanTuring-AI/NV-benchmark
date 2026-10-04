@@ -1,0 +1,74 @@
+{
+ "at": "2026-10-04T12:13:01+0800",
+ "dataset": "miracl-hn-zh",
+ "encoder": {
+  "backend": "st",
+  "model_path_basename": "nemotron-3-embed-1b-bf16-open-weights",
+  "model_safetensors_sha256": "f959c3b04e66b42de280bfb97c140cb7e0bfe25e3ecb0b4464c68a8436b2d04f",
+  "versions": {
+   "torch": "2.11.0+cu130",
+   "sentence-transformers": "5.4.1",
+   "transformers": "5.5.0",
+   "numpy": "2.4.6"
+  },
+  "device": "cuda:0",
+  "parameter_dtype": "torch.bfloat16",
+  "max_seq_length": 4096,
+  "tokenizer_model_max_length": 4096,
+  "prompts": {
+   "query": "query: ",
+   "document": "passage: "
+  },
+  "similarity_fn_name": "cosine",
+  "modules": [
+   "Transformer",
+   "Pooling",
+   "Normalize"
+  ],
+  "processor_kwargs": {
+   "model_max_length": 4096
+  },
+  "gpu": "NVIDIA GeForce RTX 5090"
+ },
+ "checks": {
+  "queries": {
+   "count": 8,
+   "size": 2048,
+   "all_finite": true,
+   "norm_min": 0.9983429908752441,
+   "norm_max": 1.0021036863327026,
+   "size_as_expected": true
+  },
+  "passages": {
+   "count": 56,
+   "size": 2048,
+   "all_finite": true,
+   "norm_min": 0.9970051646232605,
+   "norm_max": 1.0032618045806885,
+   "size_as_expected": true
+  },
+  "same_passage_other_batch_size_cosine_min": 0.999970555305481,
+  "nearest_is_itself": 8,
+  "of": 8
+ },
+ "pass": true,
+ "program": {
+  "file": "embed_cell.py",
+  "sha256": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "argv": [
+   "smoke",
+   "--backend",
+   "st",
+   "--dataset",
+   "miracl-hn-zh",
+   "--datasets",
+   "datasets",
+   "--model-path",
+   "nemotron-3-embed-1b-bf16-open-weights",
+   "--dim",
+   "2048",
+   "--out",
+   "smoke.json"
+  ]
+ }
+}

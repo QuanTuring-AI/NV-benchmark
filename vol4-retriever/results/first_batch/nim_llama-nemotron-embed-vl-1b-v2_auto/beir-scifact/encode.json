@@ -1,0 +1,124 @@
+{
+ "what": "every query and passage of the data set encoded; wall times are recorded and are not throughput figures",
+ "start": "2026-10-04T06:00:08+0000",
+ "end": "2026-10-04T06:00:40+0000",
+ "dataset": "beir-scifact",
+ "split": "test",
+ "encoder": {
+  "backend": "nim",
+  "url": "http://p109_embedvl:8000",
+  "model": "nvidia/llama-nemotron-embed-vl-1b-v2",
+  "truncate": "END",
+  "connection": "one kept connection",
+  "server": {
+   "/v1/models": {
+    "status": 200,
+    "body": {
+     "object": "list",
+     "data": [
+      {
+       "id": "nvidia/llama-nemotron-embed-vl-1b-v2",
+       "object": "model",
+       "created": 1791093372,
+       "owned_by": "nvidia"
+      }
+     ]
+    }
+   },
+   "/v1/metadata": {
+    "status": 200,
+    "body": {
+     "version": "2.3.0",
+     "modelInfo": [
+      {
+       "modelUrl": "nvidia/llama-nemotron-embed-vl-1b-v2",
+       "shortName": "llama-nemotron-embed-vl-1b-v2"
+      }
+     ],
+     "assetInfo": [
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/model.safetensors",
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/config.json",
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/tokenizer.json",
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/tokenizer_config.json",
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/special_tokens_map.json",
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/processor_config.json"
+     ],
+     "licenseInfo": {
+      "name": "LICENSE",
+      "path": "LICENSE",
+      "sha": "34d2b75b79866a9c35e2abd8d1cdd9be11f07d4f",
+      "size": 623,
+      "url": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-community-models-license/",
+      "type": "file",
+      "content": "**GOVERNING DOWNLOAD TERMS:** The NIM container is governed by the [NVIDIA Software License Agreement](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/) and [Product-Specific Terms for AI Products](https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/). Use of this model is governed by the [NVIDIA Open Model License](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-license/). ADDITIONAL INFORMATION: [Llama 3.2 Community License Agreement](https://www.llama.com/llama3_2/license/). Built with Llama."
+     },
+     "repository_override": "",
+     "selectedModelProfileId": "N/A",
+     "backend": "rust"
+    }
+   },
+   "/v1/health/ready": {
+    "status": 200,
+    "body": {
+     "object": "health.response",
+     "message": "ready",
+     "ready": true
+    }
+   }
+  }
+ },
+ "batch": 64,
+ "queries": {
+  "count": 300,
+  "size": 2048,
+  "all_finite": true,
+  "norm_min": 0.9999756217002869,
+  "norm_max": 1.0000252723693848,
+  "size_as_expected": true
+ },
+ "passages": {
+  "count": 5183,
+  "size": 2048,
+  "all_finite": true,
+  "norm_min": 0.9999741911888123,
+  "norm_max": 1.000028133392334,
+  "size_as_expected": true
+ },
+ "seconds": {
+  "queries": 1.0,
+  "passages": 29.9
+ },
+ "tokens_reported": {
+  "queries": 6748,
+  "passages": 1676690
+ },
+ "vectors": {
+  "folder": "beir-scifact",
+  "queries_sha256": "7e5312b10032b045613a551e0c0833c76be509ba8bd8c382a03c3493f68061c3",
+  "corpus_sha256": "23dec44fded30a80ce1b66c7b0cd3f15262e3b530671e2087bb8b85746750b58",
+  "ids_sha256": "515df2b4e40c753950f548669ecb426a58d01281142817a3f2be3d09359fb4be"
+ },
+ "program": {
+  "file": "embed_cell.py",
+  "sha256": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "argv": [
+   "encode",
+   "--backend",
+   "nim",
+   "--dataset",
+   "beir-scifact",
+   "--datasets",
+   "data",
+   "--url",
+   "http://p109_embedvl:8000",
+   "--model",
+   "nvidia/llama-nemotron-embed-vl-1b-v2",
+   "--batch",
+   "64",
+   "--emb-dir",
+   "beir-scifact",
+   "--out",
+   "encode.json"
+  ]
+ }
+}

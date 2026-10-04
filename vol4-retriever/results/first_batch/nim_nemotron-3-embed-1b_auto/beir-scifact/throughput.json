@@ -1,0 +1,152 @@
+{
+ "what": "timed passes over a fixed sample of the corpus",
+ "at": "2026-10-04T05:12:41+0000",
+ "dataset": "beir-scifact",
+ "encoder": {
+  "backend": "nim",
+  "url": "http://p109_n3embed_auto:8000",
+  "model": "nvidia/nemotron-3-embed-1b",
+  "truncate": "END",
+  "connection": "one kept connection",
+  "server": {
+   "/v1/models": {
+    "status": 200,
+    "body": {
+     "object": "list",
+     "data": [
+      {
+       "id": "nvidia/nemotron-3-embed-1b",
+       "object": "model",
+       "created": 1791089088,
+       "owned_by": "nvidia"
+      }
+     ]
+    }
+   },
+   "/v1/metadata": {
+    "status": 200,
+    "body": {
+     "version": "2.2.2",
+     "modelInfo": [
+      {
+       "modelUrl": "nvidia/nemotron-3-embed-1b",
+       "shortName": "nemotron-3-embed-1b"
+      }
+     ],
+     "assetInfo": [],
+     "licenseInfo": {
+      "name": "LICENSE",
+      "path": "LICENSE",
+      "sha": "34d2b75b79866a9c35e2abd8d1cdd9be11f07d4f",
+      "size": 623,
+      "url": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-community-models-license/",
+      "type": "file",
+      "content": "**GOVERNING DOWNLOAD TERMS:** The NIM container is governed by the [NVIDIA Software License Agreement](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/) and [Product-Specific Terms for AI Products](https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/). Use of this model is governed by the [NVIDIA Open Model License](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-license/). ADDITIONAL INFORMATION: [Llama 3.2 Community License Agreement](https://www.llama.com/llama3_2/license/). Built with Llama."
+     },
+     "repository_override": "",
+     "selectedModelProfileId": "N/A",
+     "backend": "rust"
+    }
+   },
+   "/v1/health/ready": {
+    "status": 200,
+    "body": {
+     "object": "health.response",
+     "message": "ready",
+     "ready": true
+    }
+   }
+  }
+ },
+ "sample": {
+  "passages": 4096,
+  "selection": "the first passages of the corpus in file order",
+  "characters": 6175931
+ },
+ "batch": 64,
+ "reps": 3,
+ "discarded": "one pass over the first 4 batches",
+ "passes": [
+  {
+   "start": "2026-10-04T05:11:21+0000",
+   "end": "2026-10-04T05:11:47+0000",
+   "seconds": 26.633,
+   "passages_per_s": 153.8,
+   "tokens_reported": 1292272,
+   "tokens_per_s": 48521.7,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9999664425849915,
+    "norm_max": 1.0000290870666504,
+    "size_as_expected": true
+   }
+  },
+  {
+   "start": "2026-10-04T05:11:47+0000",
+   "end": "2026-10-04T05:12:14+0000",
+   "seconds": 26.54,
+   "passages_per_s": 154.3,
+   "tokens_reported": 1292272,
+   "tokens_per_s": 48690.8,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9999664425849915,
+    "norm_max": 1.0000290870666504,
+    "size_as_expected": true
+   }
+  },
+  {
+   "start": "2026-10-04T05:12:14+0000",
+   "end": "2026-10-04T05:12:41+0000",
+   "seconds": 26.526,
+   "passages_per_s": 154.4,
+   "tokens_reported": 1292272,
+   "tokens_per_s": 48718.0,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9999664425849915,
+    "norm_max": 1.0000295639038086,
+    "size_as_expected": true
+   }
+  }
+ ],
+ "passages_per_s_median": 154.3,
+ "passages_per_s_min": 153.8,
+ "passages_per_s_max": 154.4,
+ "per_request_seconds": {
+  "count": 196,
+  "p50": 0.3979,
+  "p99": 0.4663
+ },
+ "program": {
+  "file": "embed_cell.py",
+  "sha256": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "argv": [
+   "throughput",
+   "--backend",
+   "nim",
+   "--dataset",
+   "beir-scifact",
+   "--datasets",
+   "data",
+   "--url",
+   "http://p109_n3embed_auto:8000",
+   "--model",
+   "nvidia/nemotron-3-embed-1b",
+   "--batch",
+   "64",
+   "--n",
+   "4096",
+   "--reps",
+   "3",
+   "--out",
+   "throughput.json"
+  ]
+ }
+}

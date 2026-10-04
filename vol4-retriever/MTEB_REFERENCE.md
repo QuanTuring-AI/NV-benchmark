@@ -1,6 +1,6 @@
 # Vol.4 · The model-level reference: two published values and the conditions behind them
 
-**Nothing in this file was measured here.** It records two values that the public MTEB results repository holds for the open weights of one of the models this volume serves, and every condition of them that could be found, each with the file and key it was read from. These conditions are the settings of the reference arm this volume will run first: the open weights on the same task. Whether that arm reproduces the two values is a result that does not exist yet.
+**Nothing in this file was measured here.** It records two values that the public MTEB results repository holds for the open weights of one of the models this volume serves, and every condition of them that could be found, each with the file and key it was read from. These conditions are the settings of the reference arm of this volume: the open weights on the same task. That arm ran on 2026-10-04 ([`results/first_batch/README.md`](results/first_batch/README.md) §1): the ja value was reproduced (+0.0019), the zh value was not (+0.021), and MTEB itself in the same environment gives this repository's zh figure, not the published one.
 
 ## The two values
 

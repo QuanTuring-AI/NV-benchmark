@@ -1,0 +1,154 @@
+{
+ "what": "timed passes over a fixed sample of the corpus",
+ "at": "2026-10-04T04:48:27+0000",
+ "dataset": "miracl-hn-ja",
+ "encoder": {
+  "backend": "nim",
+  "url": "http://p109_n3embed_auto:8000",
+  "model": "nvidia/nemotron-3-embed-1b",
+  "truncate": "END",
+  "connection": "one kept connection",
+  "server": {
+   "/v1/models": {
+    "status": 200,
+    "body": {
+     "object": "list",
+     "data": [
+      {
+       "id": "nvidia/nemotron-3-embed-1b",
+       "object": "model",
+       "created": 1791089089,
+       "owned_by": "nvidia"
+      }
+     ]
+    }
+   },
+   "/v1/metadata": {
+    "status": 200,
+    "body": {
+     "version": "2.2.2",
+     "modelInfo": [
+      {
+       "modelUrl": "nvidia/nemotron-3-embed-1b",
+       "shortName": "nemotron-3-embed-1b"
+      }
+     ],
+     "assetInfo": [],
+     "licenseInfo": {
+      "name": "LICENSE",
+      "path": "LICENSE",
+      "sha": "34d2b75b79866a9c35e2abd8d1cdd9be11f07d4f",
+      "size": 623,
+      "url": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-community-models-license/",
+      "type": "file",
+      "content": "**GOVERNING DOWNLOAD TERMS:** The NIM container is governed by the [NVIDIA Software License Agreement](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/) and [Product-Specific Terms for AI Products](https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/). Use of this model is governed by the [NVIDIA Open Model License](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-license/). ADDITIONAL INFORMATION: [Llama 3.2 Community License Agreement](https://www.llama.com/llama3_2/license/). Built with Llama."
+     },
+     "repository_override": "",
+     "selectedModelProfileId": "N/A",
+     "backend": "rust"
+    }
+   },
+   "/v1/health/ready": {
+    "status": 200,
+    "body": {
+     "object": "health.response",
+     "message": "ready",
+     "ready": true
+    }
+   }
+  }
+ },
+ "sample": {
+  "passages": 4096,
+  "selection": "the first passages of the corpus in file order",
+  "characters": 827236
+ },
+ "batch": 64,
+ "reps": 3,
+ "discarded": "one pass over the first 4 batches",
+ "passes": [
+  {
+   "start": "2026-10-04T04:47:33+0000",
+   "end": "2026-10-04T04:47:51+0000",
+   "seconds": 18.124,
+   "passages_per_s": 226.0,
+   "tokens_reported": 644343,
+   "tokens_per_s": 35552.5,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9999691247940063,
+    "norm_max": 1.0000293254852295,
+    "size_as_expected": true
+   }
+  },
+  {
+   "start": "2026-10-04T04:47:51+0000",
+   "end": "2026-10-04T04:48:09+0000",
+   "seconds": 18.121,
+   "passages_per_s": 226.0,
+   "tokens_reported": 644343,
+   "tokens_per_s": 35557.0,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9999691247940063,
+    "norm_max": 1.0000293254852295,
+    "size_as_expected": true
+   }
+  },
+  {
+   "start": "2026-10-04T04:48:09+0000",
+   "end": "2026-10-04T04:48:27+0000",
+   "seconds": 18.046,
+   "passages_per_s": 227.0,
+   "tokens_reported": 644343,
+   "tokens_per_s": 35706.5,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9999691247940063,
+    "norm_max": 1.0000298023223877,
+    "size_as_expected": true
+   }
+  }
+ ],
+ "passages_per_s_median": 226.0,
+ "passages_per_s_min": 226.0,
+ "passages_per_s_max": 227.0,
+ "per_request_seconds": {
+  "count": 196,
+  "p50": 0.2623,
+  "p99": 0.4063
+ },
+ "program": {
+  "file": "embed_cell.py",
+  "sha256": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "argv": [
+   "throughput",
+   "--backend",
+   "nim",
+   "--dataset",
+   "miracl-hn-ja",
+   "--datasets",
+   "data",
+   "--url",
+   "http://p109_n3embed_auto:8000",
+   "--model",
+   "nvidia/nemotron-3-embed-1b",
+   "--dim",
+   "2048",
+   "--batch",
+   "64",
+   "--n",
+   "4096",
+   "--reps",
+   "3",
+   "--out",
+   "throughput.json"
+  ]
+ }
+}

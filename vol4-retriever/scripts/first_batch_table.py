@@ -17,6 +17,26 @@ def load(*parts):
     return json.load(open(p, encoding="utf-8")) if os.path.isfile(p) else None
 
 
+def runs(e):
+    """Profile, engine and kernel set as the container's own start-up log names them (the lines kept in the event)."""
+    import re
+    text = "\n".join(e.get("log_lines_picked") or [])
+    out = []
+    m = re.search(r"NIM_MODEL_PROFILE is set to ([0-9a-f]{12})", text)
+    if m:
+        out.append(f"profile `{m.group(1)}…`")
+    m = re.search(r"/snapshots/([A-Za-z0-9_.\-]+)/model\.plan", text)
+    if m:
+        out.append(f"engine folder `{m.group(1)}`")
+    m = re.search(r"Loaded engine size: (\d+) MiB", text)
+    if m:
+        out.append(f"engine {m.group(1)} MiB")
+    m = re.search(r"(sm\d+)/kernel-cubin \((\d+) baked cubins\)", text)
+    if m:
+        out.append(f"{m.group(2)} kernel files for `{m.group(1)}` in the image")
+    return ", ".join(out) or "nothing about a profile or precision"
+
+
 events = [json.loads(l) for l in open(os.path.join(R, "events.jsonl"), encoding="utf-8")] if os.path.isfile(os.path.join(R, "events.jsonl")) else []
 arms = sorted(d for d in os.listdir(R) if os.path.isdir(os.path.join(R, d)) and (d.startswith("nim_") or d.startswith("reference_")) and "rerank" not in d)
 rerank = sorted(d for d in os.listdir(R) if os.path.isdir(os.path.join(R, d)) and "rerank" in d)
@@ -32,13 +52,15 @@ for arm in arms:
         q = f"{s['metrics']['ndcg_cut_10']:.5f} · {s['metrics']['recall_100']:.5f}" if s else "no score"
         sp = f"{t['passages_per_s_median']:.1f} ({t['passages_per_s_min']:.1f}–{t['passages_per_s_max']:.1f})" if t else "no timed passes"
         cells.append(f"{q} · {sp}")
+    if all(c == "not run" for c in cells):
+        continue                                   # a folder that holds only a probe is not an embedding cell
     print(f"| `{arm}` | " + " | ".join(cells) + " |")
 print("\nPublished values for the open weights of `nemotron-3-embed-1b` (MTEB results, nDCG@10): " + ", ".join(f"{d} {v}" for d, v in TARGET.items()) + ".\n")
 print("## Containers\n")
-print("| Tag | Image | Seconds to ready | Card memory at ready, MiB (before the start) | Outcome |"); print("|---|---|---|---|---|")
+print("| Tag | Image | Seconds to ready | Card memory at ready, MiB (before the start) | What its start-up log names | Outcome |"); print("|---|---|---|---|---|---|")
 for e in events:
     if e.get("kind") in ("nim_ready", "nim_not_ready", "nim_start_failed"):
-        print(f"| `{e['tag']}` | `{e.get('image', '')}` | {e.get('seconds_to_verdict', '')} | {(e.get('card') or {}).get('used_mib', '')} ({(e.get('card_before') or {}).get('used_mib', '')}) | {e['kind'].replace('nim_', '')}{': ' + str(e.get('reason')) if e.get('reason') else ''} |")
+        print(f"| `{e['tag']}` | `{e.get('image', '')}` | {e.get('seconds_to_verdict', '')} | {(e.get('card') or {}).get('used_mib', '')} ({(e.get('card_before') or {}).get('used_mib', '')}) | {runs(e)} | {e['kind'].replace('nim_', '')}{': ' + str(e.get('reason')) if e.get('reason') else ''} |")
 if rerank:
     print("\n## Reranking the first 100 results of `nim_nemotron-3-embed-1b_auto`: nDCG@10 before → after · pairs per second\n")
     print("| Reranker | " + " | ".join(DATA) + " |"); print("|---|" + "---|" * len(DATA))

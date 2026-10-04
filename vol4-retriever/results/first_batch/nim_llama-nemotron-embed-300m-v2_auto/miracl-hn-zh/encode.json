@@ -1,0 +1,125 @@
+{
+ "what": "every query and passage of the data set encoded; wall times are recorded and are not throughput figures",
+ "start": "2026-10-04T05:47:58+0000",
+ "end": "2026-10-04T05:49:46+0000",
+ "dataset": "miracl-hn-zh",
+ "split": "dev",
+ "encoder": {
+  "backend": "nim",
+  "url": "http://p109_embed300m:8000",
+  "model": "nvidia/llama-nemotron-embed-300m-v2",
+  "truncate": "END",
+  "connection": "one kept connection",
+  "server": {
+   "/v1/models": {
+    "status": 200,
+    "body": {
+     "object": "list",
+     "data": [
+      {
+       "id": "nvidia/llama-nemotron-embed-300m-v2",
+       "created": 0,
+       "object": "model",
+       "owned_by": "organization-owner"
+      }
+     ]
+    }
+   },
+   "/v1/metadata": {
+    "status": 200,
+    "body": {
+     "assetInfo": [
+      ""
+     ],
+     "licenseInfo": {
+      "name": "LICENSE",
+      "path": "/opt/nim/LICENSE",
+      "sha": "45b414c24ac6a455d8d226cdb5a5e22a94820338",
+      "size": 687,
+      "url": "",
+      "type": "file",
+      "content": "<p><strong>GOVERNING DOWNLOAD TERMS: </strong>The NIM container is governed by the <a href=\"https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/\">NVIDIA Software License Agreement</a> and <a href=\"https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/\">Product-Specific Terms for AI Products</a>. Use of this model is governed by the <a href=\"https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-license/\">NVIDIA Open Model License</a>. ADDITIONAL INFORMATION: <a href=\"https://www.llama.com/llama3_2/license/\">Llama 3.2 Community License Agreement</a>. Built with Llama.</p>"
+     },
+     "modelInfo": [
+      {
+       "modelUrl": "ngc://nim/nvidia/llama-nemotron-embed-300m-v2:extra-1",
+       "shortName": "llama-nemotron-embed-300m-v2:extra-1"
+      },
+      {
+       "modelUrl": "ngc://nim/nvidia/llama-nemotron-embed-300m-v2:rtx5090x1-trt-fp8-85n4shahyq",
+       "shortName": "llama-nemotron-embed-300m-v2:rtx5090x1-trt-fp8-85n4shahyq"
+      },
+      {
+       "modelUrl": "ngc://nim/nvidia/llama-nemotron-embed-300m-v2:tokenizer-8192-f42d5774",
+       "shortName": "llama-nemotron-embed-300m-v2:tokenizer-8192-f42d5774"
+      }
+     ],
+     "repository_override": "",
+     "version": "1.13.0",
+     "selectedModelProfileId": "ee7364e4eba4df47443ed9df08f50d9551b529f7e12063cb9b7891fcec8b4e5c"
+    }
+   },
+   "/v1/health/ready": {
+    "status": 200,
+    "body": {
+     "object": "health-response",
+     "message": "Service is ready."
+    }
+   }
+  }
+ },
+ "batch": 64,
+ "queries": {
+  "count": 393,
+  "size": 2048,
+  "all_finite": true,
+  "norm_min": 0.9995595812797546,
+  "norm_max": 1.0004700422286987,
+  "size_as_expected": true
+ },
+ "passages": {
+  "count": 81309,
+  "size": 2048,
+  "all_finite": true,
+  "norm_min": 0.999515950679779,
+  "norm_max": 1.0004944801330566,
+  "size_as_expected": true
+ },
+ "seconds": {
+  "queries": 0.3,
+  "passages": 100.4
+ },
+ "tokens_reported": {
+  "queries": 4990,
+  "passages": 10573925
+ },
+ "vectors": {
+  "folder": "miracl-hn-zh",
+  "queries_sha256": "e9387974f7f11eefa737ad48fe8709f03f1a5441453e748ec9e60dd1d2f84162",
+  "corpus_sha256": "c271c0d2976f91970cf7330122f97057ac4fc4df0a6c07aac2f38d1de4a377b1",
+  "ids_sha256": "548a66904f525ba4180e81b172e693179595428222ad6045c374e9c02d5f097a"
+ },
+ "program": {
+  "file": "embed_cell.py",
+  "sha256": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "argv": [
+   "encode",
+   "--backend",
+   "nim",
+   "--dataset",
+   "miracl-hn-zh",
+   "--datasets",
+   "data",
+   "--url",
+   "http://p109_embed300m:8000",
+   "--model",
+   "nvidia/llama-nemotron-embed-300m-v2",
+   "--batch",
+   "64",
+   "--emb-dir",
+   "miracl-hn-zh",
+   "--out",
+   "encode.json"
+  ]
+ }
+}

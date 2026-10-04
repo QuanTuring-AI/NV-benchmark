@@ -1,6 +1,6 @@
-# Vol.4 · NeMo Retriever on one RTX 5090 — tools, before any measurement
+# Vol.4 · NeMo Retriever on one RTX 5090 — tools and the first measurements
 
-**Nothing in this folder has met a GPU yet.** It holds the tools the volume will measure with, the check that shows the metric tool agrees with a published score, and the sources that were read first. No embedding or reranking NIM has been started; there is no result about them here.
+**This volume is in progress.** It holds the tools the volume measures with, the check that shows the metric tool agrees with a published score, the sources that were read first, and the results of the first GPU session of 2026-10-04: [`results/first_batch/`](results/first_batch/README.md) (four embedding NIMs and two reranking NIMs on SciFact and on the reduced MIRACL task in zh and ja, with the open weights of one model as the reference arm). HotpotQA and the full MIRACL corpus have not been run. Nothing here has been published as an article.
 
 ## What is here
 
@@ -10,6 +10,10 @@
 | [`scripts/retrieval_metrics.py`](scripts/retrieval_metrics.py) | nDCG@10 and Recall@100 with `pytrec_eval`; every definition that decides a digit is written at the top of the file |
 | [`scripts/nim_retrieval_clients.py`](scripts/nim_retrieval_clients.py) | the request bodies for the embedding and reranking NIMs, built from the OpenAPI files NVIDIA publishes |
 | [`scripts/mock_nim_server.py`](scripts/mock_nim_server.py) | a stand-in server for the client tests |
+| [`scripts/embed_cell.py`](scripts/embed_cell.py), [`scripts/score_run.py`](scripts/score_run.py), [`scripts/rerank_cell.py`](scripts/rerank_cell.py) | one embedding cell (the same program for the open weights and for a NIM), the search and the two metrics (the same for every cell), one reranking cell |
+| [`scripts/run_step.py`](scripts/run_step.py), [`client/Dockerfile`](client/Dockerfile) | the steps of a session (gate, container start and stop, the client in a container on the NIM's Docker network) and the client image |
+| [`scripts/method_cell.py`](scripts/method_cell.py), [`scripts/mteb_arbiter.py`](scripts/mteb_arbiter.py), [`scripts/first_batch_table.py`](scripts/first_batch_table.py) | the method cell, MTEB itself as the arbiter of the reference arm, the tables from the result files |
+| [`results/first_batch/`](results/first_batch/README.md) | the first GPU session: pre-registration, run log, results |
 | [`tests/`](tests/) | 40 unit tests (6 more run when the downloaded data sets are present) |
 | [`positive_control/`](positive_control/) | the tool check: Pyserini's BM25 on SciFact, scored by our metric program |
 | [`MTEB_REFERENCE.md`](MTEB_REFERENCE.md) | the model-level reference: two values from the public MTEB results, and every condition of them with the file it was read from |
@@ -33,13 +37,15 @@ Before the metric program scores anything of ours, it has to give the published 
 
 This checks the metric program and the qrels reader. It says nothing about a NIM.
 
-## The model-level reference (not run yet)
+## The model-level reference (run on 2026-10-04: ja reproduced, zh not)
 
 The tool check cannot show that a model is asked the right way: the prefix of a query and of a passage, where an over-long input is cut, how the similarity is computed. For that this volume uses two values someone else published for a model whose weights are open: the MTEB results repository's nDCG@10 of `nvidia/Nemotron-3-Embed-1B-BF16` on the task `MIRACLRetrievalHardNegatives`, **0.64244 (zh) and 0.74194 (ja)**.
 
-The plan has two steps, neither of which has been run: first the open weights on that task with the conditions of the published result, to see whether this harness arrives at the two values; then the NIM of the same model on the same task. [`MTEB_REFERENCE.md`](MTEB_REFERENCE.md) lists the conditions, each with its source, and the ones that are recorded nowhere.
+Two steps: first the open weights on that task with the conditions of the published result, to see whether this harness arrives at the two values; then the NIM of the same model on the same task. [`MTEB_REFERENCE.md`](MTEB_REFERENCE.md) lists the conditions, each with its source, and the ones that are recorded nowhere.
 
-On the other data sets of this volume (SciFact, HotpotQA, the full MIRACL corpus in zh and ja) no published per-data-set score of these models exists; results there will be reported as measured, without a claim of having reproduced an official score.
+What came out ([`results/first_batch/README.md`](results/first_batch/README.md) §1): on ja this repository's path gives 0.74383, inside the 0.005 set beforehand. On zh it gives 0.66313, which is 0.021 above the published value; MTEB itself (source tag 2.14.3), run in the same environment on the same weights, gives 0.66251. The published zh value is therefore not reproduced by either, the reason is not known, and nothing was tuned to make it fit. The NIM of the same model agrees with the open weights to 0.0011 (zh) and 0.0001 (ja).
+
+On the other data sets of this volume (SciFact, HotpotQA, the full MIRACL corpus in zh and ja) no published per-data-set score of these models exists; results there are reported as measured, without a claim of having reproduced an official score.
 
 ## Run the tests
 

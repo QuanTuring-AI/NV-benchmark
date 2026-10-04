@@ -1,0 +1,154 @@
+{
+ "at": "2026-10-04T05:18:41+0000",
+ "dataset": "miracl-hn-zh",
+ "url": "http://p109_n3embed_fp16:8000",
+ "model": "nvidia/nemotron-3-embed-1b",
+ "texts": {
+  "queries": 8,
+  "passages": 8
+ },
+ "cases": {
+  "plain": {
+   "query": {
+    "status": 200,
+    "usage": {
+     "prompt_tokens": 105,
+     "total_tokens": 105
+    },
+    "model": "nvidia/nemotron-3-embed-1b"
+   },
+   "passage": {
+    "status": 200,
+    "usage": {
+     "prompt_tokens": 1176,
+     "total_tokens": 1176
+    },
+    "model": "nvidia/nemotron-3-embed-1b"
+   },
+   "size": 2048,
+   "norm_min_max": [
+    0.9999873042106628,
+    1.0000121593475342
+   ]
+  },
+  "query_text_sent_as_passage": {
+   "cosine_with_query_mode": [
+    0.746794,
+    0.731993,
+    0.723246,
+    0.713715,
+    0.761052,
+    0.712485,
+    0.714126,
+    0.62992
+   ]
+  },
+  "client_prefix_plus_input_type": {
+   "query_cosine_with_plain": [
+    0.989801,
+    0.987706,
+    0.990454,
+    0.966862,
+    0.988226,
+    0.983759,
+    0.980482,
+    0.957708
+   ],
+   "passage_cosine_with_plain": [
+    0.992839,
+    0.986549,
+    0.999006,
+    0.997711,
+    0.995748,
+    0.991413,
+    0.99041,
+    0.996376
+   ]
+  },
+  "against_the_reference_arm": {
+   "query_mode_vs_reference_query": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "passage_mode_vs_reference_passage": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "client_prefixed_query_vs_reference_query": [
+    0.989801,
+    0.987706,
+    0.990455,
+    0.966862,
+    0.988226,
+    0.983759,
+    0.980482,
+    0.957708
+   ],
+   "query_text_sent_as_passage_vs_reference_query": [
+    0.746794,
+    0.731993,
+    0.723246,
+    0.713716,
+    0.761052,
+    0.712485,
+    0.714126,
+    0.62992
+   ]
+  },
+  "over_long_input": {
+   "characters": 201825,
+   "truncate_END": {
+    "status": 200,
+    "usage": {
+     "prompt_tokens": 4096,
+     "total_tokens": 4096
+    },
+    "model": "nvidia/nemotron-3-embed-1b"
+   },
+   "truncate_NONE": {
+    "status": 400,
+    "body": "{\"object\":\"error\",\"message\":\"input[0] length 467475 exceeds maximum of 65536 characters\",\"type\":\"invalid_request_error\",\"detail\":\"input[0]\"}"
+   }
+  },
+  "dimensions_1024": {
+   "answer": {
+    "status": 400,
+    "body": "{\"object\":\"error\",\"message\":\"dimensions must be one of 2048\",\"type\":\"invalid_request_error\"}"
+   },
+   "size": null
+  }
+ },
+ "program": {
+  "file": "embed_cell.py",
+  "sha256": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "argv": [
+   "probe",
+   "--backend",
+   "nim",
+   "--dataset",
+   "miracl-hn-zh",
+   "--datasets",
+   "data",
+   "--url",
+   "http://p109_n3embed_fp16:8000",
+   "--model",
+   "nvidia/nemotron-3-embed-1b",
+   "--reference-dir",
+   "miracl-hn-zh",
+   "--out",
+   "probe_against_cell_A.json"
+  ]
+ }
+}

@@ -1,0 +1,159 @@
+{
+ "what": "timed passes over a fixed sample of the corpus",
+ "at": "2026-10-04T05:58:52+0000",
+ "dataset": "miracl-hn-zh",
+ "encoder": {
+  "backend": "nim",
+  "url": "http://p109_embedvl:8000",
+  "model": "nvidia/llama-nemotron-embed-vl-1b-v2",
+  "truncate": "END",
+  "connection": "one kept connection",
+  "server": {
+   "/v1/models": {
+    "status": 200,
+    "body": {
+     "object": "list",
+     "data": [
+      {
+       "id": "nvidia/llama-nemotron-embed-vl-1b-v2",
+       "object": "model",
+       "created": 1791093372,
+       "owned_by": "nvidia"
+      }
+     ]
+    }
+   },
+   "/v1/metadata": {
+    "status": 200,
+    "body": {
+     "version": "2.3.0",
+     "modelInfo": [
+      {
+       "modelUrl": "nvidia/llama-nemotron-embed-vl-1b-v2",
+       "shortName": "llama-nemotron-embed-vl-1b-v2"
+      }
+     ],
+     "assetInfo": [
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/model.safetensors",
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/config.json",
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/tokenizer.json",
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/tokenizer_config.json",
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/special_tokens_map.json",
+      "https://huggingface.co/nvidia/llama-nemotron-embed-vl-1b-v2/resolve/main/processor_config.json"
+     ],
+     "licenseInfo": {
+      "name": "LICENSE",
+      "path": "LICENSE",
+      "sha": "34d2b75b79866a9c35e2abd8d1cdd9be11f07d4f",
+      "size": 623,
+      "url": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-community-models-license/",
+      "type": "file",
+      "content": "**GOVERNING DOWNLOAD TERMS:** The NIM container is governed by the [NVIDIA Software License Agreement](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/) and [Product-Specific Terms for AI Products](https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/). Use of this model is governed by the [NVIDIA Open Model License](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-license/). ADDITIONAL INFORMATION: [Llama 3.2 Community License Agreement](https://www.llama.com/llama3_2/license/). Built with Llama."
+     },
+     "repository_override": "",
+     "selectedModelProfileId": "N/A",
+     "backend": "rust"
+    }
+   },
+   "/v1/health/ready": {
+    "status": 200,
+    "body": {
+     "object": "health.response",
+     "message": "ready",
+     "ready": true
+    }
+   }
+  }
+ },
+ "sample": {
+  "passages": 4096,
+  "selection": "the first passages of the corpus in file order",
+  "characters": 563057
+ },
+ "batch": 64,
+ "reps": 3,
+ "discarded": "one pass over the first 4 batches",
+ "passes": [
+  {
+   "start": "2026-10-04T05:58:08+0000",
+   "end": "2026-10-04T05:58:23+0000",
+   "seconds": 14.644,
+   "passages_per_s": 279.7,
+   "tokens_reported": 487023,
+   "tokens_per_s": 33257.7,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9999728798866272,
+    "norm_max": 1.00003182888031,
+    "size_as_expected": true
+   }
+  },
+  {
+   "start": "2026-10-04T05:58:23+0000",
+   "end": "2026-10-04T05:58:38+0000",
+   "seconds": 14.578,
+   "passages_per_s": 281.0,
+   "tokens_reported": 487023,
+   "tokens_per_s": 33409.2,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.999975323677063,
+    "norm_max": 1.0000284910202026,
+    "size_as_expected": true
+   }
+  },
+  {
+   "start": "2026-10-04T05:58:38+0000",
+   "end": "2026-10-04T05:58:52+0000",
+   "seconds": 14.653,
+   "passages_per_s": 279.5,
+   "tokens_reported": 487023,
+   "tokens_per_s": 33236.5,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9999721646308899,
+    "norm_max": 1.0000298023223877,
+    "size_as_expected": true
+   }
+  }
+ ],
+ "passages_per_s_median": 279.7,
+ "passages_per_s_min": 279.5,
+ "passages_per_s_max": 281.0,
+ "per_request_seconds": {
+  "count": 196,
+  "p50": 0.2138,
+  "p99": 0.2507
+ },
+ "program": {
+  "file": "embed_cell.py",
+  "sha256": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "argv": [
+   "throughput",
+   "--backend",
+   "nim",
+   "--dataset",
+   "miracl-hn-zh",
+   "--datasets",
+   "data",
+   "--url",
+   "http://p109_embedvl:8000",
+   "--model",
+   "nvidia/llama-nemotron-embed-vl-1b-v2",
+   "--batch",
+   "64",
+   "--n",
+   "4096",
+   "--reps",
+   "3",
+   "--out",
+   "throughput.json"
+  ]
+ }
+}
