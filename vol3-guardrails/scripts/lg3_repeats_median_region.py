@@ -13,8 +13,8 @@ def jl(p):
     return [json.loads(l) for l in open(p, encoding="utf-8") if l.strip()]
 
 
-files = sorted(glob.glob("vol3-judges/results/p93_judges/J[0-6]/input_c1.jsonl")) + ["vol3-judges/results/p102_followup/LG3/input_c1.jsonl",
-        "vol3-judges/results/lg3_timing_repeats/quiet_run_1/LG3/input_c1.jsonl", "vol3-judges/results/lg3_timing_repeats/quiet_run_2/LG3/input_c1.jsonl"]
+files = sorted(glob.glob("vol3-guardrails/results/p93_judges/J[0-6]/input_c1.jsonl")) + ["vol3-guardrails/results/p102_followup/LG3/input_c1.jsonl",
+        "vol3-guardrails/results/lg3_timing_repeats/quiet_run_1/LG3/input_c1.jsonl", "vol3-guardrails/results/lg3_timing_repeats/quiet_run_2/LG3/input_c1.jsonl"]
 print("arm (input track, c=1, 200 calls) | p25  p45  p50  p55  p75 ms | p55-p45 as a share of p50 | completion tokens p25/p50/p75")
 for f in files:
     rows = jl(f); v = [r["latency_ms"] for r in rows if r.get("latency_ms") is not None]

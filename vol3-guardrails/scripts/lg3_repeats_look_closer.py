@@ -3,7 +3,7 @@ the run; exploratory, and labelled so in the report). One arm, three runs. Looks
 card memory, warm-up, prechecks, the shape of the per-call durations and their per-item differences."""
 import json, math, os, statistics
 
-RUNS = [("first", "vol3-judges/results/p102_followup"), ("quiet1", "vol3-judges/results/lg3_timing_repeats/quiet_run_1"), ("quiet2", "vol3-judges/results/lg3_timing_repeats/quiet_run_2")]
+RUNS = [("first", "vol3-guardrails/results/p102_followup"), ("quiet1", "vol3-guardrails/results/lg3_timing_repeats/quiet_run_1"), ("quiet2", "vol3-guardrails/results/lg3_timing_repeats/quiet_run_2")]
 
 
 def nr(v, p):

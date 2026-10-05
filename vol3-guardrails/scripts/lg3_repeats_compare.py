@@ -5,8 +5,8 @@ usage: compare_runs.py            (run from the repository root)
 """
 import json, os, sys
 
-FIRST = "vol3-judges/results/p102_followup"
-QUIET = sys.argv[1:3] if len(sys.argv) >= 3 else ["vol3-judges/results/lg3_timing_repeats/quiet_run_1", "vol3-judges/results/lg3_timing_repeats/quiet_run_2"]   # two arguments: a test of this program on planted folders
+FIRST = "vol3-guardrails/results/p102_followup"
+QUIET = sys.argv[1:3] if len(sys.argv) >= 3 else ["vol3-guardrails/results/lg3_timing_repeats/quiet_run_1", "vol3-guardrails/results/lg3_timing_repeats/quiet_run_2"]   # two arguments: a test of this program on planted folders
 
 
 def summary(d):
@@ -70,5 +70,5 @@ for track in ("input", "output"):
     rows["detection_counts_per_group"] = q
     print("  detection counts per group, per run:", q)
     out["tracks"][track] = rows
-json.dump(out, open("vol3-judges/results/lg3_timing_repeats/comparison.json", "w", encoding="utf-8", newline="\n"), indent=1)
-print("\nwritten: vol3-judges/results/lg3_timing_repeats/comparison.json")
+json.dump(out, open("vol3-guardrails/results/lg3_timing_repeats/comparison.json", "w", encoding="utf-8", newline="\n"), indent=1)
+print("\nwritten: vol3-guardrails/results/lg3_timing_repeats/comparison.json")

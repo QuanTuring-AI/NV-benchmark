@@ -1,0 +1,77 @@
+{
+ "date": "2026-10-05",
+ "purpose": "Third directory rename: the Vol.3 directory takes the name of the NVIDIA product the volume measures (NeMo Guardrails), as vol1-nim/ and vol2-nemotron/ do. Input of tools/renumber_dirs_gen3.py. The same rule moves tracked, ignored and untracked files.",
+ "subject": "Rename the Vol.3 directory to vol3-guardrails (moves only)",
+ "commit_body": "vol3-judges/ -> vol3-guardrails/ (Vol.3, NeMo Guardrails). The name vol3-guardrails has never been used before.",
+ "docs_label": "Directory rename 2026-10-05",
+ "moves": [
+  {
+   "from": "vol3-judges/",
+   "to": "vol3-guardrails/",
+   "why": "Vol.3: NeMo Guardrails (the models behind the rail)"
+  }
+ ],
+ "run_codes": {},
+ "old_roots": [
+  "vol3-judges"
+ ],
+ "new_roots": [
+  "vol3-guardrails"
+ ],
+ "not_moved": [
+  "vol1-nim/",
+  "vol2-nemotron/",
+  "benchmark/ (Vol.1, March 2026 original)",
+  "DEPLOYMENT_NOTES.md",
+  "roadmap-e456/",
+  "tools/",
+  "every other root file",
+  "the directories inside the Vol.3 directory (results/p93_judges/ and the others keep their names: frozen pre-registrations name them)"
+ ],
+ "history_files": [
+  "CHANGELOG.md",
+  "CHRONICLE.md",
+  "releases/vol2.md"
+ ],
+ "history_files_rule": "Files that record past paths on purpose, or that hold an old directory name as part of something else. The docs phase leaves them as they are and verify does not count them. CHANGELOG.md: the record of changes, with the paths of their day. CHRONICLE.md: the table of retired tags names the directory each tag held (vol1b/, vol1a-revisit/, vol2/). releases/vol2.md: a link to the tag vol2 (.../blob/vol2/...), which reads like the old directory vol2/ to the pattern.",
+ "tags": {
+  "new": {},
+  "note": "No tag is made for this rename. The tag vol3 moves once, on the day the Vol.3 study is published."
+ },
+ "note_on_frozen_paths": "Frozen harnesses import with the paths written at the time. They are bound by SHA-256 and are not edited, so they run as written only at the commit PATH_MAP.md names for their paths. PATH_MAP.md maps every old path through all three renames.",
+ "path_map_intro": "Directories were renamed three times: on 2026-09-28 to match the volume numbers; on 2026-09-29, when Vol.2 and Vol.3 swapped places so that Nemotron on NIM (Vol.2) comes before the judges (Vol.3); and on 2026-10-05, when the Vol.3 directory took the name of the NVIDIA product the volume measures, NeMo Guardrails, as `vol1-nim/` and `vol2-nemotron/` do. Files written before a rename, including frozen pre-registrations, refer to the paths of their day; this file maps every one through all three renames. To reproduce a run byte for byte, check out the commit named below for the column its paths are in. Check out one of those commits, a tag or the tip of the branch; a pure-rename commit alone is not a supported checkout (its .gitattributes still names the paths before it).",
+ "volume_table": [
+  [
+   "Vol.1",
+   "vol1-nim/",
+   "3efa794241d269f6f5e83e6b0bd4364b4fa8228e"
+  ],
+  [
+   "Vol.2",
+   "vol2-nemotron/",
+   "3efa794241d269f6f5e83e6b0bd4364b4fa8228e"
+  ],
+  [
+   "Vol.3",
+   "vol3-guardrails/",
+   "3efa794241d269f6f5e83e6b0bd4364b4fa8228e"
+  ]
+ ],
+ "path_map_notes": [
+  "`3efa794241d269f6f5e83e6b0bd4364b4fa8228e` is the last commit before the renames of September 2026: every path in the first column of the map exists there. It was the tags `vol1-nim-published`, `vol2-guardrails-published` and `vol3-judges-baseline` until 2026-10-01; see [`CHRONICLE.md`](CHRONICLE.md). The current tags are `vol1`, `vol2`, `vol3` and `chronicle`.",
+  "`d3baa9c4f2ba578f8d3953a9ae894b37e60a033f` is the last commit that changed a Vol.3 file before the rename of 2026-10-05: every path in the column `2026-09-29` exists there. Files added to Vol.3 between the second and the third rename have a row that begins in that column (— in the two columns before it); their pre-registrations name the `vol3-judges/` paths and are rerun byte for byte at that commit.",
+  "Files added after the last rename of their directory have no row in this map: they were written at the current paths and are reproduced at the current tags."
+ ],
+ "anchor_checks": [
+  {
+   "commit": "3efa794241d269f6f5e83e6b0bd4364b4fa8228e",
+   "column": 0,
+   "rule": "every path in this column exists in the tree of this commit"
+  },
+  {
+   "commit": "d3baa9c4f2ba578f8d3953a9ae894b37e60a033f",
+   "column": 2,
+   "rule": "every path in this column exists in the tree of this commit"
+  }
+ ]
+}

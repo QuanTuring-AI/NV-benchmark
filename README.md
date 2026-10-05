@@ -21,7 +21,7 @@
 |---|---|---|---|
 | **Vol.1** | **NIM for LLMs.** Why NIM? Llama 3.1 8B on one RTX 5090, 1 to 128 concurrent requests | [`vol1-nim/README.md`](vol1-nim/README.md) | [Releases → `vol1`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol1) |
 | **Vol.2** | **Nemotron on NIM.** Nemotron 3 Nano on one RTX 5090 with NIM | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) | [Releases → `vol2`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol2) |
-| **Vol.3** | **Judges in NeMo Guardrails on NIM.** Baseline data published; the judge study (verdict quality against latency) is in progress | [`vol3-judges/README.md`](vol3-judges/README.md) | at publication |
+| **Vol.3** | **NeMo Guardrails.** Which model to put behind the self-check rail and the content-safety rail: detection rate, false alarms and the cost of each verdict, each model measured on its own | [`vol3-guardrails/README.md`](vol3-guardrails/README.md) | at publication |
 | **Vol.4** | **NeMo Retriever.** Embedding and reranking NIMs on one card (planned) | — | — |
 | **Vol.5** | **The NVIDIA RAG Blueprint on one card.** The whole pipeline end to end (planned) | — | — |
 
@@ -38,7 +38,7 @@ Measurements of NVIDIA's inference stack on one workstation GPU. So far the stac
 
 Every number that leaves this repository is quoted with its measurement boundary: model, versions, precision, concurrency, input shape and statistic.
 
-Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md). It is kept exactly as published and is not modified. The comparison that led it is closed out, as an account of how it was measured, in [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §12.
+Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md). It is kept exactly as published and is not modified. The comparison that led it is closed out, as an account of how it was measured, in [`vol3-guardrails/BASELINE.md`](vol3-guardrails/BASELINE.md) §12.
 
 ## How to check a number
 
@@ -87,7 +87,7 @@ A tag opens the whole repository as it was at one commit; all four point to the 
 | `VLLM_USE_V2_MODEL_RUNNER=0` for the Llama 3.1 8B image on Docker Desktop / WSL2 (its default runner fails with "UVA is not available"). The Nemotron 3 Nano image started without it. | [`vol1-nim/README.md` §B](vol1-nim/README.md) · [`vol2-nemotron/README.md`](vol2-nemotron/README.md) (claim → evidence, *Run it* rows) |
 | `NIM_MAX_MODEL_LEN=8192` (the default context does not leave room for the KV cache) | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) §3 |
 | NGC key without a trailing space · PowerShell single-line commands · Windows console encoding (cp950) with multilingual output | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) §4–§6 |
-| NeMo Guardrails self-check prompts | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) (Guardrails section) · [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §8–§9 |
+| NeMo Guardrails self-check prompts | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) (Guardrails section) · [`vol3-guardrails/BASELINE.md`](vol3-guardrails/BASELINE.md) §8–§9 |
 
 `DEPLOYMENT_NOTES.md` records the stack of March 2026 and is kept as published. The current stack is NIM 2.0.12 on driver 591.86.
 
