@@ -57,16 +57,24 @@ The two profiles are TensorRT engines for compute capability 12.0; nothing else 
 | `fp8` | the container exits after 6 s: `Error: startup pipeline preference mismatch: pipeline='(none)', precision=Some(Fp8), attention_strategy=None; available compatible pipeline ids: ["padded-naive-fp16"]` |
 | `nvfp4` | the same, with `precision=Some(Nvfp4)` |
 
-- The weights mounted for all three starts are the ones this NIM wrote in its download-only mode with nothing set. Whether a download made with a precision set would add a pipeline was not tried. The image holds fp8 kernels for this card's architecture and no fp8 calibration file for this model.
+- The weights mounted for these three starts are the ones this NIM wrote in its download-only mode with nothing set. **Followed up the same evening:** the download-only mode was run again with a precision pinned. With `fp8` it wrote the same 14 files, byte for byte (same `model.safetensors`). With `nvfp4` it wrote another set: 18 files, 997 MiB, a quantised checkpoint with its own manifest. A start with `NIM_ENGINE_PRECISION=nvfp4` and those files mounted ended the same way after 16.7 s, with the same list of one compatible pipeline, `padded-naive-fp16` (run on a card shared with the encoding job of section 3; record in [`../../../vol5-rag-blueprint/results/co_resident_smoke/events.jsonl`](../../../vol5-rag-blueprint/results/co_resident_smoke/events.jsonl), name `p111_n3embed_nvfp4`). So on this card this image offers the fp16 pipeline only, whichever weights are mounted. The image holds fp8 kernels for this card's architecture and no fp8 calibration file for this model.
 - **The timed passes at fp16, on two days** (same image, same sample, another container): 243.7 passages per second in the first session (243.0 · 243.7 · 249.1) and 230.3 in this one (230.3 · 228.6 · 239.5), a difference of 5.5%. The first session's passes overlapped CPU work of another session on the same host; they were not the slower ones.
 
-## 3 · Every passage of MIRACL zh
+## 3 · Every passage of MIRACL zh, and three quarters of MIRACL ja
 
-*Written when the run has stopped.* The run started at 20:05 on 2026-10-04 with the NIM pinned to fp16 and stops by itself at 08:00 on 2026-10-05. Its record is [`full_corpus/miracl-zh/checkpoints.jsonl`](full_corpus/miracl-zh/checkpoints.jsonl): one line per 100,000 passages (counts, seconds, SHA-256 of the vectors; no text). The vectors are kept outside the repository.
+One container of `nemotron-3-embed-1b:2.2.2` pinned to fp16, from 20:05 on 2026-10-04 until the stop time of 08:00 on 2026-10-05. The program stopped by itself at 08:00:03; the container was removed at 08:00:13 and the closing gate found no container and an idle card (1,369 MiB held by the desktop, 0%).
+
+| Corpus | Passages encoded | Pieces | From → to (+0800) | State |
+|---|---|---|---|---|
+| MIRACL zh | **4,934,368 of 4,934,368** | 50 | 20:05:35 → 02:04:57 | finished |
+| MIRACL ja | **5,132,768 of 6,953,614** (73.8%) | 52 | 02:05:05 → 08:00:03 | stopped at the stop time; a later call with the same arguments goes on from passage 5,132,768 |
+
+- Records: [`full_corpus/miracl-zh/checkpoints.jsonl`](full_corpus/miracl-zh/checkpoints.jsonl), [`full_corpus/miracl-ja/checkpoints.jsonl`](full_corpus/miracl-ja/checkpoints.jsonl) — one line per piece of 100,000 passages: counts, seconds, the SHA-256 of the piece's vectors and ids; no text. Every piece: vectors of size 2,048, all finite. The vectors are kept outside the repository (float32, 38.6 GB and 40.2 GB).
+- The queries of the dev split were encoded once per corpus (393 and 860).
+- **Wall times in these files are not speeds.** No gate guards them and the card was shared on purpose: between 21:48 and 21:57, and again between 03:31 and 03:38, other containers of this repository's work ran on the same card (smoke tests of Vol.5). A full piece took 358 to 487 s for zh and 388 to 451 s for ja; the slowest ones overlap those tests and the downloads before them.
+- The Docker health check of this image reported "unhealthy" for the whole run while the server answered every request; the health check is the image's own and was not looked into.
 
 The program is new ([`scripts/encode_corpus_resumable.py`](../../scripts/encode_corpus_resumable.py)); before the run it encoded the first 512 passages of the reduced zh corpus against the real NIM, in two pieces, and the result was compared with the first session's vectors: same ids in the same order, smallest cosine 0.999999998 ([`full_corpus/program_check/against_embed_cell.json`](full_corpus/program_check/against_embed_cell.json)).
-
-Wall times in that file are not speeds: no gate guards them, and the card may be shared during the night.
 
 ## What was expected and what came out
 
@@ -82,4 +90,4 @@ Wall times in that file are not speeds: no gate guards them, and the card may be
 - Why the published zh value is lower. The library version is excluded; the conditions of the published run that are not recorded anywhere (batch size, GPU, package versions) remain.
 - Speeds of other samples, batch sizes or concurrent clients: each figure is one client, 64 passages per request, the first 4,096 passages of a corpus.
 - Anything about fp8 or nvfp4 for `nemotron-3-embed-1b` on other cards.
-- A quality figure on the whole MIRACL corpus.
+- A quality figure on the whole MIRACL corpus: the vectors exist, no search over them was run.
