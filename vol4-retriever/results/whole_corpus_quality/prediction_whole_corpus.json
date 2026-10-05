@@ -1,0 +1,443 @@
+{
+ "what": "Pre-registration of the Vol.4 cells on the whole MIRACL zh and ja corpora (quality by exact search), of the reranking cell on their results and of a timing cell from two places; a supplement to prediction_first_batch.json and prediction_second_batch.json",
+ "draft": false,
+ "written_at": "2026-10-05T20:41:19+0800",
+ "supplements": [
+  {
+   "file": "../first_batch/prediction_first_batch.json",
+   "sha256": "9e5758e98cd052cbdf41e580095cb70bb1188479fef722747a64dc1b88216dd7"
+  },
+  {
+   "file": "../second_batch/prediction_second_batch.json",
+   "sha256": "10e4ab272dbf661499d00ede80e6520c4a338422e5733f7341a70caa659fc1f9"
+  }
+ ],
+ "kept_from_them": "the rules (timed and untimed parts, the gate before a timed part, one variable per comparison, raw output outside the repository, a limit on every measuring command), the data sets, the two metrics and their program, and the method (client in a container on the NIM's Docker network, one kept connection)",
+ "host": {
+  "card": "one RTX 5090 (32 GB), Windows 11 + Docker Desktop (WSL2)",
+  "cpu": "Intel Core i7-14700, 20 cores, 28 threads",
+  "memory_gib": 63.7,
+  "memory_free_gib_when_measured": 45.2,
+  "measured_at": "2026-10-05, about 20:30 (+0800), Docker Desktop not running",
+  "disk": "one NVMe SSD; the vectors are on it"
+ },
+ "vectors_used": {
+  "whole_corpus": {
+   "encoder": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2 pinned to fp16 (second session, cell 6)",
+   "size": 2048,
+   "storage": "float32, pieces of 100,000 passages, outside the repository",
+   "miracl-zh": {
+    "file": "../second_batch/full_corpus/miracl-zh/checkpoints.jsonl",
+    "sha256": "e20c379fb8ba07394cf29234cf1c8e11d59d9bd76c396e35fad9b515b9c07cbc",
+    "passages": 4934368,
+    "pieces": 50,
+    "queries": 393,
+    "queries_sha256": "eecc3921a8b9242ab319dceb577ca2a9392ad80cddf0a737c75d652ed3b5f30b",
+    "query_ids_sha256": "cd0f9cd447f20b9e6b9cc748dbd7f045d5f6193898401177ae14d92f227046b6"
+   },
+   "miracl-ja": {
+    "file": "../second_batch/full_corpus/miracl-ja/checkpoints.jsonl",
+    "sha256": "69257b7b2a6a2dc7eea3f524573b03cd64f7a40109ebaebb98458375000cf499",
+    "passages": 6953614,
+    "pieces": 71,
+    "queries": 860,
+    "queries_sha256": "6487e7e4a4c3226039a3ecd1ee792629fcb33b8da10f37abdfefc3eebba324eb",
+    "query_ids_sha256": "b6102f4a27b3ebb323445a650e2918fd4812e16db4fda626ba647a1ea2a9d901"
+   }
+  },
+  "queries": "the query vectors stored with each corpus: encoded by the same container at the start of that corpus's run, input_type query, no prefix added by the client (the checkpoint files' `queries` lines carry their SHA-256). They are not encoded again: the work order's first GPU step is therefore not needed, and cells A to C need no card and no container.",
+  "reduced_corpus": {
+   "zh": {
+    "reference arm (open weights)": {
+     "file": "../first_batch/reference_bf16/miracl-hn-zh/score.json",
+     "sha256": "7e7ea7e7907949ec485d98ead77d7b6069c4afbbab7783e3e21088e1e840d2a3",
+     "ndcg_cut_10": 0.6631311979964787,
+     "recall_100": 0.9878892523930691,
+     "passages": 81309,
+     "queries": 393
+    },
+    "the same NIM image, no precision set": {
+     "file": "../first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-zh/score.json",
+     "sha256": "6ee2adc88d14a0dc76251c70321dc5164e0ee66e81b1c274b478f48ae3495052",
+     "ndcg_cut_10": 0.6619852203579513,
+     "recall_100": 0.9878892523930691,
+     "passages": 81309,
+     "queries": 393
+    }
+   },
+   "ja": {
+    "reference arm (open weights)": {
+     "file": "../first_batch/reference_bf16/miracl-hn-ja/score.json",
+     "sha256": "206204e541c3e3596d0abac3bf56ace099a95d572e4e983754fcd3fc7dc084c5",
+     "ndcg_cut_10": 0.743834393831563,
+     "recall_100": 0.9920172656800562,
+     "passages": 185319,
+     "queries": 860
+    },
+    "the same NIM image, no precision set": {
+     "file": "../first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-ja/score.json",
+     "sha256": "c3a34815c8b4ec4b2e31e98432e0b44491cdb46db72436ba84b891dab1e1ec22",
+     "ndcg_cut_10": 0.7437135090703177,
+     "recall_100": 0.9916296687808315,
+     "passages": 185319,
+     "queries": 860
+    }
+   },
+   "note": "the second session showed that this image offers one pipeline on this card (fp16); with the precision pinned it gave the same nDCG@10 and Recall@100 on miracl-hn-zh as with nothing set"
+  }
+ },
+ "facts_measured_before_this_file": {
+  "queries_and_judgements": "the reduced task (MIRACLRetrievalHardNegatives) and MIRACL dev have the same query ids, the same query texts and the same judgements: zh 393 queries, 3,928 judgements, 994 of them relevant; ja 860 queries, 8,354 judgements, 1,790 relevant. Compared with the readers of this volume on the files in hand.",
+  "relevant_passages": "every relevant passage of the judgements is in the reduced corpus (zh 966 of 966 ids, ja 1,728 of 1,728). Of the passages judged at all, the reduced corpus holds 3,369 of 3,786 (zh) and 7,285 of 8,066 (ja): the rest are passages judged not relevant.",
+  "what_follows": "with the same vectors, adding passages to a corpus that already holds every relevant passage can only push relevant passages down or leave them where they are. nDCG@10 and Recall@100 on the whole corpus are therefore at most the values on the reduced corpus. The vectors are not bit for bit the same (another call, other batches; the second session measured a smallest cosine of 0.999999998 on 512 passages), so a difference in the fourth decimal in either direction is possible; more is not.",
+  "program_checks": {
+   "why": "the search program is new. Both checks ran before this file was frozen; neither is one of the cells below and neither gives a figure about a whole corpus.",
+   "one_file_layout": {
+    "what": "beir-scifact, the first session's stored vectors of the same NIM, cut into pieces of 1,000 rows",
+    "file": "before_the_run/program_check_scifact_score.json",
+    "ndcg_cut_10": 0.7518798534085879,
+    "first_session": 0.7518798534085879,
+    "per_query_values_identical": true
+   },
+   "pieces_layout": {
+    "what": "the first two pieces of MIRACL zh, then stopped (no ranking, no metric): the calling form, the comparison of each file with its recorded SHA-256, and the seconds per piece",
+    "file": "before_the_run/program_check_two_pieces_progress.jsonl",
+    "seconds_per_piece": [
+     1.68,
+     1.67
+    ]
+   },
+   "tests": "tests/test_search_whole_corpus.py (23) and tests/test_rerank_latency.py (4); each rule the tests guard was broken once in a copy of the program and the tests failed each time (18 and 6 changes)"
+  }
+ },
+ "memory_budget_of_the_search": {
+  "piece_file_mib": 781.3,
+  "pieces_in_memory_at_once": 1,
+  "per_piece_in_memory_mib": {
+   "the file's bytes, used in place": 781,
+   "the same vectors divided by their length": 781,
+   "products of 64 queries with the piece": 24,
+   "products of all queries with the piece (zh 393 / ja 860)": [
+    150,
+    328
+   ],
+   "ids of the piece": "about 10"
+  },
+  "kept_between_pieces": "per query the 100 best scores and passage numbers, and the ids of those passages: below 2 MiB",
+  "peak_estimate_gib": 2.2,
+  "share_of_free_memory": "about 5%",
+  "no_part_of_a_corpus_is_held_beyond_its_piece": true,
+  "state_file": "rewritten after every piece outside the repository; one line per piece in search_progress.jsonl inside it"
+ },
+ "cell_A_check_of_the_search_program": {
+  "what": "the search program on the reduced corpora, whose results exist: the first session's stored vectors, cut into pieces of 10,000 rows so that the merging across pieces runs",
+  "runs": [
+   {
+    "dataset": "miracl-hn-zh",
+    "vectors": "reference_bf16",
+    "must_equal": {
+     "file": "../first_batch/reference_bf16/miracl-hn-zh/score.json",
+     "sha256": "7e7ea7e7907949ec485d98ead77d7b6069c4afbbab7783e3e21088e1e840d2a3",
+     "ndcg_cut_10": 0.6631311979964787,
+     "recall_100": 0.9878892523930691,
+     "passages": 81309,
+     "queries": 393
+    }
+   },
+   {
+    "dataset": "miracl-hn-zh",
+    "vectors": "nim_nemotron-3-embed-1b_auto",
+    "must_equal": {
+     "file": "../first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-zh/score.json",
+     "sha256": "6ee2adc88d14a0dc76251c70321dc5164e0ee66e81b1c274b478f48ae3495052",
+     "ndcg_cut_10": 0.6619852203579513,
+     "recall_100": 0.9878892523930691,
+     "passages": 81309,
+     "queries": 393
+    }
+   },
+   {
+    "dataset": "miracl-hn-ja",
+    "vectors": "reference_bf16",
+    "must_equal": {
+     "file": "../first_batch/reference_bf16/miracl-hn-ja/score.json",
+     "sha256": "206204e541c3e3596d0abac3bf56ace099a95d572e4e983754fcd3fc7dc084c5",
+     "ndcg_cut_10": 0.743834393831563,
+     "recall_100": 0.9920172656800562,
+     "passages": 185319,
+     "queries": 860
+    }
+   },
+   {
+    "dataset": "miracl-hn-ja",
+    "vectors": "nim_nemotron-3-embed-1b_auto",
+    "must_equal": {
+     "file": "../first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-ja/score.json",
+     "sha256": "c3a34815c8b4ec4b2e31e98432e0b44491cdb46db72436ba84b891dab1e1ec22",
+     "ndcg_cut_10": 0.7437135090703177,
+     "recall_100": 0.9916296687808315,
+     "passages": 185319,
+     "queries": 860
+    }
+   }
+  ],
+  "command": {
+   "program": "scripts/search_whole_corpus.py --piece-rows 10000 --top 100",
+   "timeout_s": 300
+  },
+  "pass": "nDCG@10 and Recall@100 equal to the first session's when both are rounded to five decimals, in all four runs. The first session kept 1,000 results per query and this program keeps 100; neither metric looks beyond 100.",
+  "if_not": "no figure about a whole corpus is produced; the difference is reported",
+  "expectation": "equal, also without rounding, and the per-query values identical (as in the program check on beir-scifact)",
+  "note_on_the_work_order": "the work order names 0.66313 and 0.74383 as the values to reproduce. Those are the reference arm's (open weights). The whole-corpus vectors come from the NIM, whose values on the reduced corpora are 0.66199 and 0.74371; both pairs are checked, and the NIM's pair is the one set beside the whole-corpus values."
+ },
+ "cell_C_ids_and_vectors_belong_together": {
+  "what": "the stored vectors of the whole corpus, searched with only the passages whose id is in the reduced corpus taking part (--only-ids-of). This is the reduced task again, computed from the whole-corpus files: it fails if ids and vectors of a piece are shifted against each other, if a piece is missing or doubled, or if the stored query vectors are not those of the queries.",
+  "runs": [
+   {
+    "dataset": "miracl-zh",
+    "ids_of": "the reduced corpus of miracl-hn-zh",
+    "ids": 81309,
+    "compared_with": 0.6619852203579513
+   },
+   {
+    "dataset": "miracl-ja",
+    "ids_of": "the reduced corpus of miracl-hn-ja",
+    "ids": 185319,
+    "compared_with": 0.7437135090703177
+   }
+  ],
+  "command": {
+   "program": "scripts/search_whole_corpus.py --checkpoints ... --only-ids-of <the first session's folder of the same NIM>",
+   "timeout_s": 1800
+  },
+  "pass": "every id of the reduced corpus is found in the whole corpus, and nDCG@10 is within 0.001 and Recall@100 within 0.002 of the NIM's values on the reduced corpus",
+  "if_not": "the whole-corpus figures of cell B are not reported until the cause is known",
+  "expectation": "passes; the two nDCG@10 values agree to four decimals"
+ },
+ "cell_B_whole_corpus": {
+  "what": "exact search of the dev queries over every passage of MIRACL zh and of MIRACL ja; nDCG@10 and Recall@100 against the public dev judgements",
+  "runs": [
+   "miracl-zh (4,934,368 passages, 393 queries)",
+   "miracl-ja (6,953,614 passages, 860 queries)"
+  ],
+  "command": {
+   "program": "scripts/search_whole_corpus.py --checkpoints ... --top 100",
+   "timeout_s": 1800
+  },
+  "search": "cosine, every query against every passage, no index of any kind; 100 results per query",
+  "reported": "per language one line: nDCG@10, Recall@100, queries, passages, the wall time of the search on the host CPU (stated as that, not as a speed of the NIM), and beside it the same NIM's values on the reduced corpus",
+  "sentence_for_the_two_values": "the reduced corpus is the condition of the published model-card figure; the whole corpus is the condition of a deployment",
+  "branches_decided_in_advance": {
+   "lower_or_equal": "the whole-corpus value is reported beside the reduced-corpus value with the sentence above",
+   "higher_by_more_than_0.001": "not reported: by the fact above it cannot be higher with the same vectors. The alignment of ids and judgements is examined first (cell C, the count of judged ids found in the corpus)."
+  },
+  "alignment_recorded": "how many of the judged passage ids and of the relevant ones are among the ids of the corpus; all must be found",
+  "expectation": {
+   "zh": {
+    "ndcg_cut_10": "between 0.630 and 0.662",
+    "recall_100": "between 0.945 and 0.988"
+   },
+   "ja": {
+    "ndcg_cut_10": "between 0.710 and 0.744",
+    "recall_100": "between 0.955 and 0.992"
+   },
+   "reason": "the reduced corpus was built from the passages three retrievers ranked highest per query, so most passages that can displace a relevant one are in it already; the whole corpus adds about 60 times (zh) and 37 times (ja) as many passages, nearly all of them never judged",
+   "confidence": "moderate for the direction and the upper end, low for the lower end",
+   "seconds": "from the program check ([1.68, 1.67] s for two pieces): about 1.5 minutes for zh and 2.5 for ja"
+  }
+ },
+ "cell_D_reranking_the_whole_corpus_results": {
+  "what": "the 100 results per query of cell B, scored again by the reranking NIM of the first session, one call per query",
+  "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2:1.10.0",
+  "image_digest_recorded_by_the_first_session": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2@sha256:cab08cc2b620235f6d75bb7ee198d13352f61ae48285524e304f2904380ea8ca",
+  "checked_again": "the step that starts the container records the digest; another digest stops the cell",
+  "start": "as in the first session: no profile set (the image selected a TensorRT fp8 profile on this card)",
+  "needs": "cell B's run files; the card, after the go-ahead for a GPU session",
+  "quality": {
+   "commands": [
+    {
+     "what": "start and wait for ready",
+     "program": "scripts/session_step.py nim-start --kind 1x --wait 600",
+     "timeout_s": 720
+    },
+    {
+     "what": "smoke: three queries",
+     "program": "scripts/rerank_cell.py smoke --dataset miracl-zh",
+     "timeout_s": 900
+    },
+    {
+     "what": "rerank every query (untimed); zh, then ja",
+     "program": "scripts/rerank_cell.py rerank --depth 100",
+     "timeout_s": [
+      1200,
+      2400
+     ]
+    },
+    {
+     "what": "score",
+     "program": "scripts/score_run.py --rerank-from",
+     "timeout_s": 300
+    }
+   ],
+   "reported": "per language nDCG@10 before and after; Recall@100 before and after, which must be equal because the 100 passages of a query are the same ones in another order",
+   "if_recall_differs": "the two run files do not hold the same passages per query: reported as a fault of the cell, the nDCG@10 pair is not used",
+   "expectation": "nDCG@10 rises on both languages by 0.015 to 0.04 (on the reduced corpora the same reranker gave +0.024 for zh and +0.028 for ja); Recall@100 equal to the last decimal",
+   "note": "the limits of the first three commands include reading the whole corpus once to collect the texts of the passages asked for (4.9 and 7.0 million lines)"
+  },
+  "durations": {
+   "program": "scripts/rerank_latency.py --where container --passes 2 --depth 100",
+   "what": "every query of the run file, one call each with its 100 passages, one after the other on one kept connection, from a container on the NIM's Docker network; two passes; the duration of every call is kept",
+   "conditions": "the gate with --timed right before each run; no game launcher running; one blocking command per run and no other command from this session while it runs",
+   "commands": [
+    {
+     "what": "zh, two passes",
+     "timeout_s": 1200
+    },
+    {
+     "what": "ja, two passes",
+     "timeout_s": 2400
+    }
+   ],
+   "reported": "per language and pass: calls, p50, p90 and p99 of the call duration in ms (nearest rank), min, max, pairs per second; the passes side by side, not pooled",
+   "expectation": {
+    "zh_p50_ms": "130 to 190",
+    "ja_p50_ms": "140 to 200",
+    "p99": "below 600 ms on both",
+    "second_pass": "p50 within 5% of the first pass's",
+    "reason": "the first session's rates on the reduced corpora were 655.5 (zh) and 611.1 (ja) pairs per second over 40 queries, which is about 153 and 164 ms per call of 100 passages"
+   },
+   "not_claimed": "one stream of calls only: nothing about concurrent calls; a duration measured in the client, on this host"
+  }
+ },
+ "cell_E_timing_from_two_places": {
+  "why": "the work order asks for the four embedding cells' speed 'again with the client in a container, beside the host-side values of the first session'. The first session's four cells were already measured from a container (that is the method of this volume); a host-side value exists for one NIM only, from the method cell: 214.9 passages per second from the host against 241.1 from the container. This cell therefore measures both places for each of the four NIMs on another day.",
+  "data": "miracl-hn-zh, the first 4,096 passages, 64 per request, one kept connection, one discarded pass over the first 4 requests, three timed passes (the sample and request of every timed cell of this volume)",
+  "per_nim": [
+   "container: scripts/embed_cell.py throughput (the program of the first session's cells)",
+   "host through the published port: scripts/method_cell.py --where host --batch 64",
+   "container once more: scripts/embed_cell.py throughput"
+  ],
+  "why_the_third_run": "with two runs in a fixed order a drift over the minutes of a container's life could not be told from the place of the client; the second container run shows the drift",
+  "nims": {
+   "nemotron-3-embed-1b": {
+    "image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2",
+    "image_digest_recorded_by_the_first_session": "nvcr.io/nim/nvidia/nemotron-3-embed-1b@sha256:16f49c13bc9ee101f4abfaba972b2dc2e587871ab7474913ac40dbf0bffb7d92",
+    "checked_again": "the step that starts the container records the digest; another digest stops the cell",
+    "start": "NIM_ENGINE_PRECISION=fp16",
+    "first_session": {
+     "file": "../first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-zh/throughput.json",
+     "passages_per_s_median": 243.7,
+     "passes": [
+      243.0,
+      243.7,
+      249.1
+     ]
+    },
+    "second_session_fp16": 230.3
+   },
+   "llama-nemotron-embed-1b-v2": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2:1.13.0",
+    "image_digest_recorded_by_the_first_session": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2@sha256:3c22c0bd8d36dcdee4c46ff371951bb83ec537361db5d6b5737b5c4ecbec92ae",
+    "checked_again": "the step that starts the container records the digest; another digest stops the cell",
+    "start": "no profile set (fp8, selected by the image)",
+    "first_session": {
+     "file": "../first_batch/nim_llama-nemotron-embed-1b-v2_auto/miracl-hn-zh/throughput.json",
+     "passages_per_s_median": 485.6,
+     "passes": [
+      474.7,
+      495.2,
+      485.6
+     ]
+    },
+    "second_session_same_start": 498.4
+   },
+   "llama-nemotron-embed-300m-v2": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-300m-v2:1.13.0",
+    "image_digest_recorded_by_the_first_session": "nvcr.io/nim/nvidia/llama-nemotron-embed-300m-v2@sha256:1f0a7fc168919d7b84bb4edfb4a4da0c5828d11ee284f9fb8113242b3b35cbb4",
+    "checked_again": "the step that starts the container records the digest; another digest stops the cell",
+    "start": "no profile set",
+    "first_session": {
+     "file": "../first_batch/nim_llama-nemotron-embed-300m-v2_auto/miracl-hn-zh/throughput.json",
+     "passages_per_s_median": 796.0,
+     "passes": [
+      755.8,
+      796.0,
+      836.8
+     ]
+    }
+   },
+   "llama-nemotron-embed-vl-1b-v2": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-vl-1b-v2:2.3.0",
+    "image_digest_recorded_by_the_first_session": "nvcr.io/nim/nvidia/llama-nemotron-embed-vl-1b-v2@sha256:93a3f17fa7d0b5ef1d31765a1eab4662669483bf85f2101a2c460aedd9b45480",
+    "checked_again": "the step that starts the container records the digest; another digest stops the cell",
+    "start": "no profile set",
+    "first_session": {
+     "file": "../first_batch/nim_llama-nemotron-embed-vl-1b-v2_auto/miracl-hn-zh/throughput.json",
+     "passages_per_s_median": 279.7,
+     "passes": [
+      279.7,
+      281.0,
+      279.5
+     ]
+    }
+   }
+  },
+  "commands_per_nim": [
+   {
+    "what": "start",
+    "timeout_s": "1020 (2.x images) / 720 (1.13.0 images)"
+   },
+   {
+    "what": "smoke",
+    "program": "scripts/embed_cell.py smoke",
+    "timeout_s": 300
+   },
+   {
+    "what": "each of the three timed runs, the gate with --timed right before",
+    "timeout_s": 600
+   },
+   {
+    "what": "stop",
+    "timeout_s": 300
+   }
+  ],
+  "reported": "per NIM one line: passages per second from the container (both runs, all passes), from the host, the host's difference from the mean of the two container runs in percent, and the first session's container value beside them",
+  "expectation": {
+   "container_against_the_first_session": "each NIM's first container run within 6% of its first-session value",
+   "host_against_container": "the host is slower for every NIM, by 5% to 15% for the two 1b text encoders and the vl encoder, and by more for the 300m encoder (15% to 30%): its requests are the shortest, so a fixed cost per request is a larger share",
+   "two_container_runs": "within 3% of each other",
+   "confidence": "moderate; one earlier comparison on one NIM is all there is"
+  },
+  "not_claimed": "host-side values of the first session for the other three NIMs: there are none"
+ },
+ "order": [
+  "A (no card)",
+  "C (no card)",
+  "B (no card)",
+  "D (card; after the go-ahead)",
+  "E (card)"
+ ],
+ "stops": "A not passed: C and B are not run. C not passed: B's figures are not reported. D needs B. A cell whose container does not report ready is reported as not run with its last log lines.",
+ "not_in_this_file": [
+  "the two Vol.5 cells of the same work order: they have their own file in the Vol.5 directory",
+  "a search with an index",
+  "any other data set or split",
+  "the reranker on more than 100 results"
+ ],
+ "harness_sha256": {
+  "scripts/search_whole_corpus.py": "c69bd45625b61b1f1db03ca4fcbcbc0c4f45e0faad237270421ae3e378b386da",
+  "scripts/rerank_latency.py": "f8c708edab0e2bf212b6304c77d1b0072adf7c4b6f1889103f42563968bae3cc",
+  "scripts/embed_cell.py": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "scripts/score_run.py": "a96f43db8df6dd4813ba25f850aac936b404a50e5d18d73c66c94d8a9318163b",
+  "scripts/rerank_cell.py": "689b3e791cd198e6b2a6e7dbaecf04157081c1383ff1259168f0579ef6e29fc1",
+  "scripts/run_step.py": "3468e40ba41085aff2233f6f526f43bf7bbed953894984ddc515b5ff1d10a143",
+  "scripts/session_step.py": "80f79d0d2affc7a346fe91a2d3ab33e0a904533e8c6faa5c24672bb4d7673b2c",
+  "scripts/method_cell.py": "1e4d6ca406e3f64ca22e29dfb46b2c5ca169902dc71ed1234d185b241585f710",
+  "scripts/retrieval_datasets.py": "699a7681569f61c9c66980a8ec91341b9e45a7836a28686cf7888b8bda174d18",
+  "scripts/retrieval_metrics.py": "db1ddd18f78484d998bdd700311fa4e67bfd62fc702a389a2ebddab3f77c61e5",
+  "scripts/nim_retrieval_clients.py": "706b960a71e583143969794f14138c93304dc6623d9c62fa1082866819a26cf2",
+  "client/Dockerfile": "886ebed74c074a9836f89c0a0d1bdad1bad5db737259b7d4900dbd24dd191dc7",
+  "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb"
+ },
+ "programs_written_after_the_freeze": "none planned; if one is needed, its SHA-256 is written to the events file before its first use"
+}

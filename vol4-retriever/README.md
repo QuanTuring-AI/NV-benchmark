@@ -13,8 +13,11 @@
 | [`scripts/embed_cell.py`](scripts/embed_cell.py), [`scripts/score_run.py`](scripts/score_run.py), [`scripts/rerank_cell.py`](scripts/rerank_cell.py) | one embedding cell (the same program for the open weights and for a NIM), the search and the two metrics (the same for every cell), one reranking cell |
 | [`scripts/run_step.py`](scripts/run_step.py), [`client/Dockerfile`](client/Dockerfile) | the steps of a session (gate, container start and stop, the client in a container on the NIM's Docker network) and the client image |
 | [`scripts/method_cell.py`](scripts/method_cell.py), [`scripts/mteb_arbiter.py`](scripts/mteb_arbiter.py), [`scripts/first_batch_table.py`](scripts/first_batch_table.py) | the method cell, MTEB itself as the arbiter of the reference arm, the tables from the result files |
+| [`scripts/search_whole_corpus.py`](scripts/search_whole_corpus.py), [`scripts/rerank_latency.py`](scripts/rerank_latency.py) | exact search over a corpus stored in pieces, one piece in memory at a time, with the two metrics; the duration of every reranking call |
 | [`results/first_batch/`](results/first_batch/README.md) | the first GPU session: pre-registration, run log, results |
-| [`tests/`](tests/) | 40 unit tests (6 more run when the downloaded data sets are present) |
+| [`results/second_batch/`](results/second_batch/README.md) | the second GPU session: one library version, one precision at a time, every passage of MIRACL zh and ja encoded |
+| [`results/whole_corpus_quality/`](results/whole_corpus_quality/README.md) | nDCG@10 and Recall@100 on the whole MIRACL zh and ja corpora beside the reduced-corpus values; two cells on the card are pre-registered and not run |
+| [`tests/`](tests/) | 77 unit tests (6 more run when the downloaded data sets are present) |
 | [`positive_control/`](positive_control/) | the tool check: Pyserini's BM25 on SciFact, scored by our metric program |
 | [`MTEB_REFERENCE.md`](MTEB_REFERENCE.md) | the model-level reference: two values from the public MTEB results, and every condition of them with the file it was read from |
 | [`SOURCES.md`](SOURCES.md), [`MODEL_CARD_CLAIMS.json`](MODEL_CARD_CLAIMS.json) | what the documentation, the model cards, the MTEB results repository and the issue trackers say, with links and the date they were read |
