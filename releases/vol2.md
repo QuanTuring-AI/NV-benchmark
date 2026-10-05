@@ -1,3 +1,5 @@
+Forum post: <https://forums.developer.nvidia.com/t/nemotron-3-nano-on-one-rtx-5090-with-nim-300-tok-s-flat-to-120k-context-128-concurrent-requests/384859>
+
 ![Nemotron 3 Nano on one RTX 5090](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol2-nemotron/figures/cover_vol2.png)
 
 ![Chat-shaped requests: total output throughput against per-request output speed, one point per concurrency level](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol2-nemotron/figures/pareto_chat_dark.png)
