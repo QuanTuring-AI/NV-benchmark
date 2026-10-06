@@ -16,7 +16,7 @@
 | [`scripts/search_whole_corpus.py`](scripts/search_whole_corpus.py), [`scripts/rerank_latency.py`](scripts/rerank_latency.py) | exact search over a corpus stored in pieces, one piece in memory at a time, with the two metrics; the duration of every reranking call |
 | [`results/first_batch/`](results/first_batch/README.md) | the first GPU session: pre-registration, run log, results |
 | [`results/second_batch/`](results/second_batch/README.md) | the second GPU session: one library version, one precision at a time, every passage of MIRACL zh and ja encoded |
-| [`results/whole_corpus_quality/`](results/whole_corpus_quality/README.md) | nDCG@10 and Recall@100 on the whole MIRACL zh and ja corpora beside the reduced-corpus values; two cells on the card are pre-registered and not run |
+| [`results/whole_corpus_quality/`](results/whole_corpus_quality/README.md) | nDCG@10 and Recall@100 on the whole MIRACL zh and ja corpora beside the reduced-corpus values; the reranker on those results with the duration of every call; four embedding NIMs timed from a container and from the host |
 | [`tests/`](tests/) | 77 unit tests (6 more run when the downloaded data sets are present) |
 | [`positive_control/`](positive_control/) | the tool check: Pyserini's BM25 on SciFact, scored by our metric program |
 | [`MTEB_REFERENCE.md`](MTEB_REFERENCE.md) | the model-level reference: two values from the public MTEB results, and every condition of them with the file it was read from |
