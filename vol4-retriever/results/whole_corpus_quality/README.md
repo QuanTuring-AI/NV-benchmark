@@ -69,6 +69,28 @@ Before the pre-registration was frozen the program had two checks that are not c
 - The two passes of a corpus agree within 0.1% at the median and within 2% at p99. The duration of every call is in the files (numbers only).
 - One stream of calls: nothing here is about concurrent calls. Files: [`rerank_llama-nemotron-rerank-1b-v2/`](rerank_llama-nemotron-rerank-1b-v2/).
 
+## D2 · The second reranker on the same whole-corpus results
+
+Addendum [`addendum_second_reranker.json`](addendum_second_reranker.json), frozen 2026-10-06T14:50:41+0800 before the first container of this cell (SHA-256 `3feb764bbb83785c37782c090c1c16cc3b697bc62f0c8a4ad3de1170ea62d9a6`). `llama-nemotron-rerank-500m-v2:1.10.0`, started as in the first session (ready after 28.2 s, 3,525 MiB on the card once ready), on the 100 results per query of cell B, with cell D's programs and limits. Each reranker's own values, side by side:
+
+| Corpus | nDCG@10 before | after · 500m reranker | after · 1b reranker (cell D) | Recall@100 before → after (500m) |
+|---|---|---|---|---|
+| MIRACL zh, whole | 0.64921 | **0.66932** (+0.0201) | 0.68296 (+0.0338) | 0.96419 → 0.96419 |
+| MIRACL ja, whole | 0.74122 | **0.75233** (+0.0111) | 0.77134 (+0.0301) | 0.98422 → 0.98422 |
+
+| Corpus | Pass | Calls | 500m: p50 ms | p90 ms | p99 ms | Pairs per second | 1b (cell D): p50 ms · pairs per second |
+|---|---|---|---|---|---|---|---|
+| MIRACL zh | 1 | 393 | 84.5 | 111.5 | 139.7 | 1138.9 | 143.1 · 679.4 |
+| MIRACL zh | 2 | 393 | 85.2 | 110.5 | 142.4 | 1136.1 | 143.0 · 677.7 |
+| MIRACL ja | 1 | 860 | 91.3 | 115.6 | 147.5 | 1073.9 | 154.1 · 638.5 |
+| MIRACL ja | 2 | 860 | 91.6 | 116.0 | 147.5 | 1072.8 | 154.1 · 636.0 |
+
+- Recall@100 is equal before and after, as it must be.
+- The 500m reranker adds 60% (zh) and 37% (ja) of what the 1b reranker adds, and its call takes 59% and 59% of the 1b reranker's median.
+- Measured 2026-10-06 in the afternoon (cell D: the same day, early morning), graphics driver 610.88, each NIM alone on the card. Files: [`rerank_llama-nemotron-rerank-500m-v2/`](rerank_llama-nemotron-rerank-500m-v2/).
+
+**The reference arm's timing on the reduced MIRACL ja corpus** (the same addendum). The first session had no timed passes for this arm on ja: at 64 passages per batch it filled the card's memory. At 16 per batch, three passes over the first 4,096 passages after one discarded pass: **290.6 passages per second** (median). The batch differs from the NIM cells (64 per request) and from this arm's zh figure (64 per batch), so this figure stands by itself. File: [`reference_bf16_batch16/miracl-hn-ja/throughput.json`](reference_bf16_batch16/miracl-hn-ja/throughput.json).
+
 ## E · Four embedding NIMs timed from a container, from the host, and from a container again
 
 The sample and request of every timed cell of this volume: the first 4,096 passages of the reduced MIRACL zh corpus, 64 per request, one kept connection, one discarded pass over the first 4 requests, three timed passes; passages per second, median of the three (all three in the files). Per NIM three runs, each behind the gate: the client in a container on the NIM's Docker network (`embed_cell.py throughput`, the program of the first session's cells), the client on the host through the published port (`method_cell.py --where host`), the container again.
@@ -103,6 +125,10 @@ The sample and request of every timed cell of this volume: the first 4,096 passa
 | E: by 5% to 15% for the two 1b text encoders and the vl encoder | **two of three no**: 3.4% and 4.0% (below the range), 9.7% (inside) |
 | E: by 15% to 30% for the 300m encoder | **no**: 12.9% (the largest of the four, as expected; below the range) |
 | E: the two container runs within 3% of each other | **one of four no**: the 300m encoder, 6.2% |
+
+| D2 (addendum): nDCG@10 rises by 0.005 to 0.02 on both languages; Recall@100 equal | **zh no**: +0.0201 (just above the range); ja +0.0111; equal |
+| D2: a call's median 75 to 110 ms (zh) and 80 to 115 ms (ja); p99 below 400 ms; the second pass within 5% of the first | 84.5 and 91.3 ms; p99 at most 148 ms; within 0.9% |
+| Reference arm, ja, batch 16: completes; 200 to 350 passages per second | 290.6 |
 
 ## What this does not show
 

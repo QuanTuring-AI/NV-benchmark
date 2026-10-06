@@ -1,0 +1,89 @@
+{
+ "what": "Addendum to prediction_whole_corpus.json: BEIR HotpotQA, every passage encoded with the embedding NIM and searched exactly (cell H), and the 1b reranker on its results (cell H-R)",
+ "draft": false,
+ "written_at": "2026-10-06T17:07:15+0800",
+ "supplements": {
+  "file": "prediction_whole_corpus.json",
+  "sha256": "129e21e6bfbf7dd35c4ed2b4179d457dc25be1c12a7bbae49dcbe3c7b4bbd7fa"
+ },
+ "why": "the two whole-corpus figures of this volume are Chinese and Japanese; this adds one English corpus of the same order of size, in its usual public packaging",
+ "data": {
+  "data_set": "HotpotQA in the BEIR packaging",
+  "zip_sha256": "c62459dbc91d31329584507b1fa564b3b1abcee58800967113054ee0f5a15c62",
+  "zip_md5_equals_the_one_in_the_beir_readme": true,
+  "corpus_passages": 5233329,
+  "split": "test",
+  "queries_with_a_judgement": 7405,
+  "judgements": 14810,
+  "fetched_at": "2026-10-03T19:23:51+0800"
+ },
+ "cell_H": {
+  "encoding": {
+   "image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2",
+   "started": "as for the two MIRACL corpora: NIM_ENGINE_PRECISION=fp16, the model files of the image's own download mounted",
+   "image_digest": "sha256:16f49c13bc9ee101f4abfaba972b2dc2e587871ab7474913ac40dbf0bffb7d92",
+   "program": "encode_corpus_resumable.py --dataset beir-hotpotqa --piece 100000 --batch 64 --dim 2048 --stop-at <08:00 +0800 of the next morning>",
+   "passage_text": "as the data-set reader gives it for BEIR (title, one space, text: retrieval_datasets.passage_text), input_type passage; queries input_type query; no prefix added by the client",
+   "night_only": "the encoding runs in a night stretch and stops by itself at 08:00; if the corpus is not finished, a later night continues from the last checkpoint",
+   "checkpoints": "results/hotpotqa_whole_corpus/full_corpus/beir-hotpotqa/checkpoints.jsonl (counts, seconds, SHA-256; no text); the vectors stay outside the repository",
+   "not_a_speed_figure": "the seconds of a piece are recorded and are not a throughput figure"
+  },
+  "search": {
+   "program": "search_whole_corpus.py --dataset beir-hotpotqa --checkpoints ... --top 100 (cosine, exact, one piece in memory at a time)",
+   "metrics": "nDCG@10 and Recall@100 on the test queries, by retrieval_metrics.py",
+   "timeout_s": 3600
+  },
+  "controls": {
+   "A_H (the search and the metric on this data set, computed a second way)": "the same search restricted to a fixed subset of the corpus (every passage with a test judgement and the first 100,000 passages of the file) is computed twice: by search_whole_corpus.py with its restricted mode, and by a separate short program that loads the subset's vectors into one matrix and ranks with one matrix product. nDCG@10 and Recall@100 must agree to five decimals.",
+   "C_H (ids and vectors belong together)": "after the encoding, 1,000 passages spread evenly over the file are encoded again in one new request stream and compared with the stored rows found by their ids: every cosine must be at least 0.999.",
+   "already_shown_for_the_programs": "the encoder against the first session's vectors (results/second_batch/full_corpus/program_check/), the search program on four reduced-corpus runs and on two restricted whole-corpus runs (cells A and C of the pre-registration)",
+   "programs_of_the_two_controls": "written after this freeze; their SHA-256 values are recorded in the results folder before their first use"
+  },
+  "public_value": "none for this model on this data set: the public MTEB results folder of the open weights (read 2026-10-03, MODEL_CARD_CLAIMS.json) holds no HotpotQA file, and the model card gives HotpotQA only inside a four-set average. The result is reported with the sentence 'no public value for this model'."
+ },
+ "cell_H-R": {
+  "what": "as cell D: llama-nemotron-rerank-1b-v2 1.10.0 on the 100 results per query of cell H, one call per query; quality, then the duration of every call in two passes",
+  "only_if": "cell H is complete and both controls passed",
+  "limits_s": {
+   "rerank": 7200,
+   "timed passes": 7200
+  }
+ },
+ "known_before": {
+  "whole MIRACL corpora with this NIM": {
+   "zh": {
+    "ndcg_cut_10": 0.6492055253430075,
+    "recall_100": 0.9641948382406398,
+    "after_the_1b_reranker": 0.6829602919684138
+   },
+   "ja": {
+    "ndcg_cut_10": 0.7412230950650949,
+    "recall_100": 0.9842154938085169,
+    "after_the_1b_reranker": 0.7713385430562314
+   }
+  }
+ },
+ "expectations": {
+  "encoding": "between 400 and 1,000 passages per second (the passages are shorter than MIRACL's); the corpus is finished in one night stretch of about 10 hours or less",
+  "H": "nDCG@10 between 0.66 and 0.82 and Recall@100 between 0.85 and 0.97 (a prior from figures published for other text-embedding models of this size, not looked up again for this file; there is no figure for this model)",
+  "controls": "both pass",
+  "H-R": "nDCG@10 rises by 0.02 to 0.08; Recall@100 equal before and after",
+  "confidence": "low for the quality range (no reference for this model), moderate for the rest"
+ },
+ "branches_decided_in_advance": {
+  "a control fails": "no figure of cell H is reported; the failure is the result",
+  "the corpus is not finished at 08:00": "the checkpoint file says where it stopped; nothing is searched until it is finished",
+  "the result lies outside the expected range": "reported as measured, with the controls; no setting is changed to move it"
+ },
+ "harness_sha256": {
+  "encode_corpus_resumable.py": "37bfb0e8a3adb66b26914b97ba3a48f27f699c43deb656c61b2ff5010b2a18c7",
+  "search_whole_corpus.py": "c69bd45625b61b1f1db03ca4fcbcbc0c4f45e0faad237270421ae3e378b386da",
+  "retrieval_datasets.py": "699a7681569f61c9c66980a8ec91341b9e45a7836a28686cf7888b8bda174d18",
+  "retrieval_metrics.py": "db1ddd18f78484d998bdd700311fa4e67bfd62fc702a389a2ebddab3f77c61e5",
+  "nim_retrieval_clients.py": "706b960a71e583143969794f14138c93304dc6623d9c62fa1082866819a26cf2",
+  "rerank_cell.py": "689b3e791cd198e6b2a6e7dbaecf04157081c1383ff1259168f0579ef6e29fc1",
+  "score_run.py": "a96f43db8df6dd4813ba25f850aac936b404a50e5d18d73c66c94d8a9318163b",
+  "run_step.py": "3468e40ba41085aff2233f6f526f43bf7bbed953894984ddc515b5ff1d10a143",
+  "session_step.py": "80f79d0d2affc7a346fe91a2d3ab33e0a904533e8c6faa5c24672bb4d7673b2c"
+ }
+}

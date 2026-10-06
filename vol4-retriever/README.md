@@ -17,10 +17,27 @@
 | [`results/first_batch/`](results/first_batch/README.md) | the first GPU session: pre-registration, run log, results |
 | [`results/second_batch/`](results/second_batch/README.md) | the second GPU session: one library version, one precision at a time, every passage of MIRACL zh and ja encoded |
 | [`results/whole_corpus_quality/`](results/whole_corpus_quality/README.md) | nDCG@10 and Recall@100 on the whole MIRACL zh and ja corpora beside the reduced-corpus values; the reranker on those results with the duration of every call; four embedding NIMs timed from a container and from the host |
-| [`tests/`](tests/) | 77 unit tests (6 more run when the downloaded data sets are present) |
+| [`results/hotpotqa_whole_corpus/`](results/hotpotqa_whole_corpus/README.md) | BEIR HotpotQA, every passage (5,233,329) encoded with the same NIM and searched exactly: nDCG@10 and Recall@100 on the test queries, two controls, and the 1b reranker on the results |
+| [`tests/`](tests/) | 87 unit tests (6 more run when the downloaded data sets are present) |
 | [`positive_control/`](positive_control/) | the tool check: Pyserini's BM25 on SciFact, scored by our metric program |
 | [`MTEB_REFERENCE.md`](MTEB_REFERENCE.md) | the model-level reference: two values from the public MTEB results, and every condition of them with the file it was read from |
 | [`SOURCES.md`](SOURCES.md), [`MODEL_CARD_CLAIMS.json`](MODEL_CARD_CLAIMS.json) | what the documentation, the model cards, the MTEB results repository and the issue trackers say, with links and the date they were read |
+
+## Which of these models the RAG Blueprint uses by default
+
+Read from the compose files of the NVIDIA RAG Blueprint at tag `v2.6.2` (commit `f20716d7`); nothing here was measured for this table.
+
+| Role in the Blueprint | Default (file and line in the Blueprint's repository) | Measured in this volume? |
+|---|---|---|
+| Embedding | `nvidia/llama-nemotron-embed-vl-1b-v2`, image tag `1.12.0` (`deploy/compose/docker-compose-rag-server.yaml` lines 100 to 101; `deploy/compose/nims.yaml` line 70). Dimensions 2048 (line 104) | the model yes, as image tag `2.3.0` (first session; timing in `results/whole_corpus_quality/`, cell E); the default's own tag `1.12.0` was not run |
+| Embedding, the text-only alternative the compose file carries as a comment | `nvidia/llama-nemotron-embed-1b-v2`, image tag `1.13.0` (the same file, lines 102 to 103; `nims.yaml` line 40, profile `text-embed`) | yes, this tag |
+| Reranking | `nvidia/llama-nemotron-rerank-1b-v2`, image tag `1.10.0`, on by default (`docker-compose-rag-server.yaml` lines 108, 109 and 113; `nims.yaml` line 100) | yes, this tag: first session, and on the whole MIRACL zh and ja corpora (cell D) |
+| Retrieval depth | 100 results from the vector search, 10 after reranking (`VECTOR_DB_TOPK`, `APP_RETRIEVER_TOPK`: lines 70 and 161) | cell D reranks the top 100, the same depth |
+| Vector store | Elasticsearch, dense search (lines 40 and 45) | no: this volume searches exactly, on the CPU |
+
+- **`nemotron-3-embed-1b`, the model whose whole-corpus quality this volume measures, is not the Blueprint's default embedder** at this tag: its compose files do not name it. The Blueprint's documentation has a section on migrating to it (`docs/change-model.md` lines 415 to 494, image tag `2.2.1`; this volume measured tag `2.2.2`), which says to re-ingest after the switch.
+- `llama-nemotron-rerank-500m-v2` (cell D2) is not named there either.
+- The Helm values of the same tag give the same two defaults, with the vision-language embedder enabled and the text embedder disabled (`deploy/helm/nvidia-blueprint-rag/values.yaml` lines 191 to 199 and 888 to 942).
 
 ## The tool check
 
