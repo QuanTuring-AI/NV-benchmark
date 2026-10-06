@@ -1,0 +1,646 @@
+{
+ "arm": "J2P",
+ "arm_of_this_folder": "J2P",
+ "request_shape_of": "J2",
+ "judge": "Nemotron 3 Nano",
+ "path": "guardrails_self_check",
+ "thinking": true,
+ "max_tokens": 1024,
+ "server": "NIM_PASSTHROUGH_ARGS=--reasoning-parser nemotron_v3",
+ "precheck_rule": "addendum_parser_arm_precheck.json: the study's controls and the server check",
+ "precheck": {
+  "input": {
+   "study_precheck": {
+    "controls_pass": true,
+    "reasoning_switch": {
+     "arm_setting": true,
+     "answers_with_reasoning": 0,
+     "of": 10,
+     "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+     "pass": false
+    },
+    "pass": false,
+    "at": "2026-10-06T15:45:26+0800"
+   },
+   "server_check": {
+    "answers_with_reasoning_content": 10,
+    "answers_with_a_think_tag_in_the_content": 0,
+    "of": 10,
+    "rule": "at least 9 of 10 with a non-empty reasoning field of the message (`reasoning` or `reasoning_content`), none with a think tag in the content",
+    "pass": true,
+    "at": "2026-10-06T15:45:28+0800"
+   },
+   "usable_under_the_addendum": true
+  },
+  "output": {
+   "study_precheck": {
+    "controls_pass": true,
+    "reasoning_switch": {
+     "arm_setting": true,
+     "answers_with_reasoning": 0,
+     "of": 10,
+     "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+     "pass": false
+    },
+    "pass": false,
+    "at": "2026-10-06T15:56:32+0800"
+   },
+   "server_check": {
+    "answers_with_reasoning_content": 10,
+    "answers_with_a_think_tag_in_the_content": 0,
+    "of": 10,
+    "rule": "at least 9 of 10 with a non-empty reasoning field of the message (`reasoning` or `reasoning_content`), none with a think tag in the content",
+    "pass": true,
+    "at": "2026-10-06T15:56:34+0800"
+   },
+   "usable_under_the_addendum": true
+  }
+ },
+ "tracks": {
+  "input": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 1928,
+     "items_expected": 1928,
+     "harmful": 1039,
+     "harmless": 889,
+     "detection": {
+      "k": 686,
+      "n": 1039,
+      "rate": 0.6602502406159769,
+      "wilson95": [
+       0.6309081802366855,
+       0.6884116906635144
+      ]
+     },
+     "false_alarm": {
+      "k": 90,
+      "n": 889,
+      "rate": 0.10123734533183353,
+      "wilson95": [
+       0.08309297068892697,
+       0.12281308016081781
+      ]
+     },
+     "no_verdict": {
+      "share": 0.001037344398340249,
+      "unreadable": 1,
+      "truncated": 1,
+      "error": 0
+     },
+     "with_verdict": 1926,
+     "accuracy_over_items_with_verdict": 0.770508826583593,
+     "f1_unsafe_over_items_with_verdict": 0.7563395810363837,
+     "confusion_over_items_with_verdict": {
+      "tp": 686,
+      "fn": 352,
+      "fp": 90,
+      "tn": 798
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 687,
+       "n": 1039,
+       "rate": 0.6612127045235804,
+       "wilson95": [
+        0.6318868523281277,
+        0.6893508556345357
+       ]
+      },
+      "block_on_harmless": {
+       "k": 91,
+       "n": 889,
+       "rate": 0.10236220472440945,
+       "wilson95": [
+        0.08411660392221128,
+        0.12402948627633532
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "vol1": {
+     "items": 45,
+     "items_expected": 45,
+     "harmful": 15,
+     "harmless": 30,
+     "detection": {
+      "k": 15,
+      "n": 15,
+      "rate": 1.0,
+      "wilson95": [
+       0.7961166989641515,
+       1.0
+      ]
+     },
+     "false_alarm": {
+      "k": 0,
+      "n": 30,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.11351339317396876
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 45,
+     "accuracy_over_items_with_verdict": 1.0,
+     "f1_unsafe_over_items_with_verdict": 1.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 15,
+      "fn": 0,
+      "fp": 0,
+      "tn": 30
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 15,
+       "n": 15,
+       "rate": 1.0,
+       "wilson95": [
+        0.7961166989641515,
+        1.0
+       ]
+      },
+      "block_on_harmless": {
+       "k": 0,
+       "n": 30,
+       "rate": 0.0,
+       "wilson95": [
+        0.0,
+        0.11351339317396876
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "xstest": {
+     "items": 450,
+     "items_expected": 450,
+     "harmful": 200,
+     "harmless": 250,
+     "detection": {
+      "k": 177,
+      "n": 200,
+      "rate": 0.885,
+      "wilson95": [
+       0.8333528310151243,
+       0.9221362676743804
+      ]
+     },
+     "false_alarm": {
+      "k": 17,
+      "n": 250,
+      "rate": 0.068,
+      "wilson95": [
+       0.04288591857836033,
+       0.10618925218570377
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 450,
+     "accuracy_over_items_with_verdict": 0.9111111111111111,
+     "f1_unsafe_over_items_with_verdict": 0.8984771573604061,
+     "confusion_over_items_with_verdict": {
+      "tp": 177,
+      "fn": 23,
+      "fp": 17,
+      "tn": 233
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 177,
+       "n": 200,
+       "rate": 0.885,
+       "wilson95": [
+        0.8333528310151243,
+        0.9221362676743804
+       ]
+      },
+      "block_on_harmless": {
+       "k": 17,
+       "n": 250,
+       "rate": 0.068,
+       "wilson95": [
+        0.04288591857836033,
+        0.10618925218570377
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "xstest_harmless_only": {
+     "items": 250,
+     "items_expected": 250,
+     "harmful": 0,
+     "harmless": 250,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 17,
+      "n": 250,
+      "rate": 0.068,
+      "wilson95": [
+       0.04288591857836033,
+       0.10618925218570377
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 250,
+     "accuracy_over_items_with_verdict": 0.932,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 17,
+      "tn": 233
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 0,
+       "n": 0,
+       "rate": null,
+       "wilson95": [
+        null,
+        null
+       ]
+      },
+      "block_on_harmless": {
+       "k": 17,
+       "n": 250,
+       "rate": 0.068,
+       "wilson95": [
+        0.04288591857836033,
+        0.10618925218570377
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "aegis2_needs_caution_only": {
+     "items": 148,
+     "items_expected": 148,
+     "harmful": 0,
+     "harmless": 148,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 24,
+      "n": 148,
+      "rate": 0.16216216216216217,
+      "wilson95": [
+       0.1114610940654237,
+       0.22995724598037653
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 148,
+     "accuracy_over_items_with_verdict": 0.8378378378378378,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 24,
+      "tn": 124
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 0,
+       "n": 0,
+       "rate": null,
+       "wilson95": [
+        null,
+        null
+       ]
+      },
+      "block_on_harmless": {
+       "k": 24,
+       "n": 148,
+       "rate": 0.16216216216216217,
+       "wilson95": [
+        0.1114610940654237,
+        0.22995724598037653
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 2423,
+    "calls_returned": 2423,
+    "latency_ms": {
+     "p50": 2278.5,
+     "p99": 15181.6,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 112,
+     "p99": 628,
+     "n": 2423
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 1,
+    "wall_s": 507.577,
+    "verdicts_per_s": 4.773659957011448,
+    "completion_tokens_per_s": 763.7442200887747,
+    "concurrency": 16,
+    "window": [
+     "2026-10-06T15:47:45+0800",
+     "2026-10-06T15:56:14+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 378.2,
+     "p99": 2039.0,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 107,
+     "p99": 620,
+     "n": 200
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 103.167,
+    "verdicts_per_s": 1.9386043986933805,
+    "completion_tokens_per_s": 293.9796640398577,
+    "concurrency": 1,
+    "window": [
+     "2026-10-06T15:45:39+0800",
+     "2026-10-06T15:47:24+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 194,
+    "n": 200,
+    "rate": 0.97,
+    "wilson95": [
+     0.9361057075454807,
+     0.9861796856598887
+    ]
+   },
+   "stability_checks": {
+    "study_precheck": {
+     "controls_pass": true,
+     "reasoning_switch": {
+      "arm_setting": true,
+      "answers_with_reasoning": 0,
+      "of": 10,
+      "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+      "pass": false
+     },
+     "pass": false,
+     "at": "2026-10-06T16:07:25+0800"
+    },
+    "server_check": {
+     "answers_with_reasoning_content": 10,
+     "answers_with_a_think_tag_in_the_content": 0,
+     "of": 10,
+     "rule": "at least 9 of 10 with a non-empty reasoning field of the message (`reasoning` or `reasoning_content`), none with a think tag in the content",
+     "pass": true,
+     "at": "2026-10-06T16:07:27+0800"
+    },
+    "usable_under_the_addendum": true
+   },
+   "stability": {
+    "k": 190,
+    "n": 200,
+    "rate": 0.95,
+    "wilson95": [
+     0.9104218518612239,
+     0.972617354399236
+    ]
+   }
+  },
+  "output": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 813,
+     "items_expected": 813,
+     "harmful": 394,
+     "harmless": 419,
+     "detection": {
+      "k": 238,
+      "n": 394,
+      "rate": 0.6040609137055838,
+      "wilson95": [
+       0.5549896230637568,
+       0.6511226314083374
+      ]
+     },
+     "false_alarm": {
+      "k": 64,
+      "n": 419,
+      "rate": 0.15274463007159905,
+      "wilson95": [
+       0.1214659995060274,
+       0.1903327990044126
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 813,
+     "accuracy_over_items_with_verdict": 0.7293972939729397,
+     "f1_unsafe_over_items_with_verdict": 0.6839080459770115,
+     "confusion_over_items_with_verdict": {
+      "tp": 238,
+      "fn": 156,
+      "fp": 64,
+      "tn": 355
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 238,
+       "n": 394,
+       "rate": 0.6040609137055838,
+       "wilson95": [
+        0.5549896230637568,
+        0.6511226314083374
+       ]
+      },
+      "block_on_harmless": {
+       "k": 64,
+       "n": 419,
+       "rate": 0.15274463007159905,
+       "wilson95": [
+        0.1214659995060274,
+        0.1903327990044126
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 813,
+    "calls_returned": 813,
+    "latency_ms": {
+     "p50": 2954.7,
+     "p99": 13503.5,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 152,
+     "p99": 629,
+     "n": 813
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 184.785,
+    "verdicts_per_s": 4.399707768487702,
+    "completion_tokens_per_s": 806.1963903996536,
+    "concurrency": 16,
+    "window": [
+     "2026-10-06T15:59:23+0800",
+     "2026-10-06T16:02:29+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 580.4,
+     "p99": 2017.9,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 157,
+     "p99": 581,
+     "n": 200
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 134.574,
+    "verdicts_per_s": 1.4861711771961894,
+    "completion_tokens_per_s": 271.9098785798148,
+    "concurrency": 1,
+    "window": [
+     "2026-10-06T15:56:45+0800",
+     "2026-10-06T15:59:01+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 179,
+    "n": 200,
+    "rate": 0.895,
+    "wilson95": [
+     0.8448196800887696,
+     0.9302925120731899
+    ]
+   },
+   "stability_checks": {
+    "study_precheck": {
+     "controls_pass": true,
+     "reasoning_switch": {
+      "arm_setting": true,
+      "answers_with_reasoning": 0,
+      "of": 10,
+      "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+      "pass": false
+     },
+     "pass": false,
+     "at": "2026-10-06T16:08:17+0800"
+    },
+    "server_check": {
+     "answers_with_reasoning_content": 10,
+     "answers_with_a_think_tag_in_the_content": 0,
+     "of": 10,
+     "rule": "at least 9 of 10 with a non-empty reasoning field of the message (`reasoning` or `reasoning_content`), none with a think tag in the content",
+     "pass": true,
+     "at": "2026-10-06T16:08:20+0800"
+    },
+    "usable_under_the_addendum": true
+   },
+   "stability": {
+    "k": 87,
+    "n": 100,
+    "rate": 0.87,
+    "wilson95": [
+     0.7901964855992357,
+     0.9224283257275948
+    ]
+   }
+  }
+ },
+ "files_read": [
+  {
+   "file": "input_c16.jsonl",
+   "sha256": "7da6c4b6de10986347dba703a2edd21cf8b167a91654e92662c0085c199d1f26"
+  },
+  {
+   "file": "input_c1.jsonl",
+   "sha256": "a0516ffe8187f216655cd069bc696e5f29b57d84c1225b5a025a471c29e06099"
+  },
+  {
+   "file": "input_stability.jsonl",
+   "sha256": "ea7c3bf22b3785cbea2c446aedbe61c95f8f2b3a86b6fc2c86a4a0a286511969"
+  },
+  {
+   "file": "output_c16.jsonl",
+   "sha256": "3c0b70898e96170d0a948718de19b1659771b71c242d66ce6cbd6330b6d2e8e8"
+  },
+  {
+   "file": "output_c1.jsonl",
+   "sha256": "4600768a146e51907e1f7a665eec586a82c67e60addaf4bd075fa038347aecdd"
+  },
+  {
+   "file": "output_stability.jsonl",
+   "sha256": "41e97a810acdef861e86dba860e45b44058339d7125dd65b60cbe179c962a90e"
+  }
+ ],
+ "per_item_files_read_from": "J2P"
+}

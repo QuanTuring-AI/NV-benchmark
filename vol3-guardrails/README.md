@@ -14,6 +14,8 @@ The measurements, their boundaries and their results are in [`BASELINE.md`](BASE
 
 **Added 2026-10-06:** [`results/safety_guard_nim/`](results/safety_guard_nim/README.md) serves the Safety Guard model through its NIM (arm J6N, the ninth point of both figures), with the study's arm J6 run again the same night, the prompt template of the NIM's documentation, and the model behind the NeMo Guardrails content-safety rail as the library documents it.
 
+**Added 2026-10-06 (afternoon):** [`results/parser_and_engine_version/`](results/parser_and_engine_version/README.md) has two follow-up arms: the reasoning parser on the whole of both tracks (arm J2P: with the parser on the server the rail follows the model's answer on all but 2 of 3,236 items), and the Safety Guard model on the upstream vLLM image tagged v0.10.0 (arm J6-v010: within 4% of the NIM's rate, about 17% below upstream 0.20.2). Neither is drawn on the figures above.
+
 **Scope rule of the study.** Every figure is about one arm. Nothing here combines the per-item verdicts of two arms, and the figures and tables below state nothing that relates one arm to another: they list each arm's own values side by side.
 
 ### Figures
@@ -258,6 +260,70 @@ Every number of the study that an article may use, with the file it comes from a
 <!-- end of the Safety Guard NIM rows -->
 
 **How to check a row:** open the file, follow the key, compare. Or check every row at once: `python ../tools/check_claims.py README.md` (from this directory). `results/p93_judges/table.json` holds the seven arms' summaries as they were read from each arm's own `summary.json`; nothing in it is computed across arms.
+
+## Run it
+
+Three starting points, each copied from a run recorded in this directory (the container names are the runs' own). `$NGC_ENV_FILE` is a file holding the NGC key (passed by path, never printed); `$NIM_CACHE_DIR` is a folder for the NIM's model cache. All three were run on one RTX 5090 (32 GB), Windows 11 with Docker Desktop (WSL2), graphics driver 610.88, on 2026-10-06.
+
+### 1 · The Safety Guard model through its NIM, on a card its optimised profiles do not list
+
+The NIM `llama-3.1-nemotron-safety-guard-8b-v3:1.14.0` selects no profile by itself on this card; its two TensorRT-LLM FP8 profiles are refused ("is incompatible with detected hardware"). The generic profile (vLLM, BF16), named by its id, starts and serves (ready after 251 to 327 s, 31,892 MiB on the card):
+
+```bash
+docker run -d --name sgnim_generic_main --gpus all --shm-size=64GB -p 127.0.0.1:8000:8000 \
+  --env-file "$NGC_ENV_FILE" \
+  -e NIM_MODEL_PROFILE=47804570e8db67fdc60d9cb518b0f60316ac4eb0f3a55af81aafefe124505a8f \
+  -e NIM_MAX_MODEL_LEN=8192 \
+  -v "$NIM_CACHE_DIR:/opt/nim/.cache" \
+  nvcr.io/nim/nvidia/llama-3.1-nemotron-safety-guard-8b-v3:1.14.0
+```
+
+Recorded in [`results/safety_guard_nim/events.jsonl`](results/safety_guard_nim/events.jsonl) (the `container_ready` lines carry the command); figures in [`results/safety_guard_nim/`](results/safety_guard_nim/README.md).
+
+### 2 · That model behind the NeMo Guardrails content-safety rail
+
+`config.yml` as used (NeMo Guardrails 0.24.1). The model is named once per entry: the library rejects a configuration that names it in `model` and again in `parameters.model_name` ("Model name must be specified in exactly one place").
+
+```yaml
+models:
+  - type: main
+    engine: nim
+    model: nvidia/llama-3.1-nemotron-safety-guard-8b-v3
+    parameters:
+      base_url: "http://127.0.0.1:8000/v1"
+
+  - type: content_safety
+    engine: nim
+    model: nvidia/llama-3.1-nemotron-safety-guard-8b-v3
+    parameters:
+      base_url: "http://127.0.0.1:8000/v1"
+
+rails:
+  input:
+    flows:
+      - content safety check input $model=content_safety
+  output:
+    flows:
+      - content safety check output $model=content_safety
+```
+
+`prompts.yml` beside it is the library's own `examples/configs/content_safety_multilingual/prompts.yml` at tag `v0.24.1`, byte for byte ([`scripts/guardrails_safety_guard/prompts.yml`](scripts/guardrails_safety_guard/prompts.yml)). Both files as written by the run: [`results/safety_guard_nim/J6G/gr_config/`](results/safety_guard_nim/J6G/gr_config/).
+
+### 3 · Nemotron 3 Nano as a self-check model, with the reasoning parser on the server
+
+Without the last `-e` line the self-check rail blocks every item when the model reasons (arm J2); with it the reasoning is separated on the server and the rail reads the model's answer (arm J2P: on the whole of both tracks its decisions and the model's answers differ on 2 of 2,423 prompts and 0 of 813 responses):
+
+```bash
+docker run -d --name vol3fu_parser_main --gpus all -p 127.0.0.1:8000:8000 \
+  --env-file "$NGC_ENV_FILE" \
+  -e NIM_MODEL_PROFILE=1fba9ecfcfb4cde28d4ce3fd55c40bca89a5a613e25e98f057befe6a7e99eada \
+  -e NIM_MAX_MODEL_LEN=8192 \
+  -e NIM_PASSTHROUGH_ARGS="--reasoning-parser nemotron_v3" \
+  -v "$NIM_CACHE_DIR:/opt/nim/.cache" \
+  nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12
+```
+
+Recorded in [`results/parser_and_engine_version/events.jsonl`](results/parser_and_engine_version/events.jsonl); figures in [`results/parser_and_engine_version/`](results/parser_and_engine_version/README.md). The NIM's start-up log has no line about the argument; that it took effect shows in the responses (the reasoning arrives in its own field of the message, and the content carries no think tag).
 
 ## Internal identifiers
 

@@ -277,3 +277,18 @@ vol3-guardrails/scripts/safety_guard_nim_summary.py -text
 vol3-guardrails/results/safety_guard_nim/*/input_*.jsonl -text
 vol3-guardrails/results/safety_guard_nim/*/output_*.jsonl -text
 vol3-guardrails/results/safety_guard_nim/*/gr_config/* -text
+# The parser and engine-version arms: the files bound by
+# vol3-guardrails/results/parser_and_engine_version/prediction_parser_and_engine_version.json, the per-item files bound
+# by result_sha256 in each arm's cells.jsonl, and the rail config files as used
+vol3-guardrails/results/parser_and_engine_version/before_the_run/* -text
+vol3-guardrails/scripts/parser_and_engine_version_run.py -text
+vol3-guardrails/results/parser_and_engine_version/*/input_*.jsonl -text
+vol3-guardrails/results/parser_and_engine_version/*/output_*.jsonl -text
+vol3-guardrails/results/parser_and_engine_version/*/gr_config/* -text
+# The parser arm's addendum: the program it binds, the addendum itself (bound by its .sha256 file) and the first run's records it lists
+vol3-guardrails/scripts/parser_arm_run.py -text
+vol3-guardrails/results/parser_and_engine_version/addendum_parser_arm_precheck.json -text
+vol3-guardrails/results/parser_and_engine_version/J2P_first_run/* -text
+# The rate repeat of the parser arm: the program its addendum binds and the addendum (bound by its .sha256 file)
+vol3-guardrails/scripts/parser_arm_rate_repeat.py -text
+vol3-guardrails/results/parser_and_engine_version/addendum_rate_repeat.json -text
