@@ -4,9 +4,15 @@
 > **Reproduce:** `git checkout vol3`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory and gives the commit at which those paths exist, for a byte-for-byte rerun.
 The measurements, their boundaries and their results are in [`BASELINE.md`](BASELINE.md). Harnesses are in `scripts/`, results in `results/`.
 
+![NeMo Guardrails on one RTX 5090: the models behind the rail](figures/cover_vol3.png)
+
+*One RTX 5090 · one safety model on the card at a time · Aegis 2.0 test split and XSTest*
+
 ## The judge study: two figures, and where each number comes from
 
 *Working data; no article has been published from it.* The study's result directories are [`results/p93_judges/`](results/p93_judges/README.md) (seven arms, one safety model on the card at a time), [`results/p102_followup/`](results/p102_followup/README.md) (a reasoning parser on the server; Llama Guard 3 8B as a reference arm) and [`results/lg3_timing_repeats/`](results/lg3_timing_repeats/README.md) (the reference arm's timed cells, repeated twice on a quiet host). Each of those READMEs gives the boundaries of its run.
+
+**Added 2026-10-06:** [`results/safety_guard_nim/`](results/safety_guard_nim/README.md) serves the Safety Guard model through its NIM (arm J6N, the ninth point of both figures), with the study's arm J6 run again the same night, the prompt template of the NIM's documentation, and the model behind the NeMo Guardrails content-safety rail as the library documents it.
 
 **Scope rule of the study.** Every figure is about one arm. Nothing here combines the per-item verdicts of two arms, and the figures and tables below state nothing that relates one arm to another: they list each arm's own values side by side.
 
@@ -26,6 +32,7 @@ Aegis 2.0 responses (the model sees the request and the response):
 - **Vertical axis:** harmful items flagged ÷ harmful items, with the Wilson 95% interval as the bar. What the figures do not show: harmless items flagged (false alarms), XSTest, and the items without a verdict. Those are in the tables below and in [`results/p93_judges/table.md`](results/p93_judges/table.md).
 - **Timings at one request at a time are not on the figures.** On this host the median of such a cell moved between runs of the same arm (51 · 60 · 66 ms for the reference arm's input track), while the rate at 16 concurrent requests stayed within 4% (98.1 · 95.3 · 94.6 verdicts per second). The one-at-a-time medians in the tables are therefore a range on this host, not a property of a model.
 - The two arms asked through Guardrails' content-safety rail on a 200-item subset (`J4G`, `J5G`) have no timed cell and are not drawn.
+- Two squares of one colour stand for one model on two servers: Llama 3.1 Nemotron Safety Guard 8B v3 on upstream vLLM (J6, measured 2026-10-02) and through its NIM (J6N, measured 2026-10-06). The same-night partner of J6N is in [`results/safety_guard_nim/`](results/safety_guard_nim/README.md), section 2.
 
 ### The arms
 
@@ -39,6 +46,7 @@ Aegis 2.0 responses (the model sees the request and the response):
 | J5 | Nemotron 3.5 Content Safety | upstream vLLM 0.20.2 | the same | on |
 | J6 | Llama 3.1 Nemotron Safety Guard 8B v3 | upstream vLLM 0.20.2 | direct request, the model card's prompt | — |
 | LG3 | Llama Guard 3 8B (reference arm) | upstream vLLM | direct request, the model's own prompt | — |
+| J6N | Llama 3.1 Nemotron Safety Guard 8B v3 | NIM 1.14.0, generic profile (vLLM, BF16) | as J6: direct request, the model card's prompt | — |
 
 ### Claim → evidence
 
@@ -161,6 +169,93 @@ Every number of the study that an article may use, with the file it comes from a
 | input track: median duration of a call, one request at a time, ms, first run · repeat 1 · repeat 2 | 51.4 · 60.1 · 65.9 | `results/lg3_timing_repeats/comparison.json` | `tracks.input.c1_p50_ms.{first,quiet[0],quiet[1]}` | rounds |
 | output track: verdicts per second at 16 concurrent requests, first run · repeat 1 · repeat 2 | 64.8 · 64.1 · 63.4 | `results/lg3_timing_repeats/comparison.json` | `tracks.output.c16_verdicts_per_s.{first,quiet[0],quiet[1]}` | rounds |
 | output track: median duration of a call, one request at a time, ms, first run · repeat 1 · repeat 2 | 52.3 · 63.6 · 63.5 | `results/lg3_timing_repeats/comparison.json` | `tracks.output.c1_p50_ms.{first,quiet[0],quiet[1]}` | rounds |
+
+**Counts and settings an article states**
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| Aegis prompts whose only category is Needs Caution, labelled safe: count | 148 | `results/p93_judges/items_summary.json` | `aegis2_needs_caution_only_by_gold.safe` | rounds |
+| Context length every server was started with, tokens | 8,192 | `results/p93_judges/prediction_p93.json` | `serving.context_tokens` | rounds |
+| Answer limit set for the reasoning arms, which is also the library's default since 0.23.0, tokens | 1,024 | `results/p93_judges/prediction_p93.json` | `arms.J2.max_tokens` | rounds |
+
+**Safety Guard 8B v3 served by its NIM, 2026-10-06 (arms J6N · J6-today · J6N-tpl · J6G)**
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| J6N · Aegis 2.0 prompts: harmful items flagged, % · lower · upper end of the interval | 87.8 · 85.6 · 89.6 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality.aegis2.detection.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N · Aegis 2.0 prompts: harmful items flagged, count · of | 912 · 1,039 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality.aegis2.detection.{k,n}` | rounds |
+| J6N · Aegis 2.0 prompts: harmless items flagged, % · lower · upper end of the interval | 15.6 · 13.4 · 18.2 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality.aegis2.false_alarm.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N · Aegis 2.0 prompts: harmless items flagged, count · of | 139 · 889 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality.aegis2.false_alarm.{k,n}` | rounds |
+| J6N · XSTest prompts: harmful items flagged, % · lower · upper end of the interval | 94.5 · 90.4 · 96.9 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality.xstest.detection.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N · XSTest prompts: harmful items flagged, count · of | 189 · 200 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality.xstest.detection.{k,n}` | rounds |
+| J6N · XSTest prompts: harmless items flagged, % · lower · upper end of the interval | 24.4 · 19.5 · 30.1 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality.xstest.false_alarm.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N · XSTest prompts: harmless items flagged, count · of | 61 · 250 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality.xstest.false_alarm.{k,n}` | rounds |
+| J6N · Aegis 2.0 responses: harmful items flagged, % · lower · upper end of the interval | 87.6 · 83.9 · 90.5 | `results/safety_guard_nim/J6N/summary.json` | `tracks.output.quality.aegis2.detection.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N · Aegis 2.0 responses: harmful items flagged, count · of | 345 · 394 | `results/safety_guard_nim/J6N/summary.json` | `tracks.output.quality.aegis2.detection.{k,n}` | rounds |
+| J6N · Aegis 2.0 responses: harmless items flagged, % · lower · upper end of the interval | 14.1 · 11.1 · 17.7 | `results/safety_guard_nim/J6N/summary.json` | `tracks.output.quality.aegis2.false_alarm.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N · Aegis 2.0 responses: harmless items flagged, count · of | 59 · 419 | `results/safety_guard_nim/J6N/summary.json` | `tracks.output.quality.aegis2.false_alarm.{k,n}` | rounds |
+| J6N · prompts: verdicts per second at 16 concurrent requests | 38.5 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality_cell.verdicts_per_s` | rounds |
+| J6N · prompts: p99 duration of a call at 16 concurrent requests, ms | 872.1 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality_cell.latency_ms.p99` | rounds |
+| J6N · prompts: median duration of a call, one request at a time, ms | 234.9 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.c1.latency_ms.p50` | rounds |
+| J6N · prompts: output tokens per call, median | 18 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.quality_cell.completion_tokens.p50` | rounds |
+| J6N · prompts: items with the same outcome in a second reading, count · of | 200 · 200 | `results/safety_guard_nim/J6N/summary.json` | `tracks.input.stability.{k,n}` | rounds |
+| J6N · responses: verdicts per second at 16 concurrent requests | 24.5 | `results/safety_guard_nim/J6N/summary.json` | `tracks.output.quality_cell.verdicts_per_s` | rounds |
+| J6N · responses: p99 duration of a call at 16 concurrent requests, ms | 1045.2 | `results/safety_guard_nim/J6N/summary.json` | `tracks.output.quality_cell.latency_ms.p99` | rounds |
+| J6N · responses: median duration of a call, one request at a time, ms | 337.5 | `results/safety_guard_nim/J6N/summary.json` | `tracks.output.c1.latency_ms.p50` | rounds |
+| J6N · responses: output tokens per call, median | 27 | `results/safety_guard_nim/J6N/summary.json` | `tracks.output.quality_cell.completion_tokens.p50` | rounds |
+| J6N · responses: items with the same outcome in a second reading, count · of | 99 · 100 | `results/safety_guard_nim/J6N/summary.json` | `tracks.output.stability.{k,n}` | rounds |
+| J6-today · Aegis 2.0 prompts: harmful items flagged, % · lower · upper end of the interval | 87.7 · 85.5 · 89.5 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality.aegis2.detection.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6-today · Aegis 2.0 prompts: harmful items flagged, count · of | 911 · 1,039 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality.aegis2.detection.{k,n}` | rounds |
+| J6-today · Aegis 2.0 prompts: harmless items flagged, % · lower · upper end of the interval | 15.3 · 13.1 · 17.8 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality.aegis2.false_alarm.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6-today · Aegis 2.0 prompts: harmless items flagged, count · of | 136 · 889 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality.aegis2.false_alarm.{k,n}` | rounds |
+| J6-today · XSTest prompts: harmful items flagged, % · lower · upper end of the interval | 94.5 · 90.4 · 96.9 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality.xstest.detection.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6-today · XSTest prompts: harmful items flagged, count · of | 189 · 200 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality.xstest.detection.{k,n}` | rounds |
+| J6-today · XSTest prompts: harmless items flagged, % · lower · upper end of the interval | 24.0 · 19.1 · 29.7 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality.xstest.false_alarm.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6-today · XSTest prompts: harmless items flagged, count · of | 60 · 250 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality.xstest.false_alarm.{k,n}` | rounds |
+| J6-today · Aegis 2.0 responses: harmful items flagged, % · lower · upper end of the interval | 87.3 · 83.7 · 90.2 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.output.quality.aegis2.detection.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6-today · Aegis 2.0 responses: harmful items flagged, count · of | 344 · 394 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.output.quality.aegis2.detection.{k,n}` | rounds |
+| J6-today · Aegis 2.0 responses: harmless items flagged, % · lower · upper end of the interval | 14.1 · 11.1 · 17.7 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.output.quality.aegis2.false_alarm.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6-today · Aegis 2.0 responses: harmless items flagged, count · of | 59 · 419 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.output.quality.aegis2.false_alarm.{k,n}` | rounds |
+| J6-today · prompts: verdicts per second at 16 concurrent requests | 47.5 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality_cell.verdicts_per_s` | rounds |
+| J6-today · prompts: p99 duration of a call at 16 concurrent requests, ms | 719.6 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality_cell.latency_ms.p99` | rounds |
+| J6-today · prompts: median duration of a call, one request at a time, ms | 194.2 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.c1.latency_ms.p50` | rounds |
+| J6-today · prompts: output tokens per call, median | 18 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.input.quality_cell.completion_tokens.p50` | rounds |
+| J6-today · responses: verdicts per second at 16 concurrent requests | 30.5 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.output.quality_cell.verdicts_per_s` | rounds |
+| J6-today · responses: p99 duration of a call at 16 concurrent requests, ms | 809.7 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.output.quality_cell.latency_ms.p99` | rounds |
+| J6-today · responses: median duration of a call, one request at a time, ms | 282.9 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.output.c1.latency_ms.p50` | rounds |
+| J6-today · responses: output tokens per call, median | 27 | `results/safety_guard_nim/J6-today/summary.json` | `tracks.output.quality_cell.completion_tokens.p50` | rounds |
+| J6N-tpl · Aegis 2.0 prompts: harmful items flagged, % · lower · upper end of the interval | 87.3 · 85.1 · 89.2 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality.aegis2.detection.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N-tpl · Aegis 2.0 prompts: harmful items flagged, count · of | 907 · 1,039 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality.aegis2.detection.{k,n}` | rounds |
+| J6N-tpl · Aegis 2.0 prompts: harmless items flagged, % · lower · upper end of the interval | 14.7 · 12.6 · 17.2 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality.aegis2.false_alarm.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N-tpl · Aegis 2.0 prompts: harmless items flagged, count · of | 131 · 889 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality.aegis2.false_alarm.{k,n}` | rounds |
+| J6N-tpl · XSTest prompts: harmful items flagged, % · lower · upper end of the interval | 93.0 · 88.6 · 95.8 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality.xstest.detection.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N-tpl · XSTest prompts: harmful items flagged, count · of | 186 · 200 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality.xstest.detection.{k,n}` | rounds |
+| J6N-tpl · XSTest prompts: harmless items flagged, % · lower · upper end of the interval | 22.4 · 17.7 · 28.0 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality.xstest.false_alarm.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N-tpl · XSTest prompts: harmless items flagged, count · of | 56 · 250 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality.xstest.false_alarm.{k,n}` | rounds |
+| J6N-tpl · Aegis 2.0 responses: harmful items flagged, % · lower · upper end of the interval | 85.0 · 81.2 · 88.2 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.output.quality.aegis2.detection.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N-tpl · Aegis 2.0 responses: harmful items flagged, count · of | 335 · 394 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.output.quality.aegis2.detection.{k,n}` | rounds |
+| J6N-tpl · Aegis 2.0 responses: harmless items flagged, % · lower · upper end of the interval | 12.4 · 9.6 · 15.9 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.output.quality.aegis2.false_alarm.{rate,wilson95[0],wilson95[1]} * 100` | rounds |
+| J6N-tpl · Aegis 2.0 responses: harmless items flagged, count · of | 52 · 419 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.output.quality.aegis2.false_alarm.{k,n}` | rounds |
+| J6N-tpl · prompts: verdicts per second at 16 concurrent requests | 39.2 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality_cell.verdicts_per_s` | rounds |
+| J6N-tpl · prompts: p99 duration of a call at 16 concurrent requests, ms | 881.1 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality_cell.latency_ms.p99` | rounds |
+| J6N-tpl · prompts: median duration of a call, one request at a time, ms | 236.5 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.c1.latency_ms.p50` | rounds |
+| J6N-tpl · prompts: output tokens per call, median | 18 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.input.quality_cell.completion_tokens.p50` | rounds |
+| J6N-tpl · responses: verdicts per second at 16 concurrent requests | 25.5 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.output.quality_cell.verdicts_per_s` | rounds |
+| J6N-tpl · responses: p99 duration of a call at 16 concurrent requests, ms | 1010.6 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.output.quality_cell.latency_ms.p99` | rounds |
+| J6N-tpl · responses: median duration of a call, one request at a time, ms | 321.7 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.output.c1.latency_ms.p50` | rounds |
+| J6N-tpl · responses: output tokens per call, median | 26 | `results/safety_guard_nim/J6N-tpl/summary.json` | `tracks.output.quality_cell.completion_tokens.p50` | rounds |
+| J6G · prompts, 100 items: the rail blocks harmful items, count · of | 46 · 52 | `results/safety_guard_nim/J6G/summary.json` | `tracks.input.quality.all_items_of_the_subset.rail.block_on_harmful.{k,n}` | rounds |
+| J6G · prompts, 100 items: the rail blocks harmless items, count · of | 5 · 48 | `results/safety_guard_nim/J6G/summary.json` | `tracks.input.quality.all_items_of_the_subset.rail.block_on_harmless.{k,n}` | rounds |
+| J6G · prompts: rail decision and verdict of the same call agree, count · of | 100 · 100 | `results/safety_guard_nim/J6G/summary.json` | `tracks.input.rail_beside_verdict_of_the_same_call.agree.{k,n}` | rounds |
+| J6G · prompts: median duration of a call through the rail, ms | 206.8 | `results/safety_guard_nim/J6G/summary.json` | `tracks.input.calls.latency_ms.p50` | rounds |
+| J6G · prompts: output tokens per call, median · maximum | 17 · 33 | `results/safety_guard_nim/J6G/summary.json` | `tracks.input.calls.completion_tokens.{p50,max}` | rounds |
+| J6G · responses, 100 items: the rail blocks harmful items, count · of | 42 · 48 | `results/safety_guard_nim/J6G/summary.json` | `tracks.output.quality.all_items_of_the_subset.rail.block_on_harmful.{k,n}` | rounds |
+| J6G · responses, 100 items: the rail blocks harmless items, count · of | 8 · 52 | `results/safety_guard_nim/J6G/summary.json` | `tracks.output.quality.all_items_of_the_subset.rail.block_on_harmless.{k,n}` | rounds |
+| J6G · responses: rail decision and verdict of the same call agree, count · of | 100 · 100 | `results/safety_guard_nim/J6G/summary.json` | `tracks.output.rail_beside_verdict_of_the_same_call.agree.{k,n}` | rounds |
+| J6G · responses: median duration of a call through the rail, ms | 316.2 | `results/safety_guard_nim/J6G/summary.json` | `tracks.output.calls.latency_ms.p50` | rounds |
+| J6G · responses: output tokens per call, median · maximum | 26 · 42 | `results/safety_guard_nim/J6G/summary.json` | `tracks.output.calls.completion_tokens.{p50,max}` | rounds |
+
+<!-- end of the Safety Guard NIM rows -->
 
 **How to check a row:** open the file, follow the key, compare. Or check every row at once: `python ../tools/check_claims.py README.md` (from this directory). `results/p93_judges/table.json` holds the seven arms' summaries as they were read from each arm's own `summary.json`; nothing in it is computed across arms.
 

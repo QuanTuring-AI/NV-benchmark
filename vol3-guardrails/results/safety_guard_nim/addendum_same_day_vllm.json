@@ -1,0 +1,38 @@
+{
+ "what": "Addendum to prediction_safety_guard_nim.json: the study's arm J6 run again on the day of the NIM arms",
+ "written_at": "2026-10-06T05:02:31+0800",
+ "supplements": {
+  "file": "prediction_safety_guard_nim.json",
+  "sha256": "bb6df52e18abdfb4e7e4cf06839f7ef1eb64fdbabcf003215fd02032ce03c211"
+ },
+ "why": "the events of the NIM arms record graphics driver 610.88; every earlier run of this volume, the study's J6 of 2026-10-02 included, records 591.86. J6N against the study's J6 therefore differs in two things, the serving package and the driver (and the day). The pre-registration named one.",
+ "found_when": "after the NIM arms had run (2026-10-06 04:04 to 04:31), while reading their events; their figures were known by then: J6N gave 38.5 verdicts per second at c=16 on prompts and 24.5 on responses, the study's J6 45.9 and 30.1",
+ "arm": {
+  "name": "J6-today",
+  "served_by": "upstream vLLM, the pinned image and model snapshot of the study (p93_common.VLLM, HF_SG8), the container command of the study",
+  "asked": "as J6 and J6N",
+  "cells": "per track: precheck, c=1 on the 200-item subset, c=16 on the whole track; no stability rerun",
+  "one_variable_against": {
+   "J6N": "the serving package (same day, same driver, same host)",
+   "the study's J6": "the day and the driver"
+  }
+ },
+ "what_each_outcome_means": {
+  "J6-today is like the study's J6 (within 5% on verdicts per second and on the c=1 median)": "the driver and the day did not move this arm; the 16% to 19% between J6 and J6N belong to the serving package",
+  "J6-today is like J6N": "the difference belongs to the day or the driver, and nothing is said about the package",
+  "in between": "both figures are reported and the difference is not assigned"
+ },
+ "expectation": "like the study's J6, within 5%: the Vol.4 cells of the same night, on another kind of model, repeated their 2026-10-04 values within 2.5% across the same driver change. Confidence moderate.",
+ "limits": {
+  "container_ready_s": 1800,
+  "each_cell_s": 1800
+ },
+ "program": "scripts/safety_guard_vllm_same_day.py",
+ "program_sha256": "aaf9090b5dd4571ffdc4fd3c21a77e8b0c777d50932b345508d1215bbf1e3f19",
+ "not_bound_by_the_frozen_file": "this program was written after the freeze; the frozen programs it calls are unchanged",
+ "first_attempt": {
+  "at": "2026-10-06T05:01",
+  "what": "the program as first written did not parse (a line break inside a string); Python stopped before the program did anything: no container was started and no event was written",
+  "then": "the string was repaired, this file was rewritten with the new SHA-256 and time, and nothing else in it was changed"
+ }
+}

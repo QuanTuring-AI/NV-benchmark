@@ -9,6 +9,13 @@ Every change to this repository that reached `main`, newest first. Volumes are n
 - **Vol.2 README:** the time to finish an answer is written as 7.31 s (it was 7.3 s; the stored median is 7,314 ms), and the claim → evidence table has two more rows: the size of the MMLU sample (2,850) and the highest total throughput of the RAG-shaped sweep on each night (2,133 and 2,246 tok/s).
 - **Where the figures are in the thread:** the cover illustration and the chat figure are in the post; the RAG figure is in reply #2, because a new forum account may attach two images per post.
 
+## <PUBLICATION_DATE> · Vol.3 published: NeMo Guardrails on one RTX 5090, the models behind the rail
+
+- **Vol.3 is published.** Seven models behind the NeMo Guardrails self-check and content-safety rails, each alone on one RTX 5090: what each one flags, what it flags wrongly, and what a verdict costs. → [`vol3-guardrails/README.md`](vol3-guardrails/README.md), with a claim-to-evidence table for every number; the text of the GitHub Release is in `releases/vol3.md`. The tag `vol3` moves to this state, once, as announced on 2026-10-01.
+- **The Vol.3 directory was renamed on 2026-10-05:** `vol3-judges/` → `vol3-guardrails/`, after the NVIDIA product the volume measures, as `vol1-nim/` and `vol2-nemotron/` are named. One commit of moves only (703 files, no content changed), then the paths in the pages. [`PATH_MAP.md`](PATH_MAP.md) has a fourth column and names the commit at which the paths of each column exist; frozen pre-registrations keep the paths of their day.
+- **Added to the study on 2026-10-06:** Llama 3.1 Nemotron Safety Guard 8B v3 served by its NIM, beside the upstream vLLM arm the study had measured, with a same-night rerun of that arm, the prompt template of the NIM's documentation, and the model behind the content-safety rail as the library documents it. → [`vol3-guardrails/results/safety_guard_nim/README.md`](vol3-guardrails/results/safety_guard_nim/README.md)
+- **Figures:** a cover illustration without text or numbers and two data figures (harmful items flagged against verdicts per second at 16 concurrent requests, for prompts and for responses), each in a light and a dark version with its point table. → [`vol3-guardrails/figures/`](vol3-guardrails/figures/)
+
 ## 2026-10-02 · Vol.2: a cover illustration; the figures say "per request"
 
 - **Cover illustration** for Vol.2, without text or numbers ([`vol2-nemotron/figures/cover_vol2.png`](vol2-nemotron/figures/cover_vol2.png)), shown in the README and in `releases/vol2.md` together with the chat figure.

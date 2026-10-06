@@ -9,7 +9,8 @@ Nothing is measured here. Every point is one arm's own figure, read from that ar
   x  tracks.<track>.quality_cell.verdicts_per_s          (the cell that ran the whole set at 16 concurrent requests)
   y  tracks.<track>.quality.aegis2.detection.rate x 100  (harmful items flagged / harmful items), with its Wilson 95%
      interval (.wilson95) as the vertical bar
-Eight arms: the seven of results/p93_judges and the reference arm of results/p102_followup (Llama Guard 3 8B).
+Nine points: the seven arms of results/p93_judges, the reference arm of results/p102_followup (Llama Guard 3 8B), and
+the Safety Guard model served by its NIM (results/safety_guard_nim/J6N), added on 2026-10-06 after the others.
 The two arms asked through a second library path on a 200-item subset (J4G, J5G) have no timed cell and are not drawn.
 
 Scope: each point stands for one arm alone. The figure writes no statement that relates two arms, draws no arrow and no
@@ -60,6 +61,7 @@ ARMS = [  # arm, summary file, family, marker, reasoning, label on the figure ({
     ("J5", "results/p93_judges/J5/summary.json", "cs", "s", True, "Nemotron 3.5 Content Safety\nreasoning on"),
     ("J6", "results/p93_judges/J6/summary.json", "guard", "s", False, "Llama 3.1 Nemotron\nSafety Guard 8B v3"),
     ("LG3", "results/p102_followup/LG3/summary.json", "ref", "D", False, "Llama Guard 3 8B\n(reference arm)"),
+    ("J6N", "results/safety_guard_nim/J6N/summary.json", "guard", "s", False, "Safety Guard 8B v3\nserved by its NIM"),
 ]
 TRACKS = {"input": "Aegis 2.0 test split, prompts", "output": "Aegis 2.0 test split, responses"}
 KEYS = {"verdicts_per_s": "tracks.{t}.quality_cell.verdicts_per_s", "concurrency": "tracks.{t}.quality_cell.concurrency",
@@ -72,10 +74,11 @@ XLIM, YLIM = (4.6, 175.0), (38.0, 101.0)         # x is logarithmic, y is linear
 LABEL = {  # (track, arm) -> (dx, dy in pixels, horizontal alignment); the default is (20, -8, "left")
     ("input", "J0"): (20, -52, "left"), ("input", "J1"): (-20, 26, "right"), ("input", "J2"): (20, -52, "left"),
     ("input", "J3"): (20, -18, "left"), ("input", "J4"): (-22, 22, "right"), ("input", "J5"): (-6, 30, "left"),
-    ("input", "J6"): (-20, -64, "right"), ("input", "LG3"): (-22, -62, "right"),
+    ("input", "J6"): (16, -64, "left"), ("input", "LG3"): (-22, -62, "right"),
     ("output", "J0"): (22, -52, "left"), ("output", "J1"): (20, -62, "left"), ("output", "J2"): (20, -8, "left"),
     ("output", "J3"): (22, -40, "left"), ("output", "J4"): (24, -18, "left"), ("output", "J5"): (-4, 34, "left"),
     ("output", "J6"): (-8, 34, "left"), ("output", "LG3"): (-24, -18, "right"),
+    ("input", "J6N"): (-18, 54, "right"), ("output", "J6N"): (-20, -64, "right"),
 }
 FORBIDDEN = (("the word 'judge'", r"judge"), ("the word 'user' or 'users'", r"\busers?\b"), ("'7.3'", r"7\.3"),
              ("an arrow character", "[←-⇿⟰-⟿⤀-⥿]"), ("a multiplication sign", "×"))
