@@ -1,0 +1,391 @@
+{
+ "what": "the values drawn on the two figures of this directory, each with its source file and key",
+ "whole_corpus_quality": {
+  "what": "nDCG@10 (bar) and Recall@100 (dash) of one encoder; one entry per corpus and condition",
+  "encoder": {
+   "source": "results/whole_corpus_quality/prediction_whole_corpus.json",
+   "key": "vectors_used.whole_corpus.encoder",
+   "value": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2 pinned to fp16 (second session, cell 6)",
+   "model": "nemotron-3-embed-1b",
+   "version": "2.2.2",
+   "precision": "fp16"
+  },
+  "rerankers": {
+   "rerank_1b": {
+    "source": "results/whole_corpus_quality/prediction_whole_corpus.json",
+    "key": "cell_D_reranking_the_whole_corpus_results.image",
+    "value": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2:1.10.0"
+   },
+   "rerank_500m": {
+    "source": "results/whole_corpus_quality/addendum_second_reranker.json",
+    "key": "cell_D2.image",
+    "value": "nvcr.io/nim/nvidia/llama-nemotron-rerank-500m-v2:1.10.0"
+   }
+  },
+  "keys": {
+   "ndcg_cut_10": "metrics.ndcg_cut_10",
+   "recall_100": "metrics.recall_100",
+   "queries": "metrics.queries_scored"
+  },
+  "canvas": {
+   "width": 1600,
+   "height": 900,
+   "axes": [
+    0.0871,
+    0.2001,
+    0.895,
+    0.6
+   ],
+   "ylim": [
+    0.0,
+    1.26
+   ]
+  },
+  "corpora": [
+   {
+    "corpus": "MIRACL zh",
+    "split": "dev",
+    "passages_whole": 4934368,
+    "conditions": [
+     {
+      "condition": "reduced",
+      "label": "reduced corpus",
+      "source": "results/first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-zh/score.json",
+      "ndcg_cut_10": 0.6619852203579513,
+      "recall_100": 0.9878892523930691,
+      "queries": 393,
+      "passages": 81309
+     },
+     {
+      "condition": "whole",
+      "label": "whole corpus",
+      "source": "results/whole_corpus_quality/whole_corpus/miracl-zh/score.json",
+      "ndcg_cut_10": 0.6492055253430075,
+      "recall_100": 0.9641948382406398,
+      "queries": 393
+     },
+     {
+      "condition": "rerank_1b",
+      "label": "whole corpus + rerank 1b",
+      "source": "results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-zh/score_after.json",
+      "ndcg_cut_10": 0.6829602919684138,
+      "recall_100": 0.9641948382406398,
+      "queries": 393
+     },
+     {
+      "condition": "rerank_500m",
+      "label": "whole corpus + rerank 500m",
+      "source": "results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-zh/score_after.json",
+      "ndcg_cut_10": 0.6693237269694963,
+      "recall_100": 0.9641948382406398,
+      "queries": 393
+     }
+    ],
+    "not_drawn": {}
+   },
+   {
+    "corpus": "MIRACL ja",
+    "split": "dev",
+    "passages_whole": 6953614,
+    "conditions": [
+     {
+      "condition": "reduced",
+      "label": "reduced corpus",
+      "source": "results/first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-ja/score.json",
+      "ndcg_cut_10": 0.7437135090703177,
+      "recall_100": 0.9916296687808315,
+      "queries": 860,
+      "passages": 185319
+     },
+     {
+      "condition": "whole",
+      "label": "whole corpus",
+      "source": "results/whole_corpus_quality/whole_corpus/miracl-ja/score.json",
+      "ndcg_cut_10": 0.7412230950650949,
+      "recall_100": 0.9842154938085169,
+      "queries": 860
+     },
+     {
+      "condition": "rerank_1b",
+      "label": "whole corpus + rerank 1b",
+      "source": "results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-ja/score_after.json",
+      "ndcg_cut_10": 0.7713385430562314,
+      "recall_100": 0.9842154938085169,
+      "queries": 860
+     },
+     {
+      "condition": "rerank_500m",
+      "label": "whole corpus + rerank 500m",
+      "source": "results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-ja/score_after.json",
+      "ndcg_cut_10": 0.7523296958434128,
+      "recall_100": 0.9842154938085169,
+      "queries": 860
+     }
+    ],
+    "not_drawn": {}
+   },
+   {
+    "corpus": "BEIR HotpotQA",
+    "split": "test",
+    "passages_whole": 5233329,
+    "conditions": [
+     {
+      "condition": "whole",
+      "label": "whole corpus",
+      "source": "results/hotpotqa_whole_corpus/whole_corpus/beir-hotpotqa/score.json",
+      "ndcg_cut_10": 0.800786887144472,
+      "recall_100": 0.9156650911546252,
+      "queries": 7405
+     },
+     {
+      "condition": "rerank_1b",
+      "label": "whole corpus + rerank 1b",
+      "source": "results/hotpotqa_whole_corpus/rerank_llama-nemotron-rerank-1b-v2/beir-hotpotqa/score_after.json",
+      "ndcg_cut_10": 0.8646717723671502,
+      "recall_100": 0.9156650911546252,
+      "queries": 7405
+     }
+    ],
+    "not_drawn": {
+     "reduced": "no reduced\ntask, no\npublic value",
+     "rerank_500m": "not run"
+    }
+   }
+  ]
+ },
+ "embedding_quality_vs_rate": {
+  "what": "four embedding NIMs: nDCG@10 on two data sets against passages per second in the timed cell",
+  "keys": {
+   "passages_per_s": "passages_per_s_median",
+   "ndcg_cut_10": "metrics.ndcg_cut_10",
+   "sample_passages": "sample.passages",
+   "batch": "batch",
+   "reps": "reps"
+  },
+  "canvas": {
+   "width": 1600,
+   "height": 900,
+   "panels": {
+    "beir-scifact": {
+     "axes": [
+      0.088,
+      0.2004,
+      0.405,
+      0.6
+     ],
+     "ylim": [
+      0.69,
+      0.8
+     ],
+     "yticks": [
+      0.7,
+      0.72,
+      0.74,
+      0.76,
+      0.78,
+      0.8
+     ]
+    },
+    "miracl-hn-zh": {
+     "axes": [
+      0.578,
+      0.2004,
+      0.405,
+      0.6
+     ],
+     "ylim": [
+      0.57,
+      0.68
+     ],
+     "yticks": [
+      0.58,
+      0.6,
+      0.62,
+      0.64,
+      0.66,
+      0.68
+     ]
+    }
+   },
+   "xlim": [
+    120.0,
+    900.0
+   ],
+   "xticks": [
+    200,
+    400,
+    600,
+    800
+   ]
+  },
+  "points": [
+   {
+    "nim": "n3embed",
+    "model": "nemotron-3-embed-1b",
+    "rate_source": "results/whole_corpus_quality/timing_container_and_host/n3embed/container_1.json",
+    "second_run_source": "results/whole_corpus_quality/timing_container_and_host/n3embed/container_2.json",
+    "passages_per_s": 237.6,
+    "passages_per_s_second_run": 233.0,
+    "sample_passages": 4096,
+    "batch": 64,
+    "reps": 3,
+    "version": "2.2.2",
+    "profile_id": "N/A",
+    "precision_in_the_model_files": null,
+    "start": {
+     "source": "results/whole_corpus_quality/prediction_whole_corpus.json",
+     "key": "cell_E_timing_from_two_places.nims.nemotron-3-embed-1b.start",
+     "value": "NIM_ENGINE_PRECISION=fp16"
+    },
+    "quality": {
+     "beir-scifact": {
+      "source": "results/first_batch/nim_nemotron-3-embed-1b_auto/beir-scifact/score.json",
+      "ndcg_cut_10": 0.7518798534085879
+     },
+     "miracl-hn-zh": {
+      "source": "results/first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-zh/score.json",
+      "ndcg_cut_10": 0.6619852203579513
+     }
+    },
+    "quality_cell_profile_id": "N/A"
+   },
+   {
+    "nim": "embedvl",
+    "model": "llama-nemotron-embed-vl-1b-v2",
+    "rate_source": "results/whole_corpus_quality/timing_container_and_host/embedvl/container_1.json",
+    "second_run_source": "results/whole_corpus_quality/timing_container_and_host/embedvl/container_2.json",
+    "passages_per_s": 278.7,
+    "passages_per_s_second_run": 277.7,
+    "sample_passages": 4096,
+    "batch": 64,
+    "reps": 3,
+    "version": "2.3.0",
+    "profile_id": "N/A",
+    "precision_in_the_model_files": null,
+    "start": {
+     "source": "results/whole_corpus_quality/prediction_whole_corpus.json",
+     "key": "cell_E_timing_from_two_places.nims.llama-nemotron-embed-vl-1b-v2.start",
+     "value": "no profile set"
+    },
+    "quality": {
+     "beir-scifact": {
+      "source": "results/first_batch/nim_llama-nemotron-embed-vl-1b-v2_auto/beir-scifact/score.json",
+      "ndcg_cut_10": 0.7670406326901903
+     },
+     "miracl-hn-zh": {
+      "source": "results/first_batch/nim_llama-nemotron-embed-vl-1b-v2_auto/miracl-hn-zh/score.json",
+      "ndcg_cut_10": 0.6483674545745314
+     }
+    },
+    "quality_cell_profile_id": "N/A"
+   },
+   {
+    "nim": "embed1bv2",
+    "model": "llama-nemotron-embed-1b-v2",
+    "rate_source": "results/whole_corpus_quality/timing_container_and_host/embed1bv2/container_1.json",
+    "second_run_source": "results/whole_corpus_quality/timing_container_and_host/embed1bv2/container_2.json",
+    "passages_per_s": 495.0,
+    "passages_per_s_second_run": 492.6,
+    "sample_passages": 4096,
+    "batch": 64,
+    "reps": 3,
+    "version": "1.13.0",
+    "profile_id": "ee7364e4eba4df47443ed9df08f50d9551b529f7e12063cb9b7891fcec8b4e5c",
+    "precision_in_the_model_files": "fp8",
+    "start": {
+     "source": "results/whole_corpus_quality/prediction_whole_corpus.json",
+     "key": "cell_E_timing_from_two_places.nims.llama-nemotron-embed-1b-v2.start",
+     "value": "no profile set (fp8, selected by the image)"
+    },
+    "quality": {
+     "beir-scifact": {
+      "source": "results/first_batch/nim_llama-nemotron-embed-1b-v2_auto/beir-scifact/score.json",
+      "ndcg_cut_10": 0.7753745801273171
+     },
+     "miracl-hn-zh": {
+      "source": "results/first_batch/nim_llama-nemotron-embed-1b-v2_auto/miracl-hn-zh/score.json",
+      "ndcg_cut_10": 0.64458407757539
+     }
+    },
+    "quality_cell_profile_id": "ee7364e4eba4df47443ed9df08f50d9551b529f7e12063cb9b7891fcec8b4e5c"
+   },
+   {
+    "nim": "embed300m",
+    "model": "llama-nemotron-embed-300m-v2",
+    "rate_source": "results/whole_corpus_quality/timing_container_and_host/embed300m/container_1.json",
+    "second_run_source": "results/whole_corpus_quality/timing_container_and_host/embed300m/container_2.json",
+    "passages_per_s": 798.6,
+    "passages_per_s_second_run": 848.3,
+    "sample_passages": 4096,
+    "batch": 64,
+    "reps": 3,
+    "version": "1.13.0",
+    "profile_id": "ee7364e4eba4df47443ed9df08f50d9551b529f7e12063cb9b7891fcec8b4e5c",
+    "precision_in_the_model_files": "fp8",
+    "start": {
+     "source": "results/whole_corpus_quality/prediction_whole_corpus.json",
+     "key": "cell_E_timing_from_two_places.nims.llama-nemotron-embed-300m-v2.start",
+     "value": "no profile set"
+    },
+    "quality": {
+     "beir-scifact": {
+      "source": "results/first_batch/nim_llama-nemotron-embed-300m-v2_auto/beir-scifact/score.json",
+      "ndcg_cut_10": 0.7125932997653364
+     },
+     "miracl-hn-zh": {
+      "source": "results/first_batch/nim_llama-nemotron-embed-300m-v2_auto/miracl-hn-zh/score.json",
+      "ndcg_cut_10": 0.593130188177807
+     }
+    },
+    "quality_cell_profile_id": "ee7364e4eba4df47443ed9df08f50d9551b529f7e12063cb9b7891fcec8b4e5c"
+   }
+  ],
+  "joined_pair": {
+   "model": "llama-nemotron-embed-1b-v2",
+   "what": "one NIM image started twice in the second session, once with each precision; nothing else changed",
+   "fp16": {
+    "rate_source": "results/second_batch/nim_llama-nemotron-embed-1b-v2_fp16/miracl-hn-zh/throughput.json",
+    "passages_per_s": 452.4,
+    "version": "1.13.0",
+    "profile_id": "2e1ac3d2b2e881b0c86959c09a6ecca58947ac174745f2113203e539ed1310d8",
+    "precision_in_the_model_files": "fp16",
+    "quality": {
+     "beir-scifact": {
+      "source": "results/second_batch/nim_llama-nemotron-embed-1b-v2_fp16/beir-scifact/score.json",
+      "ndcg_cut_10": 0.7771824135052892
+     },
+     "miracl-hn-zh": {
+      "source": "results/second_batch/nim_llama-nemotron-embed-1b-v2_fp16/miracl-hn-zh/score.json",
+      "ndcg_cut_10": 0.6442019851788705
+     }
+    },
+    "sample_passages": 4096,
+    "batch": 64,
+    "reps": 3
+   },
+   "fp8": {
+    "rate_source": "results/second_batch/nim_llama-nemotron-embed-1b-v2_auto_same_night/miracl-hn-zh/throughput.json",
+    "passages_per_s": 498.4,
+    "version": "1.13.0",
+    "profile_id": "ee7364e4eba4df47443ed9df08f50d9551b529f7e12063cb9b7891fcec8b4e5c",
+    "precision_in_the_model_files": "fp8",
+    "quality": {
+     "beir-scifact": {
+      "source": "results/first_batch/nim_llama-nemotron-embed-1b-v2_auto/beir-scifact/score.json",
+      "ndcg_cut_10": 0.7753745801273171
+     },
+     "miracl-hn-zh": {
+      "source": "results/first_batch/nim_llama-nemotron-embed-1b-v2_auto/miracl-hn-zh/score.json",
+      "ndcg_cut_10": 0.64458407757539
+     }
+    },
+    "quality_cell_profile_id": "ee7364e4eba4df47443ed9df08f50d9551b529f7e12063cb9b7891fcec8b4e5c",
+    "note": "the fp8 start of the second session was timed and not scored; its quality is the first session's cell of the same image and profile",
+    "sample_passages": 4096,
+    "batch": 64,
+    "reps": 3
+   }
+  }
+ },
+ "matplotlib_version": "3.10.9"
+}

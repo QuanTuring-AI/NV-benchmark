@@ -18,18 +18,30 @@ Control, run for every file on every call: a copy of the parsed file gets a stri
 container (as a key or item, and as a value in place of a number); the same check must report both. If a planted
 string is not reported, the result for that file is void and the exit code is 2.
 
+A file without a bulk container is not this gate's kind: it is short enough to read, and the gate says nothing about
+it. Such a file is skipped; its name and the reason are printed and it is counted, never passed in silence. A skipped
+file can still look like a long file that slipped through: its name is one of the long files' names (--long-name,
+default score*.json and latency*.json), it has a key the long files use for their containers (--long-key, default
+per_query and call_ms_all), or it holds more than --bulk keys of a distinctive id form spread over small containers
+(--piece-id-pattern, default 24 hex digits and digits#digits). The line of such a file names the signs; with
+--require-bulk it is a violation. Use --require-bulk whenever the gate decides whether files may be committed.
+
 Defaults: ids of 24 hex digits (HotpotQA), digits#digits (MIRACL queries), digits (BEIR SciFact); value keys
 ndcg_cut_10 and recall_100.
 
-usage: check_bulk_result_files.py [--bulk 60] [--id-pattern REGEX ...] [--value-key NAME ...] [--require-bulk] FILE [FILE ...]
+usage: check_bulk_result_files.py [--bulk 60] [--id-pattern REGEX ...] [--value-key NAME ...] [--require-bulk]
+                                  [--long-name GLOB ...] [--long-key NAME ...] [--piece-id-pattern REGEX ...] FILE [FILE ...]
        check_bulk_result_files.py self_test
-exit codes: 0 every file passes · 1 a violation · 2 a planted control was not reported
+exit codes: 0 no checked file has a violation · 1 a violation · 2 a planted control was not reported
 """
-import argparse, copy, json, re, sys
+import argparse, copy, fnmatch, json, os, re, sys
 
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 ID_PATTERNS = [r"[0-9a-f]{24}", r"\d+#\d+", r"\d+"]
 VALUE_KEYS = ["ndcg_cut_10", "recall_100"]
+LONG_NAMES = ["score*.json", "latency*.json"]
+LONG_KEYS = ["per_query", "call_ms_all"]
+PIECE_ID_PATTERNS = [r"[0-9a-f]{24}", r"\d+#\d+"]
 
 
 def is_number(x):
@@ -90,6 +102,46 @@ def check(doc, bulk, id_patterns, value_keys, max_head_strings=120, max_head_str
     return out
 
 
+def long_file_signs(doc, name, bulk, long_names=LONG_NAMES, long_keys=LONG_KEYS, piece_id_patterns=PIECE_ID_PATTERNS):
+    """For a file without a bulk container: the signs that it is a long file all the same. -> list of short texts."""
+    forms = [re.compile(p) for p in piece_id_patterns]; lk = set(long_keys); seen = set(); pieces = 0
+
+    def walk(o):
+        nonlocal pieces
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if k in lk:
+                    seen.add(k)
+                if any(p.fullmatch(k) for p in forms):
+                    pieces += 1
+                walk(v)
+        elif isinstance(o, list):
+            for v in o:
+                walk(v)
+
+    walk(doc); signs = []; base = os.path.basename(name)
+    hit = next((g for g in long_names if fnmatch.fnmatch(base, g)), None)
+    if hit:
+        signs.append(f"its name matches {hit}")
+    if seen:
+        signs.append("it has the key " + ", ".join(sorted(seen)))
+    if pieces > bulk:
+        signs.append(f"{pieces} keys of an id form in containers of at most {bulk}")
+    return signs
+
+
+def judge(doc, name, bulk, id_patterns, value_keys, require_bulk=False, long_names=LONG_NAMES, long_keys=LONG_KEYS, piece_id_patterns=PIECE_ID_PATTERNS):
+    """-> (status, check result, planted-control result or None, signs). status: PASS, FAIL, SKIP or VOID (control not reported)."""
+    r = check(doc, bulk, id_patterns, value_keys)
+    if not r["bulk_containers"]:
+        signs = long_file_signs(doc, name, bulk, long_names, long_keys, piece_id_patterns)
+        return ("FAIL" if signs and require_bulk else "SKIP"), r, None, signs
+    control = planted(doc, r["bulk_containers"][0], bulk, id_patterns, value_keys)
+    if not all(control.values()):
+        return "VOID", r, control, []
+    return ("PASS" if r["pass"] else "FAIL"), r, control, []
+
+
 def get(doc, path):
     o = doc
     for part in re.findall(r"[^.\[\]]+|\[\d+\]", path):
@@ -141,6 +193,22 @@ def self_test():
     t("the planted controls are reported on a clean file", planted(base, r["bulk_containers"][0], 60, ID_PATTERNS, VALUE_KEYS), {"a string as a key or an item": True, "a string in place of a number": True})
     t("with no id form given, every key is refused", check({"per_query": q}, 60, [], VALUE_KEYS)["pass"], False)
     t("a file without a bulk container has none", check({"a": "b", "c": [1, 2]}, 60, ID_PATTERNS, VALUE_KEYS)["bulk_containers"], [])
+    J = lambda d, n, rb=False: judge(d, n, 60, ID_PATTERNS, VALUE_KEYS, require_bulk=rb)
+    short = {"dataset": "x", "note": "y" * 700, "levels": {"1": 2.0, "16": 3.0}, "list": [1, 2, 3]}
+    t("a short file is skipped, not passed", J(short, "summary.json")[0], "SKIP"); t("a short file is skipped with --require-bulk too", J(short, "summary.json", True)[0], "SKIP")
+    t("a short file shows no sign of a long file", J(short, "summary.json")[3], [])
+    t("a long file is checked, never skipped", J(base, "summary.json")[0], "PASS"); t("a long file with a violation fails", J(dict(base, per_query=dict(q, text=1.0)), "x.json")[0], "FAIL")
+    few = {"per_query": dict(list(q.items())[:40])}
+    pieces = {"parts": [dict(list(q.items())[i:i + 50]) for i in (0, 50)]}; pieces_m = {"parts": [dict(list(m.items())[i:i + 50]) for i in (0, 50)]}
+    for name, d, n in (("named like a long file", short, "results/a/score_after.json"), ("named like a timing file", short, "latency_container.json"), ("with a key of the long files", few, "summary.json"),
+                       ("with the per-call key", {"passes": [{"call_ms_all": [1.0] * 40}]}, "summary.json"), ("cut into small containers (24 hex digits)", pieces, "summary.json"), ("cut into small containers (digits#digits)", pieces_m, "summary.json")):
+        t("a file without a bulk container " + name + " fails with --require-bulk", J(d, n, True)[0], "FAIL")
+        t("the same file is skipped without the option, and the sign is named", (J(d, n)[0], len(J(d, n)[3]) >= 1), ("SKIP", True))
+    t("60 id keys in small containers are not a sign, 61 are", (long_file_signs({"a": dict(list(q.items())[:30]), "b": dict(list(q.items())[30:60])}, "s.json", 60), len(long_file_signs({"a": dict(list(q.items())[:30]), "b": dict(list(q.items())[30:61])}, "s.json", 60))), ([], 1))
+    t("plain numbers as keys are not counted as pieces", long_file_signs({str(i): {str(j): 1.0 for j in range(50)} for i in range(5)}, "s.json", 60), [])
+    t("the name is compared without its directory", long_file_signs(short, "score_files/summary.json", 60), [])
+    keep = globals()["planted"]; globals()["planted"] = lambda doc, first, bulk, ids, vk: {"a string as a key or an item": True, "a string in place of a number": False}
+    t("a control that is not reported voids the file", J(base, "x.json")[0], "VOID"); globals()["planted"] = keep
     print("SELF TEST " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -150,37 +218,38 @@ def main():
         return self_test()
     ap = argparse.ArgumentParser()
     ap.add_argument("files", nargs="+"); ap.add_argument("--bulk", type=int, default=60); ap.add_argument("--id-pattern", action="append"); ap.add_argument("--value-key", action="append")
-    ap.add_argument("--require-bulk", action="store_true", help="a file without a bulk container is a violation")
+    ap.add_argument("--require-bulk", action="store_true", help="a file without a bulk container that looks like a long file is a violation")
+    ap.add_argument("--long-name", action="append"); ap.add_argument("--long-key", action="append"); ap.add_argument("--piece-id-pattern", action="append")
     a = ap.parse_args()
-    ids = a.id_pattern or ID_PATTERNS; vk = a.value_key or VALUE_KEYS; worst = 0; totals = {"files": 0, "pass": 0, "bulk_entries": 0, "without_bulk": 0}
+    ids = a.id_pattern or ID_PATTERNS; vk = a.value_key or VALUE_KEYS; worst = 0
+    totals = {"files": 0, "PASS": 0, "FAIL": 0, "VOID": 0, "SKIP": 0, "bulk_entries": 0, "checked_failing": 0, "looking_long": 0}
     for f in a.files:
-        doc = json.load(open(f, encoding="utf-8")); r = check(doc, a.bulk, ids, vk); totals["files"] += 1
+        doc = json.load(open(f, encoding="utf-8"))
+        status, r, control, signs = judge(doc, f, a.bulk, ids, vk, a.require_bulk, a.long_name or LONG_NAMES, a.long_key or LONG_KEYS, a.piece_id_pattern or PIECE_ID_PATTERNS)
+        totals["files"] += 1; totals[status] += 1; worst = max(worst, {"PASS": 0, "SKIP": 0, "FAIL": 1, "VOID": 2}[status])
+        if control is None:                                      # no bulk container: not a file of this gate's kind
+            totals["looking_long"] += bool(signs)
+            why = f"no container of more than {a.bulk} entries: not a file of this gate's kind"
+            if signs:
+                why += " · BUT IT LOOKS LIKE A LONG FILE: " + "; ".join(signs) + (" (a violation with --require-bulk)" if status == "FAIL" else " (not a violation without --require-bulk)")
+            print(f"{status} {f} · {why}")
+            continue
+        totals["checked_failing"] += status == "FAIL"
         entries = sum(c["entries"] for c in r["bulk_containers"]); totals["bulk_entries"] += entries
-        if not r["bulk_containers"]:
-            totals["without_bulk"] += 1
-            if a.require_bulk:
-                r["pass"] = False; r["violations"].append({"at": "", "kind": "no bulk container"})
-            control = None
-        else:
-            control = planted(doc, r["bulk_containers"][0], a.bulk, ids, vk)
-            if not all(control.values()):
-                worst = 2
-        if not r["pass"]:
-            worst = max(worst, 1)
-        totals["pass"] += r["pass"] and (control is None or all(control.values()))
         forms = {}
         for c in r["bulk_containers"]:
             for k, n in (c.get("keys_by_id_form") or {}).items():
                 forms[k] = forms.get(k, 0) + n
-        print(f"{'PASS' if r['pass'] else 'FAIL'} {f} · bulk containers {len(r['bulk_containers'])} · entries {entries:,} · ids by form {forms} · head strings {r['head_strings']} ({r['head_string_characters']} characters, longest {r['longest_head_string']})"
-              f" · planted controls {'reported' if control and all(control.values()) else ('NOT REPORTED' if control else 'none (no bulk container)')}")
+        print(f"{status} {f} · bulk containers {len(r['bulk_containers'])} · entries {entries:,} · ids by form {forms} · head strings {r['head_strings']} ({r['head_string_characters']} characters, longest {r['longest_head_string']})"
+              f" · planted controls {'reported' if all(control.values()) else 'NOT REPORTED'}")
         for v in r["violations"][:10]:
             print(f"     {v['kind']} at {v['at'] or '(top)'}")
         if r["violation_count"] > 10:
             print(f"     ... {r['violation_count']} violations in all")
-    print(f"RESULT {'PASS' if worst == 0 else 'FAIL'} · files {totals['files']} · passing {totals['pass']} · entries in bulk containers {totals['bulk_entries']:,} · files without a bulk container {totals['without_bulk']}")
+    print(f"RESULT {'PASS' if worst == 0 else 'FAIL'} · files {totals['files']} · checked {totals['PASS'] + totals['checked_failing'] + totals['VOID']} (passing {totals['PASS']}, failing {totals['checked_failing']}, control not reported {totals['VOID']})"
+          f" · entries in bulk containers {totals['bulk_entries']:,} · skipped as not of this kind {totals['SKIP']}"
+          f" · without a bulk container but looking like a long file {totals['looking_long']}{' (violations)' if a.require_bulk and totals['looking_long'] else ''}")
     return worst
-
 
 if __name__ == "__main__":
     sys.exit(main())
