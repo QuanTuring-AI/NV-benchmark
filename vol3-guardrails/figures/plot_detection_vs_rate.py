@@ -9,9 +9,16 @@ Nothing is measured here. Every point is one arm's own figure, read from that ar
   x  tracks.<track>.quality_cell.verdicts_per_s          (the cell that ran the whole set at 16 concurrent requests)
   y  tracks.<track>.quality.aegis2.detection.rate x 100  (harmful items flagged / harmful items), with its Wilson 95%
      interval (.wilson95) as the vertical bar
-Nine points: the seven arms of results/p93_judges, the reference arm of results/p102_followup (Llama Guard 3 8B), and
-the Safety Guard model served by its NIM (results/safety_guard_nim/J6N), added on 2026-10-06 after the others.
-The two arms asked through a second library path on a 200-item subset (J4G, J5G) have no timed cell and are not drawn.
+Ten points: the seven arms of results/p93_judges, the reference arm of results/p102_followup (Llama Guard 3 8B), the
+Safety Guard model served by its NIM (results/safety_guard_nim/J6N) and Nemotron 3 Nano with the reasoning parser on
+the server (results/parser_and_engine_version/J2P), the last two measured on 2026-10-06.
+The parser arm is the one point that reads two files: its y is the arm's own whole-set cell (J2P, the first container),
+its x is the whole-set cell of a second container of the same arm (J2P-repeat), because the first container ran that
+cell at about half its usual rate (results/parser_and_engine_version/README.md). The point table names both files.
+Arms that have no point: the two on a 200-item subset (J4G, J5G), and the same-day and engine-version arms of
+2026-10-06 (their figures are in the result tables).
+The line under each figure names the days and the driver versions of the drawn arms; both are read from the arms'
+own files (the window of the timed cell, and the driver recorded at the end of that cell).
 
 Scope: each point stands for one arm alone. The figure writes no statement that relates two arms, draws no arrow and no
 line between points, and names no region of the plane. Timings at one request at a time are not on the figure.
@@ -20,6 +27,8 @@ What the marker says:
   shape   circle: asked through the NeMo Guardrails self-check action; square: asked directly with the model's own
           prompt; diamond: the reference arm
   hollow  the model reasons before it answers
+  ring    a second outline around the marker: the arm is served by the model's NIM image, or the server runs the
+          reasoning parser
 
 Card / social-image layout (the same for every figure of this repository): a 1600 x 900 canvas, the plot area in the
 vertical middle 60%, no title, text kept as text in the SVG (font 'Space Grotesk', falling back to sans-serif). The light
@@ -27,7 +36,8 @@ and the dark version differ in colours only.
 
 Checks done on every run (exit code 1 if one fails):
   - every value in detection_vs_rate_points.json is read back from its source file and keys and must be equal;
-  - every arm's timed cell ran at 16 concurrent requests and the arm is marked usable for that track;
+  - every arm's timed cell ran at 16 concurrent requests and the arm is marked usable for that track; an arm that
+    takes its rate from a second container read the same items there;
   - every number written on a figure is in detection_vs_rate_points.json;
   - every drawn point and both ends of every bar lie inside the central 1.9:1 band of the canvas;
   - the light and the dark SVG of a figure contain the same text; no file contains "judge", "user" / "users" or "7.3"
@@ -53,6 +63,7 @@ FAMILY = {  # colour by model family
     "cs": {"light": "#2563EB", "dark": "#60A5FA"}, "guard": {"light": "#7C3AED", "dark": "#A78BFA"},
     "ref": {"light": "#B45309", "dark": "#FBBF24"}}
 ARMS = [  # arm, summary file, family, marker, reasoning, label on the figure ({limit} = the arm's output limit in tokens)
+          # optional: ring (a second outline), and the summary file the rate is read from when it is not the arm's own
     ("J0", "results/p93_judges/J0/summary.json", "llama", "o", False, "Llama 3.1 8B Instruct\nanswer limited to {limit} tokens"),
     ("J1", "results/p93_judges/J1/summary.json", "llama", "o", False, "Llama 3.1 8B Instruct\nthe library's default limit"),
     ("J2", "results/p93_judges/J2/summary.json", "nano", "o", True, "Nemotron 3 Nano\nreasoning on"),
@@ -61,8 +72,13 @@ ARMS = [  # arm, summary file, family, marker, reasoning, label on the figure ({
     ("J5", "results/p93_judges/J5/summary.json", "cs", "s", True, "Nemotron 3.5 Content Safety\nreasoning on"),
     ("J6", "results/p93_judges/J6/summary.json", "guard", "s", False, "Llama 3.1 Nemotron\nSafety Guard 8B v3"),
     ("LG3", "results/p102_followup/LG3/summary.json", "ref", "D", False, "Llama Guard 3 8B\n(reference arm)"),
-    ("J6N", "results/safety_guard_nim/J6N/summary.json", "guard", "s", False, "Safety Guard 8B v3\nserved by its NIM"),
+    ("J6N", "results/safety_guard_nim/J6N/summary.json", "guard", "s", False, "Safety Guard 8B v3, NIM", True),
+    ("J2P", "results/parser_and_engine_version/J2P/summary.json", "nano", "o", True, "Nemotron 3 Nano,\nreasoning on, parser", True,
+     "results/parser_and_engine_version/J2P-repeat/summary.json"),
 ]
+RATE_KEYS = ("verdicts_per_s", "concurrency")           # read from the rate file when an arm names one
+NIM_TAG = ("results/safety_guard_nim/prediction_safety_guard_nim.json", "serving.image")   # the tag written in the legend
+MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 TRACKS = {"input": "Aegis 2.0 test split, prompts", "output": "Aegis 2.0 test split, responses"}
 KEYS = {"verdicts_per_s": "tracks.{t}.quality_cell.verdicts_per_s", "concurrency": "tracks.{t}.quality_cell.concurrency",
         "flagged": "tracks.{t}.quality.aegis2.detection.k", "harmful": "tracks.{t}.quality.aegis2.detection.n",
@@ -78,7 +94,8 @@ LABEL = {  # (track, arm) -> (dx, dy in pixels, horizontal alignment); the defau
     ("output", "J0"): (22, -52, "left"), ("output", "J1"): (20, -62, "left"), ("output", "J2"): (20, -8, "left"),
     ("output", "J3"): (22, -40, "left"), ("output", "J4"): (24, -18, "left"), ("output", "J5"): (-4, 34, "left"),
     ("output", "J6"): (-8, 34, "left"), ("output", "LG3"): (-24, -18, "right"),
-    ("input", "J6N"): (-18, 54, "right"), ("output", "J6N"): (-20, -64, "right"),
+    ("input", "J6N"): (-24, 30, "right"), ("output", "J6N"): (-24, -40, "right"),
+    ("input", "J2P"): (-24, -58, "right"), ("output", "J2P"): (-52, 60, "left"),
 }
 FORBIDDEN = (("the word 'judge'", r"judge"), ("the word 'user' or 'users'", r"\busers?\b"), ("'7.3'", r"7\.3"),
              ("an arrow character", "[←-⇿⟰-⟿⤀-⥿]"), ("a multiplication sign", "×"))
@@ -104,21 +121,55 @@ def build():
            "tracks": {}}
     for t, what in TRACKS.items():
         pts = []
-        for arm, src, fam, marker, reasoning, label in ARMS:
+        for arm, src, fam, marker, reasoning, label, *more in ARMS:
+            ring = bool(more[0]) if more else False; rate_src = more[1] if len(more) > 1 else src
             s = json.load(open(os.path.join(VOL, src), encoding="utf-8"))
             p = {"arm": arm, "model": s["judge"], "source": src, "family": fam, "marker": marker, "reasoning": reasoning}
             p.update({k: value(s, path.format(t=t)) for k, path in KEYS.items()})
             p["max_tokens"] = s.get("max_tokens")
             p["label"] = label.format(limit=s.get("max_tokens"))
+            p["ring"] = ring; p["rate_source"] = rate_src
+            if rate_src != src:
+                r = json.load(open(os.path.join(VOL, rate_src), encoding="utf-8"))
+                p.update({k: value(r, KEYS[k].format(t=t)) for k in RATE_KEYS})
+            p.update(day_and_driver(rate_src, t))
             pts.append(p)
         out["tracks"][t] = {"what": what, "points": pts}
+    out["nim_tag"] = {"source": NIM_TAG[0], "key": NIM_TAG[1], "value": nim_tag()}
     return out
+
+
+def day_and_driver(summary_rel, t):
+    """The day of an arm's timed cell (the start of its window) and the driver recorded at the end of that cell."""
+    s = json.load(open(os.path.join(VOL, summary_rel), encoding="utf-8"))
+    day = value(s, f"tracks.{t}.quality_cell.window[0]")[:10]
+    cells = [json.loads(l) for l in open(os.path.join(VOL, os.path.dirname(summary_rel), "cells.jsonl"), encoding="utf-8") if l.strip()]
+    drivers = sorted({c["gpu_end"]["driver"] for c in cells if c.get("track") == t and c.get("mode") == "c16" and c.get("complete", True)})
+    return {"day": day, "driver": drivers[0] if len(drivers) == 1 else drivers}
+
+
+def nim_tag():
+    return value(json.load(open(os.path.join(VOL, NIM_TAG[0]), encoding="utf-8")), NIM_TAG[1]).rsplit(":", 1)[1]
+
+
+def days_line(track):
+    """'arms of 2 and 3 Oct (driver 591.86) and 6 Oct (610.88); ...' from the points' own days and drivers."""
+    by = {}
+    for p in track["points"]:
+        by.setdefault(p["driver"], set()).add(p["day"])
+    parts = []
+    for i, (drv, days) in enumerate(sorted(by.items(), key=lambda kv: min(kv[1]))):
+        ds = sorted(days); months = {d[5:7] for d in ds}
+        assert len(months) == 1, "the days of one driver span two months: write the line by hand"
+        nums = [str(int(d[8:10])) for d in ds]; mon = MONTHS[int(ds[0][5:7]) - 1]
+        parts.append((", ".join(nums[:-1]) + " and " + nums[-1] if len(nums) > 1 else nums[0]) + f" {mon} ({'driver ' if i == 0 else ''}{drv})")
+    return "arms of " + " and ".join(parts) + "; see the README for the same-day check"
 
 
 def boundary(track):
     p = track["points"][0]
     return (f"One RTX 5090 · {track['what']}: {p['harmful']:,} harmful of {p['items']:,} items · one model on the card at a time · "
-            f"{p['concurrency']} concurrent requests · bar: Wilson 95% interval")
+            f"{p['concurrency']} concurrent requests · bar: Wilson 95% interval\n{days_line(track)}")
 
 
 def check(data):
@@ -130,10 +181,21 @@ def check(data):
         for p in track["points"]:
             s = json.load(open(os.path.join(VOL, p["source"]), encoding="utf-8"))
             n += 1
+            rs = p["rate_source"]; r = s if rs == p["source"] else json.load(open(os.path.join(VOL, rs), encoding="utf-8"))
             for k, path in KEYS.items():
-                want = value(s, path.format(t=t))
+                src_file, doc = (rs, r) if k in RATE_KEYS else (p["source"], s)
+                want = value(doc, path.format(t=t))
                 if want != p[k]:
-                    problems.append(f"{p['source']} {path.format(t=t)}: source {want} != table {p[k]}")
+                    problems.append(f"{src_file} {path.format(t=t)}: source {want} != table {p[k]}")
+            if rs != p["source"]:
+                for k in ("harmful", "items", "usable"):
+                    if value(r, KEYS[k].format(t=t)) != p[k]:
+                        problems.append(f"{t} {p['arm']}: the rate file {rs} does not agree with the arm's own file on '{k}'")
+            dd = day_and_driver(rs, t)
+            if (p.get("day"), p.get("driver")) != (dd["day"], dd["driver"]):
+                problems.append(f"{t} {p['arm']}: day and driver in the table {p.get('day')}, {p.get('driver')} != source {dd['day']}, {dd['driver']}")
+            if not isinstance(p.get("driver"), str):
+                problems.append(f"{t} {p['arm']}: the timed cell does not record exactly one driver version")
             if p["concurrency"] != 16:
                 problems.append(f"{t} {p['arm']}: the timed cell ran at {p['concurrency']} concurrent requests, not 16")
             if p["usable"] is not True:
@@ -144,6 +206,8 @@ def check(data):
                 problems.append(f"{t} {p['arm']}: the rate is outside its own interval")
         if len({(p["harmful"], p["items"]) for p in track["points"]}) != 1:
             problems.append(f"{t}: the arms did not read the same number of items")
+    if (data.get("nim_tag") or {}).get("value") != nim_tag():
+        problems.append(f"the NIM tag in the table {(data.get('nim_tag') or {}).get('value')} != source {nim_tag()}")
     return n, problems
 
 
@@ -152,9 +216,10 @@ def numbers_allowed(data, t):
     track = data["tracks"][t]
     nums = {str(v) for v in X_TICKS + Y_TICKS} | {"95", "5090", "2.0", "3.1", "3.5", "3", "8"}   # interval level and names of products
     for p in track["points"]:
-        nums |= {f"{p['harmful']:,}", f"{p['items']:,}", str(p["concurrency"])}
+        nums |= {f"{p['harmful']:,}", f"{p['items']:,}", str(p["concurrency"]), str(int(p["day"][8:10])), str(p["driver"])}
         if p["max_tokens"] is not None:
             nums.add(str(p["max_tokens"]))
+    nums.add(data["nim_tag"]["value"])
     return nums
 
 
@@ -177,6 +242,8 @@ def draw(data, t, theme):
         ax.plot([x, x], [p["wilson95_low"] * 100.0, p["wilson95_high"] * 100.0], color=col, linewidth=3.0, solid_capstyle="butt", zorder=2)
         ax.plot([x], [y], linestyle="none", marker=p["marker"], markersize=19 if p["marker"] != "D" else 17,
                 markerfacecolor=T["bg"] if p["reasoning"] else col, markeredgecolor=col, markeredgewidth=3.2, zorder=3)
+        if p["ring"]:
+            ax.plot([x], [y], linestyle="none", marker=p["marker"], markersize=33, markerfacecolor="none", markeredgecolor=col, markeredgewidth=2.0, zorder=3)
         dx, dy, ha = LABEL.get((t, p["arm"]), (20, -8, "left"))
         ax.annotate(p["label"], (x, y), textcoords="offset points", xytext=(dx, dy), fontsize=17, color=T["fg"], ha=ha, va="bottom", linespacing=1.25)
     ax.set_xscale("log")
@@ -193,11 +260,13 @@ def draw(data, t, theme):
     ax.set_ylabel("Harmful items flagged, %", fontsize=24, labelpad=12)
     h = [Line2D([], [], color=T["muted"], marker="o", markersize=13, linestyle="none", label="circle: asked through the Guardrails self-check action"),
          Line2D([], [], color=T["muted"], marker="s", markersize=13, linestyle="none", label="square: asked directly, the model's own prompt"),
-         Line2D([], [], color=T["muted"], marker="o", markersize=13, linestyle="none", markerfacecolor=T["bg"], markeredgewidth=3.0, label="hollow: the model reasons before it answers")]
-    leg = ax.legend(handles=h, loc="lower left", bbox_to_anchor=(0.015, 0.03), fontsize=17, frameon=True, framealpha=0.92, facecolor=T["bg"], edgecolor=T["grid"],
-                    labelcolor=T["fg"], borderpad=0.7, alignment="left")
+         Line2D([], [], color=T["muted"], marker="o", markersize=13, linestyle="none", markerfacecolor=T["bg"], markeredgewidth=3.0, label="hollow: the model reasons before it answers"),
+         Line2D([], [], color=T["muted"], marker="s", markersize=19, linestyle="none", markerfacecolor="none", markeredgewidth=1.8,
+                label=f"outlined: served by NIM {data['nim_tag']['value']} /\nwith the reasoning parser on the server")]
+    leg = ax.legend(handles=h, loc="lower left", bbox_to_anchor=(0.015, 0.012), fontsize=16, labelspacing=0.32, frameon=True, framealpha=0.92, facecolor=T["bg"], edgecolor=T["grid"],
+                    labelcolor=T["fg"], borderpad=0.55, alignment="left")
     leg.get_frame().set_linewidth(1.5)
-    fig.text(0.5, 0.058, boundary(track), ha="center", va="bottom", fontsize=17, style="italic", color=T["muted"])
+    fig.text(0.5, 0.036, boundary(track), ha="center", va="bottom", fontsize=17, style="italic", color=T["muted"], linespacing=1.45)
     fig.canvas.draw()
     outside = []
     for p in track["points"]:
@@ -233,7 +302,7 @@ def figure_checks(data):
             problems.append(f"{t}: only {len(tl)} <text> elements: the text was not kept as text")
         written = set()
         for x in tl:
-            written |= set(re.findall(r"\d[\d,]*(?:\.\d+)?", x))
+            written |= {m.rstrip(",") for m in re.findall(r"\d[\d,]*(?:\.\d+)*", x)}   # "v3, NIM": the comma after a number is not part of it
         more = written - numbers_allowed(data, t)
         if more:
             problems.append(f"{t}: numbers on the figure that are not in the table: {sorted(more)}")
@@ -264,8 +333,22 @@ def self_test():
     bad = json.loads(json.dumps(data)); bad["tracks"]["output"]["points"][7]["flagged"] += 1
     tt("negative control: one count changed -> reported twice (source, and flagged / harmful)", len(check(bad)[1]), 2)
     bad = json.loads(json.dumps(data)); bad["tracks"]["input"]["points"].pop()
-    tt("negative control: the reference arm removed -> reported", len(check(bad)[1]), 1)
-    tt("eight arms per track, the same items for each", [(len(v["points"]), len({(p["harmful"], p["items"]) for p in v["points"]})) for v in data["tracks"].values()], [(8, 1), (8, 1)])
+    tt("negative control: the last arm removed -> reported", len(check(bad)[1]), 1)
+    tt("ten arms per track, the same items for each", [(len(v["points"]), len({(p["harmful"], p["items"]) for p in v["points"]})) for v in data["tracks"].values()], [(10, 1), (10, 1)])
+    tt("the arms with a ring", [[p["arm"] for p in v["points"] if p["ring"]] for v in data["tracks"].values()], [["J6N", "J2P"]] * 2)
+    tt("one arm reads its rate from a second container, the others from their own file", [[p["arm"] for p in v["points"] if p["rate_source"] != p["source"]] for v in data["tracks"].values()], [["J2P"]] * 2)
+    j = data["tracks"]["input"]["points"][9]; own = value(json.load(open(os.path.join(VOL, j["source"]), encoding="utf-8")), KEYS["verdicts_per_s"].format(t="input"))
+    tt("the parser arm's x is not its own cell's rate", j["verdicts_per_s"] != own, True)
+    bad = json.loads(json.dumps(data)); bad["tracks"]["input"]["points"][9]["verdicts_per_s"] = own
+    tt("negative control: the parser arm's x set to its own cell's rate -> reported", len(check(bad)[1]), 1)
+    bad = json.loads(json.dumps(data)); bad["tracks"]["output"]["points"][8]["driver"] = "591.86"
+    tt("negative control: one driver changed -> reported", len(check(bad)[1]), 1)
+    bad = json.loads(json.dumps(data)); bad["tracks"]["output"]["points"][7]["day"] = "2026-10-02"
+    tt("negative control: one day changed -> reported", len(check(bad)[1]), 1)
+    bad = json.loads(json.dumps(data)); bad["nim_tag"]["value"] = "1.13.0"
+    tt("negative control: the NIM tag changed -> reported", len(check(bad)[1]), 1)
+    tt("the line of days is built from the points", days_line({"points": [{"day": "2026-10-02", "driver": "1.0"}, {"day": "2026-10-03", "driver": "1.0"}, {"day": "2026-10-06", "driver": "2.0"}]}),
+       "arms of 2 and 3 Oct (driver 1.0) and 6 Oct (2.0); see the README for the same-day check")
     tt("the arms on a 200-item subset are not points", [p["arm"] for p in data["tracks"]["input"]["points"] if p["arm"].endswith("G")], [])
     tt("forbidden patterns fire on planted strings", [bool(re.search(pat, s, re.I)) for (_, pat), s in zip(FORBIDDEN, ("a Judge", "16 users", "x=47.3", "a → b", "2×"))], [True] * 5)
     tt("forbidden patterns stay silent on the figure's own words", [bool(re.search(pat, "Verdicts per second at 16 concurrent requests", re.I)) for _, pat in FORBIDDEN], [False] * 5)
