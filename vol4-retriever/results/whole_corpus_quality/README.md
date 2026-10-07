@@ -69,9 +69,9 @@ Before the pre-registration was frozen the program had two checks that are not c
 - The two passes of a corpus agree within 0.1% at the median and within 2% at p99. The duration of every call is in the files (numbers only).
 - One stream of calls: nothing here is about concurrent calls. Files: [`rerank_llama-nemotron-rerank-1b-v2/`](rerank_llama-nemotron-rerank-1b-v2/).
 
-## D2 · The second reranker on the same whole-corpus results
+## Second reranker (500m) · on the same whole-corpus results
 
-Addendum [`addendum_second_reranker.json`](addendum_second_reranker.json), frozen 2026-10-06T14:50:41+0800 before the first container of this cell (SHA-256 `3feb764bbb83785c37782c090c1c16cc3b697bc62f0c8a4ad3de1170ea62d9a6`). `llama-nemotron-rerank-500m-v2:1.10.0`, started as in the first session (ready after 28.2 s, 3,525 MiB on the card once ready), on the 100 results per query of cell B, with cell D's programs and limits. Each reranker's own values, side by side:
+Addendum [`addendum_second_reranker.json`](addendum_second_reranker.json), frozen 2026-10-06T14:50:41+0800 before the first container of this cell; in that frozen file the cell is keyed `cell_D2` (SHA-256 `3feb764bbb83785c37782c090c1c16cc3b697bc62f0c8a4ad3de1170ea62d9a6`). `llama-nemotron-rerank-500m-v2:1.10.0`, started as in the first session (ready after 28.2 s, 3,525 MiB on the card once ready), on the 100 results per query of cell B, with cell D's programs and limits. Each reranker's own values, side by side:
 
 | Corpus | nDCG@10 before | after · 500m reranker | after · 1b reranker (cell D) | Recall@100 before → after (500m) |
 |---|---|---|---|---|
@@ -126,8 +126,8 @@ The sample and request of every timed cell of this volume: the first 4,096 passa
 | E: by 15% to 30% for the 300m encoder | **no**: 12.9% (the largest of the four, as expected; below the range) |
 | E: the two container runs within 3% of each other | **one of four no**: the 300m encoder, 6.2% |
 
-| D2 (addendum): nDCG@10 rises by 0.005 to 0.02 on both languages; Recall@100 equal | **zh no**: +0.0201 (just above the range); ja +0.0111; equal |
-| D2: a call's median 75 to 110 ms (zh) and 80 to 115 ms (ja); p99 below 400 ms; the second pass within 5% of the first | 84.5 and 91.3 ms; p99 at most 148 ms; within 0.9% |
+| Second reranker (500m), addendum: nDCG@10 rises by 0.005 to 0.02 on both languages; Recall@100 equal | **zh no**: +0.0201 (just above the range); ja +0.0111; equal |
+| Second reranker (500m): a call's median 75 to 110 ms (zh) and 80 to 115 ms (ja); p99 below 400 ms; the second pass within 5% of the first | 84.5 and 91.3 ms; p99 at most 148 ms; within 0.9% |
 | Reference arm, ja, batch 16: completes; 200 to 350 passages per second | 290.6 |
 
 ## What this does not show

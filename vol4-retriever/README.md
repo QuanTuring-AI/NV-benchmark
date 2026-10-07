@@ -36,7 +36,7 @@ Read from the compose files of the NVIDIA RAG Blueprint at tag `v2.6.2` (commit 
 | Vector store | Elasticsearch, dense search (lines 40 and 45) | no: this volume searches exactly, on the CPU |
 
 - **`nemotron-3-embed-1b`, the model whose whole-corpus quality this volume measures, is not the Blueprint's default embedder** at this tag: its compose files do not name it. The Blueprint's documentation has a section on migrating to it (`docs/change-model.md` lines 415 to 494, image tag `2.2.1`; this volume measured tag `2.2.2`), which says to re-ingest after the switch.
-- `llama-nemotron-rerank-500m-v2` (cell D2) is not named there either.
+- `llama-nemotron-rerank-500m-v2` (the second reranker cell) is not named there either.
 - The Helm values of the same tag give the same two defaults, with the vision-language embedder enabled and the text embedder disabled (`deploy/helm/nvidia-blueprint-rag/values.yaml` lines 191 to 199 and 888 to 942).
 
 ## The tool check
