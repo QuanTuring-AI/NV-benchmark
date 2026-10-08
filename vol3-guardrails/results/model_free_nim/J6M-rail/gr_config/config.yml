@@ -1,0 +1,20 @@
+models:
+  - type: main
+    engine: nim
+    model: llama-3.1-nemotron-safety-guard-8b-v3
+    parameters:
+      base_url: "http://127.0.0.1:8000/v1"
+
+  - type: content_safety
+    engine: nim
+    model: llama-3.1-nemotron-safety-guard-8b-v3
+    parameters:
+      base_url: "http://127.0.0.1:8000/v1"
+
+rails:
+  input:
+    flows:
+      - content safety check input $model=content_safety
+  output:
+    flows:
+      - content safety check output $model=content_safety

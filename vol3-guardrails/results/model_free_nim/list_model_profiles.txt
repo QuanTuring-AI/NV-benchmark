@@ -1,0 +1,60 @@
+
+=================================================
+== NVIDIA Inference Microservice LLM / VLM NIM ==
+=================================================
+
+NVIDIA Inference Microservice LLM / VLM NIM Version 2.0.12
+
+Container image Copyright (c) 2016-2026, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+**GOVERNING DOWNLOAD TERMS:** Use of this container is governed by the [NVIDIA Software License Agreement](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/) and [Product-Specific Terms for NVIDIA AI Products](https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/).
+
+The use of any models in this container is governed by the [NVIDIA Open Model Agreement](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-agreement/).
+
+You are responsible for ensuring that your use of any provided models complies with all applicable laws.
+
+A copy of the container license can be found under /opt/nim/LICENSE.
+
+Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+LicenseRef-NvidiaProprietary
+NVIDIA CORPORATION, its affiliates and licensors retain all intellectual property and proprietary rights in and to this material, related documentation and any modifications thereto. Any use, reproduction, disclosure or distribution of this material and related documentation without an express license agreement from NVIDIA CORPORATION or its affiliates are strictly prohibited.
+This distribution includes open source which is archived at the following URL: https://opensource.nvidia.com/oss/teams/nim
+For further inquiries or assistance, contact us at oss-requests@nvidia.com
+This container will download a model to the /opt/nim/workspace subdirectory in the container to perform inference. Once downloaded, that directory will contain model-specific LICENSE and NOTICE files which you must agree to before using the model.
+
+SYSTEM INFO
+- Free GPUs: <None>
+- Non-free GPUs:
+  -  [2b85:10de] (0) NVIDIA GeForce RTX 5090 [current utilization: 7%]
+MODEL PROFILES
+- Compatible with system and runnable: <None>
+  - With LoRA support: <None>
+- Compatible with system but low memory:
+    - d655bc3a760b0d20b2ce2e638bb8212015e1a564bdcdc6f1642fdc4d9619f000 (vllm-tp1-pp1) [requires >=33 GB/gpu, try --max-model-len=102144 to reduce to >=30 GB/gpu]
+    - e11cdc8512df209673eec872e88d61e072499e30606b033bd076d0a00d0ddca2 (vllm-tp1-pp1-feat_lora) [requires >=34 GB/gpu, try --max-model-len=94976 to reduce to >=30 GB/gpu]
+- Compilable to TRT-LLM using just-in-time compilation of HF models to TRTLLM engines: <None>
+  - With LoRA support: <None>
+- Incompatible with system:
+    - 0b05c01098dd1a67310b3164b5059880cf9932285c65f713bcead850bdfc9d89 (vllm-tp8-pp2) [requires >=5 GB/gpu]
+    - 5a9366117a837a4c6e497ed5b821b4ae139e7989f5c1e1da0d585f07a01d865e (vllm-tp8-pp1) [requires >=7 GB/gpu]
+    - bead84047001ba88c81acde8171a026c829ee14bdd3ff901f8bd962352e7716b (vllm-tp8-pp4) [requires >=4 GB/gpu]
+    - 5dfcd205aa653e21862a0b616098585ab2d834726b861a0f5f5c977f1f420573 (vllm-tp4-pp2) [requires >=7 GB/gpu]
+    - f56efc54fee21fcc295586306e2313b39dd9801a89acd6cec508e99528762a8b (vllm-tp4-pp1) [requires >=11 GB/gpu]
+    - fa2e28ceae903293a953bc082c5d4f423c603687f5c51dd1246b533968031967 (vllm-tp4-pp4) [requires >=5 GB/gpu]
+    - 0010974da01a56d5542f40fb325762c2a0f4c32227487e0ac9fe84f4b21dc882 (vllm-tp2-pp1) [requires >=18 GB/gpu]
+    - 0309830c4f959988a7e3cb3044caa6620e0bfcb0dcfd3cbb7ab39b24da25cd77 (vllm-tp2-pp4) [requires >=6 GB/gpu]
+    - 23b387b8c1c45cf976bd7805cd61ead4dab587e6533470515a77ea43cf2f5ebc (vllm-tp2-pp2) [requires >=10 GB/gpu]
+    - 40330f7749fe6921c394083ec2b27af834fc8e2a94e401e5a6ce4151e987ed47 (vllm-tp1-pp4) [requires >=10 GB/gpu]
+    - 68d45790ca4330d042b16c8908912b6c47004205006417d570ff07051c4e9440 (vllm-tp1-pp2) [requires >=18 GB/gpu]
+    - 6b5acdf6e4107f392e097a1cd2458d9f43094c1375218623272af7595081f2b2 (vllm-tp8-pp4-feat_lora) [requires >=4 GB/gpu]
+    - 9a0ef72665a8815c7b5e90f68bba6867cbfdf83846276bf72e0af1c7d1bc6da1 (vllm-tp8-pp2-feat_lora) [requires >=5 GB/gpu]
+    - bcf49741598a4784638cbda01d12222efd2935dea74bd3b9d8c88d6439a392d8 (vllm-tp8-pp1-feat_lora) [requires >=7 GB/gpu]
+    - a334c913e864820d4cfbdba4e542bd9d633e651669871a789e126e4c336638ee (vllm-tp4-pp4-feat_lora) [requires >=5 GB/gpu]
+    - e0149d2f408ea42b110541d0115b0299d84995adf0ebe5ac7dc395afdddceb00 (vllm-tp4-pp1-feat_lora) [requires >=11 GB/gpu]
+    - fe73b18d4a1d2274f796e07972d348f172283f08034ccfd43bc33365ca78936f (vllm-tp4-pp2-feat_lora) [requires >=7 GB/gpu]
+    - 853d41a2a8cf039df3863849da789bfe0c7574f348327953608d060ff1dc33a5 (vllm-tp2-pp1-feat_lora) [requires >=19 GB/gpu]
+    - ece6c4eb0035f7d216d8ba39285c11aac1f9a79a1d1490f32e717e97b22a5df4 (vllm-tp2-pp2-feat_lora) [requires >=11 GB/gpu]
+    - f5428e6efef778b52c2b7942e00f592882f8a903395e526f6e739df443c04d4c (vllm-tp2-pp4-feat_lora) [requires >=7 GB/gpu]
+    - 1089cdc5fff9738e1b86f2ea937cc3d32c55bfe62e1965bff4b02947f2b7f4ac (vllm-tp1-pp4-feat_lora) [requires >=10 GB/gpu]
+    - 30c22312db5da73873ab84925903e3f8f21284ba3dcb8ec0b908e6ddc4a57265 (vllm-tp1-pp2-feat_lora) [requires >=18 GB/gpu]
+WARNING 2026-10-07 19:10:59.405 arg_utils.py:1707] Field 'port' not found in NimAsyncEngineArgs
