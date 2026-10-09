@@ -1,6 +1,6 @@
 # P102 · Two follow-up checks to the judge study: a reasoning parser on the server, and Llama Guard 3 as a reference arm
 
-*Run on 2026-10-03, 22:34–23:03 (+0800), one container on the card at a time. Every judge read stored text; no answer was generated. This is working data of the judge study ([`../p93_judges/`](../p93_judges/README.md)) and has not been published as an article.*
+*Run on 2026-10-03, 22:34–23:03 (+0800), one container on the card at a time. Every judge read stored text; no answer was generated. This is data of the judge study ([`../p93_judges/`](../p93_judges/README.md)).*
 
 **What is in this directory, and what is not.** The pre-registration, the run log, and for each check its own directory with the per-item files, the cell records, the prechecks and the summary. A per-item line holds the item id, the verdict, the rail's decision where there is one, token counts, the duration and SHA-256 values. The text of the test sets, the judges' raw answers and their reasoning are not in this repository.
 

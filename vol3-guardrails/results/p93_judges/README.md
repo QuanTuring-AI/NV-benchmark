@@ -1,6 +1,6 @@
 # P93 · Seven safety judges on one RTX 5090: what each one flags, what it flags wrongly, and what a verdict costs
 
-*Run on 2026-10-02, 04:26–06:18 (+0800), one judge container on the card at a time. Every judge read the same stored text; no answer was generated. This is working data of the judge study and has not been published as an article.*
+*Run on 2026-10-02, 04:26–06:18 (+0800), one judge container on the card at a time. Every judge read the same stored text; no answer was generated. This is data of the judge study.*
 
 **What is in this directory, and what is not.** The pre-registration, the run log, and for every arm its own directory with the per-item verdict files, the cell records, the prechecks and the summary. A per-item line holds the item id, the verdict, the rail's decision where there is one, token counts, the duration and SHA-256 values; each file's own SHA-256 is recorded in the arm's `cells.jsonl` (`result_sha256`) and in `summary.json` (`files_read`). The text of the test sets, the judges' raw answers and their reasoning are not in this repository: files here carry item ids, SHA-256, lengths, labels, verdicts and counts.
 

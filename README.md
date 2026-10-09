@@ -21,7 +21,7 @@
 |---|---|---|---|
 | **Vol.1** | **NIM for LLMs.** Why NIM? Llama 3.1 8B on one RTX 5090, 1 to 128 concurrent requests | [`vol1-nim/README.md`](vol1-nim/README.md) | [Releases → `vol1`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol1) |
 | **Vol.2** | **Nemotron on NIM.** Nemotron 3 Nano on one RTX 5090 with NIM | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) | [Releases → `vol2`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol2) |
-| **Vol.3** | **NeMo Guardrails.** Which model to put behind the self-check rail and the content-safety rail: detection rate, false alarms and the cost of each verdict, each model measured on its own | [`vol3-guardrails/README.md`](vol3-guardrails/README.md) | at publication |
+| **Vol.3** | **NeMo Guardrails.** Which model to put behind the self-check rail and the content-safety rail: detection rate, false alarms and the cost of each verdict, each model measured on its own | [`vol3-guardrails/README.md`](vol3-guardrails/README.md) | [Releases → `vol3`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol3) |
 | **Vol.4** | **NeMo Retriever.** Embedding and reranking NIMs on one card (planned) | — | — |
 | **Vol.5** | **The NVIDIA RAG Blueprint on one card.** The whole pipeline end to end (planned) | — | — |
 
@@ -55,7 +55,7 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 |---|---|
 | `vol1` | Vol.1, *Why NIM?* — the repository as the article describes it |
 | `vol2` | Vol.2, *Nemotron 3 Nano on one RTX 5090* — the repository as the article describes it |
-| `vol3` | Vol.3 baseline data (NIM × NeMo Guardrails). The judge study is not yet published; this tag moves once, on the day it is |
+| `vol3` | Vol.3, *NeMo Guardrails on one RTX 5090: the models behind the rail* — the repository as the article describes it |
 | `chronicle` | The chronicle of this repository's tags, [`CHRONICLE.md`](CHRONICLE.md): every earlier tag, its full hash and what it held |
 
 A tag opens the whole repository as it was at one commit; all four point to the same one. Earlier tags were retired on 2026-10-01 and are listed in [`CHRONICLE.md`](CHRONICLE.md).

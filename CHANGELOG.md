@@ -2,14 +2,7 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
-## 2026-10-02 · Vol.2 forum post published
-
-- **Vol.2 forum post:** the article was posted on the NVIDIA Developer Forum on 2026-10-02. The link is on the front page, at the top of [`vol2-nemotron/README.md`](vol2-nemotron/README.md) and in `releases/vol2.md`. → <https://forums.developer.nvidia.com/t/nemotron-3-nano-on-one-rtx-5090-with-nim-300-tok-s-flat-to-120k-context-128-concurrent-requests/384859>
-- **Cover illustration replaced (third version):** in the second version the laptop base at the bottom ran out of the frame. Same file name, [`vol2-nemotron/figures/cover_vol2.png`](vol2-nemotron/figures/cover_vol2.png); the pages that show it are unchanged.
-- **Vol.2 README:** the time to finish an answer is written as 7.31 s (it was 7.3 s; the stored median is 7,314 ms), and the claim → evidence table has two more rows: the size of the MMLU sample (2,850) and the highest total throughput of the RAG-shaped sweep on each night (2,133 and 2,246 tok/s).
-- **Where the figures are in the thread:** the cover illustration and the chat figure are in the post; the RAG figure is in reply #2, because a new forum account may attach two images per post.
-
-## <PUBLICATION_DATE> · Vol.3 published: NeMo Guardrails on one RTX 5090, the models behind the rail
+## 2026-10-10 · Vol.3 published: NeMo Guardrails on one RTX 5090, the models behind the rail
 
 - **Vol.3 is published.** Four models in ten configurations behind the NeMo Guardrails self-check and content-safety rails, each alone on one RTX 5090: what each one flags, what it flags wrongly, and what a verdict costs. → [`vol3-guardrails/README.md`](vol3-guardrails/README.md), with a claim-to-evidence table for every number; the text of the GitHub Release is in `releases/vol3.md`. The tag `vol3` moves to this state, once, as announced on 2026-10-01.
 - **The Vol.3 directory was renamed on 2026-10-05:** `vol3-judges/` → `vol3-guardrails/`, after the NVIDIA product the volume measures, as `vol1-nim/` and `vol2-nemotron/` are named. One commit of moves only (703 files, no content changed), then the paths in the pages. [`PATH_MAP.md`](PATH_MAP.md) has a fourth column and names the commit at which the paths of each column exist; frozen pre-registrations keep the paths of their day.
@@ -18,6 +11,13 @@ Every change to this repository that reached `main`, newest first. Volumes are n
 - **Added on 2026-10-08:** the same Safety Guard weights served by the generic NIM container of the 2.x line, beside upstream vLLM at two versions and the model's own NIM, all four the same night, with criteria frozen beforehand. The generic NIM runs at upstream's rate; one criterion about verdicts did not pass, by one of four rate differences, and the arm is kept in the figures with that stated. A second, separately pre-registered look at the verdicts the same day is in [`vol3-guardrails/results/safety_guard_recheck/README.md`](vol3-guardrails/results/safety_guard_recheck/README.md). → [`vol3-guardrails/results/model_free_nim/README.md`](vol3-guardrails/results/model_free_nim/README.md)
 - **Added on 2026-10-09:** for the Safety Guard model, the item-by-item agreement of every pair of runs the volume holds (11 runs, 55 pairs), as a description without a threshold: how often a NIM run and an upstream run give a different verdict, beside how often two upstream runs do. The plan was written before the pairs were computed. → [`vol3-guardrails/results/safety_guard_agreement/README.md`](vol3-guardrails/results/safety_guard_agreement/README.md). The rail configuration under "Run it" in the Vol.3 README is now the one used with the generic NIM.
 - **Figures:** a cover illustration without text or numbers and two data figures (harmful items flagged against verdicts per second at 16 concurrent requests, for prompts and for responses), each in a light and a dark version with its point table. Ten points per figure; a second outline marks the arm served by the generic NIM 2.0.12 and the arm whose server runs the reasoning parser; the line under each figure names the days and driver versions of the drawn arms. → [`vol3-guardrails/figures/`](vol3-guardrails/figures/)
+
+## 2026-10-02 · Vol.2 forum post published
+
+- **Vol.2 forum post:** the article was posted on the NVIDIA Developer Forum on 2026-10-02. The link is on the front page, at the top of [`vol2-nemotron/README.md`](vol2-nemotron/README.md) and in `releases/vol2.md`. → <https://forums.developer.nvidia.com/t/nemotron-3-nano-on-one-rtx-5090-with-nim-300-tok-s-flat-to-120k-context-128-concurrent-requests/384859>
+- **Cover illustration replaced (third version):** in the second version the laptop base at the bottom ran out of the frame. Same file name, [`vol2-nemotron/figures/cover_vol2.png`](vol2-nemotron/figures/cover_vol2.png); the pages that show it are unchanged.
+- **Vol.2 README:** the time to finish an answer is written as 7.31 s (it was 7.3 s; the stored median is 7,314 ms), and the claim → evidence table has two more rows: the size of the MMLU sample (2,850) and the highest total throughput of the RAG-shaped sweep on each night (2,133 and 2,246 tok/s).
+- **Where the figures are in the thread:** the cover illustration and the chat figure are in the post; the RAG figure is in reply #2, because a new forum account may attach two images per post.
 
 ## 2026-10-02 · Vol.2: a cover illustration; the figures say "per request"
 

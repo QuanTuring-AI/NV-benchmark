@@ -1,5 +1,4 @@
 # Vol.3 · NeMo Guardrails on one RTX 5090: the models behind the rail — baseline data and the rail study
-*The data here is the baseline for the judge study: Llama 3.1 8B judging its own answers through NeMo Guardrails 0.21.0 and 0.23.0, the self-check `max_tokens` setting, and the rails under load. The study itself (judge quality against latency) has not been published.*
 
 > **Reproduce:** `git checkout vol3`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory and gives the commit at which those paths exist, for a byte-for-byte rerun.
 The measurements, their boundaries and their results are in [`BASELINE.md`](BASELINE.md). Harnesses are in `scripts/`, results in `results/`.
@@ -10,7 +9,7 @@ The measurements, their boundaries and their results are in [`BASELINE.md`](BASE
 
 ## The judge study: two figures, and where each number comes from
 
-*Working data; no article has been published from it.* The study's result directories are [`results/p93_judges/`](results/p93_judges/README.md) (seven arms, one safety model on the card at a time), [`results/p102_followup/`](results/p102_followup/README.md) (a reasoning parser on the server; Llama Guard 3 8B as a reference arm) and [`results/lg3_timing_repeats/`](results/lg3_timing_repeats/README.md) (the reference arm's timed cells, repeated twice on a quiet host). Each of those READMEs gives the boundaries of its run.
+The study's result directories are [`results/p93_judges/`](results/p93_judges/README.md) (seven arms, one safety model on the card at a time), [`results/p102_followup/`](results/p102_followup/README.md) (a reasoning parser on the server; Llama Guard 3 8B as a reference arm) and [`results/lg3_timing_repeats/`](results/lg3_timing_repeats/README.md) (the reference arm's timed cells, repeated twice on a quiet host). Each of those READMEs gives the boundaries of its run.
 
 **Added 2026-10-06:** [`results/safety_guard_nim/`](results/safety_guard_nim/README.md) serves the Safety Guard model through its NIM (arm J6N; a point of both figures from 2026-10-06 to 2026-10-08), with the study's arm J6 run again the same night, the prompt template of the NIM's documentation, and the model behind the NeMo Guardrails content-safety rail as the library documents it.
 
