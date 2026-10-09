@@ -1,0 +1,125 @@
+{
+ "what": "Llama 3.1 Nemotron Safety Guard 8B v3: item-by-item agreement of every pair of runs the volume holds. Descriptive: no pass, no fail, no threshold.",
+ "written": "2026-10-09T13:18:31+0800",
+ "written_before": "the first computation of the pairs below, except the four named under already_seen",
+ "arms": {
+  "J6": {
+   "folder": "results/p93_judges/J6",
+   "day": "2026-10-02",
+   "server": "upstream vLLM 0.20.2",
+   "kind": "U"
+  },
+  "J6-today": {
+   "folder": "results/safety_guard_nim/J6-today",
+   "day": "2026-10-06",
+   "server": "upstream vLLM 0.20.2",
+   "kind": "U"
+  },
+  "J6-tonight": {
+   "folder": "results/model_free_nim/J6-tonight",
+   "day": "2026-10-08, night",
+   "server": "upstream vLLM 0.20.2",
+   "kind": "U"
+  },
+  "U1": {
+   "folder": "results/safety_guard_recheck/U1",
+   "day": "2026-10-08, day",
+   "server": "upstream vLLM 0.20.2",
+   "kind": "U"
+  },
+  "U2": {
+   "folder": "results/safety_guard_recheck/U2",
+   "day": "2026-10-08, day",
+   "server": "upstream vLLM 0.20.2",
+   "kind": "U"
+  },
+  "J6M": {
+   "folder": "results/model_free_nim/J6M",
+   "day": "2026-10-08, night",
+   "server": "the generic NIM 2.0.12",
+   "kind": "N2"
+  },
+  "M": {
+   "folder": "results/safety_guard_recheck/M",
+   "day": "2026-10-08, day",
+   "server": "the generic NIM 2.0.12",
+   "kind": "N2"
+  },
+  "J6N": {
+   "folder": "results/safety_guard_nim/J6N",
+   "day": "2026-10-06",
+   "server": "the model's own NIM 1.14.0",
+   "kind": "N1"
+  },
+  "J6N-tonight": {
+   "folder": "results/model_free_nim/J6N-tonight",
+   "day": "2026-10-08, night",
+   "server": "the model's own NIM 1.14.0",
+   "kind": "N1"
+  },
+  "J6-v0271": {
+   "folder": "results/model_free_nim/J6-v0271",
+   "day": "2026-10-08, night",
+   "server": "upstream vLLM 0.27.1",
+   "kind": "V027"
+  },
+  "J6-v010": {
+   "folder": "results/parser_and_engine_version/J6-v010",
+   "day": "2026-10-06",
+   "server": "upstream vLLM image v0.10.0",
+   "kind": "V010"
+  }
+ },
+ "files": "per arm and track, the whole per-item file of the 16-concurrent cell: input_c16.jsonl (prompts) and output_c16.jsonl (responses)",
+ "pairs": "every two of the arms, none left out; an arm whose file is missing is listed as missing and its pairs are not computed",
+ "groups": {
+  "UU": "upstream vLLM 0.20.2 against upstream vLLM 0.20.2 (another day or another container)",
+  "N2": "the generic NIM 2.0.12 against upstream vLLM 0.20.2",
+  "N1": "the model's own NIM 1.14.0 against upstream vLLM 0.20.2",
+  "other": "every other pair (a NIM against itself or the other NIM, another version of upstream vLLM)"
+ },
+ "counted": {
+  "agreement": "as criterion C3 of the second look: over the items present in both files, the share with the same verdict field",
+  "differing": "items present in both files minus those with the same verdict field",
+  "direction": "over the items on which both runs gave a verdict: unsafe only in the first, unsafe only in the second"
+ },
+ "reported": "every pair; per group and track the smallest and the largest share and the smallest and the largest number of differing items",
+ "reading_decided_beforehand": {
+  "N2's range on each track lies inside UU's or overlaps it": "the article says the NIM disagreed with upstream about as often as upstream disagreed with itself",
+  "N2's whole range on a track lies below UU's smallest share": "the figures are given as they are, the track is named, and the article says so in other words",
+  "an arm of N1 has no per-item file": "its pairs are listed as missing"
+ },
+ "already_seen": {
+  "pairs": [
+   [
+    "J6M",
+    "J6-tonight"
+   ],
+   [
+    "M",
+    "U1"
+   ],
+   [
+    "M",
+    "U2"
+   ],
+   [
+    "U1",
+    "U2"
+   ]
+  ],
+  "where": [
+   "results/model_free_nim/criteria.json",
+   "results/safety_guard_recheck/criteria.json"
+  ],
+  "note": "these four were computed as parts of two pre-registered cells; the other pairs had not been computed when this was written"
+ },
+ "program": {
+  "file": "scripts/safety_guard_agreement.py",
+  "sha256": "c99ed06154e74e8d07581b244cd074cd3084e23366fcd94e4e3e2087bcb80988"
+ },
+ "uses": {
+  "file": "scripts/safety_guard_recheck_summary.py",
+  "sha256": "c33f4f7fa71d60d6fd487f58130b6f51af09e267ca59c80b96178ba4589b78fb"
+ }
+}

@@ -18,7 +18,9 @@ The measurements, their boundaries and their results are in [`BASELINE.md`](BASE
 
 **Added 2026-10-08:** [`results/model_free_nim/`](results/model_free_nim/README.md) serves the same Safety Guard weights with the generic NIM container of the 2.x line (arm J6M, the tenth point of both figures), beside upstream vLLM at two versions and the model's own NIM, all four the same night. The generic NIM runs at upstream's rate. Of the criteria set beforehand, the one about verdicts did not pass, by one of its four rate differences; the arm is kept in the figures and in the article despite this, and the deviation and its reason are stated in that README and in the article. [`results/safety_guard_recheck/`](results/safety_guard_recheck/README.md) is a second, separately pre-registered look at the same question later that day, with the upstream server measured before and after the NIM: its outcome, criterion by criterion, is in that README and in the table below.
 
-**Scope rule of the study.** Every figure is about one arm. Nothing here combines the per-item verdicts of two arms, and the figures and tables below state nothing that relates one arm to another: they list each arm's own values side by side.
+**Added 2026-10-09:** [`results/safety_guard_agreement/`](results/safety_guard_agreement/README.md) pairs every run of the Safety Guard model that this volume holds with every other (11 runs, 55 pairs) and counts the items on which two runs gave a different verdict. It describes; it sets no threshold, and the two records of 8 October stand as they are. Two runs of upstream vLLM 0.20.2 gave the same verdict on 99.55% to 99.79% of the prompts and 99.02% to 99.63% of the responses; the generic NIM 2.0.12 against upstream on 99.46% to 99.63% of the prompts and 98.89% to 99.63% of the responses; the model's own NIM 1.14.0 against upstream on 99.46% to 99.75% of the prompts and 99.02% to 99.75% of the responses. The plan of the table was written before the pairs were computed.
+
+**Scope rule of the study.** Every figure is about one arm. Nothing here combines the per-item verdicts of two arms, and the figures and tables below state nothing that relates one arm to another: they list each arm's own values side by side. One exception, named wherever it appears: for Llama 3.1 Nemotron Safety Guard 8B v3, runs of that one model on different servers and days are compared item by item (the two looks of 8 October and the agreement table of 9 October).
 
 ### Figures
 
@@ -187,9 +189,9 @@ Every number of the study that an article may use, with the file it comes from a
 | Context length every server was started with, tokens | 8,192 | `results/p93_judges/prediction_p93.json` | `serving.context_tokens` | rounds |
 | Answer limit set for the reasoning arms, which is also the library's default since 0.23.0, tokens | 1,024 | `results/p93_judges/prediction_p93.json` | `arms.J2.max_tokens` | rounds |
 
-**Follow-up arms of 2026-10-06 (J2P · J2P-repeat · J2-today · J6-v010), the generic-NIM cell and the second look of 2026-10-08, and figures an article sets side by side**
+**Follow-up arms of 2026-10-06 (J2P · J2P-repeat · J2-today · J6-v010), the generic-NIM cell and the second look of 2026-10-08, the agreement of every pair of Safety Guard runs, and figures an article sets side by side**
 
-Rows that set two arms side by side do so for one model and one request shape on two servers or two days, or for one arm on its two tracks; they are rates, not verdicts. Nothing here combines the per-item verdicts of two arms.
+Rows that set two arms side by side do so for one model and one request shape on two servers or two days, or for one arm on its two tracks; they are rates, or, where a row says so, counts of items on which two runs of one model (Safety Guard 8B v3) gave the same or a different verdict. Nothing here sets the verdicts of two different models against each other.
 
 | In the post | Number | File | Key | Check |
 |---|---|---|---|---|
@@ -547,6 +549,47 @@ Rows that set two arms side by side do so for one model and one request shape on
 | Second look · outcome as the program wrote it | "C1 or C2 does not pass" | `results/safety_guard_recheck/criteria.json` | `outcome` | equals |
 | Second look · sessions simulated before the freeze with M as one more upstream run | 20,000 | `results/safety_guard_recheck/before_the_run/null_simulation.json` | `sessions` | rounds |
 | Second look · share of those sessions in which C1 fails · C2 fails, % | 28.0 · 0.8 | `results/safety_guard_recheck/before_the_run/null_simulation.json` | `share_of_sessions.{C1_fails,C2_fails} * 100` | rounds |
+| J6-v010 (upstream vLLM image v0.10.0) against J6N (the NIM 1.14.0): verdicts per second at 16 concurrent requests, prompts, difference in %: within | 4 | `results/parser_and_engine_version/J6-v010/summary.json` | `(tracks.input.quality_cell.verdicts_per_s / results/safety_guard_nim/J6N/summary.json::tracks.input.quality_cell.verdicts_per_s - 1) * 100` | within |
+| J6-v010 (upstream vLLM image v0.10.0) against J6N (the NIM 1.14.0): verdicts per second at 16 concurrent requests, responses, difference in %: within | 4 | `results/parser_and_engine_version/J6-v010/summary.json` | `(tracks.output.quality_cell.verdicts_per_s / results/safety_guard_nim/J6N/summary.json::tracks.output.quality_cell.verdicts_per_s - 1) * 100` | within |
+| Agreement · upstream vLLM 0.20.2 against itself, five runs: pairs | 10 | `results/safety_guard_agreement/pairs.json` | `groups.UU.pairs` | rounds |
+| Agreement · upstream vLLM 0.20.2 against itself, five runs, prompts: share of items with the same verdict, smallest · largest pair, % | 99.55 · 99.79 | `results/safety_guard_agreement/pairs.json` | `groups.UU.input.{share_min,share_max} * 100` | rounds |
+| Agreement · upstream vLLM 0.20.2 against itself, five runs, prompts: items with a different verdict, fewest · most | 5 · 11 | `results/safety_guard_agreement/pairs.json` | `groups.UU.input.{differing_min,differing_max}` | rounds |
+| Agreement · upstream vLLM 0.20.2 against itself, five runs, responses: share of items with the same verdict, smallest · largest pair, % | 99.02 · 99.63 | `results/safety_guard_agreement/pairs.json` | `groups.UU.output.{share_min,share_max} * 100` | rounds |
+| Agreement · upstream vLLM 0.20.2 against itself, five runs, responses: items with a different verdict, fewest · most | 3 · 8 | `results/safety_guard_agreement/pairs.json` | `groups.UU.output.{differing_min,differing_max}` | rounds |
+| Agreement · the generic NIM 2.0.12 (two runs) against upstream vLLM 0.20.2 (five runs): pairs | 10 | `results/safety_guard_agreement/pairs.json` | `groups.N2.pairs` | rounds |
+| Agreement · the generic NIM 2.0.12 (two runs) against upstream vLLM 0.20.2 (five runs), prompts: share of items with the same verdict, smallest · largest pair, % | 99.46 · 99.63 | `results/safety_guard_agreement/pairs.json` | `groups.N2.input.{share_min,share_max} * 100` | rounds |
+| Agreement · the generic NIM 2.0.12 (two runs) against upstream vLLM 0.20.2 (five runs), prompts: items with a different verdict, fewest · most | 9 · 13 | `results/safety_guard_agreement/pairs.json` | `groups.N2.input.{differing_min,differing_max}` | rounds |
+| Agreement · the generic NIM 2.0.12 (two runs) against upstream vLLM 0.20.2 (five runs), responses: share of items with the same verdict, smallest · largest pair, % | 98.89 · 99.63 | `results/safety_guard_agreement/pairs.json` | `groups.N2.output.{share_min,share_max} * 100` | rounds |
+| Agreement · the generic NIM 2.0.12 (two runs) against upstream vLLM 0.20.2 (five runs), responses: items with a different verdict, fewest · most | 3 · 9 | `results/safety_guard_agreement/pairs.json` | `groups.N2.output.{differing_min,differing_max}` | rounds |
+| Agreement · the model's own NIM 1.14.0 (two runs) against upstream vLLM 0.20.2 (five runs): pairs | 10 | `results/safety_guard_agreement/pairs.json` | `groups.N1.pairs` | rounds |
+| Agreement · the model's own NIM 1.14.0 (two runs) against upstream vLLM 0.20.2 (five runs), prompts: share of items with the same verdict, smallest · largest pair, % | 99.46 · 99.75 | `results/safety_guard_agreement/pairs.json` | `groups.N1.input.{share_min,share_max} * 100` | rounds |
+| Agreement · the model's own NIM 1.14.0 (two runs) against upstream vLLM 0.20.2 (five runs), prompts: items with a different verdict, fewest · most | 6 · 13 | `results/safety_guard_agreement/pairs.json` | `groups.N1.input.{differing_min,differing_max}` | rounds |
+| Agreement · the model's own NIM 1.14.0 (two runs) against upstream vLLM 0.20.2 (five runs), responses: share of items with the same verdict, smallest · largest pair, % | 99.02 · 99.75 | `results/safety_guard_agreement/pairs.json` | `groups.N1.output.{share_min,share_max} * 100` | rounds |
+| Agreement · the model's own NIM 1.14.0 (two runs) against upstream vLLM 0.20.2 (five runs), responses: items with a different verdict, fewest · most | 2 · 8 | `results/safety_guard_agreement/pairs.json` | `groups.N1.output.{differing_min,differing_max}` | rounds |
+| Agreement · every other pair of the eleven runs: pairs | 25 | `results/safety_guard_agreement/pairs.json` | `groups.other.pairs` | rounds |
+| Agreement · every other pair of the eleven runs, prompts: share of items with the same verdict, smallest · largest pair, % | 99.38 · 99.75 | `results/safety_guard_agreement/pairs.json` | `groups.other.input.{share_min,share_max} * 100` | rounds |
+| Agreement · every other pair of the eleven runs, prompts: items with a different verdict, fewest · most | 6 · 15 | `results/safety_guard_agreement/pairs.json` | `groups.other.input.{differing_min,differing_max}` | rounds |
+| Agreement · every other pair of the eleven runs, responses: share of items with the same verdict, smallest · largest pair, % | 99.02 · 99.88 | `results/safety_guard_agreement/pairs.json` | `groups.other.output.{share_min,share_max} * 100` | rounds |
+| Agreement · every other pair of the eleven runs, responses: items with a different verdict, fewest · most | 1 · 8 | `results/safety_guard_agreement/pairs.json` | `groups.other.output.{differing_min,differing_max}` | rounds |
+| Agreement · the generic NIM 2.0.12 against upstream, prompts: its range overlaps the range of upstream against itself | true | `results/safety_guard_agreement/pairs.json` | `against_UU.N2.input.overlaps_UU` | equals |
+| Agreement · the generic NIM 2.0.12 against upstream, prompts: its whole range lies below that range | false | `results/safety_guard_agreement/pairs.json` | `against_UU.N2.input.entirely_below_UU` | equals |
+| Agreement · the generic NIM 2.0.12 against upstream, responses: its range overlaps the range of upstream against itself | true | `results/safety_guard_agreement/pairs.json` | `against_UU.N2.output.overlaps_UU` | equals |
+| Agreement · the generic NIM 2.0.12 against upstream, responses: its whole range lies below that range | false | `results/safety_guard_agreement/pairs.json` | `against_UU.N2.output.entirely_below_UU` | equals |
+| Agreement · the model's own NIM 1.14.0 against upstream, prompts: its range overlaps the range of upstream against itself | true | `results/safety_guard_agreement/pairs.json` | `against_UU.N1.input.overlaps_UU` | equals |
+| Agreement · the model's own NIM 1.14.0 against upstream, prompts: its whole range lies below that range | false | `results/safety_guard_agreement/pairs.json` | `against_UU.N1.input.entirely_below_UU` | equals |
+| Agreement · the model's own NIM 1.14.0 against upstream, responses: its range overlaps the range of upstream against itself | true | `results/safety_guard_agreement/pairs.json` | `against_UU.N1.output.overlaps_UU` | equals |
+| Agreement · the model's own NIM 1.14.0 against upstream, responses: its whole range lies below that range | false | `results/safety_guard_agreement/pairs.json` | `against_UU.N1.output.entirely_below_UU` | equals |
+| Agreement · run J6 of upstream vLLM 0.20.2: its day | "2026-10-02" | `results/safety_guard_agreement/plan.json` | `arms.J6.day` | equals |
+| Agreement · run J6-today of upstream vLLM 0.20.2: its day | "2026-10-06" | `results/safety_guard_agreement/plan.json` | `arms.J6-today.day` | equals |
+| Agreement · run J6-tonight of upstream vLLM 0.20.2: its day | "2026-10-08, night" | `results/safety_guard_agreement/plan.json` | `arms.J6-tonight.day` | equals |
+| Agreement · run U1 of upstream vLLM 0.20.2: its day | "2026-10-08, day" | `results/safety_guard_agreement/plan.json` | `arms.U1.day` | equals |
+| Agreement · run U2 of upstream vLLM 0.20.2: its day | "2026-10-08, day" | `results/safety_guard_agreement/plan.json` | `arms.U2.day` | equals |
+| J6-tonight · engine version the server reports at /version | "0.20.2" | `results/model_free_nim/J6-tonight/summary.json` | `label.server_version_endpoints./version.version` | equals |
+| J6M · engine version the server reports at /version | "0.27.1" | `results/model_free_nim/J6M/summary.json` | `label.server_version_endpoints./version.version` | equals |
+| J6-v0271 · engine version the server reports at /version | "0.27.1" | `results/model_free_nim/J6-v0271/summary.json` | `label.server_version_endpoints./version.version` | equals |
+| J6N-tonight · NIM release the server reports at /v1/version | "1.14.0" | `results/model_free_nim/J6N-tonight/summary.json` | `label.server_version_endpoints./v1/version.release` | equals |
+| J6N-tonight · engine line of that night's start log, as the results README quotes it (the log is kept outside the repository) | 0.10.0 | `results/model_free_nim/README.md` | `Initializing a V1 LLM engine (v0.10.0+4019fef1.nv25.06.post1)` | text |
+| J6N · engine line of the start log of 6 October, as the results README quotes it (the log is kept outside the repository) | 0.10.0 | `results/safety_guard_nim/README.md` | `Initializing a V1 LLM engine (v0.10.0+4019fef1.nv25.06.post1)` | text |
 | J6M and J6-tonight, prompts: items with the same verdict · items read by both | 2,414 · 2,423 | `results/model_free_nim/criteria.json` | `verdicts.per_item.input.{same_verdict,items_in_both}` | rounds |
 | J6M and J6-tonight, prompts: share of items with the same verdict, % | 99.63 | `results/model_free_nim/criteria.json` | `verdicts.per_item.input.share * 100` | rounds |
 | J6M and J6-tonight, responses: items with the same verdict · items read by both | 809 · 813 | `results/model_free_nim/criteria.json` | `verdicts.per_item.output.{same_verdict,items_in_both}` | rounds |
@@ -649,7 +692,7 @@ Rows that set two arms side by side do so for one model and one request shape on
 
 ## Run it
 
-Three starting points, each copied from a run recorded in this directory (the container names are the runs' own). `$NGC_ENV_FILE` is a file holding the NGC key (passed by path, never printed); `$NIM_CACHE_DIR` is a folder for the NIM's model cache. All three were run on one RTX 5090 (32 GB), Windows 11 with Docker Desktop (WSL2), graphics driver 610.88: the first on 2026-10-08, the other two on 2026-10-06.
+Three starting points, each copied from a run recorded in this directory (the container names are the runs' own). `$NGC_ENV_FILE` is a file holding the NGC key (passed by path, never printed); `$NIM_CACHE_DIR` is a folder for the NIM's model cache. All three were run on one RTX 5090 (32 GB), Windows 11 with Docker Desktop (WSL2), graphics driver 610.88: the first two on 2026-10-08, the third on 2026-10-06.
 
 ### 1 · The Safety Guard model in the generic NIM container, from a local model directory
 
@@ -670,19 +713,19 @@ docker run -d --name mfnim_j6m_main --gpus all --shm-size=64GB -p 127.0.0.1:8000
 
 ### 2 · That model behind the NeMo Guardrails content-safety rail
 
-`config.yml` as used (NeMo Guardrails 0.24.1). The model is named once per entry: the library rejects a configuration that names it in `model` and again in `parameters.model_name` ("Model name must be specified in exactly one place").
+`config.yml` as used with the container of section 1 (NeMo Guardrails 0.24.1; on 100 prompts and 100 responses the rail's decision and the verdict read from the same call agreed on 200 of 200). The model is named once per entry: the library rejects a configuration that names it in `model` and again in `parameters.model_name` ("Model name must be specified in exactly one place"). The `main` entry points at the same server because the library's tutorial has one and this study generates no answer, so it is never called; in an application it names the model that answers. With `engine: nim` the client wants `NVIDIA_API_KEY` to be set; a local server does not check its value.
 
 ```yaml
 models:
   - type: main
     engine: nim
-    model: nvidia/llama-3.1-nemotron-safety-guard-8b-v3
+    model: llama-3.1-nemotron-safety-guard-8b-v3
     parameters:
       base_url: "http://127.0.0.1:8000/v1"
 
   - type: content_safety
     engine: nim
-    model: nvidia/llama-3.1-nemotron-safety-guard-8b-v3
+    model: llama-3.1-nemotron-safety-guard-8b-v3
     parameters:
       base_url: "http://127.0.0.1:8000/v1"
 
@@ -695,7 +738,7 @@ rails:
       - content safety check output $model=content_safety
 ```
 
-`prompts.yml` beside it is the library's own `examples/configs/content_safety_multilingual/prompts.yml` at tag `v0.24.1`, byte for byte ([`scripts/guardrails_safety_guard/prompts.yml`](scripts/guardrails_safety_guard/prompts.yml)). Both files as written by the run: [`results/safety_guard_nim/J6G/gr_config/`](results/safety_guard_nim/J6G/gr_config/).
+`prompts.yml` beside it is the library's own `examples/configs/content_safety_multilingual/prompts.yml` at tag `v0.24.1`, byte for byte ([`scripts/guardrails_safety_guard/prompts.yml`](scripts/guardrails_safety_guard/prompts.yml)). Both files as written by the run: [`results/model_free_nim/J6M-rail/gr_config/`](results/model_free_nim/J6M-rail/gr_config/). The model's own NIM image serves the model under the name `nvidia/llama-3.1-nemotron-safety-guard-8b-v3`; with that name the configuration is otherwise the same ([`results/safety_guard_nim/J6G/gr_config/`](results/safety_guard_nim/J6G/gr_config/), 2026-10-06).
 
 ### 3 · Nemotron 3 Nano as a self-check model, with the reasoning parser on the server
 

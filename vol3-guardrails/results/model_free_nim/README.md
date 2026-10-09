@@ -18,7 +18,7 @@ The first serving container started at 2026-10-07T19:11:49Z, which is 03:11:49 (
 | J6-tonight | `vllm/vllm-openai:v0.20.2` | 0.20.2 | — | upstream vLLM | 166 s | 31,893 MiB |
 | J6-v0271 | `vllm/vllm-openai:v0.27.1` | 0.27.1 | — | with_the_v1_model_runner | 192 s | 30,786 MiB |
 | J6M | `nvcr.io/nim/nvidia/model-free-nim:2.0.12` | 0.27.1 | `d655bc3a760b0d20b2ce2e638bb8212015e1a564bdcdc6f1642fdc4d9619f000` (vllm-tp1-pp1), chosen by the image | with_the_v1_model_runner | 208 s | 30,433 MiB |
-| J6N-tonight | `nvcr.io/nim/nvidia/llama-3.1-nemotron-safety-guard-8b-v3:1.14.0` | not reported by this server (its start log of 2026-10-06 names vLLM 0.10.0: [`../safety_guard_nim/`](../safety_guard_nim/README.md)) | `47804570e8db67fdc60d9cb518b0f60316ac4eb0f3a55af81aafefe124505a8f`, pinned | generic profile of the model's NIM | 182 s | 31,808 MiB |
+| J6N-tonight | `nvcr.io/nim/nvidia/llama-3.1-nemotron-safety-guard-8b-v3:1.14.0` | not reported by this server; its start log of this night (kept outside the repository) reads `Initializing a V1 LLM engine (v0.10.0+4019fef1.nv25.06.post1)`, as on 2026-10-06 ([`../safety_guard_nim/`](../safety_guard_nim/README.md)) | `47804570e8db67fdc60d9cb518b0f60316ac4eb0f3a55af81aafefe124505a8f`, pinned | generic profile of the model's NIM | 182 s | 31,808 MiB |
 
 The engine version and the profile are what each server answered on `/version` and `/v1/metadata` after it was ready (kept in `events.jsonl`, kind `warm_up`); the arm labels inside the `summary.json` files leave two of their fields empty for that reason: the start logs do not print the version in the form the label looks for, and the 2.x NIM names its profile under another key than the 1.x one.
 
@@ -99,6 +99,8 @@ docker run -d --name mfnim_j6m_main --gpus all --shm-size=64GB -p 127.0.0.1:8000
   -v $P93_HF_HUB/models--nvidia--Llama-3.1-Nemotron-Safety-Guard-8B-v3/snapshots/8fdc246ba3d56db9c469d534233b9f582d3afafa:/model:ro \
   -v $NIM_CACHE_DIR:/opt/nim/.cache nvcr.io/nim/nvidia/model-free-nim:2.0.12
 ```
+
+The article gives this command in a shorter form, which differs from the run in three places: it publishes host port 8123 on every interface (`-p 8123:8000`) where the run bound port 8000 on the loopback address only; it takes the key from the environment (`-e NGC_API_KEY`) where the run passed a file; and it has no cache mount. By the vendor's page for this container none of the three decides whether it starts from a local directory: the host port is the reader's choice, a local directory is listed there with authentication "None", and the cache directory keeps the generated manifest for later restarts (the page's first examples have no cache mount). The shorter form itself was not run here.
 
 ## Weights, rail, stability
 
