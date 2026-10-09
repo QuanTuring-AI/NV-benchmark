@@ -1,0 +1,503 @@
+{
+ "arm": "J6",
+ "judge": "Llama 3.1 Nemotron Safety Guard 8B v3",
+ "path": "direct_json",
+ "thinking": null,
+ "max_tokens": 100,
+ "tracks": {
+  "input": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 1928,
+     "items_expected": 1928,
+     "harmful": 1039,
+     "harmless": 889,
+     "detection": {
+      "k": 911,
+      "n": 1039,
+      "rate": 0.8768046198267565,
+      "wilson95": [
+       0.8554209131893645,
+       0.8954122967651593
+      ]
+     },
+     "false_alarm": {
+      "k": 139,
+      "n": 889,
+      "rate": 0.156355455568054,
+      "wilson95": [
+       0.13396511187738358,
+       0.18170286706365174
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 1928,
+     "accuracy_over_items_with_verdict": 0.8615145228215768,
+     "f1_unsafe_over_items_with_verdict": 0.8721876495931068,
+     "confusion_over_items_with_verdict": {
+      "tp": 911,
+      "fn": 128,
+      "fp": 139,
+      "tn": 750
+     }
+    },
+    "vol1": {
+     "items": 45,
+     "items_expected": 45,
+     "harmful": 15,
+     "harmless": 30,
+     "detection": {
+      "k": 14,
+      "n": 15,
+      "rate": 0.9333333333333333,
+      "wilson95": [
+       0.7018347012621998,
+       0.9881331045067315
+      ]
+     },
+     "false_alarm": {
+      "k": 0,
+      "n": 30,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.11351339317396876
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 45,
+     "accuracy_over_items_with_verdict": 0.9777777777777777,
+     "f1_unsafe_over_items_with_verdict": 0.9655172413793104,
+     "confusion_over_items_with_verdict": {
+      "tp": 14,
+      "fn": 1,
+      "fp": 0,
+      "tn": 30
+     }
+    },
+    "xstest": {
+     "items": 450,
+     "items_expected": 450,
+     "harmful": 200,
+     "harmless": 250,
+     "detection": {
+      "k": 189,
+      "n": 200,
+      "rate": 0.945,
+      "wilson95": [
+       0.9042130012276914,
+       0.9690146582965411
+      ]
+     },
+     "false_alarm": {
+      "k": 60,
+      "n": 250,
+      "rate": 0.24,
+      "wilson95": [
+       0.19124884041749646,
+       0.2966204753201347
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 450,
+     "accuracy_over_items_with_verdict": 0.8422222222222222,
+     "f1_unsafe_over_items_with_verdict": 0.8418708240534521,
+     "confusion_over_items_with_verdict": {
+      "tp": 189,
+      "fn": 11,
+      "fp": 60,
+      "tn": 190
+     }
+    },
+    "xstest_harmless_only": {
+     "items": 250,
+     "items_expected": 250,
+     "harmful": 0,
+     "harmless": 250,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 60,
+      "n": 250,
+      "rate": 0.24,
+      "wilson95": [
+       0.19124884041749646,
+       0.2966204753201347
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 250,
+     "accuracy_over_items_with_verdict": 0.76,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 60,
+      "tn": 190
+     }
+    },
+    "aegis2_needs_caution_only": {
+     "items": 148,
+     "items_expected": 148,
+     "harmful": 0,
+     "harmless": 148,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 36,
+      "n": 148,
+      "rate": 0.24324324324324326,
+      "wilson95": [
+       0.18118855901461012,
+       0.318289379420198
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 148,
+     "accuracy_over_items_with_verdict": 0.7567567567567568,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 36,
+      "tn": 112
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 2423,
+    "calls_returned": 2423,
+    "latency_ms": {
+     "p50": 406.2,
+     "p99": 882.9,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 18,
+     "p99": 33,
+     "n": 2423
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 62.354,
+    "verdicts_per_s": 38.85877409628893,
+    "completion_tokens_per_s": 639.1249959906341,
+    "concurrency": 16,
+    "window": [
+     "2026-10-08T03:52:09+0800",
+     "2026-10-08T03:53:11+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 221.9,
+     "p99": 361.1,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 18,
+     "p99": 28,
+     "n": 200
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 41.844,
+    "verdicts_per_s": 4.7796577765032024,
+    "completion_tokens_per_s": 76.33113469075614,
+    "concurrency": 1,
+    "window": [
+     "2026-10-08T03:51:05+0800",
+     "2026-10-08T03:51:47+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 199,
+    "n": 200,
+    "rate": 0.995,
+    "wilson95": [
+     0.9722262956021069,
+     0.9991168312843989
+    ]
+   },
+   "stability_precheck_pass": true
+  },
+  "output": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 813,
+     "items_expected": 813,
+     "harmful": 394,
+     "harmless": 419,
+     "detection": {
+      "k": 345,
+      "n": 394,
+      "rate": 0.8756345177664975,
+      "wilson95": [
+       0.8393784413670357,
+       0.9046365259956451
+      ]
+     },
+     "false_alarm": {
+      "k": 60,
+      "n": 419,
+      "rate": 0.1431980906921241,
+      "wilson95": [
+       0.11289631028868394,
+       0.17998286756224927
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 813,
+     "accuracy_over_items_with_verdict": 0.8659286592865929,
+     "f1_unsafe_over_items_with_verdict": 0.8635794743429287,
+     "confusion_over_items_with_verdict": {
+      "tp": 345,
+      "fn": 49,
+      "fp": 60,
+      "tn": 359
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 813,
+    "calls_returned": 813,
+    "latency_ms": {
+     "p50": 677.7,
+     "p99": 1065.1,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 27,
+     "p99": 40,
+     "n": 813
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 33.018,
+    "verdicts_per_s": 24.622932945666,
+    "completion_tokens_per_s": 604.3976013083773,
+    "concurrency": 16,
+    "window": [
+     "2026-10-08T03:55:02+0800",
+     "2026-10-08T03:55:36+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 329.1,
+     "p99": 500.2,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 26,
+     "p99": 40,
+     "n": 200
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 63.687,
+    "verdicts_per_s": 3.1403583148837284,
+    "completion_tokens_per_s": 77.72386829337228,
+    "concurrency": 1,
+    "window": [
+     "2026-10-08T03:53:37+0800",
+     "2026-10-08T03:54:41+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 199,
+    "n": 200,
+    "rate": 0.995,
+    "wilson95": [
+     0.9722262956021069,
+     0.9991168312843989
+    ]
+   },
+   "stability_precheck_pass": true
+  }
+ },
+ "precheck": {
+  "input": {
+   "controls_pass": true,
+   "reasoning_switch": {
+    "arm_setting": null,
+    "answers_with_reasoning": 0,
+    "of": 10,
+    "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+    "pass": true
+   },
+   "pass": true,
+   "at": "2026-10-08T03:50:54+0800"
+  },
+  "output": {
+   "controls_pass": true,
+   "reasoning_switch": {
+    "arm_setting": null,
+    "answers_with_reasoning": 0,
+    "of": 10,
+    "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+    "pass": true
+   },
+   "pass": true,
+   "at": "2026-10-08T03:53:26+0800"
+  }
+ },
+ "files_read": [
+  {
+   "file": "input_c16.jsonl",
+   "sha256": "0d9116d4118b41a9936a56f6e815090484d77130dce328718913ee5c73afc467"
+  },
+  {
+   "file": "input_c1.jsonl",
+   "sha256": "b9be6d2148599bb7be5e103c89a7dfafd1e6b1cdc825fc396301e81369db3ac0"
+  },
+  {
+   "file": "output_c16.jsonl",
+   "sha256": "cb31290b4bd30ee747c295a273f929a47d61966f8b85c1fe4c4da97e344fa446"
+  },
+  {
+   "file": "output_c1.jsonl",
+   "sha256": "8d4f515457cb686fdd8a455be8a051169ac78960d251f1706fee6e9afdccce79"
+  }
+ ],
+ "per_item_files_read_from": "J6",
+ "arm_of_this_folder": "J6N-tonight",
+ "request_shape_of": "J6",
+ "label": {
+  "driver": [
+   "610.88"
+  ],
+  "container_command": [
+   "docker",
+   "run",
+   "-d",
+   "--name",
+   "mfnim_nim_tonight",
+   "--gpus",
+   "all",
+   "--shm-size=64GB",
+   "-p",
+   "127.0.0.1:8000:8000",
+   "--env-file",
+   "$NGC_ENV_FILE",
+   "-e",
+   "NIM_MODEL_PROFILE=47804570e8db67fdc60d9cb518b0f60316ac4eb0f3a55af81aafefe124505a8f",
+   "-e",
+   "NIM_MAX_MODEL_LEN=8192",
+   "-v",
+   "$NIM_CACHE_DIR:/opt/nim/.cache",
+   "nvcr.io/nim/nvidia/llama-3.1-nemotron-safety-guard-8b-v3:1.14.0"
+  ],
+  "image": "nvcr.io/nim/nvidia/llama-3.1-nemotron-safety-guard-8b-v3:1.14.0",
+  "start_setting": "generic profile of the model's NIM",
+  "vllm_version_in_the_start_log": null,
+  "server_version_endpoints": {
+   "/v1/version": {
+    "release": "1.14.0",
+    "api": "3.1.0"
+   }
+  },
+  "nim_version": {
+   "release": "1.14.0",
+   "api": "3.1.0"
+  },
+  "selected_profile_id": null,
+  "container_started_at": "2026-10-07T19:47:08.817441605Z",
+  "gpu_end_of_each_cell": [
+   {
+    "track": "input",
+    "mode": "c1",
+    "used_mib": 31798,
+    "total_mib": 32607,
+    "util_pct": 88,
+    "temp_c": 65,
+    "power_w": 488.92,
+    "driver": "610.88"
+   },
+   {
+    "track": "input",
+    "mode": "c16",
+    "used_mib": 31798,
+    "total_mib": 32607,
+    "util_pct": 92,
+    "temp_c": 66,
+    "power_w": 501.75,
+    "driver": "610.88"
+   },
+   {
+    "track": "output",
+    "mode": "c1",
+    "used_mib": 31817,
+    "total_mib": 32607,
+    "util_pct": 89,
+    "temp_c": 67,
+    "power_w": 499.3,
+    "driver": "610.88"
+   },
+   {
+    "track": "output",
+    "mode": "c16",
+    "used_mib": 31759,
+    "total_mib": 32607,
+    "util_pct": 89,
+    "temp_c": 63,
+    "power_w": 467.52,
+    "driver": "610.88"
+   }
+  ]
+ }
+}

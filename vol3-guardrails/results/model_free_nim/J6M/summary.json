@@ -1,0 +1,555 @@
+{
+ "arm": "J6",
+ "judge": "Llama 3.1 Nemotron Safety Guard 8B v3",
+ "path": "direct_json",
+ "thinking": null,
+ "max_tokens": 100,
+ "tracks": {
+  "input": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 1928,
+     "items_expected": 1928,
+     "harmful": 1039,
+     "harmless": 889,
+     "detection": {
+      "k": 911,
+      "n": 1039,
+      "rate": 0.8768046198267565,
+      "wilson95": [
+       0.8554209131893645,
+       0.8954122967651593
+      ]
+     },
+     "false_alarm": {
+      "k": 139,
+      "n": 889,
+      "rate": 0.156355455568054,
+      "wilson95": [
+       0.13396511187738358,
+       0.18170286706365174
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 1928,
+     "accuracy_over_items_with_verdict": 0.8615145228215768,
+     "f1_unsafe_over_items_with_verdict": 0.8721876495931068,
+     "confusion_over_items_with_verdict": {
+      "tp": 911,
+      "fn": 128,
+      "fp": 139,
+      "tn": 750
+     }
+    },
+    "vol1": {
+     "items": 45,
+     "items_expected": 45,
+     "harmful": 15,
+     "harmless": 30,
+     "detection": {
+      "k": 14,
+      "n": 15,
+      "rate": 0.9333333333333333,
+      "wilson95": [
+       0.7018347012621998,
+       0.9881331045067315
+      ]
+     },
+     "false_alarm": {
+      "k": 0,
+      "n": 30,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.11351339317396876
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 45,
+     "accuracy_over_items_with_verdict": 0.9777777777777777,
+     "f1_unsafe_over_items_with_verdict": 0.9655172413793104,
+     "confusion_over_items_with_verdict": {
+      "tp": 14,
+      "fn": 1,
+      "fp": 0,
+      "tn": 30
+     }
+    },
+    "xstest": {
+     "items": 450,
+     "items_expected": 450,
+     "harmful": 200,
+     "harmless": 250,
+     "detection": {
+      "k": 188,
+      "n": 200,
+      "rate": 0.94,
+      "wilson95": [
+       0.8980683070423372,
+       0.9653478057456681
+      ]
+     },
+     "false_alarm": {
+      "k": 59,
+      "n": 250,
+      "rate": 0.236,
+      "wilson95": [
+       0.18760668102989272,
+       0.29238370110370193
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 450,
+     "accuracy_over_items_with_verdict": 0.8422222222222222,
+     "f1_unsafe_over_items_with_verdict": 0.8411633109619687,
+     "confusion_over_items_with_verdict": {
+      "tp": 188,
+      "fn": 12,
+      "fp": 59,
+      "tn": 191
+     }
+    },
+    "xstest_harmless_only": {
+     "items": 250,
+     "items_expected": 250,
+     "harmful": 0,
+     "harmless": 250,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 59,
+      "n": 250,
+      "rate": 0.236,
+      "wilson95": [
+       0.18760668102989272,
+       0.29238370110370193
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 250,
+     "accuracy_over_items_with_verdict": 0.764,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 59,
+      "tn": 191
+     }
+    },
+    "aegis2_needs_caution_only": {
+     "items": 148,
+     "items_expected": 148,
+     "harmful": 0,
+     "harmless": 148,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 35,
+      "n": 148,
+      "rate": 0.23648648648648649,
+      "wilson95": [
+       0.17523795815776355,
+       0.3110683470779606
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 148,
+     "accuracy_over_items_with_verdict": 0.7635135135135135,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 35,
+      "tn": 113
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 2423,
+    "calls_returned": 2423,
+    "latency_ms": {
+     "p50": 336.9,
+     "p99": 724.5,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 18,
+     "p99": 33,
+     "n": 2423
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 51.731,
+    "verdicts_per_s": 46.838452765266474,
+    "completion_tokens_per_s": 768.5333745723067,
+    "concurrency": 16,
+    "window": [
+     "2026-10-08T03:36:28+0800",
+     "2026-10-08T03:37:20+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 206.5,
+     "p99": 319.2,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 18,
+     "p99": 28,
+     "n": 200
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 37.264,
+    "verdicts_per_s": 5.36711034778875,
+    "completion_tokens_per_s": 85.57857449549162,
+    "concurrency": 1,
+    "window": [
+     "2026-10-08T03:35:28+0800",
+     "2026-10-08T03:36:06+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 200,
+    "n": 200,
+    "rate": 1.0,
+    "wilson95": [
+     0.9811546736227335,
+     1.0
+    ]
+   },
+   "stability_precheck_pass": true,
+   "stability": {
+    "k": 200,
+    "n": 200,
+    "rate": 1.0,
+    "wilson95": [
+     0.9811546736227335,
+     1.0
+    ]
+   }
+  },
+  "output": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 813,
+     "items_expected": 813,
+     "harmful": 394,
+     "harmless": 419,
+     "detection": {
+      "k": 347,
+      "n": 394,
+      "rate": 0.8807106598984772,
+      "wilson95": [
+       0.8449730948373255,
+       0.909096128841067
+      ]
+     },
+     "false_alarm": {
+      "k": 59,
+      "n": 419,
+      "rate": 0.14081145584725538,
+      "wilson95": [
+       0.11076145149158412,
+       0.17738782119447238
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 813,
+     "accuracy_over_items_with_verdict": 0.8696186961869619,
+     "f1_unsafe_over_items_with_verdict": 0.8675,
+     "confusion_over_items_with_verdict": {
+      "tp": 347,
+      "fn": 47,
+      "fp": 59,
+      "tn": 360
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 813,
+    "calls_returned": 813,
+    "latency_ms": {
+     "p50": 554.0,
+     "p99": 824.2,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 27,
+     "p99": 38,
+     "n": 813
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 26.989,
+    "verdicts_per_s": 30.12338360072622,
+    "completion_tokens_per_s": 739.3011967838748,
+    "concurrency": 16,
+    "window": [
+     "2026-10-08T03:39:03+0800",
+     "2026-10-08T03:39:31+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 296.8,
+     "p99": 457.8,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 26,
+     "p99": 41,
+     "n": 200
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 56.686,
+    "verdicts_per_s": 3.528208023145045,
+    "completion_tokens_per_s": 87.23494337226123,
+    "concurrency": 1,
+    "window": [
+     "2026-10-08T03:37:45+0800",
+     "2026-10-08T03:38:42+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 199,
+    "n": 200,
+    "rate": 0.995,
+    "wilson95": [
+     0.9722262956021069,
+     0.9991168312843989
+    ]
+   },
+   "stability_precheck_pass": true,
+   "stability": {
+    "k": 98,
+    "n": 100,
+    "rate": 0.98,
+    "wilson95": [
+     0.929988209271456,
+     0.9944980324498376
+    ]
+   }
+  }
+ },
+ "precheck": {
+  "input": {
+   "controls_pass": true,
+   "reasoning_switch": {
+    "arm_setting": null,
+    "answers_with_reasoning": 0,
+    "of": 10,
+    "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+    "pass": true
+   },
+   "pass": true,
+   "at": "2026-10-08T03:35:18+0800"
+  },
+  "output": {
+   "controls_pass": true,
+   "reasoning_switch": {
+    "arm_setting": null,
+    "answers_with_reasoning": 0,
+    "of": 10,
+    "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+    "pass": true
+   },
+   "pass": true,
+   "at": "2026-10-08T03:37:34+0800"
+  }
+ },
+ "files_read": [
+  {
+   "file": "input_c16.jsonl",
+   "sha256": "b5f41c127e944377e3b24a96719f980082a8454911972523e47f2d1ac73c9f33"
+  },
+  {
+   "file": "input_c1.jsonl",
+   "sha256": "fefa81442255e5106218cda132471120b88f55cd41e6f7b15f68b16edb2878fd"
+  },
+  {
+   "file": "input_stability.jsonl",
+   "sha256": "5ce673f294de692393b83f99436cebbe038cbde9672012160c558ce10dba844e"
+  },
+  {
+   "file": "output_c16.jsonl",
+   "sha256": "6ad32939cb81f62af04c3ac544cf1d3ef6b407b2671efefaa246bd5799801027"
+  },
+  {
+   "file": "output_c1.jsonl",
+   "sha256": "a840ca522e492c881c34ae4d275fa747ea2ac5d8a654f2e069054cf2539d8782"
+  },
+  {
+   "file": "output_stability.jsonl",
+   "sha256": "41370f736d9b316d1e56fd0ee77dd6d4208e975dc91aff0002338d57f4b0cdf9"
+  }
+ ],
+ "per_item_files_read_from": "J6",
+ "arm_of_this_folder": "J6M",
+ "request_shape_of": "J6",
+ "label": {
+  "driver": [
+   "610.88"
+  ],
+  "container_command": [
+   "docker",
+   "run",
+   "-d",
+   "--name",
+   "mfnim_j6m_main",
+   "--gpus",
+   "all",
+   "--shm-size=64GB",
+   "-p",
+   "127.0.0.1:8000:8000",
+   "--env-file",
+   "$NGC_ENV_FILE",
+   "-e",
+   "NIM_MODEL_PATH=/model",
+   "-e",
+   "NIM_SERVED_MODEL_NAME=llama-3.1-nemotron-safety-guard-8b-v3",
+   "-e",
+   "NIM_MAX_MODEL_LEN=8192",
+   "-e",
+   "VLLM_USE_V2_MODEL_RUNNER=0",
+   "-v",
+   "$P93_HF_HUB/models--nvidia--Llama-3.1-Nemotron-Safety-Guard-8B-v3/snapshots/8fdc246ba3d56db9c469d534233b9f582d3afafa:/model:ro",
+   "-v",
+   "$NIM_CACHE_DIR:/opt/nim/.cache",
+   "nvcr.io/nim/nvidia/model-free-nim:2.0.12"
+  ],
+  "image": "nvcr.io/nim/nvidia/model-free-nim:2.0.12",
+  "start_setting": "with_the_v1_model_runner",
+  "vllm_version_in_the_start_log": null,
+  "server_version_endpoints": {
+   "/version": {
+    "version": "0.27.1"
+   },
+   "/v1/version": {
+    "release": "2.0.12",
+    "openapi_spec": "3.1.0"
+   }
+  },
+  "nim_version": "2.0.12",
+  "selected_profile_id": null,
+  "container_started_at": "2026-10-07T19:31:23.008561242Z",
+  "gpu_end_of_each_cell": [
+   {
+    "track": "input",
+    "mode": "c1",
+    "used_mib": 30439,
+    "total_mib": 32607,
+    "util_pct": 99,
+    "temp_c": 64,
+    "power_w": 483.75,
+    "driver": "610.88"
+   },
+   {
+    "track": "input",
+    "mode": "c16",
+    "used_mib": 30439,
+    "total_mib": 32607,
+    "util_pct": 99,
+    "temp_c": 69,
+    "power_w": 572.58,
+    "driver": "610.88"
+   },
+   {
+    "track": "output",
+    "mode": "c1",
+    "used_mib": 30431,
+    "total_mib": 32607,
+    "util_pct": 98,
+    "temp_c": 67,
+    "power_w": 493.39,
+    "driver": "610.88"
+   },
+   {
+    "track": "output",
+    "mode": "c16",
+    "used_mib": 30446,
+    "total_mib": 32607,
+    "util_pct": 99,
+    "temp_c": 65,
+    "power_w": 555.21,
+    "driver": "610.88"
+   },
+   {
+    "track": "input",
+    "mode": "stability",
+    "used_mib": 30538,
+    "total_mib": 32607,
+    "util_pct": 99,
+    "temp_c": 56,
+    "power_w": 543.56,
+    "driver": "610.88"
+   },
+   {
+    "track": "output",
+    "mode": "stability",
+    "used_mib": 30538,
+    "total_mib": 32607,
+    "util_pct": 99,
+    "temp_c": 60,
+    "power_w": 573.32,
+    "driver": "610.88"
+   }
+  ]
+ }
+}

@@ -1,0 +1,395 @@
+{
+ "arm": "J6G",
+ "judge": "Llama 3.1 Nemotron Safety Guard 8B v3",
+ "path": "guardrails_content_safety",
+ "max_tokens": 50,
+ "tracks": {
+  "input": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 82,
+     "items_expected": 82,
+     "harmful": 44,
+     "harmless": 38,
+     "detection": {
+      "k": 38,
+      "n": 44,
+      "rate": 0.8636363636363636,
+      "wilson95": [
+       0.7329054695148456,
+       0.9359704550244412
+      ]
+     },
+     "false_alarm": {
+      "k": 2,
+      "n": 38,
+      "rate": 0.05263157894736842,
+      "wilson95": [
+       0.014554208147292413,
+       0.17285462131770377
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 82,
+     "accuracy_over_items_with_verdict": 0.9024390243902439,
+     "f1_unsafe_over_items_with_verdict": 0.9047619047619048,
+     "confusion_over_items_with_verdict": {
+      "tp": 38,
+      "fn": 6,
+      "fp": 2,
+      "tn": 36
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 38,
+       "n": 44,
+       "rate": 0.8636363636363636,
+       "wilson95": [
+        0.7329054695148456,
+        0.9359704550244412
+       ]
+      },
+      "block_on_harmless": {
+       "k": 2,
+       "n": 38,
+       "rate": 0.05263157894736842,
+       "wilson95": [
+        0.014554208147292413,
+        0.17285462131770377
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "xstest": {
+     "items": 18,
+     "items_expected": 18,
+     "harmful": 8,
+     "harmless": 10,
+     "detection": {
+      "k": 8,
+      "n": 8,
+      "rate": 1.0,
+      "wilson95": [
+       0.6755924351161198,
+       1.0
+      ]
+     },
+     "false_alarm": {
+      "k": 3,
+      "n": 10,
+      "rate": 0.3,
+      "wilson95": [
+       0.10779126740630099,
+       0.6032218525388546
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 18,
+     "accuracy_over_items_with_verdict": 0.8333333333333334,
+     "f1_unsafe_over_items_with_verdict": 0.8421052631578947,
+     "confusion_over_items_with_verdict": {
+      "tp": 8,
+      "fn": 0,
+      "fp": 3,
+      "tn": 7
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 8,
+       "n": 8,
+       "rate": 1.0,
+       "wilson95": [
+        0.6755924351161198,
+        1.0
+       ]
+      },
+      "block_on_harmless": {
+       "k": 3,
+       "n": 10,
+       "rate": 0.3,
+       "wilson95": [
+        0.10779126740630099,
+        0.6032218525388546
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "all_items_of_the_subset": {
+     "items": 100,
+     "items_expected": 100,
+     "harmful": 52,
+     "harmless": 48,
+     "detection": {
+      "k": 46,
+      "n": 52,
+      "rate": 0.8846153846153846,
+      "wilson95": [
+       0.7702833565509788,
+       0.946030307969127
+      ]
+     },
+     "false_alarm": {
+      "k": 5,
+      "n": 48,
+      "rate": 0.10416666666666667,
+      "wilson95": [
+       0.045321719041813105,
+       0.2216742169438633
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 100,
+     "accuracy_over_items_with_verdict": 0.89,
+     "f1_unsafe_over_items_with_verdict": 0.8932038834951457,
+     "confusion_over_items_with_verdict": {
+      "tp": 46,
+      "fn": 6,
+      "fp": 5,
+      "tn": 43
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 46,
+       "n": 52,
+       "rate": 0.8846153846153846,
+       "wilson95": [
+        0.7702833565509788,
+        0.946030307969127
+       ]
+      },
+      "block_on_harmless": {
+       "k": 5,
+       "n": 48,
+       "rate": 0.10416666666666667,
+       "wilson95": [
+        0.045321719041813105,
+        0.2216742169438633
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    }
+   },
+   "calls": {
+    "n": 100,
+    "latency_ms": {
+     "p50": 189.7,
+     "p99": 344.1
+    },
+    "completion_tokens": {
+     "p50": 17,
+     "p99": 32,
+     "max": 33
+    },
+    "finish_reason_length": 0,
+    "wall_s": 18.159
+   },
+   "rail_beside_verdict_of_the_same_call": {
+    "classes": {
+     "agree": 100
+    },
+    "agree": {
+     "k": 100,
+     "n": 100,
+     "rate": 1.0,
+     "wilson95": [
+      0.9630065017930143,
+      1.0
+     ]
+    },
+    "items_that_differ": []
+   }
+  },
+  "output": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 100,
+     "items_expected": 100,
+     "harmful": 48,
+     "harmless": 52,
+     "detection": {
+      "k": 41,
+      "n": 48,
+      "rate": 0.8541666666666666,
+      "wilson95": [
+       0.7283282347525372,
+       0.9275175067339628
+      ]
+     },
+     "false_alarm": {
+      "k": 8,
+      "n": 52,
+      "rate": 0.15384615384615385,
+      "wilson95": [
+       0.08007685016780322,
+       0.2752408517641015
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 100,
+     "accuracy_over_items_with_verdict": 0.85,
+     "f1_unsafe_over_items_with_verdict": 0.845360824742268,
+     "confusion_over_items_with_verdict": {
+      "tp": 41,
+      "fn": 7,
+      "fp": 8,
+      "tn": 44
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 41,
+       "n": 48,
+       "rate": 0.8541666666666666,
+       "wilson95": [
+        0.7283282347525372,
+        0.9275175067339628
+       ]
+      },
+      "block_on_harmless": {
+       "k": 8,
+       "n": 52,
+       "rate": 0.15384615384615385,
+       "wilson95": [
+        0.08007685016780322,
+        0.2752408517641015
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "all_items_of_the_subset": {
+     "items": 100,
+     "items_expected": 100,
+     "harmful": 48,
+     "harmless": 52,
+     "detection": {
+      "k": 41,
+      "n": 48,
+      "rate": 0.8541666666666666,
+      "wilson95": [
+       0.7283282347525372,
+       0.9275175067339628
+      ]
+     },
+     "false_alarm": {
+      "k": 8,
+      "n": 52,
+      "rate": 0.15384615384615385,
+      "wilson95": [
+       0.08007685016780322,
+       0.2752408517641015
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 100,
+     "accuracy_over_items_with_verdict": 0.85,
+     "f1_unsafe_over_items_with_verdict": 0.845360824742268,
+     "confusion_over_items_with_verdict": {
+      "tp": 41,
+      "fn": 7,
+      "fp": 8,
+      "tn": 44
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 41,
+       "n": 48,
+       "rate": 0.8541666666666666,
+       "wilson95": [
+        0.7283282347525372,
+        0.9275175067339628
+       ]
+      },
+      "block_on_harmless": {
+       "k": 8,
+       "n": 52,
+       "rate": 0.15384615384615385,
+       "wilson95": [
+        0.08007685016780322,
+        0.2752408517641015
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    }
+   },
+   "calls": {
+    "n": 100,
+    "latency_ms": {
+     "p50": 292.1,
+     "p99": 464.5
+    },
+    "completion_tokens": {
+     "p50": 26,
+     "p99": 42,
+     "max": 42
+    },
+    "finish_reason_length": 0,
+    "wall_s": 27.978
+   },
+   "rail_beside_verdict_of_the_same_call": {
+    "classes": {
+     "agree": 100
+    },
+    "agree": {
+     "k": 100,
+     "n": 100,
+     "rate": 1.0,
+     "wilson95": [
+      0.9630065017930143,
+      1.0
+     ]
+    },
+    "items_that_differ": []
+   }
+  }
+ },
+ "files_read": [
+  {
+   "file": "input_rail.jsonl",
+   "sha256": "b12df07badef7d319ad8a0338759f386e292c4eaffa44a5210535f81d4e792ad"
+  },
+  {
+   "file": "output_rail.jsonl",
+   "sha256": "18817f948038bc5d732d30ca4446ff2c899f63002845e619866ea80794f27c48"
+  }
+ ],
+ "arm_of_this_folder": "J6M-rail",
+ "request_shape_of": "J6G"
+}

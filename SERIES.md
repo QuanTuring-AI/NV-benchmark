@@ -12,7 +12,7 @@ This file lists where each volume's evidence lives and which NVIDIA component ea
 | **Vol.1 (renewed 2026-09)** · NIM on RTX 5090: single user, serving, answer quality | Published 2026-09-27 | [`vol1-nim/`](vol1-nim/) | [`vol1-nim/README.md`](vol1-nim/README.md) |
 | **Vol.1** · NIM vs Ollama on RTX 5090 | Published 2026-03-31 · [forum thread 365275](https://forums.developer.nvidia.com/t/nim-vs-ollama-on-rtx-5090-7-3x-faster-inference-nemo-guardrails-at-2-1-overhead-870-data-points/365275) | [`benchmark/`](benchmark/) | [`benchmark/README.md`](benchmark/README.md) |
 | **Vol.2** · NIM + Nemotron: two deployment options on 32 GB | Data published 2026-09-25 · write-up to follow | [`vol2-nemotron/`](vol2-nemotron/) | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) |
-| **Vol.3** · Judges in NeMo Guardrails on NIM 2.0.12 | Baseline data published 2026-09-19 · judge study in progress | [`vol3-judges/`](vol3-judges/) | [`vol3-judges/README.md`](vol3-judges/README.md) |
+| **Vol.3** · NeMo Guardrails on one RTX 5090: the models behind the rail | Baseline data published 2026-09-19 · judge study in progress | [`vol3-guardrails/`](vol3-guardrails/) | [`vol3-guardrails/README.md`](vol3-guardrails/README.md) |
 | Follow-ups to Vol.1's planned E4–E6 | See [`ROADMAP_STATUS.md`](ROADMAP_STATUS.md) | [`roadmap-e456/`](roadmap-e456/) | — |
 
 ---
@@ -55,7 +55,7 @@ NV-benchmark/
 ├── roadmap-e456/         # Follow-up experiments for Vol.1's planned E4–E6
 ├── vol1-nim/             # Vol.1 (renewed) evidence
 ├── vol2-nemotron/        # Vol.2 evidence
-└── vol3-judges/          # Vol.3 evidence
+└── vol3-guardrails/      # Vol.3 evidence
     ├── README.md         # index: file → experiment · measurement boundary · data-point ledger
     ├── data/             # pointers to question sets (not copies)
     ├── scripts/          # harness
