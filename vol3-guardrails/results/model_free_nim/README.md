@@ -52,7 +52,9 @@ Cells per arm: on each track a precheck, one request at a time on the 200-item s
 | Addendum: J6M at least 95% of J6-tonight's rate on both tracks | 100.2% · 101.4% | **passes** |
 | Addendum: J6M within 5% of J6-v0271 on both tracks | -0.57% · +0.40% | **passes** |
 
-**Branch B, by the registered rule and by the addendum's table alike** (`criteria.json`, `criteria_addendum.json`). The verdicts criterion does not pass, by one of its four rate differences: on the responses J6M flagged 347 of the 394 harmful items and J6-tonight 345, a difference of 0.51 points against a limit of 0.5. One item of that set is 0.25 points, so the limit allows a difference of one item and two were measured. Every other figure of the cell is inside its limit. By the branch, the NIM arm leaves the figures of this volume; the data stays here.
+**Branch B, by the registered rule and by the addendum's table alike** (`criteria.json`, `criteria_addendum.json`). The verdicts criterion does not pass, by one of its four rate differences: on the responses J6M flagged 347 of the 394 harmful items and J6-tonight 345, a difference of 0.51 points against a limit of 0.5. One item of that set is 0.25 points, so the limit allows a difference of one item and two were measured. Every other figure of the cell is inside its limit.
+
+**The arm is kept in the article despite this; the deviation and its reason are stated there.** By the registered branch the NIM arm would have left the figures of this volume. The people who write the article decided on 2026-10-08 to keep it, as arm J6M, and to say so: the criterion is reported as not passed, here and there, and nothing in the pre-registration, the addendum or `criteria.json` was changed. A second, separately pre-registered look at the same question, with an allowance taken from the measured movement and a paired test, is in [`../safety_guard_recheck/`](../safety_guard_recheck/README.md).
 
 ### How far the same server moves between nights
 

@@ -14,6 +14,7 @@ A table is any markdown table whose header starts with `| In the post |`. Column
                 approx   within 5% of the number
                 equals   the value equals the Number cell (true / false / null / a quoted string / a number)
                 text     the literal occurs in the file
+                within   |value| <= the number: a bound the text states ("within 3.5%"), not a value it reports
 usage: check_claims.py <README.md> [<README.md> ...]     exit code 0 only if every row of every table passes
        check_claims.py self_test
 """
@@ -153,8 +154,11 @@ def check_row(cells, base):
     out = []
     for n, k in zip(nums, keys):
         v = evaluate(k, base, f); want, d = parse_number(n)
+        numeric = isinstance(v, (int, float)) and not isinstance(v, bool)
+        if how == "within":
+            out.append((numeric and abs(v) <= abs(want) + 1e-9, f"|{v:.6g}| <= {n}" if numeric else f"{v!r} is not a number")); continue
         tol = 0.05 * abs(want) if how == "approx" else 0.5 * 10 ** (-d) + 1e-6
-        out.append((isinstance(v, (int, float)) and not isinstance(v, bool) and abs(v - want) <= tol, f"{n} vs {v:.6g} (tolerance {tol:.3g})"))
+        out.append((numeric and abs(v - want) <= tol, f"{n} vs {v:.6g} (tolerance {tol:.3g})"))
     return out
 
 
@@ -204,6 +208,10 @@ def self_test():
     check("equals true", row("true", "t", "equals")[0][0], True)
     check("equals, wrong value", row("false", "t", "equals")[0][0], False)
     check("the minus sign U+2212", parse_number("−1.52")[0], -1.52)
+    check("within: a value inside the bound", row("4.8", "(x - y) / 1000", "within")[0][0], True)       # 4.71682 <= 4.8
+    check("within: a value outside the bound", row("4.7", "(x - y) / 1000", "within")[0][0], False)     # 4.71682 > 4.7, though it rounds to 4.7
+    check("within: the bound is on the absolute value", [row("4.8", "(y - x) / 1000", "within")[0][0], row("4.7", "(y - x) / 1000", "within")[0][0]], [True, False])
+    check("within: a value that is not a number fails", row("1", "t", "within")[0][0], False)
     try:
         row("1", "nope", "rounds"); got = "no error"
     except KeyError:
