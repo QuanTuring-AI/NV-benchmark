@@ -1,5 +1,7 @@
 # Vol.3 · NeMo Guardrails on one RTX 5090: the models behind the rail — baseline data and the rail study
 
+Forum post: <https://forums.developer.nvidia.com/t/nemo-guardrails-on-one-rtx-5090-the-models-behind-the-rail-what-each-one-flags-and-what-a-verdict-costs/385509>
+
 > **Reproduce:** `git checkout vol3`. The harnesses here are frozen with the paths they were written with; [`../PATH_MAP.md`](../PATH_MAP.md) maps them to this directory and gives the commit at which those paths exist, for a byte-for-byte rerun.
 The measurements, their boundaries and their results are in [`BASELINE.md`](BASELINE.md). Harnesses are in `scripts/`, results in `results/`.
 

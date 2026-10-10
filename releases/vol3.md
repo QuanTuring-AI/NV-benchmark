@@ -1,3 +1,5 @@
+Forum post: <https://forums.developer.nvidia.com/t/nemo-guardrails-on-one-rtx-5090-the-models-behind-the-rail-what-each-one-flags-and-what-a-verdict-costs/385509>
+
 ![NeMo Guardrails on one RTX 5090: the models behind the rail](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol3-guardrails/figures/cover_vol3.png)
 
 ![Aegis 2.0 prompts: share of harmful items flagged, with its Wilson 95% interval, against verdicts per second at 16 concurrent requests; one point per arm](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol3-guardrails/figures/detection_vs_rate_input_dark.png)

@@ -2,6 +2,12 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-10-11 · Vol.3 forum post published
+
+- **Vol.3 forum post:** the article was posted on the NVIDIA Developer Forum on 2026-10-11. The link is on the front page, at the top of [`vol3-guardrails/README.md`](vol3-guardrails/README.md) and in `releases/vol3.md`. → <https://forums.developer.nvidia.com/t/nemo-guardrails-on-one-rtx-5090-the-models-behind-the-rail-what-each-one-flags-and-what-a-verdict-costs/385509>
+- **Where the figures are in the thread:** the cover illustration and the figure for prompts are in the post; the figure for responses is in reply #2, because a new forum account may attach two images per post.
+- **The tag `vol3` does not move:** it stays at the commit of 2026-10-10, the repository as the article describes it. This commit adds the address only.
+
 ## 2026-10-10 · Vol.3 published: NeMo Guardrails on one RTX 5090, the models behind the rail
 
 - **Vol.3 is published.** Four models in ten configurations behind the NeMo Guardrails self-check and content-safety rails, each alone on one RTX 5090: what each one flags, what it flags wrongly, and what a verdict costs. → [`vol3-guardrails/README.md`](vol3-guardrails/README.md), with a claim-to-evidence table for every number; the text of the GitHub Release is in `releases/vol3.md`. The tag `vol3` moves to this state, once, as announced on 2026-10-01.
