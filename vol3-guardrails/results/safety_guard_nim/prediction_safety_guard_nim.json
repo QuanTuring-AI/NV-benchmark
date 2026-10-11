@@ -1,0 +1,270 @@
+{
+ "what": "Pre-registration of the arms that serve Llama 3.1 Nemotron Safety Guard 8B v3 through its NIM; a supplement to the judge study's pre-registration",
+ "draft": false,
+ "written_at": "2026-10-06T04:03:56+0800",
+ "supplements": [
+  {
+   "file": "../p93_judges/prediction_p93.json",
+   "sha256": "b65af91b24b39d87ea4601ceeb8aa9d1a365db847dfb0790a3904e900eae9599"
+  },
+  {
+   "file": "../p102_followup/prediction_p102.json",
+   "sha256": "59c3a03055b6f62688c031ab090f57b9cf76b1b167719b4b9e3fab56437317cf"
+  }
+ ],
+ "kept_from_the_study": "the items and the subsets (results/p93_judges/items.jsonl, subsets.json), the labels, the two synthetic controls and the ten harmless prompts of the precheck, the answer parser, the definitions of every figure, greedy sampling, a new connection per direct call, the idle-card gate before every container start and every cell, and the scope rule: every figure is about one arm, and no per-item result of one arm is read together with a per-item result of another arm",
+ "why": {
+  "what_the_study_did": "arm J6 served this model with upstream vLLM 0.20.2 and called it 'not a NIM'. The NIM was not tried: the first sentence of its support matrix says the model requires 48 GB of GPU memory, and that sentence was taken as the answer.",
+  "what_was_not_read_then": "the same support matrix lists a generic profile (vLLM, BF16, one GPU, 14.97 GB) that is not tied to a card model",
+  "question": "does the model's NIM serve on this 32 GB card, and if it does, do the study's figures for this model change when only the serving package changes"
+ },
+ "known_before_the_run": {
+  "documentation": {
+   "pages": "https://docs.nvidia.com/nim/llama-3-1-nemotron-safety-guard-8b/latest/ (getting-started, support-matrix, release-notes, integrate-guardrails), read 2026-10-06",
+   "release": "NIM 1.14.0, built on NIM for LLMs 1.14.0",
+   "generic_profile": "BF16, vLLM, 1 GPU, 14.97 GB",
+   "fp8_profiles": "for RTX PRO 6000 Blackwell Server Edition: FP8, TensorRT-LLM, 23.56 GB, one tuned for latency and one for throughput",
+   "known_issue": "TensorRT-LLM profiles can have lower throughput under high load than the generic vLLM profile; for high concurrency and long sequences the release notes suggest the generic profile",
+   "official_parser": "the example program reads the answer as JSON; an answer that does not parse is counted as unsafe"
+  },
+  "listing_on_this_card": {
+   "file": "before_the_run/list_model_profiles.txt",
+   "sha256": "95367b018e33c740d3d2b431ac5f9aeecb3ff08607d86c301b35704a6c89fd05",
+   "what": "`list-model-profiles` of the image on this RTX 5090, before any server was started",
+   "profiles": {
+    "generic": {
+     "id": "47804570e8db67fdc60d9cb518b0f60316ac4eb0f3a55af81aafefe124505a8f",
+     "section": "Compatible with system and runnable",
+     "name": "vllm-bf16-tp1-pp1-b9e27e9c88f5f5947d49618806eacac533b6d37db6e551acdad1f143e6c4c619"
+    },
+    "fp8_throughput": {
+     "id": "b5938999f25208fbf5ef64ad1ce0d3978ac52d5b18d32f9b7e1551cbc97737db",
+     "section": "Incompatible with system",
+     "name": "tensorrt_llm-rtx6000_blackwell_sv-fp8-tp1-pp1-throughput-2bb5:10de-060ea6809cc1818ec863169550c4c34ecccac3453e9d9663b25801f7bb651b39-1"
+    },
+    "fp8_latency": {
+     "id": "9325fdaeebf47da133de2bffcbfdcfb7537de5f0cf72adb091fb5bb8429047ad",
+     "section": "Incompatible with system",
+     "name": "tensorrt_llm-rtx6000_blackwell_sv-fp8-tp1-pp1-latency-2bb5:10de-d969b0dea4a414a75ca0b53fa1379676b1c3fd7bd94bdd26bbcabf7724ccd24b-1"
+    }
+   },
+   "reading": "the image calls the generic profile compatible with this system and runnable, and both FP8 profiles incompatible with it; their names carry the device id 2bb5:10de, this card reports 2b85:10de",
+   "also_printed": "for every profile a warning that it does not support LoRA while LoRA is enabled; what that means for a start is not known before the run"
+  },
+  "prompt": {
+   "file": "before_the_run/prompt_template_comparison.json",
+   "sha256": "27895ae461e104e40d7e683fcb9a67c3e18ec0baf5da29a97428ecb44cdfc7b7",
+   "reading": "the study's prompt for this model (the model card's template) and the template of the NIM's documentation differ in one thing: each of the 23 category lines ends with a blank in the model card's and not in the documentation's. Nothing else differs on the conversations tested.",
+   "difference": {
+    "category_lines_that_end_with_a_blank_in_the_model_card_only": 23,
+    "anything_else": false,
+    "checked_on": "4 conversations, with and without a response, one with line breaks, braces and trailing blanks, one in Chinese"
+   },
+   "request_parameters": {
+    "study_arm_J6": "max_tokens 100, temperature 0.0",
+    "documentation_example": "max_tokens 2048, top_p 1, frequency_penalty 0.0, no temperature"
+   }
+  },
+  "guardrails": {
+   "version": "NeMo Guardrails 0.24.1 (the environment of the study)",
+   "found_without_a_server": "the configuration of the library's tutorial for a local NIM names the model twice (`model` and `parameters.model_name`); the library at the same tag refuses it: 'Model name must be specified in exactly one place'. With the name given once it is accepted, with engine `nim` as in the tutorial.",
+   "tutorial_prompts_equal_the_example_file": true
+  }
+ },
+ "serving": {
+  "image": "nvcr.io/nim/nvidia/llama-3.1-nemotron-safety-guard-8b-v3:1.14.0",
+  "index_digest": "sha256:c3499d38650b942132affdcf37bf6ca89223655cbe227ddbf11254d383615356",
+  "linux_amd64_manifest": "sha256:68a9ba7fa0197d77478487ba861d58846e874a581882f9c935bdf7cf9b0c6122",
+  "image_size_bytes_as_docker_reports": 15062781048,
+  "profiles": {
+   "generic": "47804570e8db67fdc60d9cb518b0f60316ac4eb0f3a55af81aafefe124505a8f",
+   "fp8_throughput": "b5938999f25208fbf5ef64ad1ce0d3978ac52d5b18d32f9b7e1551cbc97737db",
+   "fp8_latency": "9325fdaeebf47da133de2bffcbfdcfb7537de5f0cf72adb091fb5bb8429047ad"
+  },
+  "start": "docker run --gpus all --shm-size=64GB (the documentation's value), NIM_MODEL_PROFILE=<id>, NIM_MAX_MODEL_LEN=8192 (the context of the study's arm J6), port 8000 on 127.0.0.1, the NIM cache mounted",
+  "not_set": "the documentation's `-u $(id -u)` and `--runtime=nvidia` (the earlier NIM containers of this repository ran without them on this host)",
+  "ready_limit_s": 1800,
+  "cell_limit_s": 1800
+ },
+ "download": {
+  "done_before_this_file": [
+   "generic",
+   "fp8_throughput",
+   "fp8_latency"
+  ],
+  "how": "`download-to-cache --profile <id>` in the image; not timed; what each call ended with is in the README of the results folder"
+ },
+ "prompt_templates": {
+  "model_card": {
+   "sha256": "b79778e963c2384aa23a87f78d71174a38a5e31abf93fc581240a4264169a820",
+   "used_by": [
+    "J6N",
+    "J6N-fp8"
+   ]
+  },
+  "nim_documentation": {
+   "made_how": "the model card's template with the blank removed from the end of each category line",
+   "category_lines_changed": 23,
+   "test_query": "QUESTION_TEXT",
+   "test_response": "ANSWER_TEXT",
+   "rendered_sha256": {
+    "input": "02ea1473d34bb5c8f1ade12be4b810324fc9a5bae54b281da5193053148e5b5a",
+    "output": "19c29ce74f42a4361c9f85379d3ee5b0e7a24b57f0dd9f1662a24cd3c996946f"
+   },
+   "check": "the runner refuses to start unless the template it derives renders the two test conversations to these values, which come from the documentation's own code",
+   "used_by": [
+    "J6N-tpl"
+   ]
+  }
+ },
+ "arms": {
+  "J6N": {
+   "served_by": "the generic profile",
+   "asked": "as the study's arm J6: the model card's prompt in one user message, max_tokens 100, temperature 0.0, parsed by the study's parser",
+   "cells": "per track: precheck, c=1 on the 200-item subset, c=16 on the whole track; in a new container the stability subset again (200 and 100 items)",
+   "one_variable_against": "J6 of the study: the serving package (the NIM's vLLM instead of upstream vLLM 0.20.2). The program that asks and reads is the same file."
+  },
+  "J6N-fp8": {
+   "served_by": "an FP8 TensorRT-LLM profile built for RTX PRO 6000 Blackwell, pinned by id: the throughput profile first, the latency profile if that one does not report ready",
+   "asked": "as J6N",
+   "cells": "as J6N",
+   "against": "J6N, and two things differ at once: the precision (FP8 for BF16) and the engine (TensorRT-LLM for vLLM). They are named as two and not told apart by this arm."
+  },
+  "J6N-tpl": {
+   "served_by": "the generic profile, the same container as J6N",
+   "asked": "as J6N with the documentation's template (23 blanks fewer)",
+   "cells": "per track: precheck, c=1, c=16; no stability rerun",
+   "one_variable_against": "J6N: the prompt template",
+   "why_all_items": "the work order asks for the 200-item subset; the whole track costs under a minute per track and lets the study's analysis program run unchanged"
+  },
+  "J6G": {
+   "served_by": "the generic profile, the same container as J6N",
+   "asked": "through the NeMo Guardrails content-safety rail, one call at a time, on the study's subset for the Guardrails path (100 items per track)",
+   "configuration": "the library's tutorial for this model at tag v0.24.1 (engine nim, model type content_safety, the two content-safety flows) with its prompts file byte for byte: max_tokens 50, parsers nemoguard_parse_*",
+   "changes_from_the_tutorial": [
+    "the base URL is the local server's",
+    "the model name is given once",
+    "the main model points at the same server and is never called (no answer is generated in this study)"
+   ],
+   "recorded": "per item the rail's decision and, apart from it, the verdict the study's parser reads from the same completion; each item is classed by its own two readings (no other arm is read)"
+  }
+ },
+ "guardrails": {
+  "prompts_file": "scripts/guardrails_safety_guard/prompts.yml",
+  "prompts_sha256": "939a8111819ff38e50f2c16c7d22bcf82b5a0aab20a3ffe786214fa9e1316223",
+  "source": "examples/configs/content_safety_multilingual/prompts.yml of NVIDIA/NeMo-Guardrails at tag v0.24.1; equal to the prompts block of the tutorial docs/getting-started/tutorials/nemotron-safety-guard-deployment.mdx at the same tag"
+ },
+ "plan": [
+  "generic_main",
+  "generic_stability",
+  "fp8_main",
+  "fp8_stability"
+ ],
+ "fp8_order": [
+  "fp8_throughput",
+  "fp8_latency"
+ ],
+ "reference_figures_of_the_study_arm_J6": {
+  "input_aegis2": {
+   "detection": {
+    "k": 912,
+    "n": 1039,
+    "rate": 0.87776708373436,
+    "wilson95": [
+     0.8564465921766868,
+     0.8963044548403005
+    ]
+   },
+   "false_alarm": {
+    "k": 137,
+    "n": 889,
+    "rate": 0.15410573678290213,
+    "wilson95": [
+     0.13186469208448234,
+     0.17932320815894923
+    ]
+   },
+   "c1_latency_ms_p50": 204.1,
+   "c16_verdicts_per_s": 45.9,
+   "completion_tokens_p50": 18,
+   "completion_tokens_p99": 33
+  },
+  "output_aegis2": {
+   "detection": {
+    "k": 347,
+    "n": 394,
+    "rate": 0.8807106598984772,
+    "wilson95": [
+     0.8449730948373255,
+     0.909096128841067
+    ]
+   },
+   "false_alarm": {
+    "k": 58,
+    "n": 419,
+    "rate": 0.13842482100238662,
+    "wilson95": [
+     0.10862974311458695,
+     0.17478962440659285
+    ]
+   },
+   "c1_latency_ms_p50": 295.4,
+   "c16_verdicts_per_s": 30.1,
+   "completion_tokens_p50": 27,
+   "completion_tokens_p99": 38
+  },
+  "served_by": "upstream vLLM 0.20.2, BF16; 30.3 GiB of the card in use once ready"
+ },
+ "expectations": {
+  "from_the_work_order": {
+   "J6N": "starts; detection and false alarm inside the Wilson intervals of J6; verdicts per second at c=16 within 15% of J6",
+   "J6N-fp8": "an even chance that it does not start; if it starts, detection within 2 points of J6N"
+  },
+  "added_here": {
+   "J6N": "c=1 p50 within 15% of J6's (204.1 ms input, 295.4 ms output); stability at least 98%",
+   "J6N-fp8": "does not report ready (about 70%): the image itself lists both FP8 profiles as incompatible with this system, by device id",
+   "J6N-tpl": "detection and false alarm within 1 point of J6N on every data set: the prompts differ by 23 blanks",
+   "J6G": "the rail blocks both violating controls and allows both harmless ones. Among the 100 items of a track a few (0 to 10) are blocked although the study's parser reads their completion as safe: the prompts file sets max_tokens 50, J6's answers reach more than that on some items (p99 of its output tokens is in the reference figures), a cut JSON object does not parse, and the library's parser counts that as unsafe",
+   "confidence": "moderate for J6N; low for the others"
+  }
+ },
+ "branches_decided_in_advance": {
+  "J6N reports ready": "its figures stand beside J6's; whether it replaces J6 in the main table and the figures is decided by the people who write the article",
+  "J6N does not report ready": "the reason, the first error line and the profile listing are the result; J6 stays as it is",
+  "J6N-fp8 reports ready": "one more line, labelled 'FP8 TensorRT-LLM profile built for RTX PRO 6000 Blackwell, pinned on an RTX 5090', with both differences named",
+  "J6N-fp8 does not report ready": "one sentence and the error text",
+  "J6G's rail decision differs from the verdict of the same completion": "each such item is listed by id and class (answer cut, answer unreadable, library raised); the configuration is not changed to make them agree",
+  "a precheck fails": "that arm and track is null, as in the study"
+ },
+ "not_in_this_file": [
+  "any change to the study's figures or files",
+  "the documentation example's request parameters (max_tokens 2048, top_p 1) as an arm of their own",
+  "more than 16 calls in flight",
+  "another card"
+ ],
+ "harness_sha256": {
+  "safety_guard_nim_run.py": "6104709e4095008f6496c7384664c2553ee3727b6e76c0718aac823b375bc431",
+  "safety_guard_nim_rail.py": "c5acba1a60dc3584421017a4564402095dc9338b3b9119c82cc1566793028b04",
+  "safety_guard_nim_summary.py": "ba47fd36a772420e767cf0f039f5b30331ae296f75da7a383fe70705d7f87ff9",
+  "guardrails_safety_guard/prompts.yml": "939a8111819ff38e50f2c16c7d22bcf82b5a0aab20a3ffe786214fa9e1316223",
+  "p93_judge.py": "730a5b671b7604e10290da6be9d4831ca455b234787c330013f5c77eec93f01a",
+  "p93_gr_worker.py": "d700cbbdc83483d91b29bf89983db9af9cb9ff5178a363f6357452a4379ace8d",
+  "p93_parse.py": "eea7112c2f643d4ae5171bbd38d4a692d9d727b91fb767c867fc87707d9b8ef9",
+  "p93_configs.py": "8f19af2ff0232ad41353bb7d22d6ac7ab4407c593fba50f3e9bb9bf80a74f5f3",
+  "p93_common.py": "8767d8d2a4aa014311fb26506efb9f8613c5e38cd5ff7a5d7fcc937c401a79a2",
+  "p93_analyze.py": "14e0364b1ec00704a6ce08b37c41e72f36f6414033308b06bd5eb638137a3d11",
+  "p93_run.py": "baf97d8c15b550cff49b4588e2309d9c9169d02105046ba0912e9ed621dc1a45",
+  "p102_run.py": "f3b97131bfa7186e9bf1f93cd76abb892e599cc5e9573bc2a78a38eb657ffdc4",
+  "p102_cells.py": "8f5e6ca7e80b75af8ff216b35ba6f9faf03dfb0844947c97dfab77b7974bab0e"
+ },
+ "study_files_unchanged": {
+  "p93_judge.py": true,
+  "p93_gr_worker.py": true,
+  "p93_parse.py": true,
+  "p93_configs.py": true,
+  "p93_common.py": true,
+  "p93_analyze.py": true,
+  "p93_run.py": true
+ },
+ "programs_written_after_the_freeze": "none planned; if one is needed, its SHA-256 is written to the events file before its first use"
+}

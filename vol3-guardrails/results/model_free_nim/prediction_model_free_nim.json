@@ -1,0 +1,197 @@
+{
+ "what": "pre-registration of one cell of the Vol.3 judge study: the Safety Guard 8B v3 weights served by the generic NIM container of the 2.x line, with two partners measured the same night",
+ "draft": false,
+ "written_at": "2026-10-07T23:10:07+0800",
+ "supplements": {
+  "results/p93_judges/prediction_p93.json": "b65af91b24b39d87ea4601ceeb8aa9d1a365db847dfb0790a3904e900eae9599",
+  "results/safety_guard_nim/prediction_safety_guard_nim.json": "bb6df52e18abdfb4e7e4cf06839f7ef1eb64fdbabcf003215fd02032ce03c211"
+ },
+ "question": "The model's own NIM (1.14.0) gave about a fifth fewer verdicts per second than upstream vLLM 0.20.2 on this card, and upstream vLLM 0.10.0 came within 4% of the NIM: the gap follows the engine version the 1.14.0 image ships. Served by the generic NIM 2.0.12 from the same weight directory, does the model give upstream's rate and the same verdicts?",
+ "known_before_the_run": {
+  "file": "before_the_run/facts_read_before_the_run.json",
+  "sha256": "9f4cc1df19c9cc14e9f9d0d26c98f15a0d50e9871d3c6a8e6d81cb871730db9d",
+  "generic_image_tags_on_the_registry": [
+   "2.0.10",
+   "2.0.11",
+   "2.0.12",
+   "2.0.13"
+  ],
+  "engine_in_the_generic_image": "0.27.1",
+  "engine_of_the_upstream_arm": "vllm/vllm-openai:v0.20.2",
+  "note": "the engine inside the generic image is newer than the upstream arm's, so the generic NIM may come out above upstream as well as below; the first criterion is two-sided",
+  "an_inspection_container_ran_before_this_file": "one container of the generic image without a GPU, to print the engine version (named p121_inspect_no_gpu, 2026-10-07T22:52:33+0800); no serving container ran before this file"
+ },
+ "serving": {
+  "generic_nim": {
+   "image": "nvcr.io/nim/nvidia/model-free-nim:2.0.12",
+   "index_digest": "sha256:20e10652de4cf63d25417c0bcb0c35497b573cad575c3ba0a5296625c89b4bff",
+   "why_this_tag": "the tag of the other 2.x NIM images of this volume; the registry also holds a later one",
+   "model": "the local directory of the study's arm J6 (the model snapshot named in results/p93_judges/prediction_p93.json), mounted read-only at /model; nothing is fetched",
+   "start": "docker run --gpus all --shm-size=64GB, port 8000 on 127.0.0.1, the NIM cache mounted, the settings below",
+   "start_settings": {
+    "as_documented": {
+     "NIM_MODEL_PATH": "/model",
+     "NIM_SERVED_MODEL_NAME": "llama-3.1-nemotron-safety-guard-8b-v3",
+     "NIM_MAX_MODEL_LEN": "8192"
+    },
+    "with_the_v1_model_runner": {
+     "NIM_MODEL_PATH": "/model",
+     "NIM_SERVED_MODEL_NAME": "llama-3.1-nemotron-safety-guard-8b-v3",
+     "NIM_MAX_MODEL_LEN": "8192",
+     "VLLM_USE_V2_MODEL_RUNNER": "0"
+    }
+   },
+   "order_of_the_start_settings": [
+    "as_documented",
+    "with_the_v1_model_runner"
+   ],
+   "why_a_second_setting": "the Llama 3.1 8B NIM of the same version needed VLLM_USE_V2_MODEL_RUNNER=0 on this host (Vol.1); it is tried only if the first setting does not report ready, and the arm's label says which one ran",
+   "not_tried": [
+    "another tag",
+    "an hf:// path",
+    "a chat template or any other file added to the model directory",
+    "a profile pinned by hand"
+   ]
+  },
+  "upstream": {
+   "image": "vllm/vllm-openai:v0.20.2",
+   "digest": "sha256:70a098d90dbab428a001d9e852fc0fc8d67da5beb03e7851a22247653bf35923",
+   "start": "the container command of the study's arm J6 (p102_run.vllm_command), unchanged"
+  },
+  "model_nim": {
+   "image": "nvcr.io/nim/nvidia/llama-3.1-nemotron-safety-guard-8b-v3:1.14.0",
+   "index_digest": "sha256:c3499d38650b942132affdcf37bf6ca89223655cbe227ddbf11254d383615356",
+   "profile": "47804570e8db67fdc60d9cb518b0f60316ac4eb0f3a55af81aafefe124505a8f",
+   "start": "the container command of arm J6N (safety_guard_nim_run.nim_command), unchanged"
+  },
+  "ready_limit_s": 1800,
+  "cell_limit_s": 1800
+ },
+ "weights": {
+  "nim_cache_folder_below_the_cache": "ngc/hub/models--nim--nvidia--llama-3.1-nemotron-safety-guard-8b-v3/snapshots/1.2-checksum-jet",
+  "rule": "SHA-256 of every *.safetensors file of the local model directory and of the NIM 1.14.0 cache, file by file, before the first container; a difference is written down as it is and nothing is changed"
+ },
+ "prompt_template_sha256": "b79778e963c2384aa23a87f78d71174a38a5e31abf93fc581240a4264169a820",
+ "arms": {
+  "J6M": {
+   "served_by": "the generic NIM image",
+   "asked": "as the study's arm J6: the model card's prompt in one user message, max_tokens 100, temperature 0.0, the study's parser",
+   "cells": "per track: precheck, c=1 on the 200-item subset, c=16 on the whole track; in a new container the stability subset again"
+  },
+  "J6-tonight": {
+   "served_by": "upstream vLLM 0.20.2",
+   "asked": "as J6M",
+   "cells": "per track: precheck, c=1, c=16; no stability rerun"
+  },
+  "J6N-tonight": {
+   "served_by": "the model's NIM 1.14.0, generic profile pinned by id",
+   "asked": "as J6M",
+   "cells": "per track: precheck, c=1, c=16; no stability rerun"
+  },
+  "J6M-rail": {
+   "served_by": "the J6M container",
+   "asked": "through the NeMo Guardrails content-safety rail as arm J6G: the library's tutorial configuration, 100 items per track, one call at a time"
+  }
+ },
+ "one_variable": "the container (and with it the engine version). The weight directory is one path for J6M and J6-tonight; the items, the prompt, the request parameters, the client program and the order of the cells are the same for the three arms. Every setting that differs between the three start commands is listed per arm in the results; a setting that cannot be made equal is named as a variable.",
+ "guardrails": {
+  "prompts_file": "scripts/guardrails_safety_guard/prompts.yml",
+  "prompts_sha256": "939a8111819ff38e50f2c16c7d22bcf82b5a0aab20a3ffe786214fa9e1316223",
+  "source": "examples/configs/content_safety_multilingual/prompts.yml of NVIDIA/NeMo-Guardrails at tag v0.24.1; equal to the prompts block of the tutorial docs/getting-started/tutorials/nemotron-safety-guard-deployment.mdx at the same tag"
+ },
+ "plan": [
+  "weights",
+  "profiles",
+  "j6m_main",
+  "vllm_tonight",
+  "nim_tonight",
+  "j6m_stability"
+ ],
+ "criteria": {
+  "speed": {
+   "rule": "J6M's verdicts per second at 16 concurrent requests are within 5% of J6-tonight's on both tracks (above or below)",
+   "within_percent": 5.0
+  },
+  "verdicts": {
+   "rule": "on each track the whole-track verdicts of J6M and J6-tonight are the same on at least 99% of the items, and the Aegis 2.0 detection and false-alarm rates differ by at most 0.5 points",
+   "same_verdict_share_at_least": 0.99,
+   "rate_difference_at_most_points": 0.5
+  },
+  "rail": {
+   "rule": "through the content-safety rail, the rail's decision and the verdict of the same call agree on at least 199 of the 200 calls",
+   "agree_at_least": 199,
+   "calls": 200
+  },
+  "validity_of_the_night": {
+   "rule": "J6-tonight's verdicts per second at 16 concurrent requests are within 5% of J6-today's (2026-10-06) on both tracks; if not, every absolute figure of the night is written as 'invalid_night' and only the ratios between the three arms of the night are reported",
+   "within_percent": 5.0,
+   "reference_summary": "results/safety_guard_nim/J6-today/summary.json"
+  }
+ },
+ "reference_figures": {
+  "J6-today (2026-10-06, upstream vLLM 0.20.2)": {
+   "input": {
+    "verdicts_per_s_at_16": 47.4995589186646,
+    "detection": 0.8768046198267565,
+    "false_alarm": 0.1529808773903262
+   },
+   "output": {
+    "verdicts_per_s_at_16": 30.45742329449668,
+    "detection": 0.8730964467005076,
+    "false_alarm": 0.14081145584725538
+   }
+  },
+  "J6N (2026-10-06, the model's NIM)": {
+   "input": {
+    "verdicts_per_s_at_16": 38.53126391450925,
+    "detection": 0.87776708373436,
+    "false_alarm": 0.156355455568054
+   },
+   "output": {
+    "verdicts_per_s_at_16": 24.49754421912195,
+    "detection": 0.8756345177664975,
+    "false_alarm": 0.14081145584725538
+   }
+  }
+ },
+ "expectations": {
+  "start": "the first start setting does not report ready (about 60%) and the second does; that neither does: about 15%",
+  "speed": "J6M comes out between 3% below and 8% above J6-tonight; the criterion passes with about 55%",
+  "verdicts": "the same verdict on more than 99.5% of the items of each track; rate differences at most 0.3 points; the criterion passes with about 85%",
+  "rail": "200 of 200, as arm J6G",
+  "validity_of_the_night": "passes (about 85%): J6-today came within 3.4% of the study's J6 across four days and a driver change",
+  "J6N-tonight": "within 5% of J6N of 2026-10-06, and 15% to 22% below J6-tonight",
+  "weights": "the four files have the same bytes in the two directories (about 80%)",
+  "confidence": "low for the start and for the speed: the generic image has not been run on this card before"
+ },
+ "branches_decided_in_advance": {
+  "A": "speed, verdicts and rail all pass: the NIM stays in the volume; the J6N point of the two figures is replaced by J6M with the same outline; J6M's figures are added to the claim table",
+  "B": "J6M reports ready, and the speed or the verdicts criterion fails: the NIM arm leaves the article's main text; the J6N point and the NIM half of the outline's legend line are removed from the figures; the three arms' figures and what differs between their servers stay in the repository",
+  "C": "no start setting reports ready: as B, with the error text of every attempt as it is; the model directory is not changed and no chat template is written",
+  "the validity gate fails": "the branch is still chosen by the criteria (they are ratios of the same night); the results say that the absolute figures of the night are not valid",
+  "a precheck fails": "that arm and track is null, as in the study; a criterion that needs it does not pass"
+ },
+ "not_in_this_file": [
+  "NIM for LLMs 3.0",
+  "more than one card",
+  "more than 16 calls in flight",
+  "a second night",
+  "upstream vLLM at the generic image's engine version (it would tell the engine from the NIM wrapper; not asked for here)"
+ ],
+ "harness_sha256": {
+  "model_free_nim_run.py": "0509b4e504c72e67bc0126ecb52da60e572a851c79e852c36f23cd7c69b484aa",
+  "model_free_nim_summary.py": "450bc2728d666a8402162f217d27a266485129a292bb33156bca7de7d10f6528",
+  "safety_guard_nim_run.py": "6104709e4095008f6496c7384664c2553ee3727b6e76c0718aac823b375bc431",
+  "safety_guard_nim_rail.py": "c5acba1a60dc3584421017a4564402095dc9338b3b9119c82cc1566793028b04",
+  "safety_guard_nim_summary.py": "ba47fd36a772420e767cf0f039f5b30331ae296f75da7a383fe70705d7f87ff9",
+  "p93_judge.py": "730a5b671b7604e10290da6be9d4831ca455b234787c330013f5c77eec93f01a",
+  "p93_parse.py": "eea7112c2f643d4ae5171bbd38d4a692d9d727b91fb767c867fc87707d9b8ef9",
+  "p93_common.py": "8767d8d2a4aa014311fb26506efb9f8613c5e38cd5ff7a5d7fcc937c401a79a2",
+  "p93_run.py": "baf97d8c15b550cff49b4588e2309d9c9169d02105046ba0912e9ed621dc1a45",
+  "p102_run.py": "f3b97131bfa7186e9bf1f93cd76abb892e599cc5e9573bc2a78a38eb657ffdc4",
+  "p93_analyze.py": "14e0364b1ec00704a6ce08b37c41e72f36f6414033308b06bd5eb638137a3d11",
+  "p93_gr_worker.py": "d700cbbdc83483d91b29bf89983db9af9cb9ff5178a363f6357452a4379ace8d",
+  "p93_configs.py": "8f19af2ff0232ad41353bb7d22d6ac7ab4407c593fba50f3e9bb9bf80a74f5f3"
+ },
+ "programs_written_after_the_freeze": "none planned; if one is needed, its SHA-256 is written to the events file before its first use"
+}

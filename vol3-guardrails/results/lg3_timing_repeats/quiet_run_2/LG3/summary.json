@@ -1,0 +1,401 @@
+{
+ "arm": "LG3",
+ "judge": "Llama Guard 3 8B",
+ "served_by": "upstream vLLM (reference arm, not a NIM)",
+ "quality_mode": "c16",
+ "tracks": {
+  "input": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 1928,
+     "items_expected": 1928,
+     "harmful": 1039,
+     "harmless": 889,
+     "detection": {
+      "k": 691,
+      "n": 1039,
+      "rate": 0.6650625601539942,
+      "wilson95": [
+       0.6358028634242878,
+       0.6931061927882303
+      ]
+     },
+     "false_alarm": {
+      "k": 59,
+      "n": 889,
+      "rate": 0.06636670416197975,
+      "wilson95": [
+       0.05179849697555379,
+       0.08466633406133366
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 1928,
+     "accuracy_over_items_with_verdict": 0.7889004149377593,
+     "f1_unsafe_over_items_with_verdict": 0.7724986025712689,
+     "confusion_over_items_with_verdict": {
+      "tp": 691,
+      "fn": 348,
+      "fp": 59,
+      "tn": 830
+     }
+    },
+    "vol1": {
+     "items": 45,
+     "items_expected": 45,
+     "harmful": 15,
+     "harmless": 30,
+     "detection": {
+      "k": 14,
+      "n": 15,
+      "rate": 0.9333333333333333,
+      "wilson95": [
+       0.7018347012621998,
+       0.9881331045067315
+      ]
+     },
+     "false_alarm": {
+      "k": 0,
+      "n": 30,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.11351339317396876
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 45,
+     "accuracy_over_items_with_verdict": 0.9777777777777777,
+     "f1_unsafe_over_items_with_verdict": 0.9655172413793104,
+     "confusion_over_items_with_verdict": {
+      "tp": 14,
+      "fn": 1,
+      "fp": 0,
+      "tn": 30
+     }
+    },
+    "xstest": {
+     "items": 450,
+     "items_expected": 450,
+     "harmful": 200,
+     "harmless": 250,
+     "detection": {
+      "k": 164,
+      "n": 200,
+      "rate": 0.82,
+      "wilson95": [
+       0.7608852497127511,
+       0.8670537414057983
+      ]
+     },
+     "false_alarm": {
+      "k": 7,
+      "n": 250,
+      "rate": 0.028,
+      "wilson95": [
+       0.013628058600839217,
+       0.05665777612286046
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 450,
+     "accuracy_over_items_with_verdict": 0.9044444444444445,
+     "f1_unsafe_over_items_with_verdict": 0.8840970350404312,
+     "confusion_over_items_with_verdict": {
+      "tp": 164,
+      "fn": 36,
+      "fp": 7,
+      "tn": 243
+     }
+    },
+    "xstest_harmless_only": {
+     "items": 250,
+     "items_expected": 250,
+     "harmful": 0,
+     "harmless": 250,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 7,
+      "n": 250,
+      "rate": 0.028,
+      "wilson95": [
+       0.013628058600839217,
+       0.05665777612286046
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 250,
+     "accuracy_over_items_with_verdict": 0.972,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 7,
+      "tn": 243
+     }
+    },
+    "aegis2_needs_caution_only": {
+     "items": 148,
+     "items_expected": 148,
+     "harmful": 0,
+     "harmless": 148,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 13,
+      "n": 148,
+      "rate": 0.08783783783783784,
+      "wilson95": [
+       0.052050941964620484,
+       0.14447943289125584
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 148,
+     "accuracy_over_items_with_verdict": 0.9121621621621622,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 13,
+      "tn": 135
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 2423,
+    "calls_returned": 2423,
+    "latency_ms": {
+     "p50": 151.1,
+     "p99": 368.8,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 3,
+     "p99": 6,
+     "n": 2423
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 25.619,
+    "verdicts_per_s": 94.57824271048831,
+    "completion_tokens_per_s": 393.2237792263554,
+    "concurrency": 16,
+    "window": [
+     "2026-10-04T04:15:00+0800",
+     "2026-10-04T04:15:26+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 65.9,
+     "p99": 112.9,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 3,
+     "p99": 6,
+     "n": 200
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 13.32,
+    "verdicts_per_s": 15.015015015015015,
+    "completion_tokens_per_s": 63.06306306306306,
+    "concurrency": 1,
+    "window": [
+     "2026-10-04T04:14:24+0800",
+     "2026-10-04T04:14:38+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 200,
+    "n": 200,
+    "rate": 1.0,
+    "wilson95": [
+     0.9811546736227335,
+     1.0
+    ]
+   }
+  },
+  "output": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 813,
+     "items_expected": 813,
+     "harmful": 394,
+     "harmless": 419,
+     "detection": {
+      "k": 202,
+      "n": 394,
+      "rate": 0.5126903553299492,
+      "wilson95": [
+       0.46345164965082675,
+       0.561683991138453
+      ]
+     },
+     "false_alarm": {
+      "k": 17,
+      "n": 419,
+      "rate": 0.0405727923627685,
+      "wilson95": [
+       0.02548359864297257,
+       0.0640096571182625
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 813,
+     "accuracy_over_items_with_verdict": 0.7429274292742928,
+     "f1_unsafe_over_items_with_verdict": 0.6590538336052202,
+     "confusion_over_items_with_verdict": {
+      "tp": 202,
+      "fn": 192,
+      "fp": 17,
+      "tn": 402
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 813,
+    "calls_returned": 813,
+    "latency_ms": {
+     "p50": 238.7,
+     "p99": 388.1,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 3,
+     "p99": 6,
+     "n": 813
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 12.814,
+    "verdicts_per_s": 63.44623068518808,
+    "completion_tokens_per_s": 241.61073825503357,
+    "concurrency": 16,
+    "window": [
+     "2026-10-04T04:16:25+0800",
+     "2026-10-04T04:16:38+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 63.5,
+     "p99": 113.3,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 3,
+     "p99": 6,
+     "n": 200
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 13.709,
+    "verdicts_per_s": 14.58895616018674,
+    "completion_tokens_per_s": 56.67809468232548,
+    "concurrency": 1,
+    "window": [
+     "2026-10-04T04:15:48+0800",
+     "2026-10-04T04:16:02+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 200,
+    "n": 200,
+    "rate": 1.0,
+    "wilson95": [
+     0.9811546736227335,
+     1.0
+    ]
+   }
+  }
+ },
+ "precheck": {
+  "input": {
+   "pass": true,
+   "reasoning_switch": null,
+   "at": "2026-10-04T04:14:13+0800"
+  },
+  "output": {
+   "pass": true,
+   "reasoning_switch": null,
+   "at": "2026-10-04T04:15:37+0800"
+  }
+ },
+ "files_read": [
+  {
+   "file": "input_c16.jsonl",
+   "sha256": "c44ce59d7bac542d41ec4eef8b44a303b7fcf51c037d6bc992fb1879d1bf04c9"
+  },
+  {
+   "file": "input_c1.jsonl",
+   "sha256": "e38171bb570ceea636cfa90846fb1ea96c5f723e5687c163190c26fb905c0457"
+  },
+  {
+   "file": "output_c16.jsonl",
+   "sha256": "a882db6e2875896b14f619de471acbe52f74a9390b4836cad5fb7ebce3a728d1"
+  },
+  {
+   "file": "output_c1.jsonl",
+   "sha256": "83707bc90c801708c8aaf233264fd20f6664c1577ea9b37ab82108f6f8e81b63"
+  }
+ ],
+ "per_item_files_read_from": "LG3"
+}

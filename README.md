@@ -1,8 +1,8 @@
 <div align="center">
 
-# NIM on one RTX 5090: Llama 3.1 8B and Nemotron 3 Nano, measured
+# NVIDIA's inference stack on one RTX 5090, measured
 
-### QuanTuring · NV-benchmark · Llama 3.1 8B and Nemotron on a single RTX 5090 (Blackwell, sm_120)
+### QuanTuring · NV-benchmark · Pre-registered measurements of NIM, Nemotron and NeMo Guardrails on a single RTX 5090 (Blackwell, sm_120), one volume at a time
 
 [![NVIDIA Inception](https://img.shields.io/badge/NVIDIA-Inception%20Member-76B900?logo=nvidia&logoColor=white)](https://www.nvidia.com/en-us/startups/)
 [![NVIDIA NIM](https://img.shields.io/badge/NVIDIA-NIM%202.0.12-76B900?logo=nvidia&logoColor=white)](#)
@@ -19,15 +19,17 @@
 
 | Volume | Topic | Page | Release |
 |---|---|---|---|
-| **Vol.1** | Why NIM? Llama 3.1 8B on one RTX 5090, 1 to 128 concurrent requests | [`vol1-nim/README.md`](vol1-nim/README.md) | [Releases → `vol1`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol1) |
-| **Vol.2** | Nemotron 3 Nano on one RTX 5090 with NIM | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) | [Releases → `vol2`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol2) |
-| **Vol.3** | NIM × NeMo Guardrails baseline (study in progress) | [`vol3-judges/README.md`](vol3-judges/README.md) | at publication |
+| **Vol.1** | **NIM for LLMs.** Why NIM? Llama 3.1 8B on one RTX 5090, 1 to 128 concurrent requests | [`vol1-nim/README.md`](vol1-nim/README.md) | [Releases → `vol1`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol1) |
+| **Vol.2** | **Nemotron on NIM.** Nemotron 3 Nano on one RTX 5090 with NIM | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) | [Releases → `vol2`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol2) |
+| **Vol.3** | **NeMo Guardrails.** Which model to put behind the self-check rail and the content-safety rail: detection rate, false alarms and the cost of each verdict, each model measured on its own | [`vol3-guardrails/README.md`](vol3-guardrails/README.md) | [Releases → `vol3`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol3) |
+| **Vol.4** | **NeMo Retriever.** Embedding and reranking NIMs on one card (planned) | — | — |
+| **Vol.5** | **The NVIDIA RAG Blueprint on one card.** The whole pipeline end to end (planned) | — | — |
 
-Each volume's page opens with its headline and a run command, then gives a **claim → evidence** table (every number, its file, its key), how it was measured, and the measurement conditions including what we could not explain. The March 2026 original of Vol.1 is archived in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md), frozen as published; Vol.4–5 (NeMo Retriever and Nemotron in a RAG system) are planned.
+Each volume's page opens with its headline and a run command, then gives a **claim → evidence** table (every number, its file, its key), how it was measured, and the measurement conditions including what we could not explain. The March 2026 original of Vol.1 is archived in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md), frozen as published.
 
 ## What this repository is
 
-Measurements of NVIDIA's inference stack on one workstation GPU. The stack covers NIM, NeMo Guardrails and Nemotron. Each volume follows the same method:
+Measurements of NVIDIA's inference stack on one workstation GPU. So far the stack covers NIM, Nemotron and NeMo Guardrails; NeMo Retriever and the RAG Blueprint come next. Each volume follows the same method:
 - Every measurement is pre-registered before its first container: predictions and rules in a file whose SHA-256 is fixed before the run.
 - Container images are recorded by digest.
 - Each arm passes a health gate: an engine that runs from system memory instead of the GPU is caught before any comparison.
@@ -36,7 +38,7 @@ Measurements of NVIDIA's inference stack on one workstation GPU. The stack cover
 
 Every number that leaves this repository is quoted with its measurement boundary: model, versions, precision, concurrency, input shape and statistic.
 
-Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md). It is kept exactly as published and is not modified. The comparison that led it is closed out, as an account of how it was measured, in [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §12.
+Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md). It is kept exactly as published and is not modified. The comparison that led it is closed out, as an account of how it was measured, in [`vol3-guardrails/BASELINE.md`](vol3-guardrails/BASELINE.md) §12.
 
 ## How to check a number
 
@@ -53,7 +55,7 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 |---|---|
 | `vol1` | Vol.1, *Why NIM?* — the repository as the article describes it |
 | `vol2` | Vol.2, *Nemotron 3 Nano on one RTX 5090* — the repository as the article describes it |
-| `vol3` | Vol.3 baseline data (NIM × NeMo Guardrails). The judge study is not yet published; this tag moves once, on the day it is |
+| `vol3` | Vol.3, *NeMo Guardrails on one RTX 5090: the models behind the rail* — the repository as the article describes it |
 | `chronicle` | The chronicle of this repository's tags, [`CHRONICLE.md`](CHRONICLE.md): every earlier tag, its full hash and what it held |
 
 A tag opens the whole repository as it was at one commit; all four point to the same one. Earlier tags were retired on 2026-10-01 and are listed in [`CHRONICLE.md`](CHRONICLE.md).
@@ -85,7 +87,7 @@ A tag opens the whole repository as it was at one commit; all four point to the 
 | `VLLM_USE_V2_MODEL_RUNNER=0` for the Llama 3.1 8B image on Docker Desktop / WSL2 (its default runner fails with "UVA is not available"). The Nemotron 3 Nano image started without it. | [`vol1-nim/README.md` §B](vol1-nim/README.md) · [`vol2-nemotron/README.md`](vol2-nemotron/README.md) (claim → evidence, *Run it* rows) |
 | `NIM_MAX_MODEL_LEN=8192` (the default context does not leave room for the KV cache) | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) §3 |
 | NGC key without a trailing space · PowerShell single-line commands · Windows console encoding (cp950) with multilingual output | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) §4–§6 |
-| NeMo Guardrails self-check prompts | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) (Guardrails section) · [`vol3-judges/BASELINE.md`](vol3-judges/BASELINE.md) §8–§9 |
+| NeMo Guardrails self-check prompts | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) (Guardrails section) · [`vol3-guardrails/BASELINE.md`](vol3-guardrails/BASELINE.md) §8–§9 |
 
 `DEPLOYMENT_NOTES.md` records the stack of March 2026 and is kept as published. The current stack is NIM 2.0.12 on driver 591.86.
 
@@ -93,6 +95,7 @@ A tag opens the whole repository as it was at one commit; all four point to the 
 
 - NVIDIA Developer Forum · [Vol.1 thread (2026-10)](https://forums.developer.nvidia.com/t/why-nim-llama-3-1-8b-on-one-rtx-5090-from-1-to-128-concurrent-requests/384818)
 - NVIDIA Developer Forum · [Vol.2 thread (2026-10)](https://forums.developer.nvidia.com/t/nemotron-3-nano-on-one-rtx-5090-with-nim-300-tok-s-flat-to-120k-context-128-concurrent-requests/384859)
+- NVIDIA Developer Forum · [Vol.3 thread (2026-10)](https://forums.developer.nvidia.com/t/nemo-guardrails-on-one-rtx-5090-the-models-behind-the-rail-what-each-one-flags-and-what-a-verdict-costs/385509)
 - NVIDIA Developer Forum · [March 2026 thread (superseded; see its reply #2)](https://forums.developer.nvidia.com/t/365275)
 <!-- website link: to be added on publication -->
 

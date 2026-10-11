@@ -1,0 +1,74 @@
+{
+ "what": "what was read before the pre-registration of the generic-NIM cell: documentation pages, the registry, and the image itself. Nothing here was measured on the card.",
+ "read_at": "2026-10-07T22:50:52+0800",
+ "documentation": {
+  "version": "NIM for LLMs 2.0.11",
+  "base": "https://docs.nvidia.com/nim/large-language-models/2.0.11/",
+  "pages": {
+   "get-started/prerequisites.html": {
+    "bytes": 41290,
+    "sha256": "1651da274ccc5f216eb6f5f9c4ed2e56530c40efbf17fffc874ad29e884037fb"
+   },
+   "get-started/installation.html": {
+    "bytes": 30641,
+    "sha256": "4e59ae6a7b79a8d5c60c63b0b78e5de92376db5db701baaadf3ed643d43aaf9b"
+   },
+   "deployment/model-free-nim.html": {
+    "bytes": 63856,
+    "sha256": "27d30ac52072f39fb45989ed4fe2c8d10b72fff1bdbd30c76ca60f4c6e313d26"
+   }
+  },
+  "generic_image_named_in_installation": "following command: docker pull nvcr.io/nim/nvidia/model-free-nim:2.0.11 Note The",
+  "prerequisites_as_printed": {
+   "gpu_driver": "later CUDA SDK 12.9 or later GPU Driver 580 or later",
+   "cuda": "tainer Toolkit 1.14.0 or later CUDA SDK 12.9 or later",
+   "container_toolkit": "or later recommended Container Toolkit 1.14.0 or later"
+  },
+  "local_model_path_as_printed": "Local Path ( /abs/path/to/model ) # NIM reads the model directory directly with no network access. No manifest regeneration occurs, and no credentials are needed. This is the simplest air-gap workflow — ensure the model directory is pre-staged and mounted into the container. Remote URI ( ngc:// , hf:// , s3:// , and so on) # NIM",
+  "environment_variables_named_on_the_page": [
+   "NIM_CACHE_PATH",
+   "NIM_LLM_IMAGE",
+   "NIM_MODEL_PATH",
+   "NIM_MODEL_PROFILE",
+   "NIM_SERVED_MODEL_NAME"
+  ]
+ },
+ "registry": {
+  "image": "nvcr.io/nim/nvidia/model-free-nim",
+  "asked_with": "docker manifest inspect <image>:<tag>",
+  "tags_that_exist": [
+   "2.0.10",
+   "2.0.11",
+   "2.0.12",
+   "2.0.13"
+  ],
+  "tags_answered_no_such_manifest": [
+   "2.0.14",
+   "2.0.15",
+   "2.0.16",
+   "2.1.0"
+  ],
+  "latest_2_0_x_found": "2.0.13",
+  "note": "the tags asked for are a list of guesses; a tag outside the list would not have been seen"
+ },
+ "image": {
+  "name": "nvcr.io/nim/nvidia/model-free-nim:2.0.12",
+  "digest": "sha256:20e10652de4cf63d25417c0bcb0c35497b573cad575c3ba0a5296625c89b4bff",
+  "created": "2026-08-28T22:12:49Z",
+  "size_bytes_as_docker_reports": 12183964768,
+  "vllm_version": "0.27.1",
+  "how": "python3 -c 'import vllm; print(vllm.__version__)' in a container of the image without a GPU",
+  "torch": "2.13.0+cu130",
+  "labels": {
+   "ai.vllm.image.tag": "vllm/vllm-openai:v0.27.1-ubuntu2404",
+   "com.nvidia.nim.version": "2.0.12",
+   "com.nvidia.nim.name": "ga-model-free-nim"
+  },
+  "cuda_requirement_in_the_image_environment": "NVIDIA_REQUIRE_CUDA=cuda>=13.0",
+  "inspected_at": "2026-10-07T22:52:33+0800"
+ },
+ "host": {
+  "graphics_driver": "610.88",
+  "meets_the_printed_prerequisite": true
+ }
+}

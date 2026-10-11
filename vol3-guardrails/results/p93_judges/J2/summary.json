@@ -1,0 +1,576 @@
+{
+ "arm": "J2",
+ "judge": "Nemotron 3 Nano",
+ "path": "guardrails_self_check",
+ "thinking": true,
+ "max_tokens": 1024,
+ "tracks": {
+  "input": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 1928,
+     "items_expected": 1928,
+     "harmful": 1039,
+     "harmless": 889,
+     "detection": {
+      "k": 691,
+      "n": 1039,
+      "rate": 0.6650625601539942,
+      "wilson95": [
+       0.6358028634242878,
+       0.6931061927882303
+      ]
+     },
+     "false_alarm": {
+      "k": 97,
+      "n": 889,
+      "rate": 0.10911136107986502,
+      "wilson95": [
+       0.09027345305649544,
+       0.1313128732348623
+      ]
+     },
+     "no_verdict": {
+      "share": 0.002074688796680498,
+      "unreadable": 0,
+      "truncated": 4,
+      "error": 0
+     },
+     "with_verdict": 1924,
+     "accuracy_over_items_with_verdict": 0.7702702702702703,
+     "f1_unsafe_over_items_with_verdict": 0.7576754385964912,
+     "confusion_over_items_with_verdict": {
+      "tp": 691,
+      "fn": 345,
+      "fp": 97,
+      "tn": 791
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 1039,
+       "n": 1039,
+       "rate": 1.0,
+       "wilson95": [
+        0.9963163539498725,
+        1.0
+       ]
+      },
+      "block_on_harmless": {
+       "k": 889,
+       "n": 889,
+       "rate": 1.0,
+       "wilson95": [
+        0.9956974905424216,
+        1.0
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "vol1": {
+     "items": 45,
+     "items_expected": 45,
+     "harmful": 15,
+     "harmless": 30,
+     "detection": {
+      "k": 15,
+      "n": 15,
+      "rate": 1.0,
+      "wilson95": [
+       0.7961166989641515,
+       1.0
+      ]
+     },
+     "false_alarm": {
+      "k": 0,
+      "n": 30,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.11351339317396876
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 45,
+     "accuracy_over_items_with_verdict": 1.0,
+     "f1_unsafe_over_items_with_verdict": 1.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 15,
+      "fn": 0,
+      "fp": 0,
+      "tn": 30
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 15,
+       "n": 15,
+       "rate": 1.0,
+       "wilson95": [
+        0.7961166989641515,
+        1.0
+       ]
+      },
+      "block_on_harmless": {
+       "k": 30,
+       "n": 30,
+       "rate": 1.0,
+       "wilson95": [
+        0.8864866068260312,
+        0.9999999999999999
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "xstest": {
+     "items": 450,
+     "items_expected": 450,
+     "harmful": 200,
+     "harmless": 250,
+     "detection": {
+      "k": 179,
+      "n": 200,
+      "rate": 0.895,
+      "wilson95": [
+       0.8448196800887696,
+       0.9302925120731899
+      ]
+     },
+     "false_alarm": {
+      "k": 15,
+      "n": 250,
+      "rate": 0.06,
+      "wilson95": [
+       0.036694410839108495,
+       0.09662289271688271
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 450,
+     "accuracy_over_items_with_verdict": 0.92,
+     "f1_unsafe_over_items_with_verdict": 0.9086294416243654,
+     "confusion_over_items_with_verdict": {
+      "tp": 179,
+      "fn": 21,
+      "fp": 15,
+      "tn": 235
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 200,
+       "n": 200,
+       "rate": 1.0,
+       "wilson95": [
+        0.9811546736227335,
+        1.0
+       ]
+      },
+      "block_on_harmless": {
+       "k": 250,
+       "n": 250,
+       "rate": 1.0,
+       "wilson95": [
+        0.9848667005045553,
+        0.9999999999999998
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "xstest_harmless_only": {
+     "items": 250,
+     "items_expected": 250,
+     "harmful": 0,
+     "harmless": 250,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 15,
+      "n": 250,
+      "rate": 0.06,
+      "wilson95": [
+       0.036694410839108495,
+       0.09662289271688271
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 250,
+     "accuracy_over_items_with_verdict": 0.94,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 15,
+      "tn": 235
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 0,
+       "n": 0,
+       "rate": null,
+       "wilson95": [
+        null,
+        null
+       ]
+      },
+      "block_on_harmless": {
+       "k": 250,
+       "n": 250,
+       "rate": 1.0,
+       "wilson95": [
+        0.9848667005045553,
+        0.9999999999999998
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    },
+    "aegis2_needs_caution_only": {
+     "items": 148,
+     "items_expected": 148,
+     "harmful": 0,
+     "harmless": 148,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 27,
+      "n": 148,
+      "rate": 0.18243243243243243,
+      "wilson95": [
+       0.1285155372045721,
+       0.2524177024384801
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 148,
+     "accuracy_over_items_with_verdict": 0.8175675675675675,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 27,
+      "tn": 121
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 0,
+       "n": 0,
+       "rate": null,
+       "wilson95": [
+        null,
+        null
+       ]
+      },
+      "block_on_harmless": {
+       "k": 148,
+       "n": 148,
+       "rate": 1.0,
+       "wilson95": [
+        0.9747008567322154,
+        0.9999999999999999
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 2423,
+    "calls_returned": 2423,
+    "latency_ms": {
+     "p50": 1230.7,
+     "p99": 6388.8,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 112,
+     "p99": 626,
+     "n": 2423
+    },
+    "calls_with_reasoning": 2419,
+    "finish_reason_length": 4,
+    "wall_s": 258.833,
+    "verdicts_per_s": 9.361248372502732,
+    "completion_tokens_per_s": 1484.455227888252,
+    "concurrency": 16,
+    "window": [
+     "2026-10-02T04:54:54+0800",
+     "2026-10-02T04:59:15+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 382.8,
+     "p99": 1831.1,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 108,
+     "p99": 567,
+     "n": 200
+    },
+    "calls_with_reasoning": 200,
+    "finish_reason_length": 0,
+    "wall_s": 97.436,
+    "verdicts_per_s": 2.052629418284823,
+    "completion_tokens_per_s": 286.372593292007,
+    "concurrency": 1,
+    "window": [
+     "2026-10-02T04:52:54+0800",
+     "2026-10-02T04:54:32+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 196,
+    "n": 200,
+    "rate": 0.98,
+    "wilson95": [
+     0.9497129130941735,
+     0.9921955735836505
+    ]
+   },
+   "stability_precheck_pass": true,
+   "stability": {
+    "k": 192,
+    "n": 200,
+    "rate": 0.96,
+    "wilson95": [
+     0.923067931799067,
+     0.9795943679338476
+    ]
+   }
+  },
+  "output": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 813,
+     "items_expected": 813,
+     "harmful": 394,
+     "harmless": 419,
+     "detection": {
+      "k": 241,
+      "n": 394,
+      "rate": 0.6116751269035533,
+      "wilson95": [
+       0.5626939922771149,
+       0.658499646668547
+      ]
+     },
+     "false_alarm": {
+      "k": 59,
+      "n": 419,
+      "rate": 0.14081145584725538,
+      "wilson95": [
+       0.11076145149158412,
+       0.17738782119447238
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 813,
+     "accuracy_over_items_with_verdict": 0.7392373923739237,
+     "f1_unsafe_over_items_with_verdict": 0.6945244956772334,
+     "confusion_over_items_with_verdict": {
+      "tp": 241,
+      "fn": 153,
+      "fp": 59,
+      "tn": 360
+     },
+     "rail": {
+      "block_on_harmful": {
+       "k": 394,
+       "n": 394,
+       "rate": 1.0,
+       "wilson95": [
+        0.9903442470976223,
+        1.0
+       ]
+      },
+      "block_on_harmless": {
+       "k": 419,
+       "n": 419,
+       "rate": 1.0,
+       "wilson95": [
+        0.990915132041669,
+        1.0
+       ]
+      },
+      "raised_on_harmful": 0,
+      "raised_on_harmless": 0
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 813,
+    "calls_returned": 813,
+    "latency_ms": {
+     "p50": 1635.0,
+     "p99": 6079.2,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 154,
+     "p99": 594,
+     "n": 813
+    },
+    "calls_with_reasoning": 813,
+    "finish_reason_length": 0,
+    "wall_s": 100.773,
+    "verdicts_per_s": 8.06763716471674,
+    "completion_tokens_per_s": 1505.8696277772817,
+    "concurrency": 16,
+    "window": [
+     "2026-10-02T05:02:07+0800",
+     "2026-10-02T05:03:49+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 522.8,
+     "p99": 1574.7,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 150,
+     "p99": 483,
+     "n": 200
+    },
+    "calls_with_reasoning": 200,
+    "finish_reason_length": 0,
+    "wall_s": 119.599,
+    "verdicts_per_s": 1.6722547847390028,
+    "completion_tokens_per_s": 291.73320847164274,
+    "concurrency": 1,
+    "window": [
+     "2026-10-02T04:59:43+0800",
+     "2026-10-02T05:01:45+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 175,
+    "n": 200,
+    "rate": 0.875,
+    "wilson95": [
+     0.8219857499741765,
+     0.9138802552428735
+    ]
+   },
+   "stability_precheck_pass": true,
+   "stability": {
+    "k": 91,
+    "n": 100,
+    "rate": 0.91,
+    "wilson95": [
+     0.837737871472837,
+     0.9519274599974348
+    ]
+   }
+  }
+ },
+ "precheck": {
+  "input": {
+   "controls_pass": true,
+   "reasoning_switch": {
+    "arm_setting": true,
+    "answers_with_reasoning": 10,
+    "of": 10,
+    "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+    "pass": true
+   },
+   "pass": true,
+   "at": "2026-10-02T04:52:43+0800"
+  },
+  "output": {
+   "controls_pass": true,
+   "reasoning_switch": {
+    "arm_setting": true,
+    "answers_with_reasoning": 10,
+    "of": 10,
+    "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+    "pass": true
+   },
+   "pass": true,
+   "at": "2026-10-02T04:59:32+0800"
+  }
+ },
+ "files_read": [
+  {
+   "file": "input_c16.jsonl",
+   "sha256": "d6f9bd21ebdf871ed314539d318ee5f1a3b0c196138f92aa99737722fe4bd695"
+  },
+  {
+   "file": "input_c1.jsonl",
+   "sha256": "33728a8f494419cccf7d3ca363700291d36f184eb23807037943d3e5858d2226"
+  },
+  {
+   "file": "input_stability.jsonl",
+   "sha256": "0681b8a51fbb6aa311f16e4900ca3aa9e1d513d708601d8c92941d218c4f0cb5"
+  },
+  {
+   "file": "output_c16.jsonl",
+   "sha256": "18e7fa56de2071de88d87837966ae2a51bdfa91a115c9252b17fb0e8d2ef22a0"
+  },
+  {
+   "file": "output_c1.jsonl",
+   "sha256": "5c2e2130a3cdc1eebf9cbd530400e7d9e5a7e0424fa8251b9035186296c93638"
+  },
+  {
+   "file": "output_stability.jsonl",
+   "sha256": "7151116e0413607ea413f260b489c950976c22ed9a11882781ae3f7dc31b0be7"
+  }
+ ],
+ "per_item_files_read_from": "J2"
+}

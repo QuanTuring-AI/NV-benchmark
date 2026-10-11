@@ -1,0 +1,420 @@
+{
+ "arm": "J6",
+ "judge": "Llama 3.1 Nemotron Safety Guard 8B v3",
+ "path": "direct_json",
+ "thinking": null,
+ "max_tokens": 100,
+ "tracks": {
+  "input": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 1928,
+     "items_expected": 1928,
+     "harmful": 1039,
+     "harmless": 889,
+     "detection": {
+      "k": 907,
+      "n": 1039,
+      "rate": 0.8729547641963427,
+      "wilson95": [
+       0.8513220750176784,
+       0.8918397866869907
+      ]
+     },
+     "false_alarm": {
+      "k": 131,
+      "n": 889,
+      "rate": 0.14735658042744657,
+      "wilson95": [
+       0.125574033631916,
+       0.17217363051870455
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 1928,
+     "accuracy_over_items_with_verdict": 0.8635892116182573,
+     "f1_unsafe_over_items_with_verdict": 0.8733750601829562,
+     "confusion_over_items_with_verdict": {
+      "tp": 907,
+      "fn": 132,
+      "fp": 131,
+      "tn": 758
+     }
+    },
+    "vol1": {
+     "items": 45,
+     "items_expected": 45,
+     "harmful": 15,
+     "harmless": 30,
+     "detection": {
+      "k": 14,
+      "n": 15,
+      "rate": 0.9333333333333333,
+      "wilson95": [
+       0.7018347012621998,
+       0.9881331045067315
+      ]
+     },
+     "false_alarm": {
+      "k": 0,
+      "n": 30,
+      "rate": 0.0,
+      "wilson95": [
+       0.0,
+       0.11351339317396876
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 45,
+     "accuracy_over_items_with_verdict": 0.9777777777777777,
+     "f1_unsafe_over_items_with_verdict": 0.9655172413793104,
+     "confusion_over_items_with_verdict": {
+      "tp": 14,
+      "fn": 1,
+      "fp": 0,
+      "tn": 30
+     }
+    },
+    "xstest": {
+     "items": 450,
+     "items_expected": 450,
+     "harmful": 200,
+     "harmless": 250,
+     "detection": {
+      "k": 186,
+      "n": 200,
+      "rate": 0.93,
+      "wilson95": [
+       0.8859451911438936,
+       0.9578478281716571
+      ]
+     },
+     "false_alarm": {
+      "k": 56,
+      "n": 250,
+      "rate": 0.224,
+      "wilson95": [
+       0.17671830028529711,
+       0.2796352810361883
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 450,
+     "accuracy_over_items_with_verdict": 0.8444444444444444,
+     "f1_unsafe_over_items_with_verdict": 0.8416289592760181,
+     "confusion_over_items_with_verdict": {
+      "tp": 186,
+      "fn": 14,
+      "fp": 56,
+      "tn": 194
+     }
+    },
+    "xstest_harmless_only": {
+     "items": 250,
+     "items_expected": 250,
+     "harmful": 0,
+     "harmless": 250,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 56,
+      "n": 250,
+      "rate": 0.224,
+      "wilson95": [
+       0.17671830028529711,
+       0.2796352810361883
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 250,
+     "accuracy_over_items_with_verdict": 0.776,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 56,
+      "tn": 194
+     }
+    },
+    "aegis2_needs_caution_only": {
+     "items": 148,
+     "items_expected": 148,
+     "harmful": 0,
+     "harmless": 148,
+     "detection": {
+      "k": 0,
+      "n": 0,
+      "rate": null,
+      "wilson95": [
+       null,
+       null
+      ]
+     },
+     "false_alarm": {
+      "k": 33,
+      "n": 148,
+      "rate": 0.22297297297297297,
+      "wilson95": [
+       0.16340563223304938,
+       0.2965574066045068
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 148,
+     "accuracy_over_items_with_verdict": 0.777027027027027,
+     "f1_unsafe_over_items_with_verdict": 0.0,
+     "confusion_over_items_with_verdict": {
+      "tp": 0,
+      "fn": 0,
+      "fp": 33,
+      "tn": 115
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 2423,
+    "calls_returned": 2423,
+    "latency_ms": {
+     "p50": 402.0,
+     "p99": 881.1,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 18,
+     "p99": 32,
+     "n": 2423
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 61.749,
+    "verdicts_per_s": 39.23950185428104,
+    "completion_tokens_per_s": 638.3099321446501,
+    "concurrency": 16,
+    "window": [
+     "2026-10-06T04:17:29+0800",
+     "2026-10-06T04:18:31+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 236.5,
+     "p99": 376.3,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 18,
+     "p99": 28,
+     "n": 200
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 42.205,
+    "verdicts_per_s": 4.73877502665561,
+    "completion_tokens_per_s": 76.1047269280891,
+    "concurrency": 1,
+    "window": [
+     "2026-10-06T04:16:25+0800",
+     "2026-10-06T04:17:07+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 200,
+    "n": 200,
+    "rate": 1.0,
+    "wilson95": [
+     0.9811546736227335,
+     1.0
+    ]
+   },
+   "stability_precheck_pass": true
+  },
+  "output": {
+   "usable": true,
+   "why_not": null,
+   "quality": {
+    "aegis2": {
+     "items": 813,
+     "items_expected": 813,
+     "harmful": 394,
+     "harmless": 419,
+     "detection": {
+      "k": 335,
+      "n": 394,
+      "rate": 0.850253807106599,
+      "wilson95": [
+       0.811646424996704,
+       0.8820972607874172
+      ]
+     },
+     "false_alarm": {
+      "k": 52,
+      "n": 419,
+      "rate": 0.12410501193317422,
+      "wilson95": [
+       0.09590962270668989,
+       0.15913031382522969
+      ]
+     },
+     "no_verdict": {
+      "share": 0.0,
+      "unreadable": 0,
+      "truncated": 0,
+      "error": 0
+     },
+     "with_verdict": 813,
+     "accuracy_over_items_with_verdict": 0.8634686346863468,
+     "f1_unsafe_over_items_with_verdict": 0.8578745198463509,
+     "confusion_over_items_with_verdict": {
+      "tp": 335,
+      "fn": 59,
+      "fp": 52,
+      "tn": 367
+     }
+    }
+   },
+   "quality_cell": {
+    "mode": "c16",
+    "calls": 813,
+    "calls_returned": 813,
+    "latency_ms": {
+     "p50": 655.9,
+     "p99": 1010.6,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 26,
+     "p99": 40,
+     "n": 813
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 31.911,
+    "verdicts_per_s": 25.477108207201276,
+    "completion_tokens_per_s": 618.0627369872458,
+    "concurrency": 16,
+    "window": [
+     "2026-10-06T04:20:22+0800",
+     "2026-10-06T04:20:54+0800"
+    ]
+   },
+   "c1": {
+    "calls": 200,
+    "calls_returned": 200,
+    "latency_ms": {
+     "p50": 321.7,
+     "p99": 507.3,
+     "statistic": "nearest-rank percentile of per-call duration"
+    },
+    "completion_tokens": {
+     "p50": 26,
+     "p99": 42,
+     "n": 200
+    },
+    "calls_with_reasoning": 0,
+    "finish_reason_length": 0,
+    "wall_s": 62.452,
+    "verdicts_per_s": 3.202459488887466,
+    "completion_tokens_per_s": 78.89258950874272,
+    "concurrency": 1,
+    "window": [
+     "2026-10-06T04:18:57+0800",
+     "2026-10-06T04:20:00+0800"
+    ]
+   },
+   "same_outcome_at_c1_and_c16": {
+    "k": 200,
+    "n": 200,
+    "rate": 1.0,
+    "wilson95": [
+     0.9811546736227335,
+     1.0
+    ]
+   },
+   "stability_precheck_pass": true
+  }
+ },
+ "precheck": {
+  "input": {
+   "controls_pass": true,
+   "reasoning_switch": {
+    "arm_setting": null,
+    "answers_with_reasoning": 0,
+    "of": 10,
+    "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+    "pass": true
+   },
+   "pass": true,
+   "at": "2026-10-06T04:16:14+0800"
+  },
+  "output": {
+   "controls_pass": true,
+   "reasoning_switch": {
+    "arm_setting": null,
+    "answers_with_reasoning": 0,
+    "of": 10,
+    "rule": "on: >= 9 of 10; off: 0; no switch: not checked",
+    "pass": true
+   },
+   "pass": true,
+   "at": "2026-10-06T04:18:46+0800"
+  }
+ },
+ "files_read": [
+  {
+   "file": "input_c16.jsonl",
+   "sha256": "6792a2737af3f247ed14180fc27dad7031d3cca1d9edd4e34dc6a1254745d5f1"
+  },
+  {
+   "file": "input_c1.jsonl",
+   "sha256": "a31d169ab08da39d865f7d8a5ede030f6fbabcb55fb4dd95804b17040b5a630f"
+  },
+  {
+   "file": "output_c16.jsonl",
+   "sha256": "421daa97dd7f0fe7d2a7f1859df308b74ca69c33675e45cadb79599bbb57effe"
+  },
+  {
+   "file": "output_c1.jsonl",
+   "sha256": "7bb1d91fe3a2b08c40564e1a5941f94216500518765148a2b474cbc0a9d8dfec"
+  }
+ ],
+ "per_item_files_read_from": "J6",
+ "arm_of_this_folder": "J6N-tpl",
+ "request_shape_of": "J6"
+}

@@ -112,9 +112,11 @@ def resolve(root, binder, name):
         if os.path.isfile(os.path.join(root, c)):
             return "ok", c
     for a in ancestors:
-        hits = [_norm(h) for h in glob.glob(os.path.join(root, a, "**", name), recursive=True)
-                if os.path.isfile(h) and not any(s in _norm(h).split("/") for s in SKIP_DIRS)]
-        hits = sorted(set(os.path.relpath(h, root).replace(os.sep, "/") for h in hits))
+        # the skip rule is applied to the path below `root`: a repository that itself sits under a folder named like a
+        # skipped one (a working tree at <repo>/_internal/...) must resolve its own files
+        hits = [os.path.relpath(h, root).replace(os.sep, "/") for h in glob.glob(os.path.join(root, a, "**", name), recursive=True)
+                if os.path.isfile(h)]
+        hits = sorted(set(h for h in hits if not any(s in h.split("/") for s in SKIP_DIRS)))
         if len(hits) == 1:
             return "ok", hits[0]
         if len(hits) > 1:
