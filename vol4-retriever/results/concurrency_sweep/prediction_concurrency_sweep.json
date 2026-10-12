@@ -1,0 +1,504 @@
+{
+ "what": "Vol.4, session of 2026-10-12: the concurrency sweep of the retrieval NIMs (N1); Nemotron 3.5 Content Safety on a newer upstream vLLM (N2); the Blueprint's default embedding image 1.12.0 beside 2.3.0 of the same model (N4)",
+ "draft": false,
+ "written_at": "2026-10-12T04:13:26+0800",
+ "supplements": {
+  "first_batch": {
+   "file": "../first_batch/prediction_first_batch.json",
+   "sha256": "9e5758e98cd052cbdf41e580095cb70bb1188479fef722747a64dc1b88216dd7"
+  },
+  "whole_corpus": {
+   "file": "../whole_corpus_quality/prediction_whole_corpus.json",
+   "sha256": "129e21e6bfbf7dd35c4ed2b4179d457dc25be1c12a7bbae49dcbe3c7b4bbd7fa"
+  }
+ },
+ "kept_from_them": "one container on the card at a time; the gate before every container and, with its timed form, before every timed step; no game launcher while a timed step runs; a timed step is one blocking command; every number carries its boundary; results are written as they come",
+ "host": "one RTX 5090 (32 GB), Windows 11, Docker Desktop on WSL2; the driver version is recorded by every gate",
+ "order": [
+  "probes before this file was frozen (below)",
+  "N2",
+  "N1: n3, rr1b, e1b, evl, rr500, e300",
+  "N4 if time is left"
+ ],
+ "time_limit": "nothing is started that cannot end before 08:00 local time; an arm of N1 is not started with less than 40 minutes left. What is not run tonight is reported as not run.",
+ "probes_before_the_freeze": {
+  "why": "the load tool had only met this volume's stand-in server. Whether it sends the prepared bodies to a real NIM, reads the answer, and what its own start and export cost had to be seen on a real NIM before the design was fixed.",
+  "what": "the reranking NIM (arm rr1b) and the embedding NIM (arm n3) each started once; per request shape 8 seconds at 1 and at 8 requests in flight through scripts/sweep_level.py. These containers ran before this file was frozen; their records are named probe_*.json and are not results of the sweep.",
+  "rr1b": {
+   "passages_10, 1 in flight": {
+    "requests": 290,
+    "errors": [],
+    "requests_per_s": 36.309,
+    "items_per_s": 363.1,
+    "request_ms": {
+     "p50": 27.384,
+     "p90": 33.351,
+     "p99": 40.247,
+     "avg": 26.694,
+     "min": 12.43,
+     "max": 48.994
+    },
+    "client_cpu": {
+     "cores_visible": 28,
+     "cpu_seconds": 14.32,
+     "wall_s": 15.55,
+     "cores_used_mean": 0.92,
+     "share_of_all_cores": 0.033,
+     "includes": "AIPerf's start and its export, not only the timed phase"
+    },
+    "aiperf_rc": 0
+   },
+   "passages_10, 8 in flight": {
+    "requests": 527,
+    "errors": [],
+    "requests_per_s": 66.285,
+    "items_per_s": 662.8,
+    "request_ms": {
+     "p50": 118.614,
+     "p90": 137.529,
+     "p99": 153.736,
+     "avg": 119.17,
+     "min": 34.623,
+     "max": 180.389
+    },
+    "client_cpu": {
+     "cores_visible": 28,
+     "cpu_seconds": 16.25,
+     "wall_s": 16.35,
+     "cores_used_mean": 0.99,
+     "share_of_all_cores": 0.035,
+     "includes": "AIPerf's start and its export, not only the timed phase"
+    },
+    "aiperf_rc": 0
+   },
+   "passages_100, 1 in flight": {
+    "requests": 53,
+    "errors": [],
+    "requests_per_s": 6.668,
+    "items_per_s": 666.8,
+    "request_ms": {
+     "p50": 145.189,
+     "p90": 190.767,
+     "p99": 228.131,
+     "avg": 148.854,
+     "min": 94.883,
+     "max": 248.272
+    },
+    "client_cpu": {
+     "cores_visible": 28,
+     "cpu_seconds": 14.37,
+     "wall_s": 16.91,
+     "cores_used_mean": 0.85,
+     "share_of_all_cores": 0.03,
+     "includes": "AIPerf's start and its export, not only the timed phase"
+    },
+    "aiperf_rc": 0
+   },
+   "passages_100, 8 in flight": {
+    "requests": 73,
+    "errors": [],
+    "requests_per_s": 9.383,
+    "items_per_s": 938.3,
+    "request_ms": {
+     "p50": 822.66,
+     "p90": 980.923,
+     "p99": 1098.687,
+     "avg": 816.753,
+     "min": 192.597,
+     "max": 1217.941
+    },
+    "client_cpu": {
+     "cores_visible": 28,
+     "cpu_seconds": 16.73,
+     "wall_s": 18.34,
+     "cores_used_mean": 0.91,
+     "share_of_all_cores": 0.033,
+     "includes": "AIPerf's start and its export, not only the timed phase"
+    },
+    "aiperf_rc": 0
+   }
+  },
+  "n3": {
+   "passage, 1 in flight": {
+    "requests": 32,
+    "errors": [],
+    "requests_per_s": 4.012,
+    "items_per_s": 256.8,
+    "request_ms": {
+     "p50": 248.965,
+     "p90": 265.7,
+     "p99": 288.184,
+     "avg": 248.327,
+     "min": 221.397,
+     "max": 288.615
+    },
+    "client_cpu": {
+     "cores_visible": 28,
+     "cpu_seconds": 14.26,
+     "wall_s": 16.61,
+     "cores_used_mean": 0.86,
+     "share_of_all_cores": 0.031,
+     "includes": "AIPerf's start and its export, not only the timed phase"
+    },
+    "aiperf_rc": 0
+   },
+   "passage, 8 in flight": {
+    "requests": 32,
+    "errors": [],
+    "requests_per_s": 4.286,
+    "items_per_s": 274.3,
+    "request_ms": {
+     "p50": 1865.318,
+     "p90": 1893.483,
+     "p99": 1897.679,
+     "avg": 1861.817,
+     "min": 1808.329,
+     "max": 1898.223
+    },
+    "client_cpu": {
+     "cores_visible": 28,
+     "cpu_seconds": 17.7,
+     "wall_s": 19.55,
+     "cores_used_mean": 0.91,
+     "share_of_all_cores": 0.032,
+     "includes": "AIPerf's start and its export, not only the timed phase"
+    },
+    "aiperf_rc": 0
+   },
+   "query, 1 in flight": {
+    "requests": 2022,
+    "errors": [],
+    "requests_per_s": 252.843,
+    "items_per_s": 252.8,
+    "request_ms": {
+     "p50": 2.914,
+     "p90": 3.284,
+     "p99": 3.845,
+     "avg": 3.456,
+     "min": 2.612,
+     "max": 976.481
+    },
+    "client_cpu": {
+     "cores_visible": 28,
+     "cpu_seconds": 17.18,
+     "wall_s": 15.54,
+     "cores_used_mean": 1.11,
+     "share_of_all_cores": 0.039,
+     "includes": "AIPerf's start and its export, not only the timed phase"
+    },
+    "aiperf_rc": 0
+   },
+   "query, 8 in flight": {
+    "requests": 3219,
+    "errors": [],
+    "requests_per_s": 402.431,
+    "items_per_s": 402.4,
+    "request_ms": {
+     "p50": 19.079,
+     "p90": 20.291,
+     "p99": 21.355,
+     "avg": 19.05,
+     "min": 3.819,
+     "max": 23.445
+    },
+    "client_cpu": {
+     "cores_visible": 28,
+     "cpu_seconds": 22.45,
+     "wall_s": 15.31,
+     "cores_used_mean": 1.47,
+     "share_of_all_cores": 0.052,
+     "includes": "AIPerf's start and its export, not only the timed phase"
+    },
+    "aiperf_rc": 0
+   }
+  }
+ },
+ "N1_concurrency_sweep": {
+  "question": "with one retrieval NIM alone on the card, how do the rate and the duration of a request change as more requests are in flight, and where does the rate stop rising",
+  "arms": {
+   "n3": {
+    "image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2",
+    "image_digest": "nvcr.io/nim/nvidia/nemotron-3-embed-1b@sha256:16f49c13bc9ee101f4abfaba972b2dc2e587871ab7474913ac40dbf0bffb7d92",
+    "start": "NIM_ENGINE_PRECISION=fp16, weights from the NIM's own download",
+    "kind": "embedding",
+    "single_stream_before": {
+     "file": "../whole_corpus_quality/timing_container_and_host/n3embed/container_1.json",
+     "passages_per_s_median": 237.6
+    }
+   },
+   "rr1b": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2:1.10.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2@sha256:cab08cc2b620235f6d75bb7ee198d13352f61ae48285524e304f2904380ea8ca",
+    "start": "no profile set",
+    "kind": "reranking",
+    "single_stream_before": {
+     "file": "../whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/",
+     "what": "one call of 100 passages after the other, zh: p50 about 153 ms"
+    }
+   },
+   "e1b": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2:1.13.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2@sha256:3c22c0bd8d36dcdee4c46ff371951bb83ec537361db5d6b5737b5c4ecbec92ae",
+    "start": "no profile set (fp8, selected by the image)",
+    "kind": "embedding",
+    "single_stream_before": {
+     "file": "../whole_corpus_quality/timing_container_and_host/embed1bv2/container_1.json",
+     "passages_per_s_median": 495.0
+    }
+   },
+   "evl": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-vl-1b-v2:2.3.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-embed-vl-1b-v2@sha256:93a3f17fa7d0b5ef1d31765a1eab4662669483bf85f2101a2c460aedd9b45480",
+    "start": "no profile set, weights from the NIM's own download",
+    "kind": "embedding",
+    "single_stream_before": {
+     "file": "../whole_corpus_quality/timing_container_and_host/embedvl/container_1.json",
+     "passages_per_s_median": 278.7
+    }
+   },
+   "rr500": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-500m-v2:1.10.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-rerank-500m-v2@sha256:3e39d44bdb3dd683d6a2ac8d7689b484aee6c18dc7e00c2064f19501742720f3",
+    "start": "no profile set",
+    "kind": "reranking",
+    "single_stream_before": {
+     "file": "../whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/"
+    }
+   },
+   "e300": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-300m-v2:1.13.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-embed-300m-v2@sha256:1f0a7fc168919d7b84bb4edfb4a4da0c5828d11ee284f9fb8113242b3b35cbb4",
+    "start": "no profile set",
+    "kind": "embedding",
+    "single_stream_before": {
+     "file": "../whole_corpus_quality/timing_container_and_host/embed300m/container_1.json",
+     "passages_per_s_median": 798.6
+    }
+   }
+  },
+  "load": {
+   "tool": "AIPerf 0.11.0 in the container vol4-aiperf:0.11.0 (client_aiperf/Dockerfile) on the NIM's Docker network; closed loop: a fixed number of requests in flight, a finished one replaced at once",
+   "bodies": "written before the session by scripts/sweep_payloads.py with this volume's request builders and replayed verbatim (--endpoint-type raw, --custom-dataset-type inputs-json); --tokenizer builtin, so nothing is downloaded at run time",
+   "shapes": {
+    "embedding": {
+     "query": "one query per request, input_type query: the 393 queries of the reduced MIRACL zh task",
+     "passage": "64 passages per request, input_type passage: the first 4,096 passages of that corpus (the sample of every timed embedding cell of this volume)"
+    },
+    "reranking": {
+     "passages_100": "one query with the first 100 passages of its first-stage ranking (whole MIRACL zh corpus, 393 queries)",
+     "passages_10": "the same with the first 10"
+    }
+   },
+   "levels": [
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64
+   ],
+   "one_more_level": "after 64, while the rate is more than 5% above the level before, the number in flight is doubled (128, then 256 at most)",
+   "per_level": "the gate in its timed form, then 40 seconds at the level after a warm-up of twice the level in requests; one blocking command",
+   "bodies_per_arm": {
+    "n3": {
+     "record": "n3/payloads.json",
+     "sha256_of_the_record": "12b14da109dcfef46fb3382db2ce66eba7639340eadf3a4eeae01095facdb18a",
+     "files": {
+      "query": {
+       "requests": 393,
+       "items_per_request": 1,
+       "sha256": "448598234bd9dd1f9c5a8f716530e053aef91870843973f23a1a112eccb36356"
+      },
+      "passage": {
+       "requests": 64,
+       "items_per_request": 64,
+       "sha256": "cb4917f7715358ba0ef4181f3acf076fe49f5cbad179013c3117477eaef5e9ac"
+      }
+     }
+    },
+    "rr1b": {
+     "record": "rr1b/payloads.json",
+     "sha256_of_the_record": "c8d28f150c1d1a73e4117ac0ea8c2714d95a6c81d88872f230602467b991cbc5",
+     "files": {
+      "passages_100": {
+       "requests": 393,
+       "items_per_request": 100,
+       "sha256": "aa1b0bcc84ad937cfe2be6ed2e3a3db76f674acb8a7ccaf1cc3dcc7ec2577b1c"
+      },
+      "passages_10": {
+       "requests": 393,
+       "items_per_request": 10,
+       "sha256": "2eaa0d3bdcc52ed5a332b7f34783b802a06985a8cfd0b29c6955539490b45976"
+      }
+     }
+    },
+    "e1b": {
+     "record": "e1b/payloads.json",
+     "sha256_of_the_record": "554f836ee73262958f15f9156731feef2b25313c532a132126844f366adecfeb",
+     "files": {
+      "query": {
+       "requests": 393,
+       "items_per_request": 1,
+       "sha256": "100f20ce9984600719fee14cef2ef4160f5d88911bd0bcf415b8f09fadad19b1"
+      },
+      "passage": {
+       "requests": 64,
+       "items_per_request": 64,
+       "sha256": "fd590541aa984a2582f7420602fcc92907b6a540ebc6c5e893b86ba535bf0000"
+      }
+     }
+    },
+    "evl": {
+     "record": "evl/payloads.json",
+     "sha256_of_the_record": "0f0df22f534cb5145e12710684c6070de544d78b5b19d59c91f4a838d054e7be",
+     "files": {
+      "query": {
+       "requests": 393,
+       "items_per_request": 1,
+       "sha256": "832aba583eb5b06fb8afca6c3a8d2262b485be29a91ac05d8283396bd05f8f3a"
+      },
+      "passage": {
+       "requests": 64,
+       "items_per_request": 64,
+       "sha256": "98f95b5c00ff74b41ed19f51cff46a3a90c5559cae80314f6b1633ba963c9da7"
+      }
+     }
+    },
+    "rr500": {
+     "record": "rr500/payloads.json",
+     "sha256_of_the_record": "263ffe59c0fd0265384b2f88870031441ead0bab1c62cc298ab81731a3c15eb6",
+     "files": {
+      "passages_100": {
+       "requests": 393,
+       "items_per_request": 100,
+       "sha256": "5f3045833f6b46152eca501fb406a07ef905d4a50aefb00de1be0ea92554bfb9"
+      },
+      "passages_10": {
+       "requests": 393,
+       "items_per_request": 10,
+       "sha256": "62741dd0e76a4b5e71780cebccd03d82e94a284229443edef41ca4567835eaf5"
+      }
+     }
+    },
+    "e300": {
+     "record": "e300/payloads.json",
+     "sha256_of_the_record": "c9a00085f45dcb28d9b815713dbf249da3ff8eac71a06fcd75309fdaa0682dff",
+     "files": {
+      "query": {
+       "requests": 393,
+       "items_per_request": 1,
+       "sha256": "298f3bcdfe5b84196ea6f987f2cc0e56683d5c90162621c54db77d7cb50fa52a"
+      },
+      "passage": {
+       "requests": 64,
+       "items_per_request": 64,
+       "sha256": "672d7d85ef2318cbd74c973aa57c7566d5e0f8ca9a64ff40c53e2ec149b69854"
+      }
+     }
+    }
+   }
+  },
+  "per_arm": [
+   "a new container; the gate before it",
+   "calibration: this volume's own client at one request in flight (embed_cell.py throughput: 64 per request, three passes; rerank_latency.py: 100 passages per call, one pass)",
+   "the sweep of both shapes",
+   "the container removed; a second new container; the two highest levels of each shape again; both runs are reported side by side, not pooled"
+  ],
+  "calibration_rule": "AIPerf at one request in flight (passage shape, or 100 passages) against the own client's items per second: more than 20% apart stops the arm before its sweep, and the arm is reported as stopped. Nothing is adjusted.",
+  "client_rule": "every level records what the load-tool container used of the CPU (its cgroup, start and export included). A level at which it used 85% or more of all the cores it can see is marked client-limited, and such a level is not called the NIM's saturation.",
+  "reported": {
+   "per_arm_and_shape": "one row per level: requests per second, items per second (requests per second x items per request), p50 / p90 / p99 of the duration of a request in ms, requests, errors, the client's CPU",
+   "saturation": "the lowest level whose rate is at least 95% of the highest rate of that shape in that container",
+   "described_not_judged": "the highest level whose p99 is at most 100 ms, and at most 500 ms. Two round numbers to read the table by: there is no published limit for these services, and nothing passes or fails here.",
+   "errors": "a level with errors is reported with their count and is not used for the saturation"
+  },
+  "second_night": "one request in flight and the saturation level of every arm again on another night; not part of tonight",
+  "expectation": {
+   "calibration": "within 10% for every arm (same bodies, same network path, one kept connection each)",
+   "one_in_flight": "passage shape within 10% of the single-stream values named per arm above; 100 passages zh: p50 between 140 and 190 ms",
+   "shape_of_the_curve": "passage shape and 100 passages: the rate rises by less than 50% from 1 to 64 in flight (one request already fills a batch) and the duration of a request grows about in proportion; query shape and 10 passages: the rate rises at least fourfold before it flattens",
+   "client": "no level client-limited for the passage shape and for reranking; the query shape of the 300m encoder may be (its requests are the shortest)",
+   "confidence": "low for the shape of the curves: nothing in this volume was measured with more than one request in flight"
+  },
+  "not_claimed": [
+   "a number of users: a level is a number of requests in flight",
+   "two services on the card together",
+   "requests of other sizes or languages",
+   "a search service behind the encoder"
+  ]
+ },
+ "N2_content_safety_model_on_a_newer_engine": {
+  "why": "the only serving engine Nemotron 3.5 Content Safety has run on here is upstream vLLM 0.20.2, and that image is kept on the disk for this model alone. Whether a newer image already on this machine serves it with the same verdicts decides whether the older image is still needed. This is not a cell of the published Vol.3 study and changes none of its figures.",
+  "model_card": {
+   "file": "README.md of the Hugging Face snapshot 35645ed3543b7e7ffaed2e788699e57a5051497c",
+   "line": "pip install \"vllm>=0.11.0,<=0.20.2\"",
+   "reading": "0.20.2 is the newest version the card names; both newer images on this machine (0.27.1, 0.30.0) are outside that range"
+  },
+  "engine": {
+   "image": "vllm/vllm-openai:v0.30.0",
+   "digest": "sha256:8a69ffad015f138d7170c4ddc429e230a3bc1c1719f67e14324749df200a4b90",
+   "outside_the_model_cards_range": true,
+   "start_setting": {
+    "VLLM_USE_V2_MODEL_RUNNER": "0"
+   },
+   "why_that_setting": "on this host vLLM 0.27.1 needed it to start (Vol.3, generic-NIM cell); 0.30.0 is started with it for the same reason",
+   "command": "the study's container command for this model (p102_run.vllm_command) with the image changed and the variable added; nothing else"
+  },
+  "cells": "the study's unchanged p93_judge.py --arm J4 (reasoning off), per track: precheck, the stability subset at 16 in flight (200 prompts, 100 responses), the whole track at 16 in flight",
+  "reference": {
+   "what": "the study's own new-container re-read of the same subsets on 0.20.2 (arm J4, 2026-10-02)",
+   "prompts": {
+    "same": 200,
+    "of": 200
+   },
+   "responses": {
+    "same": 100,
+    "of": 100
+   },
+   "verdicts_per_s_c16_on_0202": {
+    "prompts": 87.03,
+    "responses": 56.58
+   }
+  },
+  "reading": "the server starts and passes both prechecks, and on the stability subsets the number of items whose verdict differs from the 0.20.2 main run is not more than the reference's own (both tracks together) => 'replaceable': the 0.20.2 image becomes a candidate for removal, which its owner decides. Otherwise it stays. The whole-track differences and the rate are reported beside it and do not enter the reading.",
+  "expectation": {
+   "starts": "yes (moderate confidence)",
+   "differing_on_the_subsets": "0 to 3 of 300; the reference is 0 of 300, so one differing item already means 'stays'",
+   "rate": "within 15% of the 0.20.2 figures, either way",
+   "note": "for another model of this family the same step of engine version changed 0.4% of the verdicts; a rule of 'not more than 0' is strict on purpose: it is the model's own repeat on the old engine"
+  },
+  "results": "kept outside the repository (the driver and its files are not part of this volume); whether any of it is published is decided later",
+  "runner_outside_the_repository_sha256": "e212fe8ca7b810a3a527702dff602f41e5ec634c1daeff1dd7193ca61298d93f"
+ },
+ "N4_blueprint_default_embedding_image": {
+  "why": "the RAG Blueprint's compose files name llama-nemotron-embed-vl-1b-v2:1.12.0; this volume measured the same model as 2.3.0. Whether the older image gives the same quality and at least the same speed decides whether it has to be kept.",
+  "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-vl-1b-v2:1.12.0",
+  "image_digest": "sha256:58c40b920840be6e2f4ad5d77c32c65d61e048070fe45d51fb4bdb6f84a71e21",
+  "never_started_here": true,
+  "cells": [
+   "the quality cells of the first session for this model (SciFact, reduced MIRACL zh and ja), with the first session's programs and commands and the image changed",
+   "the query shape of N1's sweep"
+  ],
+  "against": "the 2.3.0 image: first-session quality, N1's query-shape results of arm evl",
+  "reading": "nDCG@10 within 0.002 of the 2.3.0 value on each of the three data sets (the first session's two serving paths of one model agreed to 0.0011) and the rate at one request in flight not lower by more than 5% => the older image becomes a candidate for removal; otherwise it stays",
+  "tonight": "last in the order and run only if time is left; its first start downloads the model",
+  "expectation": "no guess is recorded for the quality difference; the older image is a different runtime (1.x) and its precision on this card is not known before it starts"
+ },
+ "harness_sha256": {
+  "scripts/sweep_payloads.py": "e272da8ceeb8a957c8773d080637a9897e2d0b26613131d12f226cecf9c6203e",
+  "scripts/sweep_level.py": "c23331574e86fa887e930d47c1abafeb0cb554d3e465cff646203a8f7a5f2f42",
+  "scripts/sweep_step.py": "82026136f855642d18805424174e591b8130ff9a694eb6796df199d0dd66b1fe",
+  "client_aiperf/Dockerfile": "4595496b419de48732c5029a0d76ca0a5e4f1cdafce7e5c811059cb9176d5594",
+  "scripts/run_step.py": "3468e40ba41085aff2233f6f526f43bf7bbed953894984ddc515b5ff1d10a143",
+  "scripts/embed_cell.py": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "scripts/rerank_latency.py": "f8c708edab0e2bf212b6304c77d1b0072adf7c4b6f1889103f42563968bae3cc",
+  "scripts/rerank_cell.py": "689b3e791cd198e6b2a6e7dbaecf04157081c1383ff1259168f0579ef6e29fc1",
+  "scripts/nim_retrieval_clients.py": "706b960a71e583143969794f14138c93304dc6623d9c62fa1082866819a26cf2",
+  "scripts/retrieval_datasets.py": "699a7681569f61c9c66980a8ec91341b9e45a7836a28686cf7888b8bda174d18",
+  "client/Dockerfile": "886ebed74c074a9836f89c0a0d1bdad1bad5db737259b7d4900dbd24dd191dc7",
+  "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb"
+ },
+ "generator": "scripts/gen_prediction_concurrency_sweep.py (this file's writer; its SHA-256 is in the events file)",
+ "programs_written_after_the_freeze": "scripts/sweep_table.py, which makes the tables from the level records, exists at the freeze but has not been run on a real record and may still change; the program of the figure is not written. The SHA-256 of each is recorded with its first use."
+}
