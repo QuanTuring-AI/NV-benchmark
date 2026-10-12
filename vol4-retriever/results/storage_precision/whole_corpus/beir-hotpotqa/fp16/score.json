@@ -1,0 +1,63 @@
+{
+ "what": "exact search over the corpus with its vectors turned, in memory, into what a store of fewer bits would hold",
+ "dataset": "beir-hotpotqa",
+ "split": "test",
+ "at": "2026-10-12T09:07:44+0800",
+ "precision": "fp16",
+ "bytes_per_number": 2,
+ "bytes_per_passage": 4096,
+ "size": 2048,
+ "queries_kept_as": "float32",
+ "int8": null,
+ "stored_values_and_16_bit_floats": {
+  "pieces": 53,
+  "pieces_whose_every_number_a_16_bit_float_holds_exactly": 53,
+  "lowest_share_of_a_piece": 1.0,
+  "note": "where every piece is 1.0, the fp16 store gives back the same numbers and the fp16 search is the 32-bit search"
+ },
+ "source": {
+  "vectors_folder": "beir-hotpotqa",
+  "queries": 7405,
+  "passages": 5233329,
+  "layout": "pieces",
+  "checkpoint_file_sha256": "74d2efd92285941fb7c51ef672caa996f72f547d78b35bbb7ceebe0a8f3542a9",
+  "pieces": 53,
+  "queries_sha256": "dd8a58513b188b9d286664ad0d414cad21d791ed7c9f34ed6d9ac3b263302f20",
+  "top": 100
+ },
+ "search": "exact cosine, numpy, one piece in memory at a time; no index; nothing converted is stored",
+ "metrics": {
+  "ndcg_cut_10": 0.800786887144472,
+  "recall_100": 0.9156650911546252,
+  "queries_scored": 7405,
+  "queries_with_results": 7405,
+  "queries_without_results_counted_as_zero": 0,
+  "queries_in_run_not_in_qrels": 0,
+  "ignore_identical_ids": false,
+  "metric_library": {
+   "module": "pytrec_eval",
+   "measures": [
+    "ndcg_cut.10",
+    "recall.100"
+   ]
+  }
+ },
+ "against_the_32_bit_ranking": {
+  "file_sha256": "9ddf8a379391ae175a680b607d1a5cb37a961a683d74a2a0f83179a6d0183959",
+  "queries": 7405,
+  "share_of_the_first_100_in_common_mean": 1.0,
+  "share_of_the_first_100_in_common_lowest": 1.0,
+  "queries_whose_first_10_are_the_same_in_the_same_order": 7405
+ },
+ "judged_ids_found": true,
+ "host_seconds_of_this_call": 1427.5,
+ "seconds_are": "wall time on a host that does other work; not a speed of anything",
+ "numpy": "2.4.6",
+ "program": {
+  "file": "storage_precision.py",
+  "sha256": "f575b8dc41821941f8fd8c0597a15415cacf783d98b936e9c92b6064a935adf2",
+  "uses": {
+   "search_whole_corpus.py": "c69bd45625b61b1f1db03ca4fcbcbc0c4f45e0faad237270421ae3e378b386da"
+  }
+ }
+}
