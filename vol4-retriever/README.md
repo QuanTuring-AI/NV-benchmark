@@ -85,7 +85,7 @@ Four embedding NIMs: nDCG@10 on two data sets against passages per second.
 *Drawn by [`figures/plot_vol4_figures.py`](figures/plot_vol4_figures.py) from the cells' own result files, in a light and a dark version (SVG and PNG). Every drawn value is listed with its source file and key in [`figures/figure_points.json`](figures/figure_points.json); the script reads every value back from its source on each run.*
 
 - **First figure.** Bars are nDCG@10, the dash above a bar is Recall@100 of the same results. Reranking reorders the first 100 results of a query, so Recall@100 is the same before and after. BEIR HotpotQA has no reduced task and no public value for this model, and the 500m reranker was not run on it.
-- **Second figure.** The horizontal position of a NIM is its first run from a container in the timed cell of 2026-10-06; the whisker reaches to its second run. The vertical position is the first session's quality cell of the same image and profile. The passages-per-second sample is Chinese text in both panels: the left panel sets SciFact quality against that same rate.
+- **Second figure.** The horizontal position of a NIM is its first run from a container in the timed cell of 2026-10-06; the whisker reaches to its second run. The vertical position is the first session's quality cell of the same image and profile. The passages-per-second sample is Chinese text in both panels: the left panel sets SciFact quality against that same rate. The rate is measured by this volume's own single-connection Python client, including the time it spends parsing each response; the server's own rate, from AIPerf at one request at a time and at saturation, is in the [concurrency sweep](results/concurrency_sweep/README.md).
 - **The joined pair** is `llama-nemotron-embed-1b-v2:1.13.0` started twice in the second session, once pinned to fp16 and once as the image selects (fp8); nothing else changed. It is the one place where two points are meant to be read together.
 - What the figures do not show: MIRACL ja in the second figure, the reference arm (the open weights), the host-side timings, and the duration of a reranking call. Those are in the tables below and in the result directories.
 
@@ -158,7 +158,7 @@ Encoder `nemotron-3-embed-1b:2.2.2` (NIM, fp16), exact search. A difference is t
 
 **Four embedding NIMs: quality in the first session, passages per second in the timed cell (second figure)**
 
-Passages per second: the first 4,096 passages of the reduced MIRACL zh corpus, 64 per request, one kept connection, median of three passes.
+Passages per second: the first 4,096 passages of the reduced MIRACL zh corpus, 64 per request, one kept connection, median of three passes; measured by this volume's own single-connection Python client, including the time it spends parsing each response; the server's own rate, from AIPerf at one request at a time and at saturation, is in the [concurrency sweep](results/concurrency_sweep/README.md).
 
 | In the post | Number | File | Key | Check |
 |---|---|---|---|---|
