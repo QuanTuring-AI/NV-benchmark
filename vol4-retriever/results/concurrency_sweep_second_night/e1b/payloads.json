@@ -1,0 +1,41 @@
+{
+ "model": "nvidia/llama-nemotron-embed-1b-v2",
+ "truncate": "END",
+ "format": "AIPerf inputs-json, one body per session",
+ "files": {
+  "query": {
+   "file": "emb_query.inputs.json",
+   "requests": 393,
+   "items_per_request": 1,
+   "endpoint": "/v1/embeddings",
+   "input_type": "query",
+   "data_set": "miracl-hn-zh, every query",
+   "characters_per_request": {
+    "min": 7,
+    "median": 10,
+    "max": 22,
+    "mean": 10.9
+   },
+   "sha256": "100f20ce9984600719fee14cef2ef4160f5d88911bd0bcf415b8f09fadad19b1"
+  },
+  "passage": {
+   "file": "emb_passage.inputs.json",
+   "requests": 64,
+   "items_per_request": 64,
+   "endpoint": "/v1/embeddings",
+   "input_type": "passage",
+   "data_set": "miracl-hn-zh, the first 4096 passages in file order",
+   "characters_per_request": {
+    "min": 5657,
+    "median": 8852,
+    "max": 12515,
+    "mean": 8797.8
+   },
+   "sha256": "fd590541aa984a2582f7420602fcc92907b6a540ebc6c5e893b86ba535bf0000"
+  }
+ },
+ "program": {
+  "file": "sweep_payloads.py",
+  "sha256": "e272da8ceeb8a957c8773d080637a9897e2d0b26613131d12f226cecf9c6203e"
+ }
+}
