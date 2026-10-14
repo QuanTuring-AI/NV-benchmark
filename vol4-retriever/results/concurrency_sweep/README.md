@@ -1,6 +1,6 @@
 # Vol.4 · the retrieval NIMs with more than one request in flight (2026-10-12)
 
-[← Vol.4 README](../../README.md) · pre-registration: [`prediction_concurrency_sweep.json`](prediction_concurrency_sweep.json), frozen 2026-10-12T04:13:26+0800, before the first serving container of the session (two probe containers ran before it and are named as such in it) · run log: [`events.jsonl`](events.jsonl)
+[← Vol.4 README](../../README.md) · pre-registration: [`prediction_concurrency_sweep.json`](prediction_concurrency_sweep.json), frozen 2026-10-12T04:13:26+0800, before the first serving container of the session (two probe containers ran before it and are named as such in it) · run log: [`events.jsonl`](events.jsonl) · [the second night](../concurrency_sweep_second_night/README.md), where the NIM stopped here was swept and five were run again
 
 **What was measured.** One retrieval NIM alone on one RTX 5090, and a load tool that keeps a fixed number of requests in flight (closed loop: a finished request is replaced at once) for 40 seconds per level: 1, 2, 4, 8, 16, 32, 64, and one more level while the rate still rose by more than 5%. Per NIM two request shapes. 5 of the six NIMs of the plan were swept in this session (90 levels); llama-nemotron-embed-300m-v2 was stopped before its sweep by the calibration rule (see below).
 
@@ -221,6 +221,23 @@ The rate stops rising at 16 in flight (the lowest level within 5% of the highest
 | 2 | 42.0 · 45.1 · 68.3 | 418.4 · 4.1 · 4.5 |
 
 The two images are not one variable apart: runtime 1.x against 2.x, an ONNX fp16 profile against the profile 2.3.0 selects, and one container each. Of this arm only the levels 1 and 2 of the query shape were run; the session's time limit ended it there, and the own-client passes and the 64-passage level were not run (the encoding of the ja corpus was still on the card when their gates were asked). The pre-registered reading (nDCG@10 within 0.002 of the 2.3.0 value on each of the three data sets (the first session's two serving paths of one model agreed to 0.0011) and the rate at one request in flight not lower by more than 5% => the older image becomes a candidate for removal; otherwise it stays) was written for an image that serves as it starts; as pre-registered, this one does not.
+
+## The tool's own ceiling
+
+Several NIMs stop at nearly the same rate for one query per request. To see whether that is the NIMs or the instrument, the same load tool (the same container, the same request bodies) was run against a server that holds no model and answers every request at once with a body of the size the largest NIM answer of that shape had. What the tool reaches there is what it can send, receive and record by itself. No card is used.
+
+Pre-registered and frozen 2026-10-13T22:25:54+0800 ([`prediction_tool_ceiling.json`](../tool_ceiling/prediction_tool_ceiling.json)); two runs, each with new server containers; 20 seconds per level. **Rule written before the runs:** room of 2 or more: the tool was not what held that level's rate. Below 2: the level is marked, and every NIM rate at that level is to be read as 'at least'. A tool level with errors in either run is not read.
+
+| Request shape | Answer the server sends, bytes | Lowest room over the seven levels | Levels with room below 2 |
+|---|---|---|---|
+| one query per request | 39,884 | 2.99 | none |
+| 64 passages per request | 2,544,489 | 9.68 | none |
+| one query with 100 passages | 3,395 | 58.77 | none |
+| one query with 10 passages | 390 | 14.43 | none |
+
+**At every level of every shape the tool could send at least 2.99 times what the fastest NIM took: the flat rates in the tables above are the NIMs', not the tool's.**
+
+Per level and per run: [`../tool_ceiling/README.md`](../tool_ceiling/README.md).
 
 ## What this does not show
 
