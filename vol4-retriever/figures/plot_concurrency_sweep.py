@@ -13,8 +13,9 @@ Nothing is measured here. Every value is AIPerf's own figure of one level, as sw
   p99, ms             request_ms.p99 (AIPerf's request_latency, measured in the client)
 Scope: a point is one level of one NIM alone on the card. The figure draws no arrow, writes no ratio and no statement
 that relates one model to another, and names no number of people: a level is a number of requests in flight.
-An arm that the calibration rule of the pre-registration stopped before its sweep is not drawn and is named in the
-points file.
+The NIM that the first night's calibration rule stopped before its sweep was swept on the second night; its line is
+drawn from that night's records (results/concurrency_sweep_second_night), the points file names the night of every
+line, and the note under the figure says which line is the later one.
 
 Card layout as in plot_vol4_figures.py (1600 x 900, the plot area in the vertical middle 60%, no title, text kept as
 text, light and dark differ in colours only). The positions of the axes are moved by a fraction of a pixel, found by
@@ -53,12 +54,16 @@ NAME_NUMBERS = {"5090", "100", "64", "3", "1", "2", "300", "500", "99"}     # th
 CONTROL = "requests in flight"
 
 
+LATER = {"e300": "results/concurrency_sweep_second_night/"}     # a line whose sweep is a later night's: the folder of its records
+
+
 def levels(arm, shape, label):
-    d = os.path.join(VOL, RES, arm, shape); out = []
+    root = LATER.get(arm, RES)
+    d = os.path.join(VOL, root, arm, shape); out = []
     for f in os.listdir(d) if os.path.isdir(d) else []:
         m = re.fullmatch(rf"{label}_c(\d+)\.json", f)
         if m:
-            rel = f"{RES}{arm}/{shape}/{f}"; e = {"file_level": int(m.group(1)), "source": rel}
+            rel = f"{root}{arm}/{shape}/{f}"; e = {"file_level": int(m.group(1)), "source": rel}
             e.update({k: F.value(F.load(rel), p) for k, p in KEYS.items()}); out.append(e)
     return sorted(out, key=lambda e: e["file_level"])
 
@@ -70,15 +75,13 @@ def build():
     for shape, title, unit, names, _ in PANELS:
         P = {"shape": shape, "title": title, "unit": unit, "lines": []}
         for arm in names:
-            cal = os.path.join(VOL, RES, arm, "calibration.json")
-            stopped = os.path.isfile(cal) and not json.load(open(cal, encoding="utf-8"))["within"]
             first = levels(arm, shape, "first")
-            if stopped or len(first) < 2:
-                out["not_drawn"][arm] = {"model": arms[arm]["image"].rsplit("/", 1)[1], "why": "stopped before its sweep by the calibration rule of the pre-registration" if stopped else "not run in this session",
-                                         **({"source": RES + arm + "/calibration.json"} if stopped else {})}
+            if len(first) < 2:
+                out["not_drawn"][arm] = {"model": arms[arm]["image"].rsplit("/", 1)[1], "why": "no sweep on record"}
                 continue
             key = f"N1_concurrency_sweep.arms.{arm}.image"; image = arms[arm]["image"]; model, version = image.rsplit("/", 1)[1].rsplit(":", 1)
-            P["lines"].append({"arm": arm, "model": model, "version": version, "image": {"source": PRE, "key": key, "value": image}, "first": first, "second": levels(arm, shape, "second")})
+            P["lines"].append({"arm": arm, "model": model, "version": version, "image": {"source": PRE, "key": key, "value": image}, "first": first, "second": levels(arm, shape, "second"),
+                               **({"night": "second", "records": LATER[arm]} if arm in LATER else {})})
         out["panels"].append(P)
     return out
 
@@ -158,9 +161,11 @@ def draw(data, theme, shift):
         fig.canvas.draw()
         ticks |= {t.get_text() for t in ax.get_xticklabels() + ax.get_yticklabels() if t.get_text()}
     one = next(e for P in data["panels"] for L in P["lines"] for e in L["first"])
-    fig.text(0.5, 0.036, f"One RTX 5090 · one NIM on the card at a time · AIPerf {one['aiperf']}, closed loop, {one['asked_s']} s per level, the load tool in a container on the NIM's network\n"
-                         f"filled: every level in the first container · hollow: the two highest levels in a second new container · the number at the ends of a line: {CONTROL}",
-             ha="center", va="bottom", fontsize=16.5, style="italic", color=T["muted"], linespacing=1.45)
+    later = sorted({L["model"] for P in data["panels"] for L in P["lines"] if L.get("night") == "second"})
+    fig.text(0.5, 0.030 if later else 0.036, f"One RTX 5090 · one NIM on the card at a time · AIPerf {one['aiperf']}, closed loop, {one['asked_s']} s per level, the load tool in a container on the NIM's network\n"
+                         f"filled: every level in the first container · hollow: the two highest levels in a second new container · the number at the ends of a line: {CONTROL}"
+                         + (f"\n{', '.join(later)}: swept on the second night, the other NIMs on the first" if later else ""),
+             ha="center", va="bottom", fontsize=16.5 if not later else 15.5, style="italic", color=T["muted"], linespacing=1.4)
     fig.canvas.draw()
     F.save(fig, plt, NAME, theme, T)
     return sorted(ticks), version
