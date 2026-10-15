@@ -232,6 +232,121 @@ Passages per second: the first 4,096 passages of the reduced MIRACL zh corpus, 6
 
 <!-- end of the figures and claim table -->
 
+<!-- forum post claims: generated, do not edit by hand -->
+
+### Claim → evidence: the forum post
+
+Every number of the forum post that the tables above do not already hold. Rows marked `text` point to the sentence or log line that states the fact; `equals` rows are counts or levels.
+
+**Title and corpora**
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| Title: MIRACL zh, whole corpus, millions of passages | 4.9 | `results/whole_corpus_quality/whole_corpus/miracl-zh/score.json` | `source.passages / 1000000` | rounds |
+| Title: MIRACL ja, whole corpus, millions of passages | 7.0 | `results/whole_corpus_quality/whole_corpus/miracl-ja/score.json` | `source.passages / 1000000` | rounds |
+
+**Rerank the top 100**
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| MIRACL zh: nDCG@10 gained by the 1b reranker (whole corpus) | 0.034 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-zh/score_after.json` | `metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.ndcg_cut_10` | rounds |
+| MIRACL ja: nDCG@10 gained by the 1b reranker: the low end of '0.030 to 0.064' | 0.030 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-ja/score_after.json` | `metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-ja/score.json::metrics.ndcg_cut_10` | rounds |
+| BEIR HotpotQA: nDCG@10 gained by the 1b reranker: the high end of '0.030 to 0.064' | 0.064 | `results/hotpotqa_whole_corpus/rerank_llama-nemotron-rerank-1b-v2/beir-hotpotqa/score_after.json` | `metrics.ndcg_cut_10 - results/hotpotqa_whole_corpus/whole_corpus/beir-hotpotqa/score.json::metrics.ndcg_cut_10` | rounds |
+| MIRACL zh: nDCG@10 gained by the 500m reranker | 0.020 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-zh/score_after.json` | `metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.ndcg_cut_10` | rounds |
+| MIRACL ja: nDCG@10 gained by the 500m reranker | 0.011 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-ja/score_after.json` | `metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-ja/score.json::metrics.ndcg_cut_10` | rounds |
+| The 500m reranker's gain as a share of the 1b reranker's, MIRACL ja, %: the low end of '37–59%' | 37 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-ja/score_after.json` | `(metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-ja/score.json::metrics.ndcg_cut_10) / (results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-ja/score_after.json::metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-ja/score.json::metrics.ndcg_cut_10) * 100` | rounds |
+| The same, MIRACL zh, %: the high end of '37–59%' | 60 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-zh/score_after.json` | `(metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.ndcg_cut_10) / (results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-zh/score_after.json::metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.ndcg_cut_10) * 100` | rounds |
+| Median duration of one call with 100 passages, 500m against 1b reranker, MIRACL zh, %: 'about 60% of the time' | 59 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-zh/latency_container.json` | `passes[0].call_ms.p50 / results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-zh/latency_container.json::passes[0].call_ms.p50 * 100` | approx |
+| The same, MIRACL ja, % | 59 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-ja/latency_container.json` | `passes[0].call_ms.p50 / results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-ja/latency_container.json::passes[0].call_ms.p50 * 100` | approx |
+| Median duration of one call with 100 passages, 1b reranker, MIRACL zh, ms | 143 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-zh/latency_container.json` | `passes[0].call_ms.p50` | rounds |
+| The same, 500m reranker, MIRACL zh, ms | 85 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-zh/latency_container.json` | `passes[0].call_ms.p50` | rounds |
+| The same, 1b reranker, BEIR HotpotQA, ms: the low end of '103–154 ms' | 103 | `results/hotpotqa_whole_corpus/rerank_llama-nemotron-rerank-1b-v2/beir-hotpotqa/latency_container.json` | `passes[0].call_ms.p50` | rounds |
+| The same, 1b reranker, MIRACL ja, ms: the high end of '103–154 ms' | 154 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-ja/latency_container.json` | `passes[0].call_ms.p50` | rounds |
+| MIRACL zh, reduced against whole corpus: nDCG@10 lost | 0.013 | `results/first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-zh/score.json` | `metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.ndcg_cut_10` | rounds |
+| The same, Recall@100 lost | 0.024 | `results/first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-zh/score.json` | `metrics.recall_100 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.recall_100` | rounds |
+
+**How many requests at once (AIPerf, first container; the 300m NIM on the second night)**
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| The 500m reranker's pairs per second at one request at a time, over the 1b reranker's (100 passages) | 1.6 | `results/concurrency_sweep/rr500/passages_100/first_c1.json` | `items_per_s / results/concurrency_sweep/rr1b/passages_100/first_c1.json::items_per_s` | rounds |
+| nemotron-3-embed-1b, 1 query: requests/s at one request at a time | 269 | `results/concurrency_sweep/table.json` | `arms.n3.shapes.query.first_container.1.requests_per_s` | rounds |
+| nemotron-3-embed-1b, 1 query: highest requests/s | 384 | `results/concurrency_sweep/table.json` | `arms.n3.shapes.query.reading_first_container.highest_requests_per_s` | rounds |
+| nemotron-3-embed-1b, 1 query: level where the rate stops rising | 2 | `results/concurrency_sweep/table.json` | `arms.n3.shapes.query.reading_first_container.saturation_level` | equals |
+| nemotron-3-embed-1b, 64 passages: passages/s at one request at a time | 252 | `results/concurrency_sweep/table.json` | `arms.n3.shapes.passage.first_container.1.items_per_s` | rounds |
+| nemotron-3-embed-1b, 64 passages: highest passages/s | 272 | `results/concurrency_sweep/table.json` | `arms.n3.shapes.passage.reading_first_container.highest_items_per_s` | rounds |
+| nemotron-3-embed-1b, 64 passages: level where the rate stops rising | 2 | `results/concurrency_sweep/table.json` | `arms.n3.shapes.passage.reading_first_container.saturation_level` | equals |
+| llama-nemotron-embed-vl-1b-v2, 1 query: requests/s at one request at a time | 293 | `results/concurrency_sweep/table.json` | `arms.evl.shapes.query.first_container.1.requests_per_s` | rounds |
+| llama-nemotron-embed-vl-1b-v2, 1 query: highest requests/s | 419 | `results/concurrency_sweep/table.json` | `arms.evl.shapes.query.reading_first_container.highest_requests_per_s` | rounds |
+| llama-nemotron-embed-vl-1b-v2, 1 query: level where the rate stops rising | 2 | `results/concurrency_sweep/table.json` | `arms.evl.shapes.query.reading_first_container.saturation_level` | equals |
+| llama-nemotron-embed-1b-v2, 64 passages: passages/s at one request at a time | 594 | `results/concurrency_sweep/table.json` | `arms.e1b.shapes.passage.first_container.1.items_per_s` | rounds |
+| llama-nemotron-embed-1b-v2, 64 passages: highest passages/s | 796 | `results/concurrency_sweep/table.json` | `arms.e1b.shapes.passage.reading_first_container.highest_items_per_s` | rounds |
+| llama-nemotron-embed-1b-v2, 64 passages: level where the rate stops rising | 2 | `results/concurrency_sweep/table.json` | `arms.e1b.shapes.passage.reading_first_container.saturation_level` | equals |
+| llama-nemotron-embed-300m-v2, 1 query: requests/s at one request at a time (second night) | 170 | `results/concurrency_sweep_second_night/table.json` | `arms.e300.shapes.query.first_container.1.requests_per_s` | rounds |
+| llama-nemotron-embed-300m-v2, 1 query: highest requests/s (second night) | 417 | `results/concurrency_sweep_second_night/table.json` | `arms.e300.shapes.query.reading_first_container.highest_requests_per_s` | rounds |
+| llama-nemotron-embed-300m-v2, 1 query: level where the rate stops rising (second night) | 8 | `results/concurrency_sweep_second_night/table.json` | `arms.e300.shapes.query.reading_first_container.saturation_level` | equals |
+| llama-nemotron-embed-300m-v2, 64 passages: passages/s at one request at a time (second night) | 1,073 | `results/concurrency_sweep_second_night/table.json` | `arms.e300.shapes.passage.first_container.1.items_per_s` | rounds |
+| llama-nemotron-embed-300m-v2, 64 passages: highest passages/s (second night) | 2,138 | `results/concurrency_sweep_second_night/table.json` | `arms.e300.shapes.passage.reading_first_container.highest_items_per_s` | rounds |
+| llama-nemotron-embed-300m-v2, 64 passages: level where the rate stops rising (second night) | 4 | `results/concurrency_sweep_second_night/table.json` | `arms.e300.shapes.passage.reading_first_container.saturation_level` | equals |
+| llama-nemotron-rerank-1b-v2, 100 passages: pairs/s at one request at a time | 678 | `results/concurrency_sweep/table.json` | `arms.rr1b.shapes.passages_100.first_container.1.items_per_s` | rounds |
+| llama-nemotron-rerank-1b-v2, 100 passages: highest pairs/s | 983 | `results/concurrency_sweep/table.json` | `arms.rr1b.shapes.passages_100.reading_first_container.highest_items_per_s` | rounds |
+| llama-nemotron-rerank-1b-v2, 100 passages: level where the rate stops rising | 16 | `results/concurrency_sweep/table.json` | `arms.rr1b.shapes.passages_100.reading_first_container.saturation_level` | equals |
+| llama-nemotron-rerank-1b-v2, 100 passages: highest requests (queries) per second, 'about 10' | 10 | `results/concurrency_sweep/table.json` | `arms.rr1b.shapes.passages_100.reading_first_container.highest_requests_per_s` | rounds |
+| llama-nemotron-rerank-500m-v2, 100 passages: pairs/s at one request at a time | 1,113 | `results/concurrency_sweep/table.json` | `arms.rr500.shapes.passages_100.first_container.1.items_per_s` | rounds |
+| llama-nemotron-rerank-500m-v2, 100 passages: highest pairs/s | 1,913 | `results/concurrency_sweep/table.json` | `arms.rr500.shapes.passages_100.reading_first_container.highest_items_per_s` | rounds |
+| llama-nemotron-rerank-500m-v2, 100 passages: level where the rate stops rising | 8 | `results/concurrency_sweep/table.json` | `arms.rr500.shapes.passages_100.reading_first_container.saturation_level` | equals |
+| llama-nemotron-rerank-500m-v2, 100 passages: highest requests (queries) per second, 'about 19' | 19 | `results/concurrency_sweep/table.json` | `arms.rr500.shapes.passages_100.reading_first_container.highest_requests_per_s` | rounds |
+| nemotron-3-embed-1b, 1 query: highest level with a p99 of at most 100 ms (first container) | 32 | `results/concurrency_sweep/table.json` | `arms.n3.shapes.query.reading_first_container.highest_level_with_p99_at_most_100_ms` | equals |
+| The same at 32 in flight in the second container: p99 under 100 ms | 100 | `results/concurrency_sweep/table.json` | `arms.n3.shapes.query.second_container.32.request_ms.p99` | within |
+| Where the rate 'stops rising': the lowest level at 95% of the highest rate (the rule as pre-registered) | 95% | `results/concurrency_sweep/prediction_concurrency_sweep.json` | `at least 95% of the highest rate` | text |
+| The reply: levels from 1 to 64 concurrent requests | 64 | `results/concurrency_sweep/prediction_concurrency_sweep.json` | `N1_concurrency_sweep.load.levels[6]` | equals |
+
+**Two nights, and the load tool's own ceiling**
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| Levels run on both nights with the same request bodies and without errors | 19 | `results/concurrency_sweep_second_night/README.md` | `19 levels were run on both nights with the same request bodies and without errors` | text |
+| The largest difference of the second night's rate from the first's, % ('within 2.1%') | 2.1 | `results/concurrency_sweep_second_night/README.md` | `differs from the first by at most 2.05%` | text |
+| The load tool against a server that answers at once: the smallest room over every level and shape (one query, 1 in flight) | 2.99 | `results/tool_ceiling/table.json` | `shapes.query.lowest_room` | rounds |
+| The tool's ceiling, two runs: the largest difference between them, % | 58 | `results/tool_ceiling/README.md` | `the furthest 58%` | text |
+| This volume's own client against AIPerf at one request at a time, the largest rate difference over the embedding NIMs, % (llama-nemotron-embed-300m-v2, first night) | 36 | `results/concurrency_sweep/e300/calibration.json` | `difference_percent` | rounds |
+
+**Storing the vectors**
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| The three whole-corpus vector sets as 32-bit files, GB | 140 | `results/fp16_store/summary.json` | `total.bytes_of_the_32_bit_files / 1000000000` | rounds |
+| The same as 16-bit files, GB | 70 | `results/fp16_store/summary.json` | `total.bytes_of_the_16_bit_files / 1000000000` | rounds |
+| Vectors in the three stores, millions | 17 | `results/fp16_store/summary.json` | `total.passages / 1000000` | rounds |
+| Pieces whose every value is equal after the 16-bit round trip, read back from disk (of all pieces) | 174 | `results/fp16_store/summary.json` | `total.pieces_with_every_value_equal_read_back_from_disk` | equals |
+| All pieces | 174 | `results/fp16_store/summary.json` | `total.pieces` | equals |
+| Queries with the same 100 passages in the same order, searched over the 16-bit stores (of all queries) | 8,658 | `results/fp16_store/summary.json` | `total.queries_with_the_same_passages_in_the_same_order` | rounds |
+| int8 store: queries whose first 10 are the same in the same order, BEIR HotpotQA, %: the low end of '33–58%' | 33 | `results/storage_precision/whole_corpus/beir-hotpotqa/int8/score.json` | `against_the_32_bit_ranking.queries_whose_first_10_are_the_same_in_the_same_order / against_the_32_bit_ranking.queries * 100` | rounds |
+| The same, MIRACL ja, %: the high end | 58 | `results/storage_precision/whole_corpus/miracl-ja/int8/score.json` | `against_the_32_bit_ranking.queries_whose_first_10_are_the_same_in_the_same_order / against_the_32_bit_ranking.queries * 100` | rounds |
+
+**The NIM and the open weights; what did not run**
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| MIRACL zh (reduced): nDCG@10 of the open weights minus the NIM's | 0.0011 | `results/first_batch/reference_bf16/miracl-hn-zh/score.json` | `metrics.ndcg_cut_10 - results/first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-zh/score.json::metrics.ndcg_cut_10` | rounds |
+| MIRACL ja (reduced): the same | 0.0001 | `results/first_batch/reference_bf16/miracl-hn-ja/score.json` | `metrics.ndcg_cut_10 - results/first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-ja/score.json::metrics.ndcg_cut_10` | rounds |
+| MIRACL ja (reduced): the open weights against the public MTEB value, 'within 0.002' | 0.002 | `results/first_batch/reference_bf16/miracl-hn-ja/score.json` | `metrics.ndcg_cut_10 - target.ndcg_at_10` | within |
+| nemotron-3-embed-1b NIM 2.2.2 with its NVFP4 profile on this card: not ready | — | `results/second_batch/events.jsonl` | `"kind": "nim_not_ready", "tag": "n3embed_nvfp4"` | text |
+| llama-nemotron-embed-vl-1b-v2 1.12.0 as it starts: ready, then HTTP 500 on its first request | 500 | `results/concurrency_sweep/events.jsonl` | `HTTP 500` | text |
+
+**When and on which driver**
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| The first session: 4 October | 4 | `results/first_batch/prediction_first_batch.json` | `"written_at": "2026-10-04T` | text |
+| The last cell: 13 October | 13 | `results/tool_ceiling/prediction_tool_ceiling.json` | `"written_at": "2026-10-13T` | text |
+| The driver of the first session | 591.86 | `results/first_batch/events.jsonl` | `"driver": "591.86"` | text |
+| The driver of the last sessions | 617.42 | `results/concurrency_sweep_second_night/events.jsonl` | `"driver": "617.42"` | text |
+
+Run `python ../tools/check_claims.py README.md` to check these rows with the others.
+
+<!-- end of the forum post claims -->
+
 
 ## Run the tests
 
