@@ -254,8 +254,8 @@ Every number of the forum post that the tables above do not already hold. Rows m
 | BEIR HotpotQA: nDCG@10 gained by the 1b reranker: the high end of '0.030 to 0.064' | 0.064 | `results/hotpotqa_whole_corpus/rerank_llama-nemotron-rerank-1b-v2/beir-hotpotqa/score_after.json` | `metrics.ndcg_cut_10 - results/hotpotqa_whole_corpus/whole_corpus/beir-hotpotqa/score.json::metrics.ndcg_cut_10` | rounds |
 | MIRACL zh: nDCG@10 gained by the 500m reranker | 0.020 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-zh/score_after.json` | `metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.ndcg_cut_10` | rounds |
 | MIRACL ja: nDCG@10 gained by the 500m reranker | 0.011 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-ja/score_after.json` | `metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-ja/score.json::metrics.ndcg_cut_10` | rounds |
-| The 500m reranker's gain as a share of the 1b reranker's, MIRACL ja, %: the low end of '37–59%' | 37 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-ja/score_after.json` | `(metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-ja/score.json::metrics.ndcg_cut_10) / (results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-ja/score_after.json::metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-ja/score.json::metrics.ndcg_cut_10) * 100` | rounds |
-| The same, MIRACL zh, %: the high end of '37–59%' | 60 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-zh/score_after.json` | `(metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.ndcg_cut_10) / (results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-zh/score_after.json::metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.ndcg_cut_10) * 100` | rounds |
+| The 500m reranker's gain as a share of the 1b reranker's, MIRACL ja, %: the low end of '37–60%' | 37 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-ja/score_after.json` | `(metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-ja/score.json::metrics.ndcg_cut_10) / (results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-ja/score_after.json::metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-ja/score.json::metrics.ndcg_cut_10) * 100` | rounds |
+| The same, MIRACL zh, %: the high end of '37–60%' | 60 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-zh/score_after.json` | `(metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.ndcg_cut_10) / (results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-zh/score_after.json::metrics.ndcg_cut_10 - results/whole_corpus_quality/whole_corpus/miracl-zh/score.json::metrics.ndcg_cut_10) * 100` | rounds |
 | Median duration of one call with 100 passages, 500m against 1b reranker, MIRACL zh, %: 'about 60% of the time' | 59 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-zh/latency_container.json` | `passes[0].call_ms.p50 / results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-zh/latency_container.json::passes[0].call_ms.p50 * 100` | approx |
 | The same, MIRACL ja, % | 59 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-500m-v2/miracl-ja/latency_container.json` | `passes[0].call_ms.p50 / results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-ja/latency_container.json::passes[0].call_ms.p50 * 100` | approx |
 | Median duration of one call with 100 passages, 1b reranker, MIRACL zh, ms | 143 | `results/whole_corpus_quality/rerank_llama-nemotron-rerank-1b-v2/miracl-zh/latency_container.json` | `passes[0].call_ms.p50` | rounds |
@@ -305,11 +305,11 @@ Every number of the forum post that the tables above do not already hold. Rows m
 
 | In the post | Number | File | Key | Check |
 |---|---|---|---|---|
-| Levels run on both nights with the same request bodies and without errors | 19 | `results/concurrency_sweep_second_night/README.md` | `19 levels were run on both nights with the same request bodies and without errors` | text |
-| The largest difference of the second night's rate from the first's, % ('within 2.1%') | 2.1 | `results/concurrency_sweep_second_night/README.md` | `differs from the first by at most 2.05%` | text |
+| Levels run on both nights with the same request bodies and without errors | 19 | `results/sweep_summary/summary.json` | `two_nights.levels_on_both_nights_same_bodies_no_errors` | equals |
+| The largest difference of the second night's rate from the first's, % ('within 2.1%') | 2.1 | `results/sweep_summary/summary.json` | `two_nights.largest_rate_difference_percent` | within |
 | The load tool against a server that answers at once: the smallest room over every level and shape (one query, 1 in flight) | 2.99 | `results/tool_ceiling/table.json` | `shapes.query.lowest_room` | rounds |
-| The tool's ceiling, two runs: the largest difference between them, % | 58 | `results/tool_ceiling/README.md` | `the furthest 58%` | text |
-| This volume's own client against AIPerf at one request at a time, the largest rate difference over the embedding NIMs, % (llama-nemotron-embed-300m-v2, first night) | 36 | `results/concurrency_sweep/e300/calibration.json` | `difference_percent` | rounds |
+| The tool's ceiling, two runs: the largest difference between them, % | 58 | `results/sweep_summary/summary.json` | `tool_ceiling.largest_difference_of_the_two_runs_percent` | rounds |
+| This volume's own client against AIPerf at one request at a time: how much less the own client measured, the most over the embedding NIMs, % ('up to 26% less'; llama-nemotron-embed-300m-v2, first night) | 26 | `results/concurrency_sweep/e300/calibration.json` | `difference_percent / (100 + difference_percent) * 100` | rounds |
 
 **Storing the vectors**
 
@@ -346,6 +346,7 @@ Every number of the forum post that the tables above do not already hold. Rows m
 Run `python ../tools/check_claims.py README.md` to check these rows with the others.
 
 <!-- end of the forum post claims -->
+
 
 
 ## Run the tests
