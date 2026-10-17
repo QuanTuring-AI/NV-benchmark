@@ -1,6 +1,6 @@
 # Vol.4 · NeMo Retriever on one RTX 5090 — tools and the first measurements
 
-**This volume is in progress.** It holds the tools the volume measures with, the check that shows the metric tool agrees with a published score, the sources that were read first, and the results of the first GPU session of 2026-10-04: [`results/first_batch/`](results/first_batch/README.md) (four embedding NIMs and two reranking NIMs on SciFact and on the reduced MIRACL task in zh and ja, with the open weights of one model as the reference arm). HotpotQA and the full MIRACL corpus have not been run. Nothing here has been published as an article.
+**This volume is not yet published.** It holds the tools the volume measures with, the check that shows the metric tool agrees with a published score, the sources that were read first, and every cell of the volume: the first session of 2026-10-04 ([`results/first_batch/`](results/first_batch/README.md)), the second batch, the whole corpora of MIRACL zh and ja and of BEIR HotpotQA with two rerankers, the storage-precision cells, the 16-bit store of the whole-corpus vectors, the concurrency sweep of the embedding and reranking NIMs over two nights, and the load tool's own ceiling. Every number of the forum draft has a row in the second claim table below.
 
 ## What is here
 

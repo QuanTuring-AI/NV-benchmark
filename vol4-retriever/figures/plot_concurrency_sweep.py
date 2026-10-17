@@ -124,22 +124,56 @@ def numbers_allowed(data):
     return nums
 
 
+END_LABEL_PLACES = ((8, 6, "left", "bottom"), (-8, 6, "right", "bottom"), (8, -8, "left", "top"), (-8, -8, "right", "top"),
+                    (10, 20, "left", "bottom"), (-10, 20, "right", "bottom"), (10, -22, "left", "top"), (-10, -22, "right", "top"),
+                    (16, 0, "left", "center"), (-16, 0, "right", "center"), (14, 34, "left", "bottom"), (-14, 34, "right", "bottom"),
+                    (14, -36, "left", "top"), (-14, -36, "right", "top"))
+
+
+def place_end_labels(fig, ax, items, colour, fontsize, points=()):
+    """Write the level at the ends of the lines of one panel so that no two labels overlap. items: (x, y, text, first
+    place[, colour of the label: the line's]), in drawing order; the first place is tried first, then END_LABEL_PLACES in order. points: (x, y, radius in
+    pixels) of the drawn markers, which a label may not cover either. Call it after the axes' limits are set.
+    -> the number of labels that overlap another label or a marker whatever the place (0 when all were placed)."""
+    from matplotlib.transforms import Bbox
+    renderer = fig.canvas.get_renderer(); placed, unresolved = [], 0
+    marks = []
+    for x, y, r in points:
+        px, py = ax.transData.transform((x, y)); marks.append(((px, py), Bbox([[px - r, py - r], [px + r, py + r]])))
+    for item in items:
+        x, y, text, first = item[:4]; colour_of = item[4] if len(item) > 4 else colour
+        ax_, ay_ = ax.transData.transform((x, y))
+        others = [b for (c, b) in marks if abs(c[0] - ax_) > 1 or abs(c[1] - ay_) > 1]     # not the label's own point
+        for dx, dy, ha, va in (first,) + tuple(p for p in END_LABEL_PLACES if p != first):
+            a = ax.annotate(text, (x, y), textcoords="offset points", xytext=(dx, dy), fontsize=fontsize, color=colour_of, ha=ha, va=va)
+            box = a.get_window_extent(renderer).expanded(1.0, 1.0).padded(2)
+            if not any(box.overlaps(b) for b in placed + others):
+                placed.append(box); break
+            a.remove()
+        else:
+            unresolved += 1
+            a = ax.annotate(text, (x, y), textcoords="offset points", xytext=first[:2], fontsize=fontsize, color=colour_of, ha=first[2], va=first[3])
+            placed.append(a.get_window_extent(renderer))
+    return unresolved
+
+
 def draw(data, theme, shift):
     plt, T, version = F.setup(theme)
     from matplotlib.lines import Line2D
     from matplotlib.ticker import FixedLocator, FuncFormatter, MaxNLocator, NullLocator
-    fig = plt.figure(figsize=(W / 72.0, H / 72.0), dpi=72, facecolor=T["bg"]); ticks = set()
+    fig = plt.figure(figsize=(W / 72.0, H / 72.0), dpi=72, facecolor=T["bg"]); ticks = set(); overlaps = 0
     for i, (shape, title, unit, _, left) in enumerate(PANELS):
         P = data["panels"][i]
         ax = fig.add_axes([left + shift[0], BOTTOM + shift[1], PANEL_W + shift[2], HEIGHT + shift[3]], facecolor=T["bg"])
-        ys, xs, handles = [], [], []
+        ys, xs, handles, ends, marks = [], [], [], [], []
         for L in P["lines"]:
             col = COLOURS[L["arm"]][theme]; x = [e["items_per_s"] for e in L["first"]]; y = [e["p99_ms"] for e in L["first"]]
             ax.plot(x, y, color=col, linewidth=2.4, marker="o", markersize=9, markerfacecolor=col, markeredgecolor=col, zorder=3)
             ax.plot([e["items_per_s"] for e in L["second"]], [e["p99_ms"] for e in L["second"]], linestyle="none", marker="o", markersize=15, markerfacecolor="none", markeredgecolor=col, markeredgewidth=2.0, zorder=4)
-            for e, off, ha, va in ((L["first"][0], (-8, -8), "right", "top"), (L["first"][-1], (8, 6), "left", "bottom")):
-                ax.annotate(str(e["level"]), (e["items_per_s"], e["p99_ms"]), textcoords="offset points", xytext=off, fontsize=15, color=T["muted"], ha=ha, va=va)
+            ends += [(L["first"][0]["items_per_s"], L["first"][0]["p99_ms"], str(L["first"][0]["level"]), (-8, -8, "right", "top"), col),
+                     (L["first"][-1]["items_per_s"], L["first"][-1]["p99_ms"], str(L["first"][-1]["level"]), (8, 6, "left", "bottom"), col)]
             xs += x + [e["items_per_s"] for e in L["second"]]; ys += y + [e["p99_ms"] for e in L["second"]]
+            marks += [(e["items_per_s"], e["p99_ms"], 5) for e in L["first"]] + [(e["items_per_s"], e["p99_ms"], 8) for e in L["second"]]
             handles.append(Line2D([], [], color=col, linewidth=2.4, marker="o", markersize=9, label=f"{L['model']} {L['version']}"))
         if xs:
             lo, hi = 10 ** math.floor(math.log10(min(ys))), 10 ** (math.ceil(math.log10(max(ys))) + 1)     # one decade above the data, for the legend
@@ -148,6 +182,7 @@ def draw(data, theme, shift):
             ax.xaxis.set_major_locator(MaxNLocator(nbins=5, integer=True, steps=[1, 2, 5, 10]))
         fmt = FuncFormatter(lambda v, _: f"{v:,.0f}" if v >= 1 else f"{v:g}")
         ax.xaxis.set_major_formatter(fmt); ax.yaxis.set_major_formatter(fmt)
+        fig.canvas.draw(); overlaps += place_end_labels(fig, ax, ends, T["muted"], 15, marks)
         ax.tick_params(labelsize=16, length=7, width=1.5); ax.grid(True, which="major", color=T["grid"], linewidth=1.5, zorder=0)
         for sp in ax.spines.values():
             sp.set_linewidth(1.5)
@@ -168,7 +203,7 @@ def draw(data, theme, shift):
              ha="center", va="bottom", fontsize=16.5 if not later else 15.5, style="italic", color=T["muted"], linespacing=1.4)
     fig.canvas.draw()
     F.save(fig, plt, NAME, theme, T)
-    return sorted(ticks), version
+    return sorted(ticks), version, overlaps
 
 
 def figure_checks(data):
@@ -235,6 +270,16 @@ def self_test():
     tt("negative control: an image changed -> reported", len(check(bad)[1]), 1)
     tt("forbidden patterns fire on planted strings", [bool(re.search(pat, s, re.I)) for (_, pat), s in zip(F.FORBIDDEN, ("16 users", "x=47.3", "a → b", "2×"))], [True] * 4)
     tt("forbidden patterns stay silent on the figure's own words", [bool(re.search(pat, f"Passages per second · p99 duration of a request · {CONTROL}", re.I)) for _, pat in F.FORBIDDEN], [False] * 4)
+    global END_LABEL_PLACES
+    plt, T, _ = F.setup("dark")
+    def two_on_one_point():
+        fig = plt.figure(figsize=(4, 3), dpi=72); ax = fig.add_axes([0.1, 0.1, 0.8, 0.8]); ax.set_xlim(0, 10); ax.set_ylim(0, 10); fig.canvas.draw()
+        n = place_end_labels(fig, ax, [(5, 5, "64", (8, 6, "left", "bottom")), (5.1, 5.1, "64", (8, 6, "left", "bottom"))], "#888888", 15)
+        plt.close(fig); return n
+    tt("two labels on nearly one point are both placed apart", two_on_one_point(), 0)
+    kept = END_LABEL_PLACES; END_LABEL_PLACES = ((8, 6, "left", "bottom"),)
+    tt("negative control: with one allowed place the overlap is reported", two_on_one_point(), 1)
+    END_LABEL_PLACES = kept
     a, b = list(shifts())[:3], list(shifts())[:3]
     tt("the trial positions are the same on every run and start unmoved", (a == b, a[0]), (True, (0.0, 0.0, 0.0, 0.0)))
     print("SELF-TEST " + ("PASS" if ok else "FAIL"))
@@ -253,15 +298,17 @@ if __name__ == "__main__":
         data = build(); pattern = "|".join(p for _, p in F.FORBIDDEN); tried = 0
         for shift in shifts():
             tried += 1
-            ticks, version = draw(data, "dark", shift)
+            ticks, version, overlaps = draw(data, "dark", shift)
             if not re.search(pattern, open(os.path.join(HERE, NAME + "_dark.svg"), encoding="utf-8").read(), re.I):
                 break
-        draw(data, "light", shift)
-        data["canvas"].update({"axes_moved_by": list(shift), "positions_tried": tried, "tick_labels": ticks}); data["matplotlib_version"] = version
+        overlaps += draw(data, "light", shift)[2]
+        data["canvas"].update({"axes_moved_by": list(shift), "positions_tried": tried, "tick_labels": ticks, "end_labels_overlapping": overlaps}); data["matplotlib_version"] = version
         json.dump(data, open(table, "w", encoding="utf-8", newline="\n"), indent=1, ensure_ascii=False)
     n, problems = check(data)
     texts, more = figure_checks(data)
     problems += more
+    if data["canvas"].get("end_labels_overlapping", 0):
+        problems.append(f"{data['canvas']['end_labels_overlapping']} level labels at the ends of the lines overlap another label")
     for p in problems:
         print("  FAIL", p)
     print(f"{'drawn and ' if mode != 'check' else ''}checked: {n} values read back, {texts} text elements per SVG, problems {len(problems)}")
