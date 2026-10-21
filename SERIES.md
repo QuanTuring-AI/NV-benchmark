@@ -13,6 +13,7 @@ This file lists where each volume's evidence lives and which NVIDIA component ea
 | **Vol.1** · NIM vs Ollama on RTX 5090 | Published 2026-03-31 · [forum thread 365275](https://forums.developer.nvidia.com/t/nim-vs-ollama-on-rtx-5090-7-3x-faster-inference-nemo-guardrails-at-2-1-overhead-870-data-points/365275) | [`benchmark/`](benchmark/) | [`benchmark/README.md`](benchmark/README.md) |
 | **Vol.2** · NIM + Nemotron: two deployment options on 32 GB | Data published 2026-09-25 · write-up to follow | [`vol2-nemotron/`](vol2-nemotron/) | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) |
 | **Vol.3** · NeMo Guardrails on one RTX 5090: the models behind the rail | Baseline data published 2026-09-19 · judge study in progress | [`vol3-guardrails/`](vol3-guardrails/) | [`vol3-guardrails/README.md`](vol3-guardrails/README.md) |
+| **Vol.4** · Nemotron retrieval on one RTX 5090: embedding and reranking NIMs on whole corpora | Published 2026-10-22 | [`vol4-retriever/`](vol4-retriever/) | [`vol4-retriever/README.md`](vol4-retriever/README.md) |
 | Follow-ups to Vol.1's planned E4–E6 | Run as follow-ups; the records are in the directory | [`roadmap-e456/`](roadmap-e456/) | — |
 
 ---
