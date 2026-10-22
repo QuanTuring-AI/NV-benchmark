@@ -1,0 +1,52 @@
+{
+ "configuration": "c1",
+ "alone": {
+  "llm": {
+   "shared_mib": 0,
+   "card_delta_mib": 0,
+   "note": "no alone run (supplement 5)"
+  },
+  "embed": {
+   "shared_mib": 136,
+   "card_delta_mib": 5635
+  },
+  "rank": {
+   "shared_mib": 385,
+   "card_delta_mib": 3351
+  }
+ },
+ "steps": [
+  {
+   "service": "embed",
+   "card_delta_mib": 5635,
+   "at_sample": 3,
+   "up": true
+  },
+  {
+   "service": "rank",
+   "card_delta_mib": 3489,
+   "at_sample": 24,
+   "up": true
+  },
+  {
+   "service": "llm",
+   "card_delta_mib": 12296,
+   "at_sample": 45,
+   "up": true
+  }
+ ],
+ "all_services_up": true,
+ "shared_peak_mib": 2794,
+ "allowance_at_end_mib": 1033,
+ "peak_above_allowance_mib": 1761,
+ "rule": "spilled if shared > sum(S_i of the services started) + 512 MiB, or a start changes the card by less than 50% of the same start alone",
+ "shared_above_allowed": [
+  {
+   "after": "llm",
+   "allowed_mib": 1033,
+   "peak_mib": 2794
+  }
+ ],
+ "starts_below_half": [],
+ "spilled": true
+}
