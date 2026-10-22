@@ -1,0 +1,17 @@
+# Vol.5 · second -f file after the Blueprint's docker-compose-ingestor-server.yaml (the Blueprint's file is not edited):
+# this run's container names, and the readiness probe of the ingestion runtime not waiting for extraction services
+# that the text files of the controls do not use (BP:docs/text_only_ingest.md step 2; the Blueprint's value is ALL).
+services:
+  ingestor-server:
+    container_name: p137_ingestor_server
+  redis:
+    container_name: p137_redis
+  nv-ingest-ms-runtime:
+    container_name: p137_nv_ingest
+    environment:
+      - COMPONENTS_TO_READY_CHECK=
+volumes:
+  rag-vol-ingestor:
+    name: p137-vol-ingestor
+  rag-vol-lancedb:
+    name: p137-vol-lancedb
