@@ -1,0 +1,152 @@
+{
+ "what": "supplement 8 to the night-1 pre-registration: arm P*, the answer model given the reranked top 10 of Vol.4's exact search over the whole HotpotQA corpus instead of the Blueprint's approximate top 100",
+ "draft": false,
+ "written_at": "2026-10-22T20:33:13+0800",
+ "supplements": [
+  {
+   "file": "prediction_v5_night1.json",
+   "sha256": "0906d10717e5d5ab1b7fb77a0f7e555ebd43934bc6069135a396cc85f30d55b5"
+  },
+  {
+   "file": "addendum_1_control_a_program.json",
+   "sha256": "dcdf3921b78aab252eb691f89e0958c1c8110d54636fee60f9871f9f23a484dc"
+  },
+  {
+   "file": "addendum_2_control_b_exact.json",
+   "sha256": "0933c6dc6e36adc4635921392b09c9f6251933d84f605e4e853b75385afd375e"
+  },
+  {
+   "file": "addendum_3_c2_n_o.json",
+   "sha256": "6a10b1ce109e4d58179286ec8ae721fe9726577fdc027a9f06e482d3b1ad5281"
+  },
+  {
+   "file": "addendum_4a_day.json",
+   "sha256": "4f0b6b74a92ee567b6b6e6bac87266672862a8e963bc4f78ffd7154a09b01c0e"
+  },
+  {
+   "file": "addendum_4b_night3.json",
+   "sha256": "6e96d3e4ff42ad331c2c7f0ad90d1248e19005fea5a0faa50718708473b43fed"
+  },
+  {
+   "file": "addendum_5_c4.json",
+   "sha256": "4bd9cce718599713ea6a26805349cf8a0b2b44fc83555b80574fb2dfdf36357e"
+  },
+  {
+   "file": "addendum_6_c4_ready.json",
+   "sha256": "040cd3105e9697e691b9b293c900841d8846a5ea872a5eb29061899d45e4c8cd"
+  },
+  {
+   "file": "addendum_7_c4_context_32768.json",
+   "sha256": "c55cb60033cba11173dfe8daf2453fc25679c5fd67f53a8a3d6e8b37f7baee60"
+  }
+ ],
+ "why": "arm P (0.534) lost to arm O (0.728) partly in retrieval: the default index keeps both supporting passages among the ten for 4,271 of 7,405 questions. P* puts exact search in its place and changes nothing else, so the difference P* - P is the cost of the approximate index to the answer, and O - P* what reranking and ten passages leave",
+ "status_in_the_comparison": "a reference beside the tuned versions, not one of them: exact search, nothing tuned",
+ "arm": {
+  "retrieve": "Vol.4's exact search, top 100 per question, every passage of HotpotQA (nDCG@10 0.801): the run file below",
+  "rerank": "scripts/p_arm.py rerank, unchanged from arm P: the 100 passages in retrieval order in the Blueprint's batches of 32, 32, 32, 4, all logits together, the first 10",
+  "answer": "scripts/answer_arms.py run with arm O's request body and the ten passages in reranked order (p_arm.py ids): every field as arm P; only the passages differ",
+  "answer_model": "Nemotron 3 Nano at the NIM's defaults, no reasoning parser, as arm P on night 3",
+  "questions": "the 7,405 questions of arm P (results/question_set/hotpotqa_ids.jsonl)"
+ },
+ "images": {
+  "reranker": {
+   "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2:1.10.0",
+   "id": "sha256:cab08cc2b620235f6d75bb7ee198d13352f61ae48285524e304f2904380ea8ca"
+  },
+  "answer_model": {
+   "image": "nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12",
+   "id": "sha256:bd38d2d5438950b49427ee41944ee04f84cd38383265add8df2230480539e6f9",
+   "profile": "1fba9ecfcfb4cde28d4ce3fd55c40bca89a5a613e25e98f057befe6a7e99eada"
+  }
+ },
+ "inputs_outside_the_repository": {
+  "exact_top_100": {
+   "file": "<hold>/vol4_hotpotqa/whole_corpus/run.trec",
+   "sha256": "9ddf8a379391ae175a680b607d1a5cb37a961a683d74a2a0f83179a6d0183959"
+  },
+  "passage_texts": {
+   "file": "<hold>/vol5_es/p_star/texts_exact_top100.jsonl",
+   "sha256": "f4989bdff2d1fe2c1fa7fea20dc115d7276745f928fe5404087e0be067eb406a",
+   "made_by": "p_arm.py texts on the run above (CPU, 2026-10-22)"
+  },
+  "prompts": {
+   "file": "<hold>/vol5_es/night2_capture/prompt_rag_server_2.6.0.yaml",
+   "sha256": "40d8e5d4249e8752a8b890a82e70ea14d19aa056991c74f5252f430911bbf9aa"
+  },
+  "arm_P_answers": {
+   "file": "<hold>/vol5_es/night3/p/answers_O.jsonl",
+   "sha256": "465f4cd2045a8d308963f26fb9ab21a6d7a0712ce18c5aeb96ade29547b05a9d"
+  },
+  "arm_P_ten": {
+   "file": "<hold>/vol5_es/night3/p_ids.jsonl",
+   "sha256": "32b8136fb04b5ea40b16941ca68ae4677f4aca82d892753a7803fdfc87e573c9"
+  },
+  "arm_O_answers": {
+   "file": "<hold>/vol5_es/c2/night2/answers_O.jsonl",
+   "sha256": "590ea5c5ae75144b04b99881dbc45b78e38be3b29e0b4867ffeb64fe41b77f62"
+  },
+  "gold_answers": {
+   "file": "<hold>/vol5_es/c2/gold_answers.jsonl",
+   "sha256": "fca37d9975925aedce90a7946889ea326133e16b057198e58f18c1ad040a29ee"
+  }
+ },
+ "measures": {
+  "arm": "contains the official answer (rate, Wilson 95%), F1, EM, refusals by pattern, finish reasons",
+  "paired": "P* against P and P* against O on the same 7,405 questions, exact McNemar",
+  "passages": "both / one / none of the two supporting passages among P*'s ten; questions whose ten equal P's",
+  "program": "scripts/score_p_star.py"
+ },
+ "seen_before_this_supplement": {
+  "note": "known when the interval was set, all without generating an answer; the counts for P* come from Vol.4's reranked run (one call of 100 per question), not from the batches this arm uses",
+  "supporting_passages_among_the_ten": {
+   "P": {
+    "both": 4271,
+    "one": 2363,
+    "none": 771
+   },
+   "P_star_from_vol4_reranking": {
+    "both": 5706,
+    "one": 1628,
+    "none": 71
+   }
+  },
+  "P_contains_by_supporting_passages": {
+   "none": 0.065,
+   "one": 0.354,
+   "both": 0.718
+  },
+  "projection": "P's rates by supporting-passage count applied to P*'s counts: 0.632"
+ },
+ "expect": {
+  "contains_rate": {
+   "low": 0.58,
+   "high": 0.68
+  },
+  "why": "the projection is 0.632; the band allows the other eight passages to change answers either way",
+  "P_star_vs_P": "P* right and P wrong outnumbers the reverse, exact McNemar p < 0.001",
+  "P_star_vs_O": "O stays higher, exact McNemar p < 0.001",
+  "outside_the_band": "reported as it is, with the passage counts; no rerun"
+ },
+ "branches": {
+  "reranker_or_answer_model_does_not_start": "stop; the error is recorded",
+  "a_question_fails": "retried by answer_arms.py as on night 3; a question still failing counts as not containing the answer",
+  "not_done_by_the_stop_time": "the answers written so far stay; the run resumes on another night the owner gives; nothing is scored before all 7,405 are in"
+ },
+ "stop": "08:00 of the night the owner gives, unless the owner names another end",
+ "per_question_table": "after scoring, one line per question (query_id, contains, f1, refusal, the ten passage ids; no answer text) for the external evaluation, kept outside the repository",
+ "harness_sha256": {
+  "scripts/p_arm.py": "21fd0d64278ec9034844cf9d8361f942fee4e90b1297c201da0a3aeba2b2f4c9",
+  "scripts/answer_arms.py": "f121b86768fab704f8b7df35a844dec7921f952f2bd9be6dcf62bed552ab62fc",
+  "scripts/score_p_star.py": "b5f4d404d66e78aed2463ef4a9cd03129e12e8378692378b06e15a45c2f0b003",
+  "eval/hotpot_scoring.py": "7cd6979e31c526a6690f52ca1be2a38e586aee6537693daefbb116652fe8edf6",
+  "eval/rag_eval.py": "9ed964de1ad84fa956c403963139d742c7eed1abf89273ccd730b13b3dd11d19",
+  "results/question_set/hotpotqa_ids.jsonl": "f8389efd00ade1b788cc2d1b5d19a918de50a92d038a406537b6418b0cad3ae6",
+  "results/c2/request_params.json": "ed09e9b257ad7538bef5c183db169bf6c57aeac5b1b9575b6f55ceb1d41f4042"
+ },
+ "runner_outside_the_repository_sha256": {
+  "file": "pstar.sh",
+  "sha256": "07983adb4b26bbc4a71595e650338c6dc46137e48136e428b312a166ac3a6265"
+ },
+ "generator": "scripts/gen_addendum_8_p_star.py"
+}

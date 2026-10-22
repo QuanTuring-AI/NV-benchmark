@@ -87,6 +87,12 @@ row("positive control: shared peak (MiB)", "c4/c4_summary.json", "pc.shared_peak
 row("configuration 1: shared peak during the answer model's start (MiB)", "c4/c4_summary.json", "c1.shared_peak_mib")
 row("configuration 1: shared maximum after ready (MiB)", "c4/c4_summary.json", "c1.peak_after_answer_model_ready_mib")
 row("configuration 1: card used at ready (MiB)", "c4/c4_summary.json", "c1.card_used_at_answer_model_ready_mib")
+row("configuration 1 (vl embedder): card used about a minute after ready, at the configuration's completion (MiB)",
+    "c4/card_used.json", "configurations.c1.at_configuration_complete_mib")
+row("configuration 5 (n3 embedder): card used at ready (MiB)", "c4/card_used.json",
+    "configurations.ready5.at_answer_model_ready_mib")
+row("configuration 5 (n3 embedder): card used about a minute after ready, at the configuration's completion (MiB)",
+    "c4/card_used.json", "configurations.ready5.at_configuration_complete_mib")
 row("ready cell (n3 embedder): shared maximum after ready (MiB)", "c4/ready1_after_ready.json", "window_max_mib")
 row("ready cell: allowance (MiB)", "c4/ready1_after_ready.json", "allowance_mib", 0)
 section("C4 · configuration 5 (answer model context 32768, supplement 7): the Blueprint's own request, then all three on the card")
