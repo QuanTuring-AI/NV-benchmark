@@ -1,0 +1,128 @@
+{
+ "what": "supplement 2 to the night-1 pre-registration: control (b) as frozen could not measure what it was for; it is replaced by two exact-against-exact comparisons on the same 100,000-passage slice",
+ "draft": false,
+ "written_at": "2026-10-19T02:56:10+0800",
+ "supplements": [
+  {
+   "file": "prediction_v5_night1.json",
+   "sha256": "0906d10717e5d5ab1b7fb77a0f7e555ebd43934bc6069135a396cc85f30d55b5"
+  },
+  {
+   "file": "addendum_1_control_a_program.json",
+   "sha256": "dcdf3921b78aab252eb691f89e0958c1c8110d54636fee60f9871f9f23a484dc"
+  }
+ ],
+ "authorised_by": "the second supplement of 2026-10-18 to the Vol.5 design ticket",
+ "what_happened": "control (b) compared the top 100 of two approximate (bbq_hnsw) indexes and set a line of 0.99 for their mean overlap. It ran on 2026-10-18 and gave 0.8946; the night stopped there as frozen. Each approximate index alone keeps only about nine in ten of its own exact top 100, and two such indexes built in a different order do not lose the same passages, so the line could not be reached even with identical vectors. The design was wrong, not the loader.",
+ "seen_before_this_supplement": {
+  "note": "this supplement is written after the diagnosis; these figures were known when its rules were set",
+  "file": "results/night1/control_b_diagnosis.json",
+  "program": "scripts/control_b_diagnosis.py",
+  "overlaps_on_100_questions": {
+   "bulk_exact vs numpy_exact": {
+    "at_10": {
+     "mean": 1.0,
+     "lowest": 1.0,
+     "under_0.9": 0
+    },
+    "at_100": {
+     "mean": 1.0,
+     "lowest": 1.0,
+     "under_0.9": 0
+    }
+   },
+   "ingestor_exact vs numpy_exact": {
+    "at_10": {
+     "mean": 0.972,
+     "lowest": 0.9,
+     "under_0.9": 0
+    },
+    "at_100": {
+     "mean": 0.9815,
+     "lowest": 0.95,
+     "under_0.9": 0
+    }
+   },
+   "ingestor_exact vs bulk_exact": {
+    "at_10": {
+     "mean": 0.972,
+     "lowest": 0.9,
+     "under_0.9": 0
+    },
+    "at_100": {
+     "mean": 0.9815,
+     "lowest": 0.95,
+     "under_0.9": 0
+    }
+   },
+   "bulk_ann vs bulk_exact": {
+    "at_10": {
+     "mean": 0.939,
+     "lowest": 0.3,
+     "under_0.9": 13
+    },
+    "at_100": {
+     "mean": 0.9139,
+     "lowest": 0.66,
+     "under_0.9": 27
+    }
+   },
+   "ingestor_ann vs ingestor_exact": {
+    "at_10": {
+     "mean": 0.926,
+     "lowest": 0.3,
+     "under_0.9": 15
+    },
+    "at_100": {
+     "mean": 0.8861,
+     "lowest": 0.55,
+     "under_0.9": 38
+    }
+   },
+   "ingestor_ann vs bulk_ann": {
+    "at_10": {
+     "mean": 0.896,
+     "lowest": 0.2,
+     "under_0.9": 20
+    },
+    "at_100": {
+     "mean": 0.8946,
+     "lowest": 0.61,
+     "under_0.9": 33
+    }
+   }
+  },
+  "ingestor_text": {
+   "passages_with_non_ascii": 26503,
+   "split_into_two_or_more": 30,
+   "extra_documents": 30,
+   "only_the_end_missing": 99721,
+   "end_missing_one_character": 98297,
+   "changed_inside": 249,
+   "changed_inside_with_non_ascii": 249,
+   "end_missing_a_word": 1424
+  }
+ },
+ "b1": {
+  "what": "Elasticsearch's exact search (script_score cosine) on the index written by es_bulk_load.py with the mapping read from the ingestor's index, against numpy's exact search over the same Vol.4 vectors",
+  "questions": "the 200 questions of the validity gate (the first 200 ids of the HotpotQA id table, sorted); the first 100 of them are the questions already seen",
+  "rule": "for every one of the 200 questions the two top-100 sets are equal once equal-score swaps at the 100th place are set aside (a score within 5e-5 of that side's 100th score); every swap is listed; pass line 1.0 (all 200). Not passed: no figure of the store is reported (the ticket's second stop)",
+  "program": "scripts/exact_equal_check.py",
+  "joins": "the validity gate of C1 (the frozen rule asked for the same thing in words; this makes it a program)"
+ },
+ "b2": {
+  "what": "Elasticsearch's exact search on the index written by the Blueprint's ingestor against the same search on the index written by es_bulk_load.py",
+  "questions": "the same 200",
+  "rule": "none; reported as it is (overlap at 10 and at 100: mean, lowest, questions under 0.9), with the classes of stored text of the diagnosis",
+  "why_no_line": "it measures what the Blueprint's ingestion does to a passage's text (and so to its vector), not this volume's loader"
+ },
+ "unchanged": "C1 as frozen (load, memory, disk, overlap against Vol.4's exact search, quality, latency, negative control, branches, expectations)",
+ "not_in_this_supplement": "the arms N and O of C2 (answers without passages, and with the two supporting passages) are pre-registered in supplement 3, frozen before the answer model's container",
+ "harness_sha256": {
+  "scripts/exact_equal_check.py": "49e011c3bdcb2ed3f13bbd87491fd36ec02f028313d48b0c1dc70adb0d9959f1",
+  "scripts/control_b_diagnosis.py": "83f940a3a9d48af9036c9aae96040fc96a5a0c308f9c4b13fd12a6c89cbe2262",
+  "scripts/es_ann_vs_exact.py": "c27d0e76e0ae489db1dce00f6a271aa0cff97f9adf8b9a2afc9b07debef42e0f",
+  "scripts/slice_exact.py": "4a7235cf3c9ebe756dbb6ba928d844d7eb4e628e725195b19bd88a52b8e7e926"
+ },
+ "generator": "scripts/gen_addendum_2_night1.py"
+}

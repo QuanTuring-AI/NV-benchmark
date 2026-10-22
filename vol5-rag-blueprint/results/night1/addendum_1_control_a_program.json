@@ -1,0 +1,16 @@
+{
+ "what": "supplement 1 to the night-1 pre-registration: the program of control (a) changed before the control produced any result",
+ "written_at": "2026-10-18T04:22:43+0800",
+ "supplements": {
+  "file": "prediction_v5_night1.json",
+  "sha256": "0906d10717e5d5ab1b7fb77a0f7e555ebd43934bc6069135a396cc85f30d55b5"
+ },
+ "what_happened": "the first run of step a (04:21 +0800) called get_embedding_model with the address taken from the environment as it is ('p137_embed:8000/v1'). The Blueprint's sanitize_nim_url then made it 'http://p137_embed:8000/v1/v1' and the embedding service answered 404; no vector was made, so the control has no result yet.",
+ "why_it_is_the_program": "the rag-server passes config.embeddings.server_url (rag_server/main.py:179-182); EmbeddingConfig.normalize_url adds the scheme first (utils/configuration.py, EmbeddingConfig), after which sanitize_nim_url does not append /v1. The program now makes exactly that call.",
+ "program": {
+  "file": "scripts/control_query_vectors.py",
+  "sha256_frozen": "b56ec188833b9fe0cf6d75fdcc9814a7e2706f4afc66d84670acccaa9a43a614",
+  "sha256_now": "1c97f716c16a15c8806c631656adb1f0404e96453f4ae51abce7da55ab627390"
+ },
+ "rule_unchanged": "cosine at least 0.9999 for each of the first 20 questions; otherwise stop"
+}
