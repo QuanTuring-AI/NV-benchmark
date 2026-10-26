@@ -101,6 +101,48 @@ The card (32,607 MiB) holds 21,909 MiB when the answer model of configuration 5 
 
 Each service alone on the card, the same 200 questions: reranking 153.8, the answer model's first answer text 1,226, whole answer 1,278.
 
+## Run it: the query path on one card
+
+Five commands, in this order, from a folder that holds a clone of [NVIDIA-AI-Blueprints/rag](https://github.com/NVIDIA-AI-Blueprints/rag) at v2.6.2 as `rag/` and this repository as `NV-benchmark/`. `$NGC_ENV_FILE` is a file holding your NGC key (`NGC_API_KEY=...`). The containers are named `embed`, `rerank` and `nano`; [`compose_es/blueprint_query_path.env`](compose_es/blueprint_query_path.env) points the rag-server at those names. It differs from [`compose_es/c4_n3.env`](compose_es/c4_n3.env), the file the measured runs used, only in the container names.
+
+<!-- run-it commands: begin -->
+```bash
+# 1 Elasticsearch, as the Blueprint ships it (the second file only renames the container and the volume); creates the network nvidia-rag
+docker compose -p p137es -f rag/deploy/compose/vectordb.yaml -f NV-benchmark/vol5-rag-blueprint/compose_es/override_vectordb.yaml up -d
+
+# 2 the embedding NIM (deviation 1: nemotron-3-embed-1b, fp16)
+docker run -d --name embed --gpus device=0 --network nvidia-rag --shm-size=16GB --env-file "$NGC_ENV_FILE" \
+  -e NIM_ENGINE_MODEL_DOWNLOAD_PROVIDER=ngc -e NIM_ENGINE_PRECISION=fp16 \
+  -v ~/nim/weights/nemotron-3-embed-1b-nim-2.2.2:/model -v ~/nim/cache/nemotron-3-embed-1b-2.2.2:/opt/cache \
+  nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2
+
+# 3 the reranking NIM, as shipped
+docker run -d --name rerank --gpus device=0 --network nvidia-rag --shm-size=16GB --env-file "$NGC_ENV_FILE" \
+  -v ~/nim/cache/llama-nemotron-rerank-1b-v2-1.10.0:/opt/nim/.cache \
+  nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2:1.10.0
+
+# 4 the answer NIM (deviation 2), last, with the settings that fit next to the other two and accept the Blueprint's requests
+#   (NIM_KVCACHE_PERCENT is the share of the card the NIM gives vLLM as gpu_memory_utilization)
+docker run -d --name nano --gpus device=0 --network nvidia-rag --shm-size=16GB --env-file "$NGC_ENV_FILE" \
+  --user 0 --ulimit nofile=65536:65536 \
+  -e NIM_ENABLE_CHUNKED_PREFILL=1 -e NCCL_NVLS_ENABLE=0 -e VLLM_USE_FLASHINFER_MOE_FP8=0 \
+  -e NIM_MODEL_PROFILE=1fba9ecfcfb4cde28d4ce3fd55c40bca89a5a613e25e98f057befe6a7e99eada \
+  -e NIM_MAX_MODEL_LEN=32768 -e NIM_KVCACHE_PERCENT=0.65 \
+  -e "NIM_PASSTHROUGH_ARGS=--max-num-seqs 26 --reasoning-parser nemotron_v3" \
+  -v ~/.cache/nim:/opt/nim/.cache \
+  nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12
+
+# 5 the Blueprint's rag-server, the two model names changed; PROMPT_CONFIG_FILE holds {} (no prompt overridden)
+export PROMPT_CONFIG_FILE=$PWD/NV-benchmark/vol5-rag-blueprint/compose_es/prompt_overrides_none.yaml
+docker compose -p p137rag --env-file NV-benchmark/vol5-rag-blueprint/compose_es/blueprint_query_path.env --env-file "$NGC_ENV_FILE" \
+  -f rag/deploy/compose/docker-compose-rag-server.yaml \
+  -f NV-benchmark/vol5-rag-blueprint/compose_es/override_rag_server.yaml \
+  up -d rag-server
+```
+<!-- run-it commands: end -->
+
+The index itself is not one of the five: Vol.5 loaded the vectors of Vol.4 directly (deviation 3, [`scripts/es_bulk_load.py`](scripts/es_bulk_load.py)). On Docker Desktop with Git Bash, set `MSYS_NO_PATHCONV=1` first.
+
 ## What a reader meets with the defaults
 
 | # | Fact | Where |
@@ -112,6 +154,8 @@ Each service alone on the card, the same 200 questions: reranking 153.8, the ans
 | 5 | Without the reasoning parser the answer model emits only the closing reasoning tag, the Blueprint's filter does not remove the reasoning, and the reader sees it | C2, cell R |
 | 6 | `max_tokens` 16256 needs a context of more than 16,256 plus the prompt: at 16,384 every prompt above 128 tokens is refused | [`results/c4/ready1_400_diagnosis.json`](results/c4/ready1_400_diagnosis.json), [`results/c4/ready5_alone_probe.json`](results/c4/ready5_alone_probe.json) |
 | 7 | The three query services share one 32 GB card only below the default memory ratio; 0.65 is the value that worked here, not a documented one | C4 |
+| 8 | Hybrid search with the default ranker (`APP_VECTORSTORE_SEARCHTYPE=hybrid`, `APP_VECTORSTORE_RANKER_TYPE` left at `rrf`) is refused by the Elasticsearch the Blueprint ships: basic licence, HTTP 403 "current license is non-compliant for [Reciprocal Rank Fusion (RRF)]", in both query forms | [`results/hybrid_limits/probe.json`](results/hybrid_limits/probe.json) |
+| 9 | Hybrid search with `APP_VECTORSTORE_RANKER_TYPE=weighted` fixes `num_candidates` at 100 and sets `k` to `VECTOR_DB_TOPK` (`src/nvidia_rag/utils/vdb/elasticsearch/es_queries.py:239-275`): above 100, Elasticsearch refuses the search (HTTP 400, "[num_candidates] cannot be less than [k]") | same file |
 
 ## What this does not show
 
@@ -120,6 +164,7 @@ Each service alone on the card, the same 200 questions: reranking 153.8, the ans
 - One card, one host (Windows 11, Docker Desktop on WSL2, driver 617.42). The memory counters are Windows's; the spill during the answer model's start may differ on Linux.
 - Concurrency 1 and 4 only; no claim about how many people one card can serve.
 - HotpotQA dev and MIRACL dev are evaluation sets. A system compared with these numbers must not be tuned or trained on them.
+- No Blueprint setting was tuned. A tuning round was pre-registered and frozen on 2026-10-22 and was not run; the pre-registration is not published.
 
 ## Claim → evidence
 
@@ -291,6 +336,21 @@ Every number of the forum post and its first reply that the table above does not
 | The ingestor's time per 100,000 passages, minutes ('1 h 51 min') | 111 | `results/forum_counts.json` | `ingestor_log.seconds_per_100000_passages / 60` | rounds |
 | The same rate over the whole HotpotQA corpus, hours ('an estimated 97 hours') | 97 | `results/forum_counts.json` | `ingestor_log.estimate_hours_for_the_whole_hotpotqa_corpus` | rounds |
 | The fix the ingestor's defect undoes: NeMo-Retriever#497, merged in 2025 | 2025 | `results/forum_counts.json` | `"mergedAt": "2025-02-28` | text |
+
+**Hybrid search on the Elasticsearch the Blueprint ships (results/hybrid_limits/probe.json)**
+
+| In the post | Number | File | Key | Check |
+|---|---|---|---|---|
+| The licence of that Elasticsearch | basic | `results/hybrid_limits/probe.json` | `"type": "basic"` | text |
+| Default hybrid ranker (rrf), the form the client sends: HTTP status | 403 | `results/hybrid_limits/probe.json` | `asked[0].status` | equals |
+| The same, the retriever form: HTTP status | 403 | `results/hybrid_limits/probe.json` | `asked[1].status` | equals |
+| Its error text | 403 | `results/hybrid_limits/probe.json` | `current license is non-compliant for [Reciprocal Rank Fusion (RRF)]` | text |
+| Weighted hybrid at VECTOR_DB_TOPK 100: HTTP status | 200 | `results/hybrid_limits/probe.json` | `asked[2].status` | equals |
+| Weighted hybrid at VECTOR_DB_TOPK 200: HTTP status | 400 | `results/hybrid_limits/probe.json` | `asked[3].status` | equals |
+| Weighted hybrid at VECTOR_DB_TOPK 400: HTTP status | 400 | `results/hybrid_limits/probe.json` | `asked[4].status` | equals |
+| Its error text | 400 | `results/hybrid_limits/probe.json` | `[num_candidates] cannot be less than [k]` | text |
+| Control: kNN alone on the same index: HTTP status | 200 | `results/hybrid_limits/probe.json` | `asked[5].status` | equals |
+| Control: match alone on the same index: HTTP status | 200 | `results/hybrid_limits/probe.json` | `asked[6].status` | equals |
 
 **When and on which driver**
 
