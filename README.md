@@ -97,6 +97,7 @@ A tag opens the whole repository as it was at one commit; all four point to the 
 - NVIDIA Developer Forum · [Vol.1 thread (2026-10)](https://forums.developer.nvidia.com/t/why-nim-llama-3-1-8b-on-one-rtx-5090-from-1-to-128-concurrent-requests/384818)
 - NVIDIA Developer Forum · [Vol.2 thread (2026-10)](https://forums.developer.nvidia.com/t/nemotron-3-nano-on-one-rtx-5090-with-nim-300-tok-s-flat-to-120k-context-128-concurrent-requests/384859)
 - NVIDIA Developer Forum · [Vol.3 thread (2026-10)](https://forums.developer.nvidia.com/t/nemo-guardrails-on-one-rtx-5090-the-models-behind-the-rail-what-each-one-flags-and-what-a-verdict-costs/385509)
+- NVIDIA Developer Forum · [Vol.4 thread (2026-10)](https://forums.developer.nvidia.com/t/nemotron-retrieval-on-one-rtx-5090-4-9m-passage-miracl-zh-7-0m-ja-and-where-embedding-and-reranking-nims-top-out/387528)
 - NVIDIA Developer Forum · [March 2026 thread (superseded; see its reply #2)](https://forums.developer.nvidia.com/t/365275)
 <!-- website link: to be added on publication -->
 

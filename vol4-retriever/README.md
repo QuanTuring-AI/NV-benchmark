@@ -1,5 +1,7 @@
 # Vol.4 · Nemotron retrieval on one RTX 5090 — embedding and reranking NIMs on whole corpora
 
+Forum post: <https://forums.developer.nvidia.com/t/nemotron-retrieval-on-one-rtx-5090-4-9m-passage-miracl-zh-7-0m-ja-and-where-embedding-and-reranking-nims-top-out/387528>
+
 > **Reproduce:** `git checkout vol4`. Every number of the article has a row in the claim → evidence tables below; `python tools/check_claims.py vol4-retriever/README.md` checks them all.
 
 ## What is here

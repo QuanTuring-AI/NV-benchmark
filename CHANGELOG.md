@@ -2,6 +2,13 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-10-31 · Vol.4 forum post published
+
+- **Vol.4 forum post:** the article was posted on the NVIDIA Developer Forum on 2026-10-31. The link is on the front page, at the top of [`vol4-retriever/README.md`](vol4-retriever/README.md), in `SERIES.md` and in `releases/vol4.md`. → <https://forums.developer.nvidia.com/t/nemotron-retrieval-on-one-rtx-5090-4-9m-passage-miracl-zh-7-0m-ja-and-where-embedding-and-reranking-nims-top-out/387528>
+- **Where the figures are in the thread:** the cover illustration and the whole-corpus figure are in the post; the concurrency figure is in reply #1, because a new forum account may attach two images per post.
+- **The forum version is not signed:** the forum's guidelines ask that posts not be signed, so the post on the forum ends without the last line of the text whose SHA-256 the tag message of `vol4` gives. [`CHRONICLE.md`](CHRONICLE.md) lists every difference and gives the SHA-256 of the text on the forum.
+- **The tag `vol4` does not move:** it stays at the commit of the publication, the repository as the article describes it. This commit adds the address and the note on the forum text only.
+
 ## 2026-10-31 · Vol.4 published: Nemotron retrieval on one RTX 5090
 
 - **Vol.4 is published.** The Nemotron embedding NIMs and the Llama Nemotron reranking NIMs on one RTX 5090, one model on the card at a time: quality on BEIR SciFact and on the reduced and the whole corpora of MIRACL zh and ja and of BEIR HotpotQA (exact search over every passage), the top 100 reranked by two rerankers, the vectors stored at three precisions, and the rate of each NIM from 1 to 64 requests in flight over two nights, with the load tool's own ceiling. → [`vol4-retriever/README.md`](vol4-retriever/README.md)

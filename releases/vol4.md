@@ -1,3 +1,5 @@
+Forum post: <https://forums.developer.nvidia.com/t/nemotron-retrieval-on-one-rtx-5090-4-9m-passage-miracl-zh-7-0m-ja-and-where-embedding-and-reranking-nims-top-out/387528>
+
 ![Nemotron retrieval on one RTX 5090](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol4-retriever/figures/nv_vol4_cover_1200x630.png)
 
 ![nDCG@10 and Recall@100 of nemotron-3-embed-1b on the reduced and the whole corpora of MIRACL zh and ja and BEIR HotpotQA, and after two rerankers](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol4-retriever/figures/whole_corpus_quality_dark_forum.png)
