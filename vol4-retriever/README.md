@@ -1,6 +1,8 @@
-# Vol.4 · NeMo Retriever on one RTX 5090 — tools and the first measurements
+# Vol.4 · Nemotron retrieval on one RTX 5090 — embedding and reranking NIMs on whole corpora
 
-**This volume is in progress.** It holds the tools the volume measures with, the check that shows the metric tool agrees with a published score, the sources that were read first, and the results of the first GPU session of 2026-10-04: [`results/first_batch/`](results/first_batch/README.md) (four embedding NIMs and two reranking NIMs on SciFact and on the reduced MIRACL task in zh and ja, with the open weights of one model as the reference arm). HotpotQA and the full MIRACL corpus have not been run. Nothing here has been published as an article.
+Forum post: <https://forums.developer.nvidia.com/t/nemotron-retrieval-on-one-rtx-5090-4-9m-passage-miracl-zh-7-0m-ja-and-where-embedding-and-reranking-nims-top-out/387528>
+
+> **Reproduce:** `git checkout vol4`. Every number of the article has a row in the claim → evidence tables below; `python tools/check_claims.py vol4-retriever/README.md` checks them all.
 
 ## What is here
 
@@ -72,7 +74,7 @@ On the other data sets of this volume (SciFact, HotpotQA, the full MIRACL corpus
 
 ## Figures, and where each number comes from
 
-*Working data; nothing here has been published as an article.* Each bar and each point is one cell's own value. The figures and the tables below set values side by side; they state nothing that relates one model to another.
+Each bar and each point is one cell's own value. The figures and the tables below set values side by side; they state nothing that relates one model to another.
 
 One encoder, three corpora: the reduced corpus where one exists, every passage of the corpus, and the same results after each of two rerankers.
 

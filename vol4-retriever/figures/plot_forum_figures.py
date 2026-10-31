@@ -106,18 +106,19 @@ def draw_sweep(data, shift):
     from matplotlib.lines import Line2D
     from matplotlib.ticker import FixedLocator, FuncFormatter, MaxNLocator, NullLocator
     w, h = SIZES["concurrency_sweep"]
-    fig = plt.figure(figsize=(w / 72.0, h / 72.0), dpi=72, facecolor=T["bg"]); ticks = set()
+    fig = plt.figure(figsize=(w / 72.0, h / 72.0), dpi=72, facecolor=T["bg"]); ticks = set(); overlaps = 0
     bottoms = [0.708, 0.418, 0.128]; height = 0.235
     for i, (shape, title, unit, _, _) in enumerate(C.PANELS):
         P = data["panels"][i]
         ax = fig.add_axes([0.195 + shift[0], bottoms[i] + shift[1], 0.775 + shift[2], height + shift[3]], facecolor=T["bg"])
-        ys, xs, handles = [], [], []
+        ys, xs, handles, ends, marks = [], [], [], [], []
         for L in P["lines"]:
             col = C.COLOURS[L["arm"]][THEME]; x = [e["items_per_s"] for e in L["first"]]; y = [e["p99_ms"] for e in L["first"]]
             ax.plot(x, y, color=col, linewidth=2.6, marker="o", markersize=10, markerfacecolor=col, markeredgecolor=col, zorder=3)
             ax.plot([e["items_per_s"] for e in L["second"]], [e["p99_ms"] for e in L["second"]], linestyle="none", marker="o", markersize=17, markerfacecolor="none", markeredgecolor=col, markeredgewidth=2.2, zorder=4)
-            for e, off, ha, va in ((L["first"][0], (-8, -8), "right", "top"), (L["first"][-1], (9, 6), "left", "bottom")):
-                ax.annotate(str(e["level"]), (e["items_per_s"], e["p99_ms"]), textcoords="offset points", xytext=off, fontsize=FS["small"], color=T["muted"], ha=ha, va=va)
+            ends += [(L["first"][0]["items_per_s"], L["first"][0]["p99_ms"], str(L["first"][0]["level"]), (-8, -8, "right", "top"), col),
+                     (L["first"][-1]["items_per_s"], L["first"][-1]["p99_ms"], str(L["first"][-1]["level"]), (9, 6, "left", "bottom"), col)]
+            marks += [(e["items_per_s"], e["p99_ms"], 6) for e in L["first"]] + [(e["items_per_s"], e["p99_ms"], 9) for e in L["second"]]
             xs += x + [e["items_per_s"] for e in L["second"]]; ys += y + [e["p99_ms"] for e in L["second"]]
             handles.append(Line2D([], [], color=col, linewidth=2.6, marker="o", markersize=10, label=f"{L['model']} {L['version']}"))
         if xs:
@@ -127,6 +128,7 @@ def draw_sweep(data, shift):
             ax.xaxis.set_major_locator(MaxNLocator(nbins=6, integer=True, steps=[1, 2, 5, 10]))
         fmt = FuncFormatter(lambda v, _: f"{v:,.0f}" if v >= 1 else f"{v:g}")
         ax.xaxis.set_major_formatter(fmt); ax.yaxis.set_major_formatter(fmt)
+        fig.canvas.draw(); overlaps += C.place_end_labels(fig, ax, ends, T["muted"], FS["small"], marks)
         ax.tick_params(labelsize=FS["small"], length=7, width=1.5); ax.grid(True, which="major", color=T["grid"], linewidth=1.5, zorder=0)
         for sp in ax.spines.values():
             sp.set_linewidth(1.5)
@@ -149,6 +151,7 @@ def draw_sweep(data, shift):
              ha="center", va="bottom", fontsize=FS["small"], style="italic", color=T["muted"], linespacing=1.4)
     fig.canvas.draw()
     save(fig, plt, "concurrency_sweep", T)
+    draw_sweep.overlaps = overlaps
     return sorted(ticks), version
 
 
@@ -209,6 +212,8 @@ def checks(q, c, meta):
     a1 = F.numbers_allowed(q, "whole_corpus_quality") | set(meta["whole_corpus_quality"]["tick_labels"])
     a2 = C.numbers_allowed(c) | set(meta["concurrency_sweep"]["tick_labels"])
     r1, x1 = figure_checks("whole_corpus_quality", a1, "Recall@100"); r2, x2 = figure_checks("concurrency_sweep", a2, C.CONTROL)
+    if meta["concurrency_sweep"].get("end_labels_overlapping", 0):
+        x2.append(f"concurrency_sweep: {meta['concurrency_sweep']['end_labels_overlapping']} level labels overlap another label or a marker")
     return n1 + n2, problems + x1 + x2, {"whole_corpus_quality": r1, "concurrency_sweep": r2}
 
 
@@ -222,6 +227,8 @@ def draw_all(q, c):
             if not re.search(pattern, open(out_base(name) + ".svg", encoding="utf-8").read(), re.I):
                 break
         meta[name] = {"canvas": list(SIZES[name]), "axes_moved_by": list(shift), "positions_tried": tried, "tick_labels": ticks, "matplotlib_version": version}
+        if name == "concurrency_sweep":
+            meta[name]["end_labels_overlapping"] = draw_sweep.overlaps
     return meta
 
 

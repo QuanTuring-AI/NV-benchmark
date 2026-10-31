@@ -1,6 +1,6 @@
 # Vol.4 · First GPU session: the open weights against a published value, the NIM of the same model, three more embedding NIMs, two rerankers
 
-*Run on 2026-10-04, 12:12 to 14:35 (+0800), on one RTX 5090, one model on the card at a time. Working data of Vol.4; nothing here has been published as an article. Two preparation cells for Vol.5 ran afterwards in the same session and are in [`../../../vol5-rag-blueprint/`](../../../vol5-rag-blueprint/README.md).*
+*Run on 2026-10-04, 12:12 to 14:35 (+0800), on one RTX 5090, one model on the card at a time. Working data of Vol.4; nothing here has been published as an article. Two preparation cells for Vol.5 ran afterwards in the same session; they belong to Vol.5 and are published with it (section `P4_vol5_preparation` of the pre-registration registers them).*
 
 **What is in this directory, and what is not.** The pre-registration, the run log, and for every encoder its own directory with the scores (the two metrics and their per-query values), the timed passes and the records of each step. Vectors, run files and container logs are outside the repository; a run file lists passage ids of a data set. No text of a data set is here.
 

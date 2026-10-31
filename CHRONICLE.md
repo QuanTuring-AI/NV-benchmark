@@ -35,8 +35,13 @@ This file was first added as `HISTORY.md`, and the fourth tag was first called `
 | `vol1` | Vol.1, *Why NIM?* — the repository as the article describes it |
 | `vol2` | Vol.2, *Nemotron 3 Nano on one RTX 5090* — the repository as the article describes it |
 | `vol3` | Vol.3, *NeMo Guardrails on one RTX 5090: the models behind the rail* — the repository as the article describes it |
+| `vol4` | Vol.4, *Nemotron retrieval on one RTX 5090* — the repository as the article describes it |
 | `chronicle` | The commit that gives this file its name |
 
 All four were created on 2026-10-01 and moved once the same day, for the rename described above, to the commit that renames this file to `CHRONICLE.md`. From that commit on they do not move, with one exception: **`vol3` moved once**, on 2026-10-10, the day the judge study was published, to the commit that holds it. Until then it pointed to the same commit as the other three (`281e014f26f656b24d66b3f68d1406611e034e4b`), which holds the Vol.3 baseline data without the study.
+
+`vol4` was created on 2026-10-31, the day Vol.4 was published, at the commit that merges it, and does not move.
+
+The message of `vol4` gives the SHA-256 of the article's source text as prepared for the forum, before the images were attached. The text on the forum ([thread 387528](https://forums.developer.nvidia.com/t/nemotron-retrieval-on-one-rtx-5090-4-9m-passage-miracl-zh-7-0m-ja-and-where-embedding-and-reranking-nims-top-out/387528)) differs from it in these ways and no others: the first line, the title, is the topic's title; the image placeholders are the uploaded images; the forum's editor wrote list items with `*` and table rules with `----`; the first reply begins with an empty line, and neither text ends with a line break; the link to the Vol.4 README reads "Vol.4 README of NV-benchmark", without "(tag `vol4`)", and goes to the same address; and the last line, the company's signature, is not there, because the forum's guidelines ask that posts not be signed. The SHA-256 of the text the forum returns at `/raw/387528/1` and `/raw/387528/2`, read on 2026-10-31: post `6e722d2bf40eb9fe7c091ffeeacac00fe8561748e8330730921223cb9361ab8d`, first reply `e323b2da4b6b578cbc81f6d680bab26b810e90819a20c57ab2cc2d845e099671`. The three images in the thread have the same pixels as the figures in `vol4-retriever/figures/`; the forum stored two of them as smaller PNG files.
 
 To rerun a harness byte for byte at the paths it was written with, [`PATH_MAP.md`](PATH_MAP.md) gives the commit for each volume.
