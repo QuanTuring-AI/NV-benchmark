@@ -2,7 +2,7 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
-## 2026-10-26 · Vol.4 published: Nemotron retrieval on one RTX 5090
+## 2026-10-31 · Vol.4 published: Nemotron retrieval on one RTX 5090
 
 - **Vol.4 is published.** The Nemotron embedding NIMs and the Llama Nemotron reranking NIMs on one RTX 5090, one model on the card at a time: quality on BEIR SciFact and on the reduced and the whole corpora of MIRACL zh and ja and of BEIR HotpotQA (exact search over every passage), the top 100 reranked by two rerankers, the vectors stored at three precisions, and the rate of each NIM from 1 to 64 requests in flight over two nights, with the load tool's own ceiling. → [`vol4-retriever/README.md`](vol4-retriever/README.md)
 - **Figures:** the whole-corpus quality and the concurrency sweep, each in a light and a dark version and in a version laid out for the forum page, with their point tables.
