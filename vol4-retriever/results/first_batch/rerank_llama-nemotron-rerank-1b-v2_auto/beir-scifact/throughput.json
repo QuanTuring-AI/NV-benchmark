@@ -1,0 +1,54 @@
+{
+ "at": "2026-10-04T06:21:12+0000",
+ "dataset": "beir-scifact",
+ "split": "test",
+ "url": "http://p109_rerank1b:8000",
+ "model": "nvidia/llama-nemotron-rerank-1b-v2",
+ "truncate": "END",
+ "depth": 100,
+ "first_stage_run": {
+  "name": "run.trec",
+  "sha256": "5cd4f0fd8fa694ee0d7954054839df88ff237c64f694d3a7c6a7790ba7a33af9"
+ },
+ "queries_in_the_run": 300,
+ "connection": "one kept connection",
+ "rule": "one call per query; a query's passages are ordered by the logits of its own call",
+ "what": "timed passes over the first queries of the run file",
+ "sample_queries": 40,
+ "reps": 3,
+ "discarded": "one pass over the first 4 queries",
+ "passes": [
+  {
+   "start": "2026-10-04T06:21:14+0000",
+   "end": "2026-10-04T06:21:25+0000",
+   "seconds": 11.782,
+   "pairs": 4000,
+   "pairs_per_s": 339.5,
+   "queries_per_s": 3.39
+  },
+  {
+   "start": "2026-10-04T06:21:25+0000",
+   "end": "2026-10-04T06:21:37+0000",
+   "seconds": 11.745,
+   "pairs": 4000,
+   "pairs_per_s": 340.6,
+   "queries_per_s": 3.41
+  },
+  {
+   "start": "2026-10-04T06:21:37+0000",
+   "end": "2026-10-04T06:21:49+0000",
+   "seconds": 11.73,
+   "pairs": 4000,
+   "pairs_per_s": 341.0,
+   "queries_per_s": 3.41
+  }
+ ],
+ "pairs_per_s_median": 340.6,
+ "pairs_per_s_min": 339.5,
+ "pairs_per_s_max": 341.0,
+ "calls": 124,
+ "program": {
+  "file": "rerank_cell.py",
+  "sha256": "689b3e791cd198e6b2a6e7dbaecf04157081c1383ff1259168f0579ef6e29fc1"
+ }
+}

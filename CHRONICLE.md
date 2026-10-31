@@ -35,8 +35,11 @@ This file was first added as `HISTORY.md`, and the fourth tag was first called `
 | `vol1` | Vol.1, *Why NIM?* — the repository as the article describes it |
 | `vol2` | Vol.2, *Nemotron 3 Nano on one RTX 5090* — the repository as the article describes it |
 | `vol3` | Vol.3, *NeMo Guardrails on one RTX 5090: the models behind the rail* — the repository as the article describes it |
+| `vol4` | Vol.4, *Nemotron retrieval on one RTX 5090* — the repository as the article describes it |
 | `chronicle` | The commit that gives this file its name |
 
 All four were created on 2026-10-01 and moved once the same day, for the rename described above, to the commit that renames this file to `CHRONICLE.md`. From that commit on they do not move, with one exception: **`vol3` moved once**, on 2026-10-10, the day the judge study was published, to the commit that holds it. Until then it pointed to the same commit as the other three (`281e014f26f656b24d66b3f68d1406611e034e4b`), which holds the Vol.3 baseline data without the study.
+
+`vol4` was created on 2026-10-31, the day Vol.4 was published, at the commit that merges it, and does not move.
 
 To rerun a harness byte for byte at the paths it was written with, [`PATH_MAP.md`](PATH_MAP.md) gives the commit for each volume.

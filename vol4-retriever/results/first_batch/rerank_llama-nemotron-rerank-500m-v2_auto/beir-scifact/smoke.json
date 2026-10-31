@@ -1,0 +1,27 @@
+{
+ "at": "2026-10-04T06:29:42+0000",
+ "dataset": "beir-scifact",
+ "split": "test",
+ "url": "http://p109_rerank500m:8000",
+ "model": "nvidia/llama-nemotron-rerank-500m-v2",
+ "truncate": "END",
+ "depth": 100,
+ "first_stage_run": {
+  "name": "run.trec",
+  "sha256": "5cd4f0fd8fa694ee0d7954054839df88ff237c64f694d3a7c6a7790ba7a33af9"
+ },
+ "queries_in_the_run": 300,
+ "connection": "one kept connection",
+ "rule": "one call per query; a query's passages are ordered by the logits of its own call",
+ "calls": 3,
+ "passages_per_call": [
+  100,
+  100,
+  100
+ ],
+ "pass": true,
+ "program": {
+  "file": "rerank_cell.py",
+  "sha256": "689b3e791cd198e6b2a6e7dbaecf04157081c1383ff1259168f0579ef6e29fc1"
+ }
+}

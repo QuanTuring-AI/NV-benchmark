@@ -1,0 +1,120 @@
+{
+ "what": "timed passes over a fixed sample of the corpus",
+ "at": "2026-10-06T15:38:39+0800",
+ "dataset": "miracl-hn-ja",
+ "encoder": {
+  "backend": "st",
+  "model_path_basename": "nemotron-3-embed-1b-bf16-open-weights",
+  "model_safetensors_sha256": "f959c3b04e66b42de280bfb97c140cb7e0bfe25e3ecb0b4464c68a8436b2d04f",
+  "versions": {
+   "torch": "2.11.0+cu130",
+   "sentence-transformers": "5.4.1",
+   "transformers": "5.5.0",
+   "numpy": "2.4.6"
+  },
+  "device": "cuda:0",
+  "parameter_dtype": "torch.bfloat16",
+  "max_seq_length": 4096,
+  "tokenizer_model_max_length": 4096,
+  "prompts": {
+   "query": "query: ",
+   "document": "passage: "
+  },
+  "similarity_fn_name": "cosine",
+  "modules": [
+   "Transformer",
+   "Pooling",
+   "Normalize"
+  ],
+  "processor_kwargs": {
+   "model_max_length": 4096
+  },
+  "gpu": "NVIDIA GeForce RTX 5090"
+ },
+ "sample": {
+  "passages": 4096,
+  "selection": "the first passages of the corpus in file order",
+  "characters": 827236
+ },
+ "batch": 16,
+ "reps": 3,
+ "discarded": "one pass over the first 4 batches",
+ "passes": [
+  {
+   "start": "2026-10-06T15:37:58+0800",
+   "end": "2026-10-06T15:38:12+0800",
+   "seconds": 14.142,
+   "passages_per_s": 289.6,
+   "tokens_reported": null,
+   "tokens_per_s": null,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9963006973266602,
+    "norm_max": 1.0040611028671265,
+    "size_as_expected": true
+   }
+  },
+  {
+   "start": "2026-10-06T15:38:12+0800",
+   "end": "2026-10-06T15:38:26+0800",
+   "seconds": 14.093,
+   "passages_per_s": 290.6,
+   "tokens_reported": null,
+   "tokens_per_s": null,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9963006973266602,
+    "norm_max": 1.0040611028671265,
+    "size_as_expected": true
+   }
+  },
+  {
+   "start": "2026-10-06T15:38:26+0800",
+   "end": "2026-10-06T15:38:39+0800",
+   "seconds": 13.12,
+   "passages_per_s": 312.2,
+   "tokens_reported": null,
+   "tokens_per_s": null,
+   "vectors": {
+    "count": 4096,
+    "size": 2048,
+    "all_finite": true,
+    "norm_min": 0.9963006973266602,
+    "norm_max": 1.0040611028671265,
+    "size_as_expected": true
+   }
+  }
+ ],
+ "passages_per_s_median": 290.6,
+ "passages_per_s_min": 289.6,
+ "passages_per_s_max": 312.2,
+ "program": {
+  "file": "embed_cell.py",
+  "sha256": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "argv": [
+   "throughput",
+   "--backend",
+   "st",
+   "--dataset",
+   "miracl-hn-ja",
+   "--datasets",
+   "datasets",
+   "--model-path",
+   "nemotron-3-embed-1b-bf16-open-weights",
+   "--device",
+   "cuda",
+   "--batch",
+   "16",
+   "--n",
+   "4096",
+   "--reps",
+   "3",
+   "--out",
+   "throughput.json"
+  ]
+ }
+}

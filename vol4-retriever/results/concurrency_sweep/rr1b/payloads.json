@@ -1,0 +1,41 @@
+{
+ "model": "nvidia/llama-nemotron-rerank-1b-v2",
+ "truncate": "END",
+ "format": "AIPerf inputs-json, one body per session",
+ "files": {
+  "passages_100": {
+   "file": "rank_100.inputs.json",
+   "requests": 393,
+   "items_per_request": 100,
+   "endpoint": "/v1/ranking",
+   "data_set": "miracl-zh, every dev query with the first passages of its first-stage ranking",
+   "first_stage_run_sha256": "e86ba57abcd84b79660186b1382b979732485a2508001108bad635b21f025f16",
+   "characters_per_request": {
+    "min": 7832,
+    "median": 15426,
+    "max": 29498,
+    "mean": 15822.5
+   },
+   "sha256": "aa1b0bcc84ad937cfe2be6ed2e3a3db76f674acb8a7ccaf1cc3dcc7ec2577b1c"
+  },
+  "passages_10": {
+   "file": "rank_10.inputs.json",
+   "requests": 393,
+   "items_per_request": 10,
+   "endpoint": "/v1/ranking",
+   "data_set": "miracl-zh, every dev query with the first passages of its first-stage ranking",
+   "first_stage_run_sha256": "e86ba57abcd84b79660186b1382b979732485a2508001108bad635b21f025f16",
+   "characters_per_request": {
+    "min": 600,
+    "median": 1571,
+    "max": 5844,
+    "mean": 1669.2
+   },
+   "sha256": "2eaa0d3bdcc52ed5a332b7f34783b802a06985a8cfd0b29c6955539490b45976"
+  }
+ },
+ "program": {
+  "file": "sweep_payloads.py",
+  "sha256": "e272da8ceeb8a957c8773d080637a9897e2d0b26613131d12f226cecf9c6203e"
+ }
+}

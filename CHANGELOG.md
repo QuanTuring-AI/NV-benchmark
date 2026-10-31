@@ -2,6 +2,14 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-10-31 · Vol.4 published: Nemotron retrieval on one RTX 5090
+
+- **Vol.4 is published.** The Nemotron embedding NIMs and the Llama Nemotron reranking NIMs on one RTX 5090, one model on the card at a time: quality on BEIR SciFact and on the reduced and the whole corpora of MIRACL zh and ja and of BEIR HotpotQA (exact search over every passage), the top 100 reranked by two rerankers, the vectors stored at three precisions, and the rate of each NIM from 1 to 64 requests in flight over two nights, with the load tool's own ceiling. → [`vol4-retriever/README.md`](vol4-retriever/README.md)
+- **Figures:** the whole-corpus quality and the concurrency sweep, each in a light and a dark version and in a version laid out for the forum page, with their point tables.
+- **Checksum files of every volume:** each `.sha256` sidecar is now checked out byte for byte. With Git's Windows default (`core.autocrlf=true`) a sidecar was checked out with a carriage return after each file name and `sha256sum -c` reported the file as missing; the bound files themselves were never changed.
+- **`SERIES.md`:** the row of Vol.1's E4–E6 follow-ups no longer links to a status file the repository does not hold; the records are in `roadmap-e456/`.
+- **The tag `vol4`** points to the commit that merges the volume.
+
 ## 2026-10-11 · Vol.3 forum post published
 
 - **Vol.3 forum post:** the article was posted on the NVIDIA Developer Forum on 2026-10-11. The link is on the front page, at the top of [`vol3-guardrails/README.md`](vol3-guardrails/README.md) and in `releases/vol3.md`. → <https://forums.developer.nvidia.com/t/nemo-guardrails-on-one-rtx-5090-the-models-behind-the-rail-what-each-one-flags-and-what-a-verdict-costs/385509>

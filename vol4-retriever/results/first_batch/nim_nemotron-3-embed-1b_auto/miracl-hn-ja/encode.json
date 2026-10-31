@@ -1,0 +1,119 @@
+{
+ "what": "every query and passage of the data set encoded; wall times are recorded and are not throughput figures",
+ "start": "2026-10-04T04:55:31+0000",
+ "end": "2026-10-04T05:10:26+0000",
+ "dataset": "miracl-hn-ja",
+ "split": "dev",
+ "encoder": {
+  "backend": "nim",
+  "url": "http://p109_n3embed_auto:8000",
+  "model": "nvidia/nemotron-3-embed-1b",
+  "truncate": "END",
+  "connection": "one kept connection",
+  "server": {
+   "/v1/models": {
+    "status": 200,
+    "body": {
+     "object": "list",
+     "data": [
+      {
+       "id": "nvidia/nemotron-3-embed-1b",
+       "object": "model",
+       "created": 1791089088,
+       "owned_by": "nvidia"
+      }
+     ]
+    }
+   },
+   "/v1/metadata": {
+    "status": 200,
+    "body": {
+     "version": "2.2.2",
+     "modelInfo": [
+      {
+       "modelUrl": "nvidia/nemotron-3-embed-1b",
+       "shortName": "nemotron-3-embed-1b"
+      }
+     ],
+     "assetInfo": [],
+     "licenseInfo": {
+      "name": "LICENSE",
+      "path": "LICENSE",
+      "sha": "34d2b75b79866a9c35e2abd8d1cdd9be11f07d4f",
+      "size": 623,
+      "url": "https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-community-models-license/",
+      "type": "file",
+      "content": "**GOVERNING DOWNLOAD TERMS:** The NIM container is governed by the [NVIDIA Software License Agreement](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/) and [Product-Specific Terms for AI Products](https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/). Use of this model is governed by the [NVIDIA Open Model License](https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-open-model-license/). ADDITIONAL INFORMATION: [Llama 3.2 Community License Agreement](https://www.llama.com/llama3_2/license/). Built with Llama."
+     },
+     "repository_override": "",
+     "selectedModelProfileId": "N/A",
+     "backend": "rust"
+    }
+   },
+   "/v1/health/ready": {
+    "status": 200,
+    "body": {
+     "object": "health.response",
+     "message": "ready",
+     "ready": true
+    }
+   }
+  }
+ },
+ "batch": 64,
+ "queries": {
+  "count": 860,
+  "size": 2048,
+  "all_finite": true,
+  "norm_min": 0.9999738931655884,
+  "norm_max": 1.0000277757644653,
+  "size_as_expected": true
+ },
+ "passages": {
+  "count": 185319,
+  "size": 2048,
+  "all_finite": true,
+  "norm_min": 0.9999508261680603,
+  "norm_max": 1.0000407695770264,
+  "size_as_expected": true
+ },
+ "seconds": {
+  "queries": 3.2,
+  "passages": 877.8
+ },
+ "tokens_reported": {
+  "queries": 13526,
+  "passages": 30040492
+ },
+ "vectors": {
+  "folder": "miracl-hn-ja",
+  "queries_sha256": "e3fb81f4b6e7146bbd5c1ad2350bf2b8c458ffd5240cd57876d9d057967bffad",
+  "corpus_sha256": "b462087cd500400f8cca53b6f326b9d1b08917ab47950276e4d8a94022d6cc2b",
+  "ids_sha256": "50f20cbf41119f684f9813b67ca7d9f6ceb33b7f0659ea646f886f70261c7e2f"
+ },
+ "program": {
+  "file": "embed_cell.py",
+  "sha256": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "argv": [
+   "encode",
+   "--backend",
+   "nim",
+   "--dataset",
+   "miracl-hn-ja",
+   "--datasets",
+   "data",
+   "--url",
+   "http://p109_n3embed_auto:8000",
+   "--model",
+   "nvidia/nemotron-3-embed-1b",
+   "--dim",
+   "2048",
+   "--batch",
+   "64",
+   "--emb-dir",
+   "miracl-hn-ja",
+   "--out",
+   "encode.json"
+  ]
+ }
+}

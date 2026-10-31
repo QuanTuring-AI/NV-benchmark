@@ -311,3 +311,60 @@ vol3-guardrails/results/safety_guard_recheck/prediction_safety_guard_recheck.jso
 # Safety Guard, agreement of every pair of runs: the program and the plan written before the pairs were computed (bound by its .sha256 file)
 vol3-guardrails/scripts/safety_guard_agreement.py -text
 vol3-guardrails/results/safety_guard_agreement/plan.json -text
+# Vol.4 first GPU session: the files bound by vol4-retriever/results/first_batch/prediction_first_batch.json
+vol4-retriever/scripts/embed_cell.py -text
+vol4-retriever/scripts/score_run.py -text
+vol4-retriever/scripts/rerank_cell.py -text
+vol4-retriever/scripts/run_step.py -text
+vol4-retriever/scripts/retrieval_datasets.py -text
+vol4-retriever/scripts/retrieval_metrics.py -text
+vol4-retriever/scripts/nim_retrieval_clients.py -text
+vol4-retriever/client/Dockerfile -text
+vol4-retriever/results/first_batch/token_counts/*.json -text
+# Vol.4 second GPU session: the files bound by vol4-retriever/results/second_batch/prediction_second_batch.json
+vol4-retriever/scripts/session_step.py -text
+vol4-retriever/scripts/encode_corpus_resumable.py -text
+vol4-retriever/scripts/compare_embeddings.py -text
+vol4-retriever/scripts/rope_check.py -text
+vol4-retriever/scripts/transformers_rope_scan.py -text
+vol4-retriever/results/second_batch/before_the_run/* -text
+vol4-retriever/results/second_batch/prediction_second_batch.json -text
+# Vol.4 whole-corpus cells: the files bound by vol4-retriever/results/whole_corpus_quality/prediction_whole_corpus.json
+vol4-retriever/scripts/search_whole_corpus.py -text
+vol4-retriever/scripts/rerank_latency.py -text
+vol4-retriever/scripts/method_cell.py -text
+vol4-retriever/results/first_batch/reference_bf16/miracl-hn-zh/score.json -text
+vol4-retriever/results/first_batch/reference_bf16/miracl-hn-ja/score.json -text
+vol4-retriever/results/first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-zh/score.json -text
+vol4-retriever/results/first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-ja/score.json -text
+vol4-retriever/results/second_batch/full_corpus/miracl-zh/checkpoints.jsonl -text
+vol4-retriever/results/second_batch/full_corpus/miracl-ja/checkpoints.jsonl -text
+# Vol.4 whole-corpus cells, addendum (a second reranker; the reference arm's ja timing): bound by its .sha256 file
+vol4-retriever/results/whole_corpus_quality/addendum_second_reranker.json -text
+# Vol.4 whole-corpus cells, addendum for BEIR HotpotQA: bound by its .sha256 file
+vol4-retriever/results/whole_corpus_quality/addendum_hotpotqa.json -text
+# Vol.4 HotpotQA: the two control programs, bound by results/hotpotqa_whole_corpus/control_programs.json
+vol4-retriever/scripts/check_stored_vectors.py -text
+vol4-retriever/scripts/subset_search_two_ways.py -text
+# Vol.4 HotpotQA whole corpus: files bound by the encoder's checkpoint file and by the results beside them
+vol4-retriever/results/hotpotqa_whole_corpus/full_corpus/beir-hotpotqa/checkpoints.jsonl -text
+vol4-retriever/results/hotpotqa_whole_corpus/control_programs.json -text
+vol4-retriever/results/hotpotqa_whole_corpus/subset_two_ways/first_way/score.json -text
+# Vol.4, session of 2026-10-12 (concurrency sweep): the programs its pre-registration binds and the pre-registration (bound by its .sha256 file)
+vol4-retriever/scripts/sweep_payloads.py -text
+vol4-retriever/scripts/sweep_level.py -text
+vol4-retriever/scripts/sweep_step.py -text
+vol4-retriever/client_aiperf/Dockerfile -text
+vol4-retriever/results/concurrency_sweep/prediction_concurrency_sweep.json -text
+vol4-retriever/scripts/sweep_table.py -text
+vol4-retriever/scripts/storage_precision.py -text
+vol4-retriever/scripts/sweep_two_nights.py -text
+vol4-retriever/results/concurrency_sweep_second_night/prediction_second_night.json -text
+vol4-retriever/scripts/instant_answer_server.py -text
+vol4-retriever/scripts/tool_ceiling_table.py -text
+vol4-retriever/results/tool_ceiling/prediction_tool_ceiling.json -text
+vol4-retriever/scripts/fp16_store.py -text
+vol4-retriever/scripts/fp16_store_summary.py -text
+vol4-retriever/results/second_batch/nvfp4_followup_events.jsonl -text
+# Checksum sidecars, kept byte for byte: with a carriage return after the name, sha256sum -c cannot find the file
+*.sha256 -text

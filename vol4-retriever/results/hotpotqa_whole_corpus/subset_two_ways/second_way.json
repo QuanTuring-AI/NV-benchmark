@@ -1,0 +1,46 @@
+{
+ "what": "control A_H: the subset's search and metrics computed a second way and set beside the first way",
+ "at": "2026-10-07T01:24:51+0800",
+ "dataset": "beir-hotpotqa",
+ "split": "test",
+ "subset_passages": 111926,
+ "queries": 7405,
+ "top": 100,
+ "first_way": {
+  "program": "search_whole_corpus.py --only-ids-of",
+  "score_file_sha256": "1f1edba79b0d78ff981418bf1ba57e8119c6846d3a36c8c1e799e07f0f8c3744",
+  "ndcg_cut_10": 0.9119850574546831,
+  "recall_100": 0.9769750168804862,
+  "restricted_search": {
+   "ids_asked_for": 111926,
+   "ids_found_in_the_corpus": 111926,
+   "all_found": true
+  }
+ },
+ "second_way": {
+  "program": "subset_search_two_ways.py",
+  "one_matrix": [
+   111926,
+   2048
+  ],
+  "order": "stable sort of the negated scores: equal scores keep the order of the corpus file",
+  "ndcg_cut_10": 0.9119850574546831,
+  "recall_100": 0.9769750168804862,
+  "seconds": {
+   "gathering_the_vectors": 2.6,
+   "ranking_and_metrics": 54.8
+  }
+ },
+ "difference": {
+  "ndcg_cut_10": 0.0,
+  "recall_100": 0.0
+ },
+ "equal_at_five_decimals": {
+  "ndcg_cut_10": true,
+  "recall_100": true
+ },
+ "queries_whose_two_values_are_equal_in_both_ways": 7405,
+ "queries_compared": 7405,
+ "program_sha256": "74103f7b8aaede18f1d057485faa4fe04f1f3b98825f0f535f390707587304c2",
+ "pass": true
+}

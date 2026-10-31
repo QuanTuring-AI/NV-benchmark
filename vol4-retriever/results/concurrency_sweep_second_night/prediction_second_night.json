@@ -1,0 +1,552 @@
+{
+ "what": "Vol.4, second night of the concurrency sweep (2026-10-13): the calibration read by the duration of a request; the arm the first night's rule stopped; five arms again at one request in flight and at their saturation level; one content-safety model on two serving engines in one night",
+ "draft": false,
+ "written_at": "2026-10-13T02:37:59+0800",
+ "supplements": {
+  "file": "../concurrency_sweep/prediction_concurrency_sweep.json",
+  "sha256": "81d3e6a2bc93fd7266df5dc0f5413d58fefeefd7c1fc34ef09b89ec7591704e2",
+  "unchanged": "that file and every result of the first night stay as they are; its tool, request bodies, shapes, levels, duration per level, gates and what is reported are kept"
+ },
+ "host": "one RTX 5090 (32 GB), Windows 11, Docker Desktop on WSL2; the driver version is recorded by every gate",
+ "driver": {
+  "now": "617.42",
+  "first_night": [
+   "617.42"
+  ],
+  "what_follows": "if tonight's gates record the driver of the first night, the two nights are a repeat on one driver and say nothing about a driver change. What this volume has across drivers is its own client at one request in flight: its rate and the duration of one request of 64 passages in the earlier sessions (below), beside tonight's; the table names the driver of every row.",
+  "own_client_in_earlier_sessions": {
+   "n3": {
+    "sessions": [
+     {
+      "file": "../first_batch/nim_nemotron-3-embed-1b_auto/miracl-hn-zh/throughput.json",
+      "date": "2026-10-04",
+      "driver": "591.86",
+      "passages_per_s_median": 243.7,
+      "request_p50_ms": 245.7
+     },
+     {
+      "file": "../whole_corpus_quality/timing_container_and_host/n3embed/container_1.json",
+      "date": "2026-10-06",
+      "driver": "610.88",
+      "passages_per_s_median": 237.6,
+      "request_p50_ms": 253.1
+     },
+     {
+      "file": "../whole_corpus_quality/timing_container_and_host/n3embed/container_2.json",
+      "date": "2026-10-06",
+      "driver": "610.88",
+      "passages_per_s_median": 233.0,
+      "request_p50_ms": 254.6
+     },
+     {
+      "file": "../concurrency_sweep/n3/calibration_own_client.json",
+      "date": "2026-10-12",
+      "driver": "617.42",
+      "passages_per_s_median": 245.1,
+      "request_p50_ms": 247.3
+     }
+    ],
+    "largest_difference_between_two_sessions_percent": 5.19
+   },
+   "e1b": {
+    "sessions": [
+     {
+      "file": "../first_batch/nim_llama-nemotron-embed-1b-v2_auto/miracl-hn-zh/throughput.json",
+      "date": "2026-10-04",
+      "driver": "591.86",
+      "passages_per_s_median": 485.6,
+      "request_p50_ms": 107.1
+     },
+     {
+      "file": "../whole_corpus_quality/timing_container_and_host/embed1bv2/container_1.json",
+      "date": "2026-10-06",
+      "driver": "610.88",
+      "passages_per_s_median": 495.0,
+      "request_p50_ms": 106.0
+     },
+     {
+      "file": "../whole_corpus_quality/timing_container_and_host/embed1bv2/container_2.json",
+      "date": "2026-10-06",
+      "driver": "610.88",
+      "passages_per_s_median": 492.6,
+      "request_p50_ms": 105.6
+     },
+     {
+      "file": "../concurrency_sweep/e1b/calibration_own_client.json",
+      "date": "2026-10-12",
+      "driver": "617.42",
+      "passages_per_s_median": 498.3,
+      "request_p50_ms": 106.0
+     }
+    ],
+    "largest_difference_between_two_sessions_percent": 2.62
+   },
+   "evl": {
+    "sessions": [
+     {
+      "file": "../first_batch/nim_llama-nemotron-embed-vl-1b-v2_auto/miracl-hn-zh/throughput.json",
+      "date": "2026-10-04",
+      "driver": "591.86",
+      "passages_per_s_median": 279.7,
+      "request_p50_ms": 213.8
+     },
+     {
+      "file": "../whole_corpus_quality/timing_container_and_host/embedvl/container_1.json",
+      "date": "2026-10-06",
+      "driver": "610.88",
+      "passages_per_s_median": 278.7,
+      "request_p50_ms": 214.1
+     },
+     {
+      "file": "../whole_corpus_quality/timing_container_and_host/embedvl/container_2.json",
+      "date": "2026-10-06",
+      "driver": "610.88",
+      "passages_per_s_median": 277.7,
+      "request_p50_ms": 215.2
+     },
+     {
+      "file": "../concurrency_sweep/evl/calibration_own_client.json",
+      "date": "2026-10-12",
+      "driver": "617.42",
+      "passages_per_s_median": 274.0,
+      "request_p50_ms": 218.7
+     }
+    ],
+    "largest_difference_between_two_sessions_percent": 2.08
+   },
+   "e300": {
+    "sessions": [
+     {
+      "file": "../first_batch/nim_llama-nemotron-embed-300m-v2_auto/miracl-hn-zh/throughput.json",
+      "date": "2026-10-04",
+      "driver": "591.86",
+      "passages_per_s_median": 796.0,
+      "request_p50_ms": 56.0
+     },
+     {
+      "file": "../whole_corpus_quality/timing_container_and_host/embed300m/container_1.json",
+      "date": "2026-10-06",
+      "driver": "610.88",
+      "passages_per_s_median": 798.6,
+      "request_p50_ms": 55.2
+     },
+     {
+      "file": "../whole_corpus_quality/timing_container_and_host/embed300m/container_2.json",
+      "date": "2026-10-06",
+      "driver": "610.88",
+      "passages_per_s_median": 848.3,
+      "request_p50_ms": 53.7
+     },
+     {
+      "file": "../concurrency_sweep/e300/calibration_own_client.json",
+      "date": "2026-10-12",
+      "driver": "617.42",
+      "passages_per_s_median": 824.4,
+      "request_p50_ms": 55.7
+     }
+    ],
+    "largest_difference_between_two_sessions_percent": 6.57
+   }
+  }
+ },
+ "order": [
+  "A: llama-nemotron-embed-300m-v2, the whole arm",
+  "B: n3, rr1b, e1b, evl, rr500, one new container each",
+  "C: the content-safety model on two engines, only if its first container can start before 06:30"
+ ],
+ "time_limit": "nothing is started that cannot end before 08:00 local time: the whole arm is not started with less than 40 minutes left, a repeat not with less than 15. What is not run tonight is reported as not run.",
+ "kept": "one container on the card at a time; the gate before every container and, in its timed form, before every timed step; no game launcher while a timed step runs; a timed step is one blocking command; results are written as they come; a command that does not end within its limit has its container stopped by name",
+ "calibration_rule_added": {
+  "rule": "AIPerf at one request in flight against this volume's own client, by the p50 of the duration of one request (64 passages per request for an embedding NIM, 100 passages per call for a reranking NIM): more than 20% apart, the difference rounded to two decimals, stops the arm before its sweep. scripts/sweep_two_nights.py computes it.",
+  "why": "the first night's rule compared items per second. The own client's rate is items divided by the wall time of a pass, and that wall time also holds what the client does between two requests (it reads every returned number before it sends the next request); the duration of a request does not. On the first night the two instruments agreed on the duration of a request within 3% on all six arms, while their rates were up to 36% apart, most on the NIM whose requests are shortest. A rule on rates therefore measures the client's own time, not an error of the load tool.",
+  "the_first_rule": "is not withdrawn: it is computed for every arm on both nights and reported beside the new one, with 'outside' where it is outside. It no longer stops an arm.",
+  "first_night_by_both_rules": {
+   "n3": {
+    "by_duration": {
+     "own_client_p50_ms": 247.3,
+     "aiperf_c1_p50_ms": 250.95,
+     "difference_percent": 1.48,
+     "within": true
+    },
+    "by_rate": {
+     "own_client_items_per_s": 245.1,
+     "aiperf_c1_items_per_s": 251.8,
+     "difference_percent": 2.73,
+     "within": true
+    }
+   },
+   "rr1b": {
+    "by_duration": {
+     "own_client_p50_ms": 141.54,
+     "aiperf_c1_p50_ms": 140.11,
+     "difference_percent": -1.01,
+     "within": true
+    },
+    "by_rate": {
+     "own_client_items_per_s": 680.9,
+     "aiperf_c1_items_per_s": 678.3,
+     "difference_percent": -0.38,
+     "within": true
+    }
+   },
+   "e1b": {
+    "by_duration": {
+     "own_client_p50_ms": 106.0,
+     "aiperf_c1_p50_ms": 103.89,
+     "difference_percent": -1.99,
+     "within": true
+    },
+    "by_rate": {
+     "own_client_items_per_s": 498.3,
+     "aiperf_c1_items_per_s": 593.7,
+     "difference_percent": 19.15,
+     "within": true
+    }
+   },
+   "evl": {
+    "by_duration": {
+     "own_client_p50_ms": 218.7,
+     "aiperf_c1_p50_ms": 217.38,
+     "difference_percent": -0.61,
+     "within": true
+    },
+    "by_rate": {
+     "own_client_items_per_s": 274.0,
+     "aiperf_c1_items_per_s": 290.5,
+     "difference_percent": 6.02,
+     "within": true
+    }
+   },
+   "rr500": {
+    "by_duration": {
+     "own_client_p50_ms": 85.47,
+     "aiperf_c1_p50_ms": 85.3,
+     "difference_percent": -0.2,
+     "within": true
+    },
+    "by_rate": {
+     "own_client_items_per_s": 1127.5,
+     "aiperf_c1_items_per_s": 1112.9,
+     "difference_percent": -1.29,
+     "within": true
+    }
+   },
+   "e300": {
+    "by_duration": {
+     "own_client_p50_ms": 55.7,
+     "aiperf_c1_p50_ms": 54.13,
+     "difference_percent": -2.83,
+     "within": true
+    },
+    "by_rate": {
+     "own_client_items_per_s": 824.4,
+     "aiperf_c1_items_per_s": 1120.1,
+     "difference_percent": 35.87,
+     "within": false
+    }
+   }
+  },
+  "not_recomputed": "the first night's calibration.json files and its table stay as they were written"
+ },
+ "cell_A_the_arm_stopped_on_the_first_night": {
+  "arm": "e300",
+  "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-300m-v2:1.13.0",
+  "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-embed-300m-v2@sha256:1f0a7fc168919d7b84bb4edfb4a4da0c5828d11ee284f9fb8113242b3b35cbb4",
+  "start": "no profile set",
+  "what": "the whole arm as the first pre-registration describes an arm: a new container; the own client (64 per request, three passes); AIPerf at one in flight on the passage shape; the calibration by the new rule; both shapes at 1, 2, 4, 8, 16, 32, 64 in flight and one more level while the rate rises by more than 5% (256 at most); the container removed; a second new container and the two highest levels of each shape again",
+  "bodies": "the first night's files, replayed as they are (their SHA-256 is in e300/payloads.json and in every level record)",
+  "expectation": {
+   "calibration": "within 5% by duration (first night: -2.83%); outside 20% by rate again",
+   "passage_shape": "the rate stops rising at 1 or 2 in flight; at one in flight between 1,000 and 1,250 passages per second (first night, one level: 1120.1)",
+   "query_shape": "the rate stops rising at 2 or 4 in flight; the levels 1 and 2 may be below 90% held, as on the two fastest arms of the first night (requests of a few milliseconds)",
+   "errors": "none",
+   "confidence": "moderate: five arms of the same kind behaved so on the first night"
+  }
+ },
+ "cell_B_second_night_repeats": {
+  "what": "per arm one new container: the own client, then per shape one request in flight and the first night's saturation level (where that level is 1, only 1), 40 seconds each, the same request bodies; no second container",
+  "arms": {
+   "n3": {
+    "image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2",
+    "image_digest": "nvcr.io/nim/nvidia/nemotron-3-embed-1b@sha256:16f49c13bc9ee101f4abfaba972b2dc2e587871ab7474913ac40dbf0bffb7d92",
+    "start": "NIM_ENGINE_PRECISION=fp16, weights from the NIM's own download",
+    "levels": {
+     "query": [
+      1,
+      2
+     ],
+     "passage": [
+      1,
+      2
+     ]
+    },
+    "first_night": {
+     "query": {
+      "1": {
+       "requests_per_s": 268.705,
+       "items_per_s": 268.7,
+       "p50_ms": 3.038,
+       "level_held": false
+      },
+      "2": {
+       "requests_per_s": 371.096,
+       "items_per_s": 371.1,
+       "p50_ms": 4.447,
+       "level_held": false
+      }
+     },
+     "passage": {
+      "1": {
+       "requests_per_s": 3.935,
+       "items_per_s": 251.8,
+       "p50_ms": 250.948,
+       "level_held": true
+      },
+      "2": {
+       "requests_per_s": 4.23,
+       "items_per_s": 270.7,
+       "p50_ms": 465.297,
+       "level_held": true
+      }
+     }
+    }
+   },
+   "rr1b": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2:1.10.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2@sha256:cab08cc2b620235f6d75bb7ee198d13352f61ae48285524e304f2904380ea8ca",
+    "start": "no profile set",
+    "levels": {
+     "passages_100": [
+      1,
+      16
+     ],
+     "passages_10": [
+      1,
+      16
+     ]
+    },
+    "first_night": {
+     "passages_100": {
+      "1": {
+       "requests_per_s": 6.783,
+       "items_per_s": 678.3,
+       "p50_ms": 140.107,
+       "level_held": true
+      },
+      "16": {
+       "requests_per_s": 9.826,
+       "items_per_s": 982.6,
+       "p50_ms": 1521.832,
+       "level_held": true
+      }
+     },
+     "passages_10": {
+      "1": {
+       "requests_per_s": 35.952,
+       "items_per_s": 359.5,
+       "p50_ms": 27.342,
+       "level_held": true
+      },
+      "16": {
+       "requests_per_s": 72.167,
+       "items_per_s": 721.7,
+       "p50_ms": 217.753,
+       "level_held": true
+      }
+     }
+    }
+   },
+   "e1b": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2:1.13.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2@sha256:3c22c0bd8d36dcdee4c46ff371951bb83ec537361db5d6b5737b5c4ecbec92ae",
+    "start": "no profile set (fp8, selected by the image)",
+    "levels": {
+     "query": [
+      1,
+      2
+     ],
+     "passage": [
+      1,
+      2
+     ]
+    },
+    "first_night": {
+     "query": {
+      "1": {
+       "requests_per_s": 110.502,
+       "items_per_s": 110.5,
+       "p50_ms": 8.218,
+       "level_held": true
+      },
+      "2": {
+       "requests_per_s": 182.612,
+       "items_per_s": 182.6,
+       "p50_ms": 10.023,
+       "level_held": true
+      }
+     },
+     "passage": {
+      "1": {
+       "requests_per_s": 9.276,
+       "items_per_s": 593.7,
+       "p50_ms": 103.895,
+       "level_held": true
+      },
+      "2": {
+       "requests_per_s": 12.407,
+       "items_per_s": 794.0,
+       "p50_ms": 157.598,
+       "level_held": true
+      }
+     }
+    }
+   },
+   "evl": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-vl-1b-v2:2.3.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-embed-vl-1b-v2@sha256:93a3f17fa7d0b5ef1d31765a1eab4662669483bf85f2101a2c460aedd9b45480",
+    "start": "no profile set, weights from the NIM's own download",
+    "levels": {
+     "query": [
+      1,
+      2
+     ],
+     "passage": [
+      1
+     ]
+    },
+    "first_night": {
+     "query": {
+      "1": {
+       "requests_per_s": 292.741,
+       "items_per_s": 292.7,
+       "p50_ms": 2.8,
+       "level_held": false
+      },
+      "2": {
+       "requests_per_s": 418.35,
+       "items_per_s": 418.4,
+       "p50_ms": 4.081,
+       "level_held": false
+      }
+     },
+     "passage": {
+      "1": {
+       "requests_per_s": 4.539,
+       "items_per_s": 290.5,
+       "p50_ms": 217.375,
+       "level_held": true
+      }
+     }
+    }
+   },
+   "rr500": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-500m-v2:1.10.0",
+    "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-rerank-500m-v2@sha256:3e39d44bdb3dd683d6a2ac8d7689b484aee6c18dc7e00c2064f19501742720f3",
+    "start": "no profile set",
+    "levels": {
+     "passages_100": [
+      1,
+      8
+     ],
+     "passages_10": [
+      1,
+      16
+     ]
+    },
+    "first_night": {
+     "passages_100": {
+      "1": {
+       "requests_per_s": 11.129,
+       "items_per_s": 1112.9,
+       "p50_ms": 85.299,
+       "level_held": true
+      },
+      "8": {
+       "requests_per_s": 18.22,
+       "items_per_s": 1822.0,
+       "p50_ms": 427.428,
+       "level_held": true
+      }
+     },
+     "passages_10": {
+      "1": {
+       "requests_per_s": 54.754,
+       "items_per_s": 547.5,
+       "p50_ms": 17.64,
+       "level_held": true
+      },
+      "16": {
+       "requests_per_s": 140.249,
+       "items_per_s": 1402.5,
+       "p50_ms": 111.665,
+       "level_held": true
+      }
+     }
+    }
+   }
+  },
+  "reported": "both nights side by side per level: date, driver, requests and items per second, p50 and p99, the difference in percent; and the calibration of both nights by both rules (scripts/sweep_two_nights.py table). Nothing is pooled and no night is preferred.",
+  "expectation": {
+   "saturation_level": "requests per second within 5% of the first night on every arm and shape (on the first night two containers of one arm were at most 1.82% apart at their two highest levels)",
+   "one_in_flight": "within 5% where the first night held the level; no guess where it did not (the query shape of n3 and evl at 1 and 2 in flight: those rates also hold the load tool's own time between requests)",
+   "confidence": "moderate at most: across the earlier sessions this volume's own client at one request in flight moved by up to 6.6% on one arm; a miss of the 5% by a few points would be of that kind",
+   "if_not": "a difference above 5% is reported as a difference between two nights. No cause is assigned from two nights, and neither night's figure is called the right one."
+  },
+  "not_claimed": "a ceiling. A saturation rate seen on two nights is the rate of two nights on this host and driver."
+ },
+ "cell_C_one_model_two_engines_one_night": {
+  "why": "the first night found Nemotron 3.5 Content Safety on upstream vLLM 0.30.0 at between a sixth and a fifth fewer verdicts per second than the study's 0.20.2 figures of 2026-10-02. Those two were ten days and a driver change apart, so the engine cannot be told from the day. Both engines in one night can.",
+  "does_not_decide": "which image is kept: 0.20.2 is the newest version the model card names and stays. This cell is not part of the published Vol.3 study and changes none of its figures.",
+  "containers": [
+   {
+    "arm": "J4-night-0202-a",
+    "step": "n35_0202_a",
+    "engine": "0.20.2",
+    "image": "vllm/vllm-openai:v0.20.2",
+    "digest": "sha256:70a098d90dbab428a001d9e852fc0fc8d67da5beb03e7851a22247653bf35923",
+    "start_setting": {}
+   },
+   {
+    "arm": "J4-night-0300",
+    "step": "n35_0300",
+    "engine": "0.30.0",
+    "image": "vllm/vllm-openai:v0.30.0",
+    "digest": "sha256:8a69ffad015f138d7170c4ddc429e230a3bc1c1719f67e14324749df200a4b90",
+    "start_setting": {
+     "VLLM_USE_V2_MODEL_RUNNER": "0"
+    }
+   },
+   {
+    "arm": "J4-night-0202-b",
+    "step": "n35_0202_b",
+    "engine": "0.20.2",
+    "image": "vllm/vllm-openai:v0.20.2",
+    "digest": "sha256:70a098d90dbab428a001d9e852fc0fc8d67da5beb03e7851a22247653bf35923",
+    "start_setting": {}
+   }
+  ],
+  "order": "0.20.2, 0.30.0, 0.20.2 again: each new and alone on the card; the two 0.20.2 containers show how far apart two containers of one engine are tonight",
+  "cells": "per container and track the study's unchanged p93_judge.py --arm J4 (reasoning off): precheck, then the whole track at 16 in flight (every prompt of the study's prompt track; every response of its response track)",
+  "measure": "verdicts per second = items / wall seconds of the cell at 16 in flight, per track",
+  "reading": "per track: 0.30.0 against the mean of the two 0.20.2 containers. 'Slower on the same night' if it is more than 5% below that mean, below both of them, and further from the mean than twice the difference between the two 0.20.2 containers; 'faster' by the mirror of that; otherwise 'no difference that stands out from two containers of one engine'. Verdicts that differ from the study's main run are counted per container and reported; they do not enter the reading.",
+  "expectation": "no guess between the two readings 'slower' and 'no difference': the first night's gap could be the engine or the day. The two 0.20.2 containers within 3% of each other.",
+  "started_only_if": "its first container can start before 06:30; once started, all three containers are run",
+  "results": "kept outside the repository, as the first night's cell of this model",
+  "runner_outside_the_repository_sha256": "1f5cc442b9ab35261f8a6f8e2b0be4a59a64814cf64b26912a78bb00e2c859a8"
+ },
+ "harness_sha256": {
+  "scripts/sweep_level.py": "c23331574e86fa887e930d47c1abafeb0cb554d3e465cff646203a8f7a5f2f42",
+  "scripts/sweep_step.py": "82026136f855642d18805424174e591b8130ff9a694eb6796df199d0dd66b1fe",
+  "scripts/run_step.py": "3468e40ba41085aff2233f6f526f43bf7bbed953894984ddc515b5ff1d10a143",
+  "scripts/sweep_table.py": "080fdcc324762f7bf7344f82de64a073fff10315057ee349c2b95d922673771b",
+  "scripts/sweep_two_nights.py": "20f1576aae97733f1547c487736670dc4b68b6656449a5b4defc57575d3b3fa1",
+  "scripts/embed_cell.py": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "scripts/rerank_latency.py": "f8c708edab0e2bf212b6304c77d1b0072adf7c4b6f1889103f42563968bae3cc",
+  "scripts/nim_retrieval_clients.py": "706b960a71e583143969794f14138c93304dc6623d9c62fa1082866819a26cf2",
+  "client/Dockerfile": "886ebed74c074a9836f89c0a0d1bdad1bad5db737259b7d4900dbd24dd191dc7",
+  "client_aiperf/Dockerfile": "4595496b419de48732c5029a0d76ca0a5e4f1cdafce7e5c811059cb9176d5594",
+  "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb"
+ },
+ "generator": "scripts/gen_prediction_second_night.py (this file's writer; its SHA-256 is in the events file of the night)",
+ "programs_that_may_still_change": "none of the measuring programs. scripts/sweep_two_nights.py makes the calibration records and the two-night table; its SHA-256 at the freeze is above, and each record it writes carries the SHA-256 of the version that wrote it."
+}

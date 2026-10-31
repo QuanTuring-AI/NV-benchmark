@@ -1,0 +1,315 @@
+{
+ "what": "Pre-registration of the second GPU session of Vol.4 with the extraction-service smoke tests of Vol.5; a supplement to prediction_first_batch.json",
+ "draft": false,
+ "written_at": "2026-10-04T19:11:23+0800",
+ "supplements": {
+  "file": "../first_batch/prediction_first_batch.json",
+  "sha256": "9e5758e98cd052cbdf41e580095cb70bb1188479fef722747a64dc1b88216dd7",
+  "kept_from_it": "its rules (timed and untimed parts, the gate, start conditions of a timed part, one variable per comparison, raw output outside the repository), its data sets, its metrics and its method (client in a container on the NIM's Docker network, one kept connection, 64 per request, the first 4,096 passages, one discarded pass and three timed passes)"
+ },
+ "session": {
+  "card": "one RTX 5090 (32 GB), Windows 11 + Docker Desktop (WSL2)",
+  "window": "the night of 2026-10-04, from the freeze of this file; every container of the session is stopped at 08:00 local time on 2026-10-05",
+  "order": "cells 1 to 6 as listed; a cell that cannot start is reported as not run with its reason, and the session goes on",
+  "containers": "named p110_<tag> on the Docker network p110net (scripts/session_step.py sets this; the steps themselves are scripts/run_step.py, unchanged)"
+ },
+ "added_rule": {
+  "every_measuring_command_has_a_limit": "each command below runs under `timeout` with the number of seconds written beside it; a command that reaches its limit is reported as 'not completed, limit reached' and is not repeated with a longer one in this session",
+  "why": "in the first session one command without a limit held the card for ten minutes"
+ },
+ "disclosed_about_the_first_session": {
+  "what": "another session on this host ran CPU work from 12:20 to 12:59 on 2026-10-04; the three timed passes of the NIM 2.2.2 cell (12:46:28 to 12:48:27) lie inside that window. The card was not shared.",
+  "consequence": "the timed passes of that cell (fp16, miracl-hn-zh) are repeated in cell 5 of this session, next to the fp8 and nvfp4 cells, and both sets of passes are reported",
+  "found_in_the_driver": "the internal driver of the first session piped each gate's output through a filter, so a refused gate would not have stopped a cell; all 34 gates of that session passed, so no cell ran against a refusal. The driver of this session sees the refusal (pipefail), and that was checked with a command that fails."
+ },
+ "cell_1_zh_version": {
+  "question": "does the reference arm give another nDCG@10 on miracl-hn-zh when only the transformers version changes from 5.5.0 to the stable release of the day the published result is dated (2026-07-07): 5.13.0",
+  "why_this_cell": "the published value is 0.64244 and the first session measured 0.66313; while loading, transformers prints that the rope key apply_yarn_scaling of the model is not recognised",
+  "known_before_the_run_without_the_card": {
+   "release_scan": {
+    "file": "before_the_run/transformers_rope_scan.json",
+    "sha256": "852b642564020671dcfb7b5f57ce52e6372be78947efe1836d87110a786e4d4e",
+    "tags": 25,
+    "tags_where_the_key_name_occurs": [],
+    "reading": "no release from 5.0.0 to 5.18.0 names the key: the warning cannot be made to disappear by choosing a release. The code of the YaRN function is the same from 5.0.0 to 5.14.0 and the model file is the same from 5.4.0 to 5.14.0."
+   },
+   "rope_check": {
+    "5.5.0": {
+     "file": "before_the_run/rope_check_transformers_5.5.0.json",
+     "sha256": "d6cc6d7d0b44049a6c69f2ce407343b4313f5bc8b7ea88f9d84f0aadd94aa119"
+    },
+    "5.13.0": {
+     "file": "before_the_run/rope_check_transformers_5.13.0.json",
+     "sha256": "34ed13ea05d2545dfac6397e09ded63473b4e1b5c8f209c3a2a66a5a8bd80a51"
+    },
+    "same_frequencies_in_both": true,
+    "frequencies_changed_by_yarn": "43 of 64 in both",
+    "factor_on_cos_and_sin": [
+     1.0,
+     1.0
+    ],
+    "warning_printed": [
+     true,
+     true
+    ],
+    "reading": "both releases apply the YaRN interpolation of the frequencies and no magnitude correction; the key that is not recognised has the value false in the model's configuration"
+   },
+   "model_config": "transformers_version 5.5.0; the downloaded revision is the one of the published result (f880174635613cff04033875fc6a69296cb72006)",
+   "environment": {
+    "name": "vol4-reference-tf5130",
+    "packages": {
+     "file": "before_the_run/environment_transformers_5.13.0.txt",
+     "sha256": "a11fc2375d20f89a6be61290d131e225545f0fe2e1efb9fa84c551e16d0372ea"
+    },
+    "first_session_packages": {
+     "file": "before_the_run/environment_transformers_5.5.0.txt",
+     "sha256": "b595bb5105b9e15705cf36359419488535383117fe7163db17a58d04fcb2cf04"
+    },
+    "difference": "one line of 47: transformers 5.5.0 -> 5.13.0; torch 2.11.0+cu130, sentence-transformers 5.4.1, tokenizers 0.22.2 and every other package are the same versions"
+   }
+  },
+  "commands": [
+   {
+    "what": "encode every query and passage (the first session's command, the other environment)",
+    "program": "scripts/embed_cell.py encode --backend st --dataset miracl-hn-zh --dim 2048 --batch 16",
+    "timeout_s": 900
+   },
+   {
+    "what": "score",
+    "program": "scripts/score_run.py --target-ndcg10 0.64244",
+    "timeout_s": 300
+   },
+   {
+    "what": "cosine of every vector with the first session's vector of the same text",
+    "program": "scripts/compare_embeddings.py",
+    "timeout_s": 300
+   }
+  ],
+  "branches_decided_in_advance": {
+   "a": "nDCG@10 within 0.005 of 0.64244: the cause is the library version; both values are reported and the published one counts as reproduced with the release of its date",
+   "b": "nDCG@10 still about 0.663: a version cause is not supported; the zh cells stay labelled 'control not reproduced, cause unknown'. No further variant is tried in this session."
+  },
+  "expectation": "branch b: nDCG@10 within 0.001 of 0.66313 and every cosine above 0.9999, because the code that computes the positions is the same in both releases",
+  "not_in_this_session": "a cell that changes the model's rope settings themselves (plain RoPE, or YaRN with the magnitude correction): asked of the people who assign the work, not decided here"
+ },
+ "cell_2_three_extraction_nims": {
+  "what": "start each image with the settings of the Blueprint's compose file (v2.6.2), send the Blueprint's own example image twice to /v1/infer, record seconds to ready, the HTTP status, the shape of the answer or the error text, the card's memory",
+  "images": {
+   "page": {
+    "image": "nvcr.io/nim/nvidia/nemotron-page-elements-v3:1.8.0",
+    "image_digest": "nvcr.io/nim/nvidia/nemotron-page-elements-v3@sha256:cf36bdf27260a0b7217dc449b33653a2c1f57620cfc2686656c2fef8c2e1884b",
+    "profile": "the one the image selects; the TensorRT fp16 engine for compute capability 12.0 was fetched beforehand in CPU-only mode"
+   },
+   "graphic": {
+    "image": "nvcr.io/nim/nvidia/nemotron-graphic-elements-v1:1.8.0",
+    "image_digest": "nvcr.io/nim/nvidia/nemotron-graphic-elements-v1@sha256:80441d106ac31a7ed95560dcd33c763cdf7aa8687382b3a96539fc1e66d1f22d",
+    "profile": "the one the image selects; the TensorRT fp16 engine for compute capability 12.0 was fetched beforehand in CPU-only mode"
+   },
+   "table": {
+    "image": "nvcr.io/nim/nvidia/nemotron-table-structure-v1:1.8.0",
+    "image_digest": "nvcr.io/nim/nvidia/nemotron-table-structure-v1@sha256:5b0e9e4cfb8aa33c1bb6c99a06b771533c445d3fc0c60f94e977973c9ea16c87",
+    "profile": "the one the image selects; the TensorRT fp16 engine for compute capability 12.0 was fetched beforehand in CPU-only mode"
+   }
+  },
+  "image_sent": "docs/assets/arch_diagram.png of the Blueprint repository at v2.6.2 (SHA-256 cf1bc91d…5b73 as recorded by the first session)",
+  "commands_per_image": [
+   {
+    "what": "start and wait for ready",
+    "program": "scripts/session_step.py nim-start --kind 1x --wait 600",
+    "timeout_s": 720
+   },
+   {
+    "what": "two requests",
+    "program": "vol5 scripts/extraction_smoke.py --form infer --timeout 300",
+    "timeout_s": 700
+   },
+   {
+    "what": "stop",
+    "program": "scripts/session_step.py nim-stop",
+    "timeout_s": 300
+   }
+  ],
+  "both_outcomes_are_results": "HTTP 500 like the OCR NIM: the ingestion's extraction step as a whole does not run on this host setup. HTTP 200: the failure is confined to the OCR service.",
+  "expectation": "a guess, with low confidence: HTTP 200 for all three (their settings name CPU threads for pre- and post-processing, which suggests those steps do not hand GPU tensors to a Python model)"
+ },
+ "cell_3_nemotron_parse": {
+  "image": "nvcr.io/nim/nvidia/nemotron-parse:1.5.0",
+  "image_digest": "nvcr.io/nim/nvidia/nemotron-parse@sha256:626a5620b48c5c1a45b67b6ebf5e00b3284bbd59b396a2a2248a4babc0bab6fb",
+  "known_before_the_run": "the image holds one model profile: engine tensorrt_llm, precision bf16, built on the local card at the first start; it is not a vLLM profile. Its documentation lists H100, A100, L40S and A10G. The weights (3.6 GiB) were fetched beforehand in CPU-only mode.",
+  "condition_in_the_work_order": "this smoke test was planned for the case that the image serves through vLLM. It does not; the test is run nevertheless because it costs at most the limit below and its outcome is a fact either way.",
+  "settings": "the Blueprint's: NIM_HTTP_API_PORT=8000, NIM_TRITON_LOG_VERBOSE=1, user root, 16 GB of shared memory",
+  "request": "POST /v1/chat/completions, model nvidia/nemotron-parse, tool markdown_bbox, the same example image as a data URL, temperature 0; twice",
+  "commands": [
+   {
+    "what": "start, engine build included, and wait for ready",
+    "program": "scripts/session_step.py nim-start --kind 1x --wait 1500",
+    "timeout_s": 1620
+   },
+   {
+    "what": "two requests",
+    "program": "vol5 scripts/extraction_smoke.py --form parse --timeout 300",
+    "timeout_s": 700
+   },
+   {
+    "what": "stop",
+    "timeout_s": 300
+   }
+  ],
+  "recorded": "seconds to ready, the card's memory once ready, the HTTP status, the number of elements and their types, the number of characters of text in total (not the text)",
+  "expectation": "a guess, with low confidence: the engine build does not finish or fails on this card (not ready within the limit); if it becomes ready, the request answers 200"
+ },
+ "cell_4_ocr_alternatives": {
+  "paddleocr": {
+   "image": "nvcr.io/nim/baidu/paddleocr:1.5.0",
+   "image_digest": "nvcr.io/nim/baidu/paddleocr@sha256:4a862453a78cfd90e460bb7f5917c3bd5804a9052ed7e66eef83c8aa87b45c21",
+   "known_before_the_run": "of its nine profiles only the generic ONNX one fits this card; its Python model reads its input from CPU memory and calls no other Triton model; it constructs the recognizer with language en",
+   "settings": "the Blueprint's (profile paddle): OMP_NUM_THREADS=8, NIM_TRITON_RATE_LIMIT=3, NIM_TRITON_CUDA_MEMORY_POOL_MB=3072, CUDA_VISIBLE_DEVICES=0",
+   "commands": [
+    {
+     "what": "start",
+     "timeout_s": 720
+    },
+    {
+     "what": "two requests to /v1/infer",
+     "timeout_s": 700
+    },
+    {
+     "what": "stop",
+     "timeout_s": 300
+    }
+   ],
+   "expectation": "a guess: ready and HTTP 200"
+  },
+  "ocr_with_the_host_process_namespace": {
+   "image": "nvcr.io/nim/nvidia/nemotron-ocr-v1:1.3.0",
+   "image_digest": "nvcr.io/nim/nvidia/nemotron-ocr-v1@sha256:a26c233f7ad7f675008fcfdcb743dc6f26f4d6838a6e23f887370d3db9df8304",
+   "what": "the OCR NIM of the first session once more, with `--pid=host` added to docker run and nothing else changed",
+   "why": "the Triton issue tracker names `--pid host` as the fix for a failing cudaIpcOpenMemHandle between two containers (issue 3429) and suggests it in a WSL2 report (issue 6220)",
+   "not_tried": "overriding FORCE_CPU_ONLY_INPUT_TENSORS: that parameter covers the inputs of a Python model and its default is already the CPU; in this image the GPU tensors are created inside the pipeline's own code (EXTRACTION_NIMS_ON_WSL2.md, sections 2 and 3). Changing the image's code is not done.",
+   "commands": [
+    {
+     "what": "start",
+     "timeout_s": 540
+    },
+    {
+     "what": "two requests to /v1/infer",
+     "timeout_s": 700
+    },
+    {
+     "what": "stop",
+     "timeout_s": 300
+    }
+   ],
+   "outside_the_work_order": true,
+   "expectation": "HTTP 500 with the same error text as before (one container: the two processes share a namespace already)"
+  }
+ },
+ "cell_5_one_variable_precision": {
+  "rule": "two cells of one image that differ in the precision only; same data, same requests, same client; timed passes of both on the same night; speed tables of cells that differ in more than the precision are not put side by side as a comparison",
+  "nemotron_3_embed_1b": {
+   "image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2",
+   "image_digest": "nvcr.io/nim/nvidia/nemotron-3-embed-1b@sha256:16f49c13bc9ee101f4abfaba972b2dc2e587871ab7474913ac40dbf0bffb7d92",
+   "data": "miracl-hn-zh",
+   "cells": [
+    "NIM_ENGINE_PRECISION=fp16 (a repeat of the first session's cell, see above)",
+    "NIM_ENGINE_PRECISION=fp8",
+    "NIM_ENGINE_PRECISION=nvfp4"
+   ],
+   "branch_decided_in_advance": "a precision with which the container does not report ready: its last log lines are the result of that cell",
+   "expectation": "fp8: nDCG@10 within 0.005 of fp16 and more passages per second than fp16. nvfp4: a guess with low confidence that it starts; if it does, nDCG@10 within 0.01 of fp16."
+  },
+  "llama_nemotron_embed_1b_v2": {
+   "image": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2:1.13.0",
+   "image_digest": "nvcr.io/nim/nvidia/llama-nemotron-embed-1b-v2@sha256:3c22c0bd8d36dcdee4c46ff371951bb83ec537361db5d6b5737b5c4ecbec92ae",
+   "data": [
+    "beir-scifact",
+    "miracl-hn-zh",
+    "miracl-hn-ja"
+   ],
+   "cells": [
+    "NIM_MODEL_PROFILE=2e1ac3d2b2e881b0c86959c09a6ecca58947ac174745f2113203e539ed1310d8 (TensorRT fp16, compute capability 12.0): smoke, timed passes, encode, score",
+    "no profile set (the image selects the fp8 profile, as in the first session): smoke and timed passes only, as the same-night partner of the fp16 passes; its quality figures are the first session's"
+   ],
+   "expectation": "fp16: nDCG@10 within 0.005 of the fp8 cell on each data set; fewer passages per second than fp8; more card memory than fp8"
+  },
+  "commands_per_cell": [
+   {
+    "what": "start",
+    "program": "scripts/session_step.py nim-start --wait 900 (2.2.2) / 600 (1.13.0)",
+    "timeout_s": "1020 / 720"
+   },
+   {
+    "what": "smoke",
+    "program": "scripts/embed_cell.py smoke",
+    "timeout_s": 300
+   },
+   {
+    "what": "the timed passes of one data set (gate with --timed right before)",
+    "program": "scripts/embed_cell.py throughput --batch 64 --n 4096 --reps 3",
+    "timeout_s": 600
+   },
+   {
+    "what": "encode one data set (untimed)",
+    "program": "scripts/embed_cell.py encode --batch 64",
+    "timeout_s": 1800
+   },
+   {
+    "what": "score",
+    "program": "scripts/score_run.py",
+    "timeout_s": 300
+   },
+   {
+    "what": "cosine of every vector with the other precision's vector of the same text",
+    "program": "scripts/compare_embeddings.py",
+    "timeout_s": 300
+   },
+   {
+    "what": "stop",
+    "timeout_s": 300
+   }
+  ],
+  "reported_per_cell": "precision as the server log names it, nDCG@10, Recall@100, passages per second (median of three passes, all three kept), the card's memory once ready, and the cosine statistics against the other precision"
+ },
+ "cell_6_whole_corpus": {
+  "what": "every passage of MIRACL zh (4,934,368) encoded with the NIM 2.2.2 pinned to fp16; if zh is finished before 06:00, MIRACL ja is started the same way",
+  "image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2",
+  "program": "scripts/encode_corpus_resumable.py --piece 100000 --batch 64 --stop-at 2026-10-05T08:00:00+0800",
+  "not_a_speed": "no gate with --timed; the wall time of a piece is recorded and is not a throughput figure. If another program shares the card during the night, the events of this session say so and nothing else changes.",
+  "checkpoint": "after every 100,000 passages: the vectors of the piece (outside the repository) and one line in results/second_batch/full_corpus/<data set>/checkpoints.jsonl (counts, seconds, SHA-256; no text). A later call goes on from the last line.",
+  "check_before_the_run": "the program is new, so its first call against the real NIM encodes the first 512 passages of miracl-hn-zh in two pieces; the ids must be those of the first session in the same order and every cosine with the first session's vectors must be at least 0.9999. If not, the whole-corpus run is not started.",
+  "limit": "the program stops by itself at 08:00; the driver's timeout is the seconds left until 08:00 plus 300; then the container is stopped and removed, the closing gate is run and the card's state is recorded",
+  "expectation": "from the first session's rate on the reduced zh corpus (about 240 passages per second) the zh corpus needs about 5.7 hours; whether it finishes depends on the hour the cell starts. ja does not finish in this session.",
+  "not_in_this_session": "any quality figure on the whole corpus"
+ },
+ "images_not_started_in_this_session": "none other than the ones named above",
+ "client_image": {
+  "image": "vol4-client:py312",
+  "id": "sha256:508c8afd39e88409f5766df957acd0c8758ef453e32a3eda64e1bbcbff7afa8c"
+ },
+ "harness_sha256": {
+  "scripts/session_step.py": "80f79d0d2affc7a346fe91a2d3ab33e0a904533e8c6faa5c24672bb4d7673b2c",
+  "scripts/encode_corpus_resumable.py": "37bfb0e8a3adb66b26914b97ba3a48f27f699c43deb656c61b2ff5010b2a18c7",
+  "scripts/compare_embeddings.py": "10336b8fdc47b2abd559b1056d3c8ab612acb74916e9304f6750ed2ececce273",
+  "scripts/rope_check.py": "8c2276b2402943133171d8ea3b1a6ec67396bbd11e94b6eabec0682b264f77b9",
+  "scripts/transformers_rope_scan.py": "415ee24ca19d93153bf9f7829f6fd6959af0097611887172d818a1425d688eb6",
+  "scripts/embed_cell.py": "799d5a7e831ff68c12e27be516e8342400cd4b665fe3542a94402cf21ee970f7",
+  "scripts/score_run.py": "a96f43db8df6dd4813ba25f850aac936b404a50e5d18d73c66c94d8a9318163b",
+  "scripts/run_step.py": "3468e40ba41085aff2233f6f526f43bf7bbed953894984ddc515b5ff1d10a143",
+  "scripts/retrieval_datasets.py": "699a7681569f61c9c66980a8ec91341b9e45a7836a28686cf7888b8bda174d18",
+  "scripts/retrieval_metrics.py": "db1ddd18f78484d998bdd700311fa4e67bfd62fc702a389a2ebddab3f77c61e5",
+  "scripts/nim_retrieval_clients.py": "706b960a71e583143969794f14138c93304dc6623d9c62fa1082866819a26cf2",
+  "client/Dockerfile": "886ebed74c074a9836f89c0a0d1bdad1bad5db737259b7d4900dbd24dd191dc7",
+  "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb",
+  "../vol5-rag-blueprint/scripts/extraction_smoke.py": "da3fd12b24ad9329bb71a36356f06c85e928aaba1a6b8f695e8bc71fdd4b1a87"
+ },
+ "unchanged_since_the_first_session": {
+  "scripts/embed_cell.py": true,
+  "scripts/score_run.py": true,
+  "scripts/run_step.py": true,
+  "scripts/retrieval_datasets.py": true,
+  "scripts/retrieval_metrics.py": true,
+  "scripts/nim_retrieval_clients.py": true,
+  "client/Dockerfile": true
+ },
+ "programs_written_after_the_freeze": "none planned; if one is needed, its SHA-256 is written to the events file before its first use"
+}

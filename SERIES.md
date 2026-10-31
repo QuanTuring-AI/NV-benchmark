@@ -13,7 +13,8 @@ This file lists where each volume's evidence lives and which NVIDIA component ea
 | **Vol.1** · NIM vs Ollama on RTX 5090 | Published 2026-03-31 · [forum thread 365275](https://forums.developer.nvidia.com/t/nim-vs-ollama-on-rtx-5090-7-3x-faster-inference-nemo-guardrails-at-2-1-overhead-870-data-points/365275) | [`benchmark/`](benchmark/) | [`benchmark/README.md`](benchmark/README.md) |
 | **Vol.2** · NIM + Nemotron: two deployment options on 32 GB | Data published 2026-09-25 · write-up to follow | [`vol2-nemotron/`](vol2-nemotron/) | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) |
 | **Vol.3** · NeMo Guardrails on one RTX 5090: the models behind the rail | Baseline data published 2026-09-19 · judge study in progress | [`vol3-guardrails/`](vol3-guardrails/) | [`vol3-guardrails/README.md`](vol3-guardrails/README.md) |
-| Follow-ups to Vol.1's planned E4–E6 | See [`ROADMAP_STATUS.md`](ROADMAP_STATUS.md) | [`roadmap-e456/`](roadmap-e456/) | — |
+| **Vol.4** · Nemotron retrieval on one RTX 5090: embedding and reranking NIMs on whole corpora | Published 2026-10-31 | [`vol4-retriever/`](vol4-retriever/) | [`vol4-retriever/README.md`](vol4-retriever/README.md) |
+| Follow-ups to Vol.1's planned E4–E6 | Run as follow-ups; the records are in the directory | [`roadmap-e456/`](roadmap-e456/) | — |
 
 ---
 
@@ -47,7 +48,6 @@ NV-benchmark/
 ├── SERIES.md             # this file
 ├── CHANGELOG.md          # every change to this repository, and the tags from earlier pushes
 ├── PATH_MAP.md           # old path → new path through the 2026-09-28 and 2026-09-29 directory renames
-├── ROADMAP_STATUS.md     # what happened to Vol.1's planned experiments
 ├── DEPLOYMENT_NOTES.md   # 🔒 fixed path — linked from the published Vol.1 post
 ├── LICENSE
 ├── requirements.txt · docker-compose.yml · progress.json · scripts/   # Vol.1-period files
@@ -67,5 +67,5 @@ Rules for adding to this repo:
 1. **A new volume gets a new top-level directory** (`vol4-…/`, …) with the same four parts as `vol2-nemotron/`. Earlier volumes are moved only when the volume order changes; the renames of 2026-09-28 and 2026-09-29 are recorded in [`CHANGELOG.md`](CHANGELOG.md), and each new name is one never used before.
    **Exception: follow-ups to a published volume's stated plans get their own directory named after that plan** (today: `roadmap-e456/` for Vol.1's E4–E6). They complete an earlier volume's commitments rather than start a new volume, so filing them under a later volume would blur which volume the evidence belongs to.
 2. **Paths linked from anything published are fixed.** Today these are `DEPLOYMENT_NOTES.md` and `benchmark/`.
-3. **Published files are not edited.** Corrections and later status go in a new, dated file (for example `ROADMAP_STATUS.md` or a volume README's correction record).
+3. **Published files are not edited.** Corrections and later status go in a new, dated file (for example a volume README's correction record).
 4. **Question sets are reused by reference, not copied.** Record their SHA-256 in the volume index.

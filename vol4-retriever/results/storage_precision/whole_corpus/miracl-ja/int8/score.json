@@ -1,0 +1,67 @@
+{
+ "what": "exact search over the corpus with its vectors turned, in memory, into what a store of fewer bits would hold",
+ "dataset": "miracl-ja",
+ "split": "dev",
+ "at": "2026-10-12T08:06:55+0800",
+ "precision": "int8",
+ "bytes_per_number": 1,
+ "bytes_per_passage": 2048,
+ "size": 2048,
+ "queries_kept_as": "float32",
+ "int8": {
+  "scale": 1671.314208984375,
+  "scale_is": "127 / the 99.9th percentile of the absolute values of the unit vectors of the first piece",
+  "share_of_values_cut_mean": 0.000974
+ },
+ "stored_values_and_16_bit_floats": {
+  "pieces": 71,
+  "pieces_whose_every_number_a_16_bit_float_holds_exactly": 71,
+  "lowest_share_of_a_piece": 1.0,
+  "note": "where every piece is 1.0, the fp16 store gives back the same numbers and the fp16 search is the 32-bit search"
+ },
+ "source": {
+  "vectors_folder": "miracl-ja",
+  "queries": 860,
+  "passages": 6953614,
+  "layout": "pieces",
+  "checkpoint_file_sha256": "69257b7b2a6a2dc7eea3f524573b03cd64f7a40109ebaebb98458375000cf499",
+  "pieces": 71,
+  "queries_sha256": "6487e7e4a4c3226039a3ecd1ee792629fcb33b8da10f37abdfefc3eebba324eb",
+  "top": 100
+ },
+ "search": "exact cosine, numpy, one piece in memory at a time; no index; nothing converted is stored",
+ "metrics": {
+  "ndcg_cut_10": 0.7436357376645171,
+  "recall_100": 0.9855527031108423,
+  "queries_scored": 860,
+  "queries_with_results": 860,
+  "queries_without_results_counted_as_zero": 0,
+  "queries_in_run_not_in_qrels": 0,
+  "ignore_identical_ids": false,
+  "metric_library": {
+   "module": "pytrec_eval",
+   "measures": [
+    "ndcg_cut.10",
+    "recall.100"
+   ]
+  }
+ },
+ "against_the_32_bit_ranking": {
+  "file_sha256": "1dcd09b41fa7e04b2e4da7914bb47dc8ec048a4e8e4f60c0ce401cb6c574c920",
+  "queries": 860,
+  "share_of_the_first_100_in_common_mean": 0.983244,
+  "share_of_the_first_100_in_common_lowest": 0.91,
+  "queries_whose_first_10_are_the_same_in_the_same_order": 500
+ },
+ "judged_ids_found": true,
+ "host_seconds_of_this_call": 560.5,
+ "seconds_are": "wall time on a host that does other work; not a speed of anything",
+ "numpy": "2.4.6",
+ "program": {
+  "file": "storage_precision.py",
+  "sha256": "f575b8dc41821941f8fd8c0597a15415cacf783d98b936e9c92b6064a935adf2",
+  "uses": {
+   "search_whole_corpus.py": "c69bd45625b61b1f1db03ca4fcbcbc0c4f45e0faad237270421ae3e378b386da"
+  }
+ }
+}
