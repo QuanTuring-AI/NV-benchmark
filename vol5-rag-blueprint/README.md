@@ -147,8 +147,8 @@ The index itself is not one of the five: Vol.5 loaded the vectors of Vol.4 direc
 
 | # | Fact | Where |
 |---|---|---|
-| 1 | The ingestor (nv-ingest 26.3.0, pinned by the Blueprint) drops the last token of every text chunk: 99,721 of 100,000 passages. It is a regression: [NVIDIA/NeMo-Retriever#497](https://github.com/NVIDIA/NeMo-Retriever/pull/497) fixed the slice (merged 2025-02-28), and [#485](https://github.com/NVIDIA/NeMo-Retriever/pull/485) (merged 2025-03-20) moved the splitter with the slice as it was before the fix | [`results/night1/control_b_diagnosis.json`](results/night1/control_b_diagnosis.json), [`issue_repro/`](issue_repro/) |
-| 2 | The ingestor guesses the charset: 249 of 100,000 short UTF-8 passages with a few non-ASCII characters were decoded as another encoding | same file, [`results/c2/unit_repro_decode.json`](results/c2/unit_repro_decode.json) |
+| 1 | The ingestor (nv-ingest 26.3.0, pinned by the Blueprint) drops the last token of every text chunk: 99,721 of 100,000 passages. In the 26.3.0 image the chunk is cut by `text[chunk[0][0] : chunk[-1][0]]` (`nv_ingest_api/internal/transform/split_text.py`, line 103): the slice ends at the start of the last token, not at its end. [NVIDIA/NeMo-Retriever#497](https://github.com/NVIDIA/NeMo-Retriever/pull/497) fixed this slice (merged 2025-02-28), and [#485](https://github.com/NVIDIA/NeMo-Retriever/pull/485) (merged 2025-03-20) moved the splitter with the slice as it was before the fix | [`results/night1/control_b_diagnosis.json`](results/night1/control_b_diagnosis.json), [`issue_repro/`](issue_repro/) |
+| 2 | The ingestor guesses the charset: 249 of 100,000 short UTF-8 passages with a few non-ASCII characters were decoded as another encoding. In the ingestor-server 2.6.0 image (`nv-ingest-client` 26.3.0, `charset_normalizer` 3.4.4), `detect_encoding_and_read_text_file` (`nv_ingest_client/util/file_processing/extract.py`, lines 111–118) decodes a text file with the encoding `charset_normalizer.detect` returns, without trying UTF-8 first | same file, [`results/c2/unit_repro_decode.json`](results/c2/unit_repro_decode.json) |
 | 3 | The default store loses 0.125 nDCG@10 against exact search on 5.2 million passages | C1 |
 | 4 | `max_thinking_tokens` 256 has no effect: median reasoning of arm N 326 tokens; 105 of 200 above 256 with the parser on | [`results/c2/token_and_strip_detail.json`](results/c2/token_and_strip_detail.json), [`results/night3/r_vs_p.json`](results/night3/r_vs_p.json) |
 | 5 | Without the reasoning parser the answer model emits only the closing reasoning tag, the Blueprint's filter does not remove the reasoning, and the reader sees it | C2, cell R |
@@ -204,6 +204,10 @@ Paths are relative to this folder. `Check`: `rounds` (the stored value rounds to
 | P vs N: only P right · only N right | 2,090 · 389 | `results/night3/p_score.json` | `paired_P_N.{only_a,only_b}` | rounds |
 | P vs O: only O right · only P right | 1,663 · 227 | `results/night3/p_score.json` | `paired_P_O.{only_b,only_a}` | rounds |
 | P's ten passages: both · one · none of the supporting passages | 4,271 · 2,363 · 771 | `results/night3/p_score.json` | `supporting_passages_among_the_ten.{both,one,none}` | rounds |
+| Arm P*: contains · F1 · refusals | 0.604 · 0.522 · 298 | `results/p_star/p_star_score.json` | `score.{contains_rate,f1_mean,refused_by_pattern}` | rounds |
+| Arm P*: Wilson 95% | 0.593 · 0.615 | `results/p_star/p_star_score.json` | `score.{contains_wilson95[0],contains_wilson95[1]}` | rounds |
+| P* vs P: only P* right · only P right | 800 · 280 | `results/p_star/p_star_score.json` | `paired_Pstar_P.{only_a,only_b}` | rounds |
+| P* vs O: only O right · only P* right | 1,157 · 241 | `results/p_star/p_star_score.json` | `paired_Pstar_O.{only_b,only_a}` | rounds |
 | MIRACL zh P: share with a judged-relevant passage | 0.901 | `results/night3/zh_p_judged.json` | `share` | rounds |
 | Cell R: reasoning separated · above 256 tokens | 200 · 105 | `results/night3/r_vs_p.json` | `R.{reasoning_separated,reasoning_tokens_above_256}` | rounds |
 | Cell R: contains · P on the same questions | 100 · 105 | `results/night3/r_vs_p.json` | `{R.contains,P_same_questions.contains}` | rounds |
@@ -274,6 +278,11 @@ Every number of the forum post and its first reply that the table above does not
 | In the post | Number | File | Key | Check |
 |---|---|---|---|---|
 | Ingestor control: the slice is 100,000 passages | 100,000 | `results/night1/addendum_2_control_b_exact.json` | `100,000-passage slice` | text |
+| Defect 1: the line of `split_text.py` (nv-ingest 26.3.0) that cuts the chunk | 103 | `results/night1/control_b_diagnosis.json` | `split_text.py:103` | text |
+| Defect 1: the slice ends at the start of the last token | — | `results/night1/control_b_diagnosis.json` | `slice ends at the start of the last token` | text |
+| Defect 1: what NeMo-Retriever#497 fixed | 497 | `results/forum_counts.json` | `Fix bug causing last token in text splits to get dropped` | text |
+| Defect 2: the lines of `extract.py` (ingestor-server 2.6.0) that guess the charset | 111–118 | `results/night1/control_b_diagnosis.json` | `extract.py:111-118 charset_normalizer.detect then decode` | text |
+| Defect 2: `charset_normalizer` in that image | 3.4.4 | `results/c2/unit_repro_decode.json` | `"charset_normalizer": "3.4.4"` | text |
 
 **The request the Blueprint sends**
 
