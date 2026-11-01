@@ -1,6 +1,6 @@
 # Vol.5 · The NVIDIA RAG Blueprint's default path on one RTX 5090, on Vol.4's corpora
 
-**Measurements complete (2026-10-18 to 2026-10-22); not yet published as an article.** Everything below is read from the result files of this folder; the table at the end gives the file and key of every number.
+**Measurements complete (2026-10-18 to 2026-10-22; arm P\* on 2026-10-26 and 2026-11-01); not yet published as an article.** Everything below is read from the result files of this folder; the table at the end gives the file and key of every number.
 
 The [NVIDIA RAG Blueprint](https://github.com/NVIDIA-AI-Blueprints/rag) v2.6.2 is run here as it ships, with three changes (below), on the corpora of [Vol.4](../vol4-retriever/README.md): BEIR HotpotQA (5,233,329 passages, 7,405 questions, English) and MIRACL zh (4,934,368 passages, 393 questions). Vol.4 measured the retrieval models alone; this volume measures the Blueprint's whole query path around them.
 
@@ -9,7 +9,7 @@ The [NVIDIA RAG Blueprint](https://github.com/NVIDIA-AI-Blueprints/rag) v2.6.2 i
 | # | Question | Answer |
 |---|---|---|
 | Q1 | How much does the Blueprint's default vector store (Elasticsearch, `bbq_hnsw`) lose against exact search on a whole corpus? | HotpotQA: nDCG@10 **0.676** against **0.801** exact. The one setting the Blueprint exposes, `VECTOR_DB_TOPK`, reaches 0.726 at its limit of 400 |
-| Q2 | How much better is the Blueprint's answer than no retrieval, and how far from the right passages? | Answers containing the gold answer: **0.304** with no passages, **0.534** through the Blueprint, **0.728** with the two supporting passages |
+| Q2 | How much better is the Blueprint's answer than no retrieval, and how far from the right passages? | Answers containing the gold answer: **0.304** with no passages, **0.534** through the Blueprint, **0.604** with exact search's top 100 in place of the Blueprint's index (arm P\*), **0.728** with the two supporting passages |
 | Q3 | Does it answer anyway when the supporting passages are not in the store? | 200 questions: refusals by pattern **0.335** (a lower bound), by hand on 50 **0.540**; **0.120** still contain the gold answer |
 | Q4 | What fits on one 32 GB card, and how long does each stage take? | Embedder, reranker and Nemotron 3 Nano share the card after the answer model is ready only at a memory ratio of 0.65; the Blueprint's default request needs a context of **32,768** (at 16,384 all 200 requests were refused). Whole call p50 **1,203 ms** at concurrency 1 |
 
@@ -25,7 +25,7 @@ Blueprint v2.6.2 defaults throughout: Elasticsearch 9.3.0, heap 1 GB, `bbq_hnsw`
 
 **Controls of the three changes.** (a) The Blueprint's query side and Vol.4 produce the same query vectors: cosine at least 0.9999999995 on 20 questions. (b1) Exact search in the Blueprint's index equals exact search with numpy on a 100,000-passage slice for 200 of 200 questions. (b2) The same slice through the Blueprint's own ingestor overlaps 0.982 in the top 100; the difference comes from the ingestor (two faults, listed below), not from the loading.
 
-**Pre-registration.** [`results/night1/prediction_v5_night1.json`](results/night1/prediction_v5_night1.json) and supplements 1 to 7 in the same folder, each with its `.sha256` file, each frozen before the first container of its cells.
+**Pre-registration.** [`results/night1/prediction_v5_night1.json`](results/night1/prediction_v5_night1.json) and supplements 1 to 8 in the same folder, each with its `.sha256` file, each frozen before the first container of its cells. Supplement 8 ([`addendum_8_p_star.json`](results/night1/addendum_8_p_star.json), arm P\*) was frozen on 2026-10-22; that arm's first container started on 2026-10-26 ([`results/p_star/events.jsonl`](results/p_star/events.jsonl)).
 
 ## Figures
 
@@ -52,19 +52,28 @@ Program: [`figures/plot_vol5_figures.py`](figures/plot_vol5_figures.py) (`draw`,
 
 The cold start restarts Elasticsearch and drops the host's page cache before each setting: a probe on questions asked shortly before runs from memory and is faster (two such probes were voided: [`results/night3/VOID_latency_1000_and_redo.json`](results/night3/VOID_latency_1000_and_redo.json)).
 
+**The state of the index when each number was taken** ([`results/index_state.json`](results/index_state.json), written by [`scripts/index_state.py`](scripts/index_state.py)). The HotpotQA column's first query (C1 above, and the 100 candidates of arm P below) ran in the 29 minutes after the bulk load finished, while Elasticsearch was still merging segments. On 2026-10-20 the index had 32 segments, and on 2026-11-01 the same 32 (the two `_cat/segments` listings, [`results/day3/hotpotqa_whole_segments.txt`](results/day3/hotpotqa_whole_segments.txt) and [`hotpotqa_whole_segments_20261101.txt`](results/day3/hotpotqa_whole_segments_20261101.txt), agree row by row except for the container's address). Queried again on that settled index, 1,960 of 7,405 questions (26.5%) got a different top 100, and the scores moved by less than 0.001: nDCG@10 0.676 both times, Recall@100 0.766 the first time and 0.765 on the settled index ([`results/day3/nc_blueprint_100_now_score.json`](results/day3/nc_blueprint_100_now_score.json)). The `VECTOR_DB_TOPK` and `num_candidates` cells (from the 32-segment listing on) and every HotpotQA cold-start latency (4.9 hours and more after it, by the files' times on the measuring host) were measured on the settled index.
+
+The MIRACL zh column was queried in the 17 minutes after its load finished. A second query, 21 to 33 minutes after the load, returned a different top 100 for 237 of 393 questions (60.3%), with nDCG@10 0.628 and Recall@100 0.916 ([`results/night3/zh_clean_score.json`](results/night3/zh_clean_score.json), scored on 2026-11-01 by `scripts/es_ann_vs_exact.py score` from the run kept outside the repository). The index was deleted on 2026-10-22 and never queried again, so the zh column is for an index whose merges may not have finished; the column keeps the first query's numbers. The zh cold-start latency was measured about 23 hours after the load (the file's time on the measuring host; the latency runs did not keep their console).
+
 **The one setting.** `VECTOR_DB_TOPK` sets both `k` and `num_candidates` and stops at 400 (the request field `vdb_top_k` has `le=400`: `src/nvidia_rag/rag_server/server.py:446-450` of the Blueprint at v2.6.2, read into [`results/forum_counts.json`](results/forum_counts.json)). On the same index state: default 0.676 at 62.3 ms, 200 → 0.704 at 81.7 ms, 400 → 0.726 at 106.6 ms. Elasticsearch's own `num_candidates`, which the Blueprint does not expose, gives 0.696 at 500 and 0.718 at 1000 with `k` 100, at about the default latency. At 200 it returns the default's top 100 for 7,405 of 7,405 questions.
 
-## C2 · Answers, three arms
+## C2 · Answers, four arms
 
-Same answer model, same container, same request; only the passages change. Score: the normalised answer contains the gold answer (main), token F1, exact match.
+Same answer model and image, same request; only the passages change. Score: the normalised answer contains the gold answer (main), token F1, exact match.
 
 | Arm | Passages | Contains (Wilson 95%) | F1 | Refusals by pattern |
 |---|---|---|---|---|
 | N | none | 0.304 (0.294–0.315) | 0.285 | 85 |
 | P | the Blueprint's path: 100 found, reranked, top 10 | 0.534 (0.522–0.545) | 0.460 | 829 |
+| P\* | the same, with the 100 found by exact search over the same vectors (Vol.4) instead of the Blueprint's index | 0.604 (0.593–0.615) | 0.522 | 298 |
 | O | the two supporting passages | 0.728 (0.717–0.738) | 0.618 | 49 |
 
-Paired (exact McNemar): P right and N wrong on 2,090 questions, the reverse on 389; O right and P wrong on 1,663, the reverse on 227. The ten passages of P hold both supporting passages for 4,271 questions, one for 2,363, none for 771.
+Paired (exact McNemar): P right and N wrong on 2,090 questions, the reverse on 389; O right and P wrong on 1,663, the reverse on 227; P\* right and P wrong on 800, the reverse on 280; O right and P\* wrong on 1,157, the reverse on 241. The ten passages of P hold both supporting passages for 4,271 questions, one for 2,363, none for 771; those of P\* for 5,707, 1,627 and 71.
+
+**Where P\* sits between P and O.** Of the 19.4 points between P and O, 7.0 are the index (P\* − P). By the supporting passages among the ten ([`results/p_star/contains_by_supporting_passages.json`](results/p_star/contains_by_supporting_passages.json)): with both, P and P\* answer alike (0.718 and 0.713); with one, P\* answers 0.242 against P's 0.354, because the questions left with one passage even after exact search are the harder ones. That is why P\* stays below the 0.632 that supplement 8 projected from P's rates per stratum (the prediction band was 0.58–0.68).
+
+**The conditions of P and P\*.** Arm P's 100 candidates are the first HotpotQA query of C1 (above: taken while the index was still merging). Both arms called the reranker with four requests in flight; at that concurrency the reranking NIM batches requests from different questions, so the order of the ten can differ on a repeat run (seen in later work on the same NIM, not measured in this volume). The ten passages each answer saw are kept in per-question tables outside the repository, as supplement 8 says; this folder holds the counts made from them. Both answered at the concurrency the answer NIM reported it could hold on the card at the time: 7 for P (night 3, 2026-10-20), 10 for P\* (2026-10-26 for 379 questions, 2026-11-01 for the other 7,026, in fresh containers of the same image and profile, at the NIM's defaults as in P; [`results/p_star/events.jsonl`](results/p_star/events.jsonl)).
 
 **MIRACL zh** has no answer strings, so only arm P is measured there: 90.1% of the 393 questions have a judged-relevant passage among the ten sent.
 
@@ -161,6 +170,7 @@ The index itself is not one of the five: Vol.5 loaded the vectors of Vol.4 direc
 
 - Only the Blueprint's default query path. Extraction (layout, tables, OCR) is not measured: the corpora are text passages.
 - MIRACL ja is not run. MIRACL zh has no answer strings, so only retrieval and the passages sent are measured there.
+- Arm P\*'s candidates come from exact search over Vol.4's vectors (numpy, Vol.4's run file), not from Elasticsearch. P\* measures what the approximate index costs the answer; it is not a setting the Blueprint offers.
 - One card, one host (Windows 11, Docker Desktop on WSL2, driver 617.42). The memory counters are Windows's; the spill during the answer model's start may differ on Linux.
 - Concurrency 1 and 4 only; no claim about how many people one card can serve.
 - HotpotQA dev and MIRACL dev are evaluation sets. A system compared with these numbers must not be tuned or trained on them.
@@ -208,6 +218,29 @@ Paths are relative to this folder. `Check`: `rounds` (the stored value rounds to
 | Arm P*: Wilson 95% | 0.593 · 0.615 | `results/p_star/p_star_score.json` | `score.{contains_wilson95[0],contains_wilson95[1]}` | rounds |
 | P* vs P: only P* right · only P right | 800 · 280 | `results/p_star/p_star_score.json` | `paired_Pstar_P.{only_a,only_b}` | rounds |
 | P* vs O: only O right · only P* right | 1,157 · 241 | `results/p_star/p_star_score.json` | `paired_Pstar_O.{only_b,only_a}` | rounds |
+| P*'s ten passages: both · one · none of the supporting passages | 5,707 · 1,627 · 71 | `results/p_star/p_star_score.json` | `supporting_passages_among_the_ten.{both,one,none}` | rounds |
+| Points between P and O · of them the index (P* − P) | 19.4 · 7.0 | `results/c2/score_n_o.json` | `{O.contains_rate * 100 - results/night3/p_score.json::score.contains_rate * 100,results/p_star/p_star_score.json::score.contains_rate * 100 - results/night3/p_score.json::score.contains_rate * 100}` | rounds |
+| Contains by supporting passages among the ten, P: both · one · none | 0.718 · 0.354 · 0.065 | `results/p_star/contains_by_supporting_passages.json` | `arms.P.by_supporting_passages_among_the_ten.{both,one,none}.contains_rate` | rounds |
+| The same, P*: both · one · none | 0.713 · 0.242 · 0.141 | `results/p_star/contains_by_supporting_passages.json` | `arms.P*.by_supporting_passages_among_the_ten.{both,one,none}.contains_rate` | rounds |
+| Supplement 8: the band | 0.58 · 0.68 | `results/night1/addendum_8_p_star.json` | `expect.contains_rate.{low,high}` | rounds |
+| Supplement 8: the projection | 0.632 | `results/night1/addendum_8_p_star.json` | `applied to P*'s counts: 0.632` | text |
+| Supplement 8: frozen on | 2026-10-22 | `results/night1/addendum_8_p_star.json` | `"written_at": "2026-10-22T20:33:13+0800"` | text |
+| P*: questions answered on 2026-10-26 | 379 | `results/p_star/events.jsonl` | `the 379 ok rows all precede` | text |
+| P*: the first container of the arm | 2026-10-26 | `results/p_star/events.jsonl` | `{"at": "2026-10-26T12:26:36+0800", "kind": "copied_commands_start"` | text |
+| P*: answers finished on 2026-11-01 | 7405 | `results/p_star/events.jsonl` | `{"at": "2026-11-01T06:41:27+0800", "kind": "gen_done", "lines": 7405` | text |
+| Reranker requests in flight, P (supplement 4B) | 4 | `results/night1/addendum_4b_night3.json` | `"client": "4 questions in flight` | text |
+| The same for P* (supplement 8: P's rerank step unchanged) | 4 | `results/night1/addendum_8_p_star.json` | `"rerank": "scripts/p_arm.py rerank, unchanged from arm P` | text |
+| Answer concurrency, P (night 3) | 7 | `results/night3/events.jsonl` | `"kind": "nano_ready", "concurrency": 7,` | text |
+| Answer concurrency, P* | 10 | `results/p_star/events.jsonl` | `"kind": "nano_ready", "concurrency": 10,` | text |
+| HotpotQA index: segments on 2026-10-20 · on 2026-11-01 · rows compared | 32 · 32 · 32 | `results/index_state.json` | `hotpotqa.{segments_2026_10_20.segments,segments_2026_11_01.segments,segment_rows_compared}` | rounds |
+| The two segment listings equal but for the container's address | true | `results/index_state.json` | `hotpotqa.segment_listings_equal_but_the_ip_column` | equals |
+| HotpotQA first query against the settled index: different top 100 · share | 1,960 · 0.265 | `results/index_state.json` | `hotpotqa.first_query_against_the_settled_index.{different_top_100,share}` | rounds |
+| HotpotQA settled index, default query: nDCG@10 · Recall@100 | 0.676 · 0.765 | `results/day3/nc_blueprint_100_now_score.json` | `metrics.{ndcg_cut_10,recall_100}` | rounds |
+| HotpotQA first query: minutes after the load (end of the step) | 29 | `results/index_state.json` | `hotpotqa.first_query_minutes_after_the_load[1]` | rounds |
+| HotpotQA: first latency file after the 32-segment listing, hours | 4.9 | `results/index_state.json` | `cold_latency_files.hotpotqa_first_after_the_2026_10_20_segment_listing_hours` | rounds |
+| MIRACL zh: first query, minutes after the load (end) · second query (start · end) | 17 · 21 · 33 | `results/index_state.json` | `miracl_zh.{first_query_minutes_after_the_load[1],second_query_minutes_after_the_load[0],second_query_minutes_after_the_load[1]}` | rounds |
+| MIRACL zh second query: different top 100 · share · nDCG@10 · Recall@100 | 237 · 0.603 · 0.628 · 0.916 | `results/index_state.json` | `miracl_zh.{first_against_second.different_top_100,first_against_second.share,second_query_scores.ndcg_cut_10,second_query_scores.recall_100}` | rounds |
+| MIRACL zh cold-start latency: hours after the load ('about 23') | 23 | `results/index_state.json` | `cold_latency_files.zh_hours_after_the_load` | rounds |
 | MIRACL zh P: share with a judged-relevant passage | 0.901 | `results/night3/zh_p_judged.json` | `share` | rounds |
 | Cell R: reasoning separated · above 256 tokens | 200 · 105 | `results/night3/r_vs_p.json` | `R.{reasoning_separated,reasoning_tokens_above_256}` | rounds |
 | Cell R: contains · P on the same questions | 100 · 105 | `results/night3/r_vs_p.json` | `{R.contains,P_same_questions.contains}` | rounds |
@@ -251,6 +284,13 @@ Every number of the forum post and its first reply that the table above does not
 | Supporting passages given (arm O): contains the answer, % | 72.8 | `results/c2/score_n_o.json` | `O.contains_rate * 100` | rounds |
 | Arm P: both supporting passages among the ten, % of the questions | 57.7 | `results/night3/p_score.json` | `supporting_passages_among_the_ten.both / results/night1/c1_score.json::metrics.queries_scored * 100` | rounds |
 | Arm P: refusals by pattern, % of the questions | 11.2 | `results/night3/p_score.json` | `score.refused_by_pattern / results/night1/c1_score.json::metrics.queries_scored * 100` | rounds |
+| Exact search instead of the index (arm P*): contains the answer, % ('takes it to 60%') | 60.4 | `results/p_star/p_star_score.json` | `score.contains_rate * 100` | rounds |
+| Arm P*: both supporting passages among the ten, % of the questions | 77.1 | `results/p_star/p_star_score.json` | `supporting_passages_among_the_ten.both / results/night1/c1_score.json::metrics.queries_scored * 100` | rounds |
+| Points between the default path and the supporting passages ('the 19 points') | 19 | `results/c2/score_n_o.json` | `O.contains_rate * 100 - results/night3/p_score.json::score.contains_rate * 100` | rounds |
+| Of them, the vector index: P* - P ('about 7') | 7 | `results/p_star/p_star_score.json` | `score.contains_rate * 100 - results/night3/p_score.json::score.contains_rate * 100` | rounds |
+| One supporting passage among the ten even with exact search (P*): answered, % ('24%') | 24 | `results/p_star/contains_by_supporting_passages.json` | `arms.P*.by_supporting_passages_among_the_ten.one.contains_rate * 100` | rounds |
+| The one-passage questions of the default path (P): answered, % ('35%') | 35 | `results/p_star/contains_by_supporting_passages.json` | `arms.P.by_supporting_passages_among_the_ten.one.contains_rate * 100` | rounds |
+| The default path's reranker: questions in flight ('four requests in flight') | 4 | `results/night1/addendum_4b_night3.json` | `"client": "4 questions in flight` | text |
 | MIRACL zh, arm P: questions | 393 | `results/night3/zh_p_judged.json` | `questions` | equals |
 | MIRACL zh, arm P: a judged-relevant passage among the ten, % | 90.1 | `results/night3/zh_p_judged.json` | `share * 100` | rounds |
 | The same: Wilson 95% low, % | 86.7 | `results/night3/zh_p_judged.json` | `wilson95[0] * 100` | rounds |
@@ -269,6 +309,19 @@ Every number of the forum post and its first reply that the table above does not
 | The reply: `num_candidates` 1000 against the default, extra ms ('about 2 ms') | 2 | `results/night3/latency_cold/es-only_1000.json` | `settings.es-only:1000.ms.p50 - results/night3/latency_cold/blueprint_100.json::settings.blueprint:100.ms.p50` | rounds |
 | The reply: the three fast points (default, `num_candidates` 500 and 1000) lie within this many ms ('within 2.1 ms') | 2.1 | `results/night3/latency_cold/es-only_1000.json` | `settings.es-only:1000.ms.p50 - results/night3/latency_cold/blueprint_100.json::settings.blueprint:100.ms.p50` | rounds |
 | The same: `num_candidates` 500 lies between them, ms above the default | 1.0 | `results/night3/latency_cold/es-only_500.json` | `settings.es-only:500.ms.p50 - results/night3/latency_cold/blueprint_100.json::settings.blueprint:100.ms.p50` | rounds |
+| HotpotQA index: segments on 2026-10-20 ('32 segments') | 32 | `results/index_state.json` | `hotpotqa.segments_2026_10_20.segments` | equals |
+| The same on 2026-11-01 | 32 | `results/index_state.json` | `hotpotqa.segments_2026_11_01.segments` | equals |
+| The two segment listings agree row by row but for the container's address ('unchanged from 20 October to 1 November') | true | `results/index_state.json` | `hotpotqa.segment_listings_equal_but_the_ip_column` | equals |
+| The first HotpotQA query against the settled index: different top 100, % | 26.5 | `results/index_state.json` | `hotpotqa.first_query_against_the_settled_index.share * 100` | rounds |
+| The settled index, default query: nDCG@10 ('did not move: 0.676') | 0.676 | `results/day3/nc_blueprint_100_now_score.json` | `metrics.ndcg_cut_10` | rounds |
+| The same: Recall@100 ('0.766') | 0.765 | `results/day3/nc_blueprint_100_now_score.json` | `metrics.recall_100` | rounds |
+| MIRACL zh: the first query, minutes after the load ('in the 17 minutes') | 17 | `results/index_state.json` | `miracl_zh.first_query_minutes_after_the_load[1]` | rounds |
+| MIRACL zh: the second query, from minutes after the load ('20 to') | 21 | `results/index_state.json` | `miracl_zh.second_query_minutes_after_the_load[0]` | rounds |
+| The same, to ('to 33 minutes') | 33 | `results/index_state.json` | `miracl_zh.second_query_minutes_after_the_load[1]` | rounds |
+| MIRACL zh: a different top 100 on the second query, % | 60 | `results/index_state.json` | `miracl_zh.first_against_second.share * 100` | rounds |
+| MIRACL zh, second query: nDCG@10 | 0.628 | `results/night3/zh_clean_score.json` | `metrics.ndcg_cut_10` | rounds |
+| MIRACL zh, second query: Recall@100 | 0.916 | `results/night3/zh_clean_score.json` | `metrics.recall_100` | rounds |
+| MIRACL zh cold-start latency: hours after the load (the file's time on the measuring host) | 23 | `results/index_state.json` | `cold_latency_files.zh_hours_after_the_load` | rounds |
 | The index's rescoring: '3×' oversampling in the mapping the Blueprint creates | 3 | `results/night1/c1_vector_mapping.json` | `"oversample":3.0` | text |
 | Brute force over the whole HotpotQA store: queries · top-100 overlap with exact search | 5 | `results/night1/c1_brute5_score.json` | `overlap_at_100.queries` | equals |
 | The same: mean top-100 overlap | 1 | `results/night1/c1_brute5_score.json` | `overlap_at_100.mean` | equals |
@@ -278,11 +331,6 @@ Every number of the forum post and its first reply that the table above does not
 | In the post | Number | File | Key | Check |
 |---|---|---|---|---|
 | Ingestor control: the slice is 100,000 passages | 100,000 | `results/night1/addendum_2_control_b_exact.json` | `100,000-passage slice` | text |
-| Defect 1: the line of `split_text.py` (nv-ingest 26.3.0) that cuts the chunk | 103 | `results/night1/control_b_diagnosis.json` | `split_text.py:103` | text |
-| Defect 1: the slice ends at the start of the last token | — | `results/night1/control_b_diagnosis.json` | `slice ends at the start of the last token` | text |
-| Defect 1: what NeMo-Retriever#497 fixed | 497 | `results/forum_counts.json` | `Fix bug causing last token in text splits to get dropped` | text |
-| Defect 2: the lines of `extract.py` (ingestor-server 2.6.0) that guess the charset | 111–118 | `results/night1/control_b_diagnosis.json` | `extract.py:111-118 charset_normalizer.detect then decode` | text |
-| Defect 2: `charset_normalizer` in that image | 3.4.4 | `results/c2/unit_repro_decode.json` | `"charset_normalizer": "3.4.4"` | text |
 
 **The request the Blueprint sends**
 
@@ -366,8 +414,10 @@ Every number of the forum post and its first reply that the table above does not
 | In the post | Number | File | Key | Check |
 |---|---|---|---|---|
 | The first pre-registration of the sessions in this volume | 18 | `results/night1/prediction_v5_night1.json` | `"written_at": "2026-10-18T` | text |
-| The last supplement | 22 | `results/night1/addendum_7_c4_context_32768.json` | `"written_at": "2026-10-22T` | text |
-| Supplements ('seven addenda') | 7 | `results/night1/addendum_7_c4_context_32768.json` | `supplement 7` | text |
+| The last supplement (8, arm P*) | 22 | `results/night1/addendum_8_p_star.json` | `"written_at": "2026-10-22T` | text |
+| Supplements ('eight addenda') | 8 | `results/night1/addendum_8_p_star.json` | `supplement 8` | text |
+| Arm P*: its first container, 26 October | 26 | `results/p_star/events.jsonl` | `{"at": "2026-10-26T12:26:36+0800", "kind": "copied_commands_start"` | text |
+| Arm P*: the rest of its answers, 1 November | 1 | `results/p_star/events.jsonl` | `{"at": "2026-11-01T06:41:27+0800", "kind": "gen_done", "lines": 7405` | text |
 | The driver | 617.42 | `results/night1/events.jsonl` | `"driver": "617.42"` | text |
 
 Run `python ../tools/check_claims.py README.md` to check these rows with the others.
