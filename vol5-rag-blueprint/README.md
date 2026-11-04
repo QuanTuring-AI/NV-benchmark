@@ -288,8 +288,8 @@ Every number of the forum post and its first reply that the table above does not
 | Arm P*: both supporting passages among the ten, % of the questions | 77.1 | `results/p_star/p_star_score.json` | `supporting_passages_among_the_ten.both / results/night1/c1_score.json::metrics.queries_scored * 100` | rounds |
 | Points between the default path and the supporting passages ('the 19 points') | 19 | `results/c2/score_n_o.json` | `O.contains_rate * 100 - results/night3/p_score.json::score.contains_rate * 100` | rounds |
 | Of them, the vector index: P* - P ('about 7') | 7 | `results/p_star/p_star_score.json` | `score.contains_rate * 100 - results/night3/p_score.json::score.contains_rate * 100` | rounds |
-| One supporting passage among the ten even with exact search (P*): answered, % ('24%') | 24 | `results/p_star/contains_by_supporting_passages.json` | `arms.P*.by_supporting_passages_among_the_ten.one.contains_rate * 100` | rounds |
-| The one-passage questions of the default path (P): answered, % ('35%') | 35 | `results/p_star/contains_by_supporting_passages.json` | `arms.P.by_supporting_passages_among_the_ten.one.contains_rate * 100` | rounds |
+| One supporting passage among the ten even with exact search (P*): contain the answer, % ('24%') | 24 | `results/p_star/contains_by_supporting_passages.json` | `arms.P*.by_supporting_passages_among_the_ten.one.contains_rate * 100` | rounds |
+| The one-passage questions of the default path (P): contain the answer, % ('35%') | 35 | `results/p_star/contains_by_supporting_passages.json` | `arms.P.by_supporting_passages_among_the_ten.one.contains_rate * 100` | rounds |
 | The default path's reranker: questions in flight ('four requests in flight') | 4 | `results/night1/addendum_4b_night3.json` | `"client": "4 questions in flight` | text |
 | MIRACL zh, arm P: questions | 393 | `results/night3/zh_p_judged.json` | `questions` | equals |
 | MIRACL zh, arm P: a judged-relevant passage among the ten, % | 90.1 | `results/night3/zh_p_judged.json` | `share * 100` | rounds |
@@ -313,15 +313,21 @@ Every number of the forum post and its first reply that the table above does not
 | The same on 2026-11-01 | 32 | `results/index_state.json` | `hotpotqa.segments_2026_11_01.segments` | equals |
 | The two segment listings agree row by row but for the container's address ('unchanged from 20 October to 1 November') | true | `results/index_state.json` | `hotpotqa.segment_listings_equal_but_the_ip_column` | equals |
 | The first HotpotQA query against the settled index: different top 100, % | 26.5 | `results/index_state.json` | `hotpotqa.first_query_against_the_settled_index.share * 100` | rounds |
-| The settled index, default query: nDCG@10 ('did not move: 0.676') | 0.676 | `results/day3/nc_blueprint_100_now_score.json` | `metrics.ndcg_cut_10` | rounds |
-| The same: Recall@100 ('0.766') | 0.765 | `results/day3/nc_blueprint_100_now_score.json` | `metrics.recall_100` | rounds |
+| The first HotpotQA query, default: nDCG@10 ('0.676 both times') | 0.676 | `results/night1/c1_score.json` | `metrics.ndcg_cut_10` | rounds |
+| The settled index, default query: nDCG@10 ('0.676 both times') | 0.676 | `results/day3/nc_blueprint_100_now_score.json` | `metrics.ndcg_cut_10` | rounds |
+| The first HotpotQA query, default: Recall@100 ('0.766 then') | 0.766 | `results/night1/c1_score.json` | `metrics.recall_100` | rounds |
+| The settled index, default query: Recall@100 ('then 0.765') | 0.765 | `results/day3/nc_blueprint_100_now_score.json` | `metrics.recall_100` | rounds |
+| nDCG@10, first query minus settled | 0.0001 | `results/night1/c1_score.json` | `metrics.ndcg_cut_10 - results/day3/nc_blueprint_100_now_score.json::metrics.ndcg_cut_10` | rounds |
+| The same, inside the bound the post states ('moved by less than 0.001') | 0.001 | `results/night1/c1_score.json` | `metrics.ndcg_cut_10 - results/day3/nc_blueprint_100_now_score.json::metrics.ndcg_cut_10` | within |
+| Recall@100, first query minus settled | 0.0003 | `results/night1/c1_score.json` | `metrics.recall_100 - results/day3/nc_blueprint_100_now_score.json::metrics.recall_100` | rounds |
+| The same, inside the bound the post states ('moved by less than 0.001') | 0.001 | `results/night1/c1_score.json` | `metrics.recall_100 - results/day3/nc_blueprint_100_now_score.json::metrics.recall_100` | within |
 | MIRACL zh: the first query, minutes after the load ('in the 17 minutes') | 17 | `results/index_state.json` | `miracl_zh.first_query_minutes_after_the_load[1]` | rounds |
-| MIRACL zh: the second query, from minutes after the load ('20 to') | 21 | `results/index_state.json` | `miracl_zh.second_query_minutes_after_the_load[0]` | rounds |
+| MIRACL zh: the second query, from minutes after the load ('21 to') | 21 | `results/index_state.json` | `miracl_zh.second_query_minutes_after_the_load[0]` | rounds |
 | The same, to ('to 33 minutes') | 33 | `results/index_state.json` | `miracl_zh.second_query_minutes_after_the_load[1]` | rounds |
 | MIRACL zh: a different top 100 on the second query, % | 60 | `results/index_state.json` | `miracl_zh.first_against_second.share * 100` | rounds |
 | MIRACL zh, second query: nDCG@10 | 0.628 | `results/night3/zh_clean_score.json` | `metrics.ndcg_cut_10` | rounds |
 | MIRACL zh, second query: Recall@100 | 0.916 | `results/night3/zh_clean_score.json` | `metrics.recall_100` | rounds |
-| MIRACL zh cold-start latency: hours after the load (the file's time on the measuring host) | 23 | `results/index_state.json` | `cold_latency_files.zh_hours_after_the_load` | rounds |
+| MIRACL zh cold-start latency: hours after the load, the file's time on the measuring host ('about 23 hours') | 23 | `results/index_state.json` | `cold_latency_files.zh_hours_after_the_load` | rounds |
 | The index's rescoring: '3×' oversampling in the mapping the Blueprint creates | 3 | `results/night1/c1_vector_mapping.json` | `"oversample":3.0` | text |
 | Brute force over the whole HotpotQA store: queries · top-100 overlap with exact search | 5 | `results/night1/c1_brute5_score.json` | `overlap_at_100.queries` | equals |
 | The same: mean top-100 overlap | 1 | `results/night1/c1_brute5_score.json` | `overlap_at_100.mean` | equals |
@@ -418,6 +424,9 @@ Every number of the forum post and its first reply that the table above does not
 | Supplements ('eight addenda') | 8 | `results/night1/addendum_8_p_star.json` | `supplement 8` | text |
 | Arm P*: its first container, 26 October | 26 | `results/p_star/events.jsonl` | `{"at": "2026-10-26T12:26:36+0800", "kind": "copied_commands_start"` | text |
 | Arm P*: the rest of its answers, 1 November | 1 | `results/p_star/events.jsonl` | `{"at": "2026-11-01T06:41:27+0800", "kind": "gen_done", "lines": 7405` | text |
+| Arm P* answered at this many requests in flight, 26 October ('10 requests in flight') | 10 | `results/p_star/events.jsonl` | `{"at": "2026-10-26T18:03:23+0800", "kind": "nano_ready", "concurrency": 10,` | text |
+| The same, 1 November | 10 | `results/p_star/events.jsonl` | `{"at": "2026-11-01T05:27:44+0800", "kind": "nano_ready", "concurrency": 10,` | text |
+| The default path (arm P, night 3, the container before its answers) answered at ('the default path at 7') | 7 | `results/night3/events.jsonl` | `{"at": "2026-10-20T03:42:36+0800", "kind": "nano_ready", "concurrency": 7,` | text |
 | The driver | 617.42 | `results/night1/events.jsonl` | `"driver": "617.42"` | text |
 
 Run `python ../tools/check_claims.py README.md` to check these rows with the others.
