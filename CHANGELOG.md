@@ -2,6 +2,13 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-11-08 · Vol.5 forum post published
+
+- **Vol.5 forum post:** the article was posted on the NVIDIA Developer Forum on 2026-11-08. The link is on the front page, at the top of [`vol5-rag-blueprint/README.md`](vol5-rag-blueprint/README.md), in `SERIES.md` and in `releases/vol5.md`. → <https://forums.developer.nvidia.com/t/nemotron-on-nvidias-rag-blueprint-one-rtx-5090-5-2m-passage-hotpotqa-end-to-end-and-nine-defaults-to-check-before-you-deploy/388384>
+- **Where the figures are in the thread:** the cover illustration and the answers figure are in the post; the candidate-count figure is in reply #1.
+- **The forum's editor rewrote some markup:** [`CHRONICLE.md`](CHRONICLE.md) lists every difference between the text on the forum and the text whose SHA-256 the tag message of `vol5` gives, and gives the SHA-256 of the text on the forum.
+- **The tag `vol5` does not move:** it stays at the commit of the publication, the repository as the article describes it. This commit adds the address and the note on the forum text only.
+
 ## 2026-11-08 · Vol.5 published: Nemotron on NVIDIA's RAG Blueprint, one RTX 5090
 
 - **Vol.5 is published.** The NVIDIA RAG Blueprint v2.6.2 query path with its defaults on one RTX 5090: Elasticsearch, the Llama Nemotron reranking NIM and Nemotron 3 Nano against every passage of BEIR HotpotQA and MIRACL zh; what the default vector store loses against exact search and what its one setting gets back; the answer with no passages, through the Blueprint, with exact search's candidates and with the supporting passages; the supporting passages kept out; two ingestor defects; and three NIMs on one card. → [`vol5-rag-blueprint/README.md`](vol5-rag-blueprint/README.md)

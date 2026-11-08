@@ -1,5 +1,7 @@
 # Vol.5 · Nemotron on NVIDIA's RAG Blueprint, one RTX 5090: 5.2M-passage HotpotQA end to end, and nine defaults to check before you deploy
 
+Forum post: <https://forums.developer.nvidia.com/t/nemotron-on-nvidias-rag-blueprint-one-rtx-5090-5-2m-passage-hotpotqa-end-to-end-and-nine-defaults-to-check-before-you-deploy/388384>
+
 > **Reproduce:** `git checkout vol5`. Every number of the article has a row in the claim → evidence tables below; `python tools/check_claims.py vol5-rag-blueprint/README.md` checks them all.
 
 Everything below is read from the result files of this folder; the table at the end gives the file and key of every number.

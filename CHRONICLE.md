@@ -47,6 +47,8 @@ The message of `vol4` gives the SHA-256 of the article's source text as prepared
 
 `vol5` was created on 2026-11-08, the day Vol.5 was published, at the commit that merges it, and does not move.
 
+The message of `vol5` gives the SHA-256 of the article's source text as prepared for the forum, before the images were attached. The text on the forum ([thread 388384](https://forums.developer.nvidia.com/t/nemotron-on-nvidias-rag-blueprint-one-rtx-5090-5-2m-passage-hotpotqa-end-to-end-and-nine-defaults-to-check-before-you-deploy/388384)) differs from it in these ways and no others: the first line, the title, is the topic's title; the image placeholders are the uploaded images; the forum's editor wrote list items with `*`, table rules with `----` and empty table cells with two spaces, and put a backslash before each square bracket in the quoted error messages; the first reply begins with an empty line, and neither text ends with a line break. The SHA-256 of the text the forum returns at `/raw/388384/1` and `/raw/388384/2`, read on 2026-11-08: post `bb8ec97f10ea5819c8d45cb1987b0feb87ec9b15bb9c5766db5f3c3fe6174515`, first reply `81271f01af04faf87763cf6f44d8a1d0225e0308aaff3b520c18abcb0e573e32`. The three images in the thread have the same pixels as the figures in `vol5-rag-blueprint/figures/`; the forum stored all three as smaller PNG files.
+
 So there are six tags: `vol1`, `vol2` and `chronicle` point to `281e014f26f656b24d66b3f68d1406611e034e4b`, `vol3` to `2a57b8e75ba30bb64aada180be0676348577a0bc`, `vol4` to `c6c52ee5fd5c36b2b4acd370ca622bba23eb1ba7`, and `vol5` to the commit that merges Vol.5.
 
 To rerun a harness byte for byte at the paths it was written with, [`PATH_MAP.md`](PATH_MAP.md) gives the commit for each volume.
