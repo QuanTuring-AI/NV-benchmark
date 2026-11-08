@@ -1,0 +1,86 @@
+{
+ "what": "supplement 7 to the night-1 pre-registration: C4, configuration 5 (answer model context 32768), alone and then with the embedder and the reranker on the card, and the time of each stage after the answer model is ready",
+ "draft": false,
+ "written_at": "2026-10-22T04:28:48+0800",
+ "supplements": [
+  {
+   "file": "prediction_v5_night1.json",
+   "sha256": "0906d10717e5d5ab1b7fb77a0f7e555ebd43934bc6069135a396cc85f30d55b5"
+  },
+  {
+   "file": "addendum_1_control_a_program.json",
+   "sha256": "dcdf3921b78aab252eb691f89e0958c1c8110d54636fee60f9871f9f23a484dc"
+  },
+  {
+   "file": "addendum_2_control_b_exact.json",
+   "sha256": "0933c6dc6e36adc4635921392b09c9f6251933d84f605e4e853b75385afd375e"
+  },
+  {
+   "file": "addendum_3_c2_n_o.json",
+   "sha256": "6a10b1ce109e4d58179286ec8ae721fe9726577fdc027a9f06e482d3b1ad5281"
+  },
+  {
+   "file": "addendum_4a_day.json",
+   "sha256": "4f0b6b74a92ee567b6b6e6bac87266672862a8e963bc4f78ffd7154a09b01c0e"
+  },
+  {
+   "file": "addendum_4b_night3.json",
+   "sha256": "6e96d3e4ff42ad331c2c7f0ad90d1248e19005fea5a0faa50718708473b43fed"
+  },
+  {
+   "file": "addendum_5_c4.json",
+   "sha256": "4bd9cce718599713ea6a26805349cf8a0b2b44fc83555b80574fb2dfdf36357e"
+  },
+  {
+   "file": "addendum_6_c4_ready.json",
+   "sha256": "040cd3105e9697e691b9b293c900841d8846a5ea872a5eb29061899d45e4c8cd"
+  }
+ ],
+ "why": "supplement 6's cell stayed on the card after the answer model was ready, but every one of its 200 requests was refused (HTTP 400): the Blueprint asks the answer model for max_tokens 16256 by default, and configuration 1's context of 16384 leaves room for a prompt of at most 128 tokens. This configuration is added only so that the Blueprint's default request fits; it is not added to pass the spill rule (the ready cell did not spill). Context length did not change the memory used in supplement 5's four configurations; the ratio did",
+ "also_on_record": "the memory cells of supplement 5 called each service once with max_tokens 512 (all answered); the Blueprint's own request was refused at every context of 16384 or less. A reader who deploys with the defaults meets this",
+ "configuration": {
+  "name": "ready5",
+  "answer_model": {
+   "image": "nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12",
+   "id": "sha256:bd38d2d5438950b49427ee41944ee04f84cd38383265add8df2230480539e6f9",
+   "setting": "NIM_MAX_MODEL_LEN 32768, --max-num-seqs 26, NIM_KVCACHE_PERCENT 0.65, --reasoning-parser nemotron_v3; everything else as supplement 6"
+  },
+  "embedder": {
+   "image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2",
+   "id": "sha256:16f49c13bc9ee101f4abfaba972b2dc2e587871ab7474913ac40dbf0bffb7d92",
+   "setting": "as supplement 6 (fp16, deviation 1)"
+  },
+  "reranker": {
+   "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2:1.10.0",
+   "id": "sha256:cab08cc2b620235f6d75bb7ee198d13352f61ae48285524e304f2904380ea8ca",
+   "setting": "the NIM's defaults"
+  },
+  "order": "embedder, reranker, answer model; 60 s after the answer model is ready before anything is timed"
+ },
+ "steps": [
+  "1 the answer model alone at this setting (tag llm5): does it start; S and D as before; max_model_len read back from GET /v1/models and the cache configuration line (vllm:cache_config_info) from GET /metrics",
+  "2 while it is alone: two captured requests of the RAG server sent byte for byte (scripts/blueprint_request_probe.py): arm N's (no passages) and arm P's (ten passages), both max_tokens 16256; each must return 200",
+  "3 the three on the card in the order above, the answer model's start recorded as before (supplement 5's rule, start transient)",
+  "4 60 s after ready, the steady verdict after ready (scripts/c4_ready_judge.py, supplement 6's rule, S of the answer model from step 1, S of the embedder and the reranker from their alone runs kept)",
+  "5 the RAG server's stages for the 200 questions of the C3 sample at concurrency 1, then 4 (scripts/c4_timing.py unchanged, compose_es/c4_n3.env)"
+ ],
+ "branches": {
+  "answer_model_does_not_start": "stop; the error text is recorded; C4 is written in the three layers of the question file",
+  "a_probe_request_is_refused": "the error text is recorded; stop (no coresident run)",
+  "spilled_after_ready": "the times are still measured; every file and figure is marked coresident_spilled",
+  "c4_beyond_the_reported_concurrency": "if concurrency 4 is above what the answer model reports it can hold, that is recorded as it is; no setting is changed"
+ },
+ "kept": "the alone runs of the n3 embedder and the reranker (2026-10-21); the not-coresident table",
+ "not_done": "no smaller ratio, no other configuration, no change to the embedder or the reranker (the owner's rule)",
+ "stop": "the owner gave the card on 2026-10-22 (\"卡給你 開始工作吧\") without an end time; the default end, 08:00, applies; what is not done by then goes into a progress file",
+ "harness_sha256": {
+  "scripts/spill_judge.py": "ba54b907ae1d5fafd3bb24154927d6faedbac709c632fb657d5d1d57c2dd65db",
+  "scripts/c4_ready_judge.py": "4b5e96109981f42c7beaf16aad7712e1072127e86f678adff5b4ff29970bd40e",
+  "scripts/c4_timing.py": "df30bd40cae4d65954440570a6bf4dd806f3c5cd7d1670c8c0995a2f785ad271",
+  "scripts/blueprint_request_probe.py": "484d8b5c345d2cbe2ecbf59bcd726a1ad180c96cc122ca7f7b95a496eab78a7c",
+  "compose_es/c4_n3.env": "783256e3f3cc954366af50ac502e50ac3ab1efa7d1272ca917f04fd4630f56a1",
+  "compose_es/override_rag_server.yaml": "3119b002e2adf4247f49a35f2acec1b129c857be34cb8f4288a45f88266ed26f",
+  "eval/hotpot_scoring.py": "7cd6979e31c526a6690f52ca1be2a38e586aee6537693daefbb116652fe8edf6"
+ },
+ "generator": "scripts/gen_addendum_7_c4_context_32768.py"
+}

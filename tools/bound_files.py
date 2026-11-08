@@ -2,7 +2,9 @@
 """Enumerate every SHA-256 binding in this repository and, on request, print the .gitattributes lines that keep the
 bound files stored byte for byte.
 
-A binding is any place where a frozen pre-registration (prediction*.json) or a .sha256 sidecar records a digest.
+A binding is any place where a frozen pre-registration (prediction*.json), a supplement to one (addendum*.json) or a
+.sha256 sidecar records a digest. (Supplements were not walked before 2026-10-22: the files they alone bind had no
+-text line; see CHANGELOG.md.)
 Enumeration does not use a list of known key names: every JSON key whose name contains "sha256" (any case, any
 depth) is a binding class, and each class is reported with its count so that a class that was never walked is
 visible as absent rather than as a pass.
@@ -126,7 +128,8 @@ def resolve(root, binder, name):
 
 def enumerate_bindings(root="."):
     out = []
-    for pf in sorted(glob.glob(os.path.join(root, "**", "prediction*.json"), recursive=True)):
+    pfs = glob.glob(os.path.join(root, "**", "prediction*.json"), recursive=True) + glob.glob(os.path.join(root, "**", "addendum*.json"), recursive=True)
+    for pf in sorted(set(pfs)):
         rel = _norm(os.path.relpath(pf, root))
         if any(s in rel.split("/") for s in SKIP_DIRS):
             continue
@@ -266,7 +269,7 @@ def enumerate_bindings_history(root=".", rev="HEAD", rule="current-bytes"):
         base = rel.split("/")[-1]
         if any(s in rel.split("/") for s in SKIP_DIRS):
             continue
-        if re.fullmatch(r"prediction.*\.json", base):
+        if re.fullmatch(r"(prediction|addendum).*\.json", base):
             try:
                 doc = json.loads(h.blob(h.rev, rel).decode("utf-8-sig"))
             except Exception as e:
@@ -339,6 +342,9 @@ def self_test_history():
         open(os.path.join(t, "a", "fixed.txt"), "wb").write(b"lf\n")
         doc = {"harness_sha256": {"a/data.txt": sha_of_bytes(b"hello\n"), "a/other.txt": "0" * 64, "a/fixed.txt": sha_of_bytes(b"lf\r\n")}}
         open(os.path.join(t, "a", "pred", "prediction_x.json"), "w", encoding="utf-8", newline="\n").write(json.dumps(doc))
+        open(os.path.join(t, "a", "late.txt"), "wb").write(b"late\n")
+        sup = {"harness_sha256": {"a/late.txt": sha_of_bytes(b"late\n")}}
+        open(os.path.join(t, "a", "pred", "addendum_1_x.json"), "w", encoding="utf-8", newline="\n").write(json.dumps(sup))
         g("add", "-A"); g("commit", "-q", "-m", "freeze")
         open(os.path.join(t, "a", "fixed.txt"), "wb").write(b"lf\r\n")
         g("add", "a/fixed.txt"); g("commit", "-q", "-m", "restore bytes")
@@ -347,13 +353,14 @@ def self_test_history():
         bs, h = enumerate_bindings_history(t)
         v = verify_history(bs, h, t)
         today = enumerate_bindings(t)
-        got = {"renamed path resolves in its anchor commit": [b["target"] for b in v["ok"]] == ["b/data.txt"],
+        got = {"renamed path resolves in its anchor commit": sorted(b["target"] for b in v["ok"]) == ["b/data.txt", "b/late.txt"],
+               "a supplement's binding is walked (addendum*.json)": any(b["source"].endswith("addendum_1_x.json") for b in bs),
                "bytes restored after the freeze -> ok_later, with that commit": [b["target"] for b in v["ok_later"]] == ["b/fixed.txt"]
                and v["ok_later"][0]["verified_at"] == (restored, "a/fixed.txt"),
                "wrong digest fails": [b["target"] for b in v["mismatch"]] == ["b/other.txt"],
-               "current blob = verified blob for all three": len(v["current_same"]) == 3,
-               "disk bytes verify for the right digests only": sorted(b["target"] for b in v["disk_ok"]) == ["b/data.txt", "b/fixed.txt"],
-               "today's-tree mode leaves all three unresolved": sorted(b["status"] for b in today if b["kind"] == "file") == ["unresolved"] * 3}
+               "current blob = verified blob for all four": len(v["current_same"]) == 4,
+               "disk bytes verify for the right digests only": sorted(b["target"] for b in v["disk_ok"]) == ["b/data.txt", "b/fixed.txt", "b/late.txt"],
+               "today's-tree mode leaves all four unresolved": sorted(b["status"] for b in today if b["kind"] == "file") == ["unresolved"] * 4}
     for k, ok in got.items():
         print(("PASS " if ok else "FAIL ") + k)
     return 0 if all(got.values()) else 1

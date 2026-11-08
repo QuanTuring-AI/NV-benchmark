@@ -1,0 +1,53 @@
+{
+ "what": "supplement 4A to the night-1 pre-registration: two pieces of work on the CPU only, ruled on 2026-10-20 (third supplement to the design ticket)",
+ "draft": false,
+ "written_at": "2026-10-20T01:57:20+0800",
+ "supplements": [
+  {
+   "file": "prediction_v5_night1.json",
+   "sha256": "0906d10717e5d5ab1b7fb77a0f7e555ebd43934bc6069135a396cc85f30d55b5"
+  },
+  {
+   "file": "addendum_1_control_a_program.json",
+   "sha256": "dcdf3921b78aab252eb691f89e0958c1c8110d54636fee60f9871f9f23a484dc"
+  },
+  {
+   "file": "addendum_2_control_b_exact.json",
+   "sha256": "0933c6dc6e36adc4635921392b09c9f6251933d84f605e4e853b75385afd375e"
+  },
+  {
+   "file": "addendum_3_c2_n_o.json",
+   "sha256": "6a10b1ce109e4d58179286ec8ae721fe9726577fdc027a9f06e482d3b1ad5281"
+  }
+ ],
+ "num_candidates_probe": {
+  "why": "C1's default query (k = num_candidates = 100) gave nDCG@10 0.6759 against Vol.4's exact 0.80079 on the same vectors (known before this supplement)",
+  "the_blueprint_knob": "one setting moves both numbers: VECTOR_DB_TOPK (or a request's vdb_top_k). The Blueprint passes k = fetch_k = top_k (utils/vdb/elasticsearch/elastic_vdb.py, retrieval_langchain) and langchain-elasticsearch 1.0.0 in the rag-server image passes num_candidates = fetch_k (_sync/vectorstores.py:481). The Blueprint accepts 1..400 (rag_server/validation.py:139). The same number is the count of passages sent to the reranker",
+  "settings": {
+   "blueprint": "k = num_candidates = 200 and 400 (400 is the Blueprint's limit); all returned passages kept, the quality read on the first 100",
+   "es_only": "k = 100, num_candidates = 200, 500 and 1000 (the search engine's own setting; the ruling's 500 and 1000 are beyond the Blueprint's knob, so they are listed apart)"
+  },
+  "unchanged": "the index (the same one, no force-merge), the mapping's rescore_vector oversample 3.0, the query vectors",
+  "measured": "per setting, all 7,405 questions: overlap at 10 and 100 with Vol.4's exact run, nDCG@10 and Recall@100; the index's segment count (_cat/segments) before the probe",
+  "latency": "not measured (latency_not_measured: daytime_host); the clean window of the night times a fixed 1,000 questions",
+  "program": "scripts/es_num_candidates.py (the query of es_ann_vs_exact.py, imported)",
+  "expectation": "quality rises with num_candidates and stays below the exact search at every setting; confidence low"
+ },
+ "miracl_zh_index": {
+  "precondition": "at least 80 GB free on the disk after the load (the index of HotpotQA took 52.9 GB for 5.2 million passages)",
+  "load": "es_bulk_load.py, unchanged, into index miracl_zh_whole with the captured mapping and metadata template; MIRACL zh's 4,934,368 passages with Vol.4's vectors from the 16-bit store",
+  "validity_gate": "a 100,000-passage slice (the first 100,000 in corpus order) loaded by the same program into miracl_zh_slice100k; Elasticsearch's exact search there against numpy's exact search over the same vectors for the first 200 question ids (sorted) of MIRACL zh dev: every question equal once equal-score swaps at the 100th place are set aside (exact_equal_check.py, tie 5e-5). Not passed: no figure of the zh index is reported",
+  "measured": "as C1: the default query (k = num_candidates = 100) for all 393 dev questions: overlap at 10 and 100 with Vol.4's exact run (whole-corpus run of the published volume), nDCG@10 and Recall@100 with MIRACL's dev judgements; negative control (k 10, num_candidates 10, no rescore) at least 0.05 lower at 10; 5 questions by brute force on the whole index against Vol.4's exact; load seconds, index size, Docker VM memory every 30 s",
+  "latency": "not measured by day (latency_not_measured: daytime_host); the clean window of the night times it",
+  "qrels": "qrels.miracl-v1.0-zh-dev.tsv is in TREC form; it is read as TREC (a copy with the .trec extension, bytes unchanged)",
+  "expectation": "overlap at 100 below HotpotQA's 0.784 or near it; nDCG@10 below Vol.4's exact; confidence low"
+ },
+ "harness_sha256": {
+  "scripts/es_num_candidates.py": "392a818a6138aeb7b40cf671d5a7d009daf7cf18f998902e567114e029f2114d",
+  "scripts/es_ann_vs_exact.py": "c27d0e76e0ae489db1dce00f6a271aa0cff97f9adf8b9a2afc9b07debef42e0f",
+  "scripts/es_bulk_load.py": "3514d3e4a837fd121385c4ce614d17e4b1b7fe210f383e97b57877e62e89d510",
+  "scripts/exact_equal_check.py": "49e011c3bdcb2ed3f13bbd87491fd36ec02f028313d48b0c1dc70adb0d9959f1",
+  "scripts/slice_exact.py": "4a7235cf3c9ebe756dbb6ba928d844d7eb4e628e725195b19bd88a52b8e7e926"
+ },
+ "generator": "scripts/gen_addendum_4a_day.py"
+}

@@ -23,13 +23,13 @@
 | **Vol.2** | **Nemotron on NIM.** Nemotron 3 Nano on one RTX 5090 with NIM | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) | [Releases → `vol2`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol2) |
 | **Vol.3** | **NeMo Guardrails.** Which model to put behind the self-check rail and the content-safety rail: detection rate, false alarms and the cost of each verdict, each model measured on its own | [`vol3-guardrails/README.md`](vol3-guardrails/README.md) | [Releases → `vol3`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol3) |
 | **Vol.4** | **NeMo Retriever.** Embedding and reranking NIMs on public data sets, every passage of MIRACL zh and ja and of BEIR HotpotQA searched: what each one finds, what reranking adds, and where each NIM stops getting faster | [`vol4-retriever/README.md`](vol4-retriever/README.md) | [Releases → `vol4`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol4) |
-| **Vol.5** | **The NVIDIA RAG Blueprint on one card.** The whole pipeline end to end (planned) | — | — |
+| **Vol.5** | **The NVIDIA RAG Blueprint.** Its default query path on one RTX 5090 against every passage of BEIR HotpotQA and MIRACL zh: what the default vector store loses against exact search, what the answer gains from retrieval, what the ingestor stores, and what fits on one card | [`vol5-rag-blueprint/README.md`](vol5-rag-blueprint/README.md) | [Releases → `vol5`](https://github.com/QuanTuring-AI/NV-benchmark/releases/tag/vol5) |
 
 Each volume's page opens with its headline and a run command, then gives a **claim → evidence** table (every number, its file, its key), how it was measured, and the measurement conditions including what we could not explain. The March 2026 original of Vol.1 is archived in [`benchmark/`](benchmark/) and [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md), frozen as published.
 
 ## What this repository is
 
-Measurements of NVIDIA's inference stack on one workstation GPU. So far the stack covers NIM, Nemotron, NeMo Guardrails and NeMo Retriever; the RAG Blueprint comes next. Each volume follows the same method:
+Measurements of NVIDIA's inference stack on one workstation GPU. So far the stack covers NIM, Nemotron, NeMo Guardrails, NeMo Retriever and the RAG Blueprint. Each volume follows the same method:
 - Every measurement is pre-registered before its first container: predictions and rules in a file whose SHA-256 is fixed before the run.
 - Container images are recorded by digest.
 - Each arm passes a health gate: an engine that runs from system memory instead of the GPU is caught before any comparison.
@@ -57,9 +57,10 @@ Vol.1 as first published (2026-03) is in [`benchmark/`](benchmark/) and [`DEPLOY
 | `vol2` | Vol.2, *Nemotron 3 Nano on one RTX 5090* — the repository as the article describes it |
 | `vol3` | Vol.3, *NeMo Guardrails on one RTX 5090: the models behind the rail* — the repository as the article describes it |
 | `vol4` | Vol.4, *Nemotron retrieval on one RTX 5090* — the repository as the article describes it |
+| `vol5` | Vol.5, *Nemotron on NVIDIA's RAG Blueprint, one RTX 5090* — the repository as the article describes it |
 | `chronicle` | The chronicle of this repository's tags, [`CHRONICLE.md`](CHRONICLE.md): every earlier tag, its full hash and what it held |
 
-A tag opens the whole repository as it was at one commit; all four point to the same one. Earlier tags were retired on 2026-10-01 and are listed in [`CHRONICLE.md`](CHRONICLE.md).
+A tag opens the whole repository as it was at one commit; [`CHRONICLE.md`](CHRONICLE.md) gives the commit of each. Earlier tags were retired on 2026-10-01 and are listed in [`CHRONICLE.md`](CHRONICLE.md).
 
 *Directories were renamed on 2026-09-28 and 2026-09-29: [`PATH_MAP.md`](PATH_MAP.md) maps every old path. Every change to this repository: [`CHANGELOG.md`](CHANGELOG.md).*
 

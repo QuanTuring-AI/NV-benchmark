@@ -1,0 +1,108 @@
+{
+ "what": "supplement 3 to the night-1 pre-registration: cell C2, arms N and O, on BEIR HotpotQA's 7,405 questions",
+ "draft": false,
+ "written_at": "2026-10-19T04:37:43+0800",
+ "supplements": [
+  {
+   "file": "prediction_v5_night1.json",
+   "sha256": "0906d10717e5d5ab1b7fb77a0f7e555ebd43934bc6069135a396cc85f30d55b5"
+  },
+  {
+   "file": "addendum_1_control_a_program.json",
+   "sha256": "dcdf3921b78aab252eb691f89e0958c1c8110d54636fee60f9871f9f23a484dc"
+  },
+  {
+   "file": "addendum_2_control_b_exact.json",
+   "sha256": "0933c6dc6e36adc4635921392b09c9f6251933d84f605e4e853b75385afd375e"
+  }
+ ],
+ "authorised_by": "the second supplement of 2026-10-18 to the Vol.5 design ticket (arms N and O on the card, the night after it)",
+ "arms": {
+  "N": "the Blueprint's path with use_knowledge_base false: system message of prompt.yaml's chat_template, user message 'Query: <question>' (rag_server/main.py _llm_chain). This is the Blueprint's knowledge-base switch, not a single variable: against P it changes the prompt and the passages",
+  "O": "the Blueprint's RAG prompt (rag_template) with the question's two supporting passages as the context, each as the server formats a document ('File: <passage id>\\nContent: <Vol.4 passage text>'), joined by a blank line, in the order of the id table's gold_passages (sorted as strings); then 'Query: <question>\\n\\nAnswer: ' (main.py _rag_chain). O differs from the later arm P only in the passages"
+ },
+ "request": {
+  "how": "every field other than the messages is the request the Blueprint's RAG server 2.6.0 itself sent to the answer model (read with capture_service.py; results/c2/request_params.json); the client sends it to the NIM unchanged, streaming included",
+  "fields": {
+   "model": "nvidia/nemotron-3-nano",
+   "temperature": 0.0,
+   "max_tokens": 16256,
+   "top_p": 1.0,
+   "min_tokens": 0,
+   "ignore_eos": false,
+   "stream": true,
+   "stream_options": {
+    "include_usage": true
+   },
+   "chat_template_kwargs": {
+    "enable_thinking": true
+   },
+   "nvext": {
+    "max_thinking_tokens": 256
+   }
+  },
+  "note": "the Blueprint's defaults put the reasoning budget at 256 tokens (LLM_REASONING_BUDGET, sent to a local NIM as nvext.max_thinking_tokens) and the answer limit at 16,256 tokens",
+  "control": {
+   "file": "results/c2/request_control.json",
+   "captured_requests": 25,
+   "by_arm": {
+    "N": 20,
+    "O": 5
+   },
+   "all_bodies_equal": true,
+   "negative": "built with the passages reversed, as arm N, without nvext, or with one space added to the question, the body differs (each checked once)"
+  },
+  "prompt_file": "the rag-server 2.6.0 image's nvidia_rag/rag_server/prompt.yaml (its chat_template and rag_template are line for line those of the v2.6.2 repository)"
+ },
+ "questions": "all 7,405 of the HotpotQA id table, in sorted id order; for each question N then O",
+ "answer_model": {
+  "nim": {
+   "image": "nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12",
+   "id": "sha256:bd38d2d5438950b49427ee41944ee04f84cd38383265add8df2230480539e6f9"
+  },
+  "profile": "NVFP4 (deviation 2 of BLUEPRINT_SETTINGS.md)",
+  "settings": "the NIM's defaults; the only branch: if the NIM's max_model_len is below 17,000 (a request asks for up to 16,256 new tokens), the container is replaced once with NIM_MAX_MODEL_LEN=32768, and that is recorded",
+  "alone": "the only container on the card; Elasticsearch (C1) on the CPU only",
+  "beside_c1": "the answers run while C1 loads its index (the ticket allows it; C1's load time is then measured with the card's work on the same host, and its record says so) and pause while C1's timed searches run (the driver reads C1's events every 30 s and stops the client, which resumes from its files after C1 is done)"
+ },
+ "client": {
+  "program": "scripts/answer_arms.py run",
+  "in_flight": "the integer part of the KV-cache concurrency the NIM prints at start ('Maximum concurrency for N tokens per request'), at most 32; read from the log, never typed",
+  "timing": "not measured: the result files carry timing_not_measured cpu_shared_with_c1",
+  "stop": "the run stops itself at 09:45 (the owner gave the card until 10:00 on 2026-10-19) and continues the next night from its files; a request that failed is sent again by the next run"
+ },
+ "final_answer": "the content of the stream; when it holds '</think>' (reasoning left in the content by a server without a reasoning parser), the text after the last '</think>'. The raw content and the reasoning are both kept (outside the repository)",
+ "tokens": "answer tokens and reasoning tokens counted with the model's tokenizer.json (SHA-256 c6021eb6847e682f..., the NIM's NVFP4 snapshot); the usage chunk's completion_tokens kept beside them",
+ "scores": {
+  "main": "contains (eval/hotpot_scoring.py)",
+  "second": "token F1",
+  "listed": "EM, refusals by pattern",
+  "intervals": "Wilson 95% per arm",
+  "paired": "N against O (exact McNemar) as soon as both are complete; P against O and N after C1",
+  "program": "scripts/answer_arms.py score"
+ },
+ "branches": {
+  "finish_reason_length": "over 2% of an arm: recorded as it is, max_tokens not changed (it is the default)",
+  "nim_does_not_start": "the error text is the result; stop",
+  "not_finished": "the question it stopped at goes in the progress file; the next night continues"
+ },
+ "expectation": {
+  "O_contains_rate": "between 0.70 and 0.90",
+  "N_contains_rate": "between 0.25 and 0.50",
+  "O_minus_N": "positive, McNemar p below 0.001",
+  "reasoning_tokens": "near or below 256 per answer if the NIM honours nvext.max_thinking_tokens; if not, many times more (whether it does is a finding either way)",
+  "confidence": "low"
+ },
+ "harness_sha256": {
+  "scripts/answer_arms.py": "f121b86768fab704f8b7df35a844dec7921f952f2bd9be6dcf62bed552ab62fc",
+  "scripts/capture_service.py": "b9d5034bc5235b8522c352217baffaae28ca63ce530bc9be8916ef13b773c721",
+  "scripts/capture_requests.py": "e26eb9a36fbf9e003e3a2df6dc24de43f90c8e95756fa91930b9d0f2d0d2da6c",
+  "eval/hotpot_scoring.py": "7cd6979e31c526a6690f52ca1be2a38e586aee6537693daefbb116652fe8edf6",
+  "eval/rag_eval.py": "9ed964de1ad84fa956c403963139d742c7eed1abf89273ccd730b13b3dd11d19",
+  "results/c2/request_params.json": "ed09e9b257ad7538bef5c183db169bf6c57aeac5b1b9575b6f55ceb1d41f4042",
+  "results/c2/request_control.json": "2b937b23b43fb5876c65e6a3e57d31619069b8b6ac437093300376ef561ac134",
+  "compose_es/capture.env": "add179686d5fbb919e5fe903d66cc16abc53a7e767532a329e9ec18c71ea457e",
+  "compose_es/override_rag_server.yaml": "3119b002e2adf4247f49a35f2acec1b129c857be34cb8f4288a45f88266ed26f"
+ },
+ "generator": "scripts/gen_addendum_3_c2_n_o.py"
+}

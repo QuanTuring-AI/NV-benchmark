@@ -1,0 +1,85 @@
+{
+ "what": "supplement 6 to the night-1 pre-registration: C4, the time of each stage with the embedder, the reranker and the answer model all on the card, measured after the answer model is ready",
+ "draft": false,
+ "written_at": "2026-10-21T17:10:30+0800",
+ "supplements": [
+  {
+   "file": "prediction_v5_night1.json",
+   "sha256": "0906d10717e5d5ab1b7fb77a0f7e555ebd43934bc6069135a396cc85f30d55b5"
+  },
+  {
+   "file": "addendum_1_control_a_program.json",
+   "sha256": "dcdf3921b78aab252eb691f89e0958c1c8110d54636fee60f9871f9f23a484dc"
+  },
+  {
+   "file": "addendum_2_control_b_exact.json",
+   "sha256": "0933c6dc6e36adc4635921392b09c9f6251933d84f605e4e853b75385afd375e"
+  },
+  {
+   "file": "addendum_3_c2_n_o.json",
+   "sha256": "6a10b1ce109e4d58179286ec8ae721fe9726577fdc027a9f06e482d3b1ad5281"
+  },
+  {
+   "file": "addendum_4a_day.json",
+   "sha256": "4f0b6b74a92ee567b6b6e6bac87266672862a8e963bc4f78ffd7154a09b01c0e"
+  },
+  {
+   "file": "addendum_4b_night3.json",
+   "sha256": "6e96d3e4ff42ad331c2c7f0ad90d1248e19005fea5a0faa50718708473b43fed"
+  },
+  {
+   "file": "addendum_5_c4.json",
+   "sha256": "4bd9cce718599713ea6a26805349cf8a0b2b44fc83555b80574fb2dfdf36357e"
+  }
+ ],
+ "why": "supplement 5's four configurations spilled only while the answer model was starting; after it was ready the three services stayed on the card (about 21.9 GB, shared 549-569 MiB) and answered. This cell times that steady state. It is not a fifth configuration: it is configuration 1 of supplement 5",
+ "configuration": {
+  "answer_model": {
+   "image": "nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12",
+   "id": "sha256:bd38d2d5438950b49427ee41944ee04f84cd38383265add8df2230480539e6f9",
+   "setting": "NIM_MAX_MODEL_LEN 16384, --max-num-seqs 26, NIM_KVCACHE_PERCENT 0.65, --reasoning-parser nemotron_v3; the Blueprint's nims.yaml environment (as supplement 5)"
+  },
+  "embedder": {
+   "image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2",
+   "id": "sha256:16f49c13bc9ee101f4abfaba972b2dc2e587871ab7474913ac40dbf0bffb7d92",
+   "setting": "fp16 (NIM_ENGINE_PRECISION=fp16), the volume's deviation 1: the same vector space as the HotpotQA index, so the passages found are the right ones (supplement 5's memory cells used the Blueprint's default embedder and stay as they are)"
+  },
+  "reranker": {
+   "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2:1.10.0",
+   "id": "sha256:cab08cc2b620235f6d75bb7ee198d13352f61ae48285524e304f2904380ea8ca",
+   "setting": "the NIM's defaults"
+  },
+  "order": "embedder, reranker, answer model; 60 s after the answer model is ready before anything is timed"
+ },
+ "alone_runs": {
+  "new": "the n3 embedder alone, and the answer model alone at the configuration's setting: S (steady Windows shared usage, spill_judge.steady_shared) and D (card delta)",
+  "kept": "the reranker's alone run of supplement 5 (2026-10-21 03:5x)",
+  "embedder_alone_times": "while the n3 embedder is alone: its query calls for the same 200 questions at c = 1 (stage_alone_timing.py embed), so the not-coresident table has the same embedder"
+ },
+ "spill_after_ready": {
+  "program": "scripts/c4_ready_judge.py",
+  "window": "the Windows counter samples from 30 samples (60 s) after the answer model's ready sample to the end of the timing runs",
+  "rule": "spilled_after_ready if any sample of the window rises above S_embed + S_rank + S_llm + 512 MiB",
+  "branch": "the times are measured either way; if it holds, every file and figure is marked coresident_spilled"
+ },
+ "stages": {
+  "program": "scripts/c4_timing.py (unchanged) through the RAG server 2.6.0 with compose_es/c4_n3.env",
+  "how": "POST /v1/generate, use_knowledge_base true, collection hotpotqa_whole, every other setting the default; per question the server's own metrics of its last stream chunk (retrieval_time_ms = query embedding + vector search, context_reranker_time_ms, llm_ttft_ms, rag_ttft_ms, llm_generation_time_ms) copied as sent, and in the client the whole call and the first answer text",
+  "questions": "the 200 of the C3 sample (seed 20261018), not filtered",
+  "load": "concurrency 1, then 4",
+  "compare": "beside the not-coresident table (each service alone, the same 200 questions): how much each stage slows down on the shared card",
+  "branch": "if the answer model refuses requests at c = 4 (sequence limit), that is recorded as it is; no setting is changed"
+ },
+ "not_done": "no smaller ratio, no other configuration (the owner's rule)",
+ "stop": "the owner gave the card until 20:30 on 2026-10-21",
+ "harness_sha256": {
+  "scripts/spill_judge.py": "ba54b907ae1d5fafd3bb24154927d6faedbac709c632fb657d5d1d57c2dd65db",
+  "scripts/c4_ready_judge.py": "4b5e96109981f42c7beaf16aad7712e1072127e86f678adff5b4ff29970bd40e",
+  "scripts/c4_timing.py": "df30bd40cae4d65954440570a6bf4dd806f3c5cd7d1670c8c0995a2f785ad271",
+  "scripts/stage_alone_timing.py": "943428bd0d2cc577f84176a361591ac53ebd937e059926c747a681c4f90337f3",
+  "compose_es/c4_n3.env": "783256e3f3cc954366af50ac502e50ac3ab1efa7d1272ca917f04fd4630f56a1",
+  "compose_es/override_rag_server.yaml": "3119b002e2adf4247f49a35f2acec1b129c857be34cb8f4288a45f88266ed26f",
+  "eval/hotpot_scoring.py": "7cd6979e31c526a6690f52ca1be2a38e586aee6537693daefbb116652fe8edf6"
+ },
+ "generator": "scripts/gen_addendum_6_c4_ready.py"
+}

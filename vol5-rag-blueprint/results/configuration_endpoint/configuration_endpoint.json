@@ -1,0 +1,179 @@
+{
+ "what": "GET /v1/configuration of the Blueprint's rag-server (nvcr.io/nvidia/blueprint/rag-server:2.6.0), started with compose_es/blueprint_query_path.env exactly as the README's step 5, before any NIM was up; and settings in effect in the same container that the response does not mention",
+ "when": "2026-10-26T00:57:50+0800",
+ "request": "GET http://127.0.0.1:8081/v1/configuration",
+ "reported_fields": [
+  {
+   "field": "rag_configuration.temperature",
+   "value": 0.0
+  },
+  {
+   "field": "rag_configuration.top_p",
+   "value": 1.0
+  },
+  {
+   "field": "rag_configuration.max_tokens",
+   "value": 16256
+  },
+  {
+   "field": "rag_configuration.vdb_top_k",
+   "value": 100
+  },
+  {
+   "field": "rag_configuration.reranker_top_k",
+   "value": 10
+  },
+  {
+   "field": "rag_configuration.confidence_threshold",
+   "value": 0.0
+  },
+  {
+   "field": "feature_toggles.enable_reranker",
+   "value": true
+  },
+  {
+   "field": "feature_toggles.enable_citations",
+   "value": true
+  },
+  {
+   "field": "feature_toggles.enable_guardrails",
+   "value": false
+  },
+  {
+   "field": "feature_toggles.enable_query_rewriting",
+   "value": false
+  },
+  {
+   "field": "feature_toggles.enable_vlm_inference",
+   "value": false
+  },
+  {
+   "field": "feature_toggles.enable_filter_generator",
+   "value": false
+  },
+  {
+   "field": "models.llm_model",
+   "value": "nvidia/nemotron-3-nano"
+  },
+  {
+   "field": "models.embedding_model",
+   "value": "nvidia/nemotron-3-embed-1b"
+  },
+  {
+   "field": "models.reranker_model",
+   "value": "nvidia/llama-nemotron-rerank-1b-v2"
+  },
+  {
+   "field": "models.vlm_model",
+   "value": "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning"
+  },
+  {
+   "field": "endpoints.llm_endpoint",
+   "value": "http://nano:8000"
+  },
+  {
+   "field": "endpoints.embedding_endpoint",
+   "value": "http://embed:8000/v1"
+  },
+  {
+   "field": "endpoints.reranker_endpoint",
+   "value": "http://rerank:8000"
+  },
+  {
+   "field": "endpoints.vlm_endpoint",
+   "value": "http://vlm-ms:8000/v1"
+  },
+  {
+   "field": "endpoints.vdb_endpoint",
+   "value": "http://elasticsearch:9200"
+  }
+ ],
+ "in_effect_not_reported": [
+  {
+   "setting": "APP_VECTORSTORE_SEARCHTYPE",
+   "value_in_effect": "dense",
+   "in_the_response": false
+  },
+  {
+   "setting": "APP_VECTORSTORE_RANKER_TYPE",
+   "value_in_effect": "rrf",
+   "in_the_response": false
+  },
+  {
+   "setting": "APP_VECTORSTORE_DENSE_WEIGHT",
+   "value_in_effect": "0.5",
+   "in_the_response": false
+  },
+  {
+   "setting": "APP_VECTORSTORE_SPARSE_WEIGHT",
+   "value_in_effect": "0.5",
+   "in_the_response": false
+  },
+  {
+   "setting": "CONVERSATION_HISTORY",
+   "value_in_effect": "0",
+   "in_the_response": false
+  },
+  {
+   "setting": "ENABLE_QUERY_DECOMPOSITION",
+   "value_in_effect": "false",
+   "in_the_response": false
+  },
+  {
+   "setting": "ENABLE_AGENTIC_RAG",
+   "value_in_effect": "false",
+   "in_the_response": false
+  },
+  {
+   "setting": "ENABLE_REFLECTION",
+   "value_in_effect": "false",
+   "in_the_response": false
+  },
+  {
+   "setting": "MAX_REFLECTION_LOOP",
+   "value_in_effect": "3",
+   "in_the_response": false
+  },
+  {
+   "setting": "REFLECTION_LLM",
+   "value_in_effect": "nvidia/nemotron-3-super-120b-a12b",
+   "in_the_response": false
+  },
+  {
+   "setting": "CONTEXT_RELEVANCE_THRESHOLD",
+   "value_in_effect": "1",
+   "in_the_response": false
+  },
+  {
+   "setting": "RESPONSE_GROUNDEDNESS_THRESHOLD",
+   "value_in_effect": "1",
+   "in_the_response": false
+  },
+  {
+   "setting": "LLM_ENABLE_THINKING",
+   "value_in_effect": "true",
+   "in_the_response": false
+  },
+  {
+   "setting": "LLM_REASONING_BUDGET",
+   "value_in_effect": "256",
+   "in_the_response": false
+  },
+  {
+   "setting": "LLM_LOW_EFFORT",
+   "value_in_effect": "true",
+   "in_the_response": false
+  },
+  {
+   "setting": "APP_RETRIEVER_SCORETHRESHOLD",
+   "value_in_effect": "0.25",
+   "in_the_response": false
+  },
+  {
+   "setting": "RERANKER_SCORE_THRESHOLD",
+   "value_in_effect": "0.0",
+   "in_the_response": false
+  }
+ ],
+ "how_checked": "each setting's name, lower-cased, searched in the whole response; values read from the container's environment (docker inspect); names holding KEY, TOKEN, SECRET or PASSWORD were dropped before reading"
+}

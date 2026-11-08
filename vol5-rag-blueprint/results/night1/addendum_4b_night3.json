@@ -1,0 +1,105 @@
+{
+ "what": "supplement 4B to the night-1 pre-registration: night 3, ruled on 2026-10-20 (third supplement to the design ticket)",
+ "draft": false,
+ "written_at": "2026-10-20T02:59:52+0800",
+ "supplements": [
+  {
+   "file": "prediction_v5_night1.json",
+   "sha256": "0906d10717e5d5ab1b7fb77a0f7e555ebd43934bc6069135a396cc85f30d55b5"
+  },
+  {
+   "file": "addendum_1_control_a_program.json",
+   "sha256": "dcdf3921b78aab252eb691f89e0958c1c8110d54636fee60f9871f9f23a484dc"
+  },
+  {
+   "file": "addendum_2_control_b_exact.json",
+   "sha256": "0933c6dc6e36adc4635921392b09c9f6251933d84f605e4e853b75385afd375e"
+  },
+  {
+   "file": "addendum_3_c2_n_o.json",
+   "sha256": "6a10b1ce109e4d58179286ec8ae721fe9726577fdc027a9f06e482d3b1ad5281"
+  },
+  {
+   "file": "addendum_4a_day.json",
+   "sha256": "4f0b6b74a92ee567b6b6e6bac87266672862a8e963bc4f78ffd7154a09b01c0e"
+  }
+ ],
+ "gate": "Steam and game processes 0, no other project's GPU container, G8; one NIM on the card at a time; the card work is not timed and may run while the day's CPU work (supplement 4A) is still running",
+ "clean_window": {
+  "when": "with no container on the card and nothing else running on the host: after the day's CPU work (supplement 4A) has ended and after the card work that does not need it (arm P, C3, cell R); MIRACL zh P, which needs the zh index, runs on the card after the clean window",
+  "c1": "the default query (k = num_candidates = 100) for all 7,405 HotpotQA questions, timed as in C1 (c = 1, first ten apart), on the same index; the run compared with C1's first run question by question (run_diff.py: identical, same set in another order, different sets, all listed). The index has merged segments since C1 (store size 52.9 GB at C1, 44.2 GB on 2026-10-20 02:01; 32 segments at 01:58), so differences are possible and are reported, not corrected",
+  "num_candidates": "c = 1 latency on 1,000 questions (seed 20261020) for blueprint:100, 200, 400 and es-only:200, 500, 1000, one setting after the other (es_latency_probe.py)",
+  "zh": "the default query for MIRACL zh's 393 questions, timed, compared with the day's untimed run (run_diff.py)"
+ },
+ "arm_P": {
+  "what": "the Blueprint's knowledge-base path, step by step, each request as the RAG server sends it (p_arm.py; control: results/c2/p_request_control.json, 5 of 5 questions equal for ranking and answer bodies, 5 negative controls unequal)",
+  "retrieve": "C1's run of the default query (night 1, c1_default.trec), the top 100 per question",
+  "rerank": {
+   "nim": {
+    "image": "nvcr.io/nim/nvidia/llama-nemotron-rerank-1b-v2:1.10.0",
+    "id": "sha256:cab08cc2b620235f6d75bb7ee198d13352f61ae48285524e304f2904380ea8ca"
+   },
+   "settings": "the NIM's defaults (the Blueprint's reranker and version, nims.yaml)",
+   "requests": "batches of 32 (32, 32, 32, 4), truncate END, the model the NIM lists; the 10 highest logits over all batches, highest first",
+   "client": "4 questions in flight; not timed"
+  },
+  "answer": {
+   "nim": {
+    "image": "nvcr.io/nim/nvidia/nemotron-3-nano:2.0.12",
+    "id": "sha256:bd38d2d5438950b49427ee41944ee04f84cd38383265add8df2230480539e6f9"
+   },
+   "settings": "as supplement 3 (NVFP4 profile, the NIM's defaults, concurrency from GET /metrics kv_cache_max_concurrency, at most 32)",
+   "request": "the request of arm O with the reranked 10 passages (answer_arms.py, arm O builder); final answer and token rules as supplement 3"
+  },
+  "scores": "contains (main), F1, EM, refusals, finish reasons, Wilson 95%; paired exact McNemar P against N and P against O on the same 7,405 questions; the share of questions whose 10 passages hold both supporting passages / one / none",
+  "expectation": {
+   "P_contains": "between O's 0.728 and N's 0.304, nearer O",
+   "P_minus_N": "positive, p below 0.001",
+   "O_minus_P": "positive, p below 0.001",
+   "confidence": "low"
+  }
+ },
+ "C3": {
+  "questions": "the 200 of the fixed sample (seed 20261018)",
+  "retrieve": "results/c2/c3_retrieval.json: the kNN query with a filter inside the kNN clause leaving out each question's two supporting passages (311 supporting passages removed from the unfiltered top 100; none left)",
+  "then": "rerank and answer as arm P",
+  "measured": "refusal by pattern (rag_eval.py) with Wilson 95%%; contains against the gold answer (an answer from the model's own knowledge); 50 answers (seed 20261020) labelled by hand as refusal / answers anyway / other before the pattern's verdict is looked at, and the agreement reported",
+  "expectation": "most answers are not refusals, given the RAG prompt's rule to answer when the context holds relevant data and the reasoning model; confidence low"
+ },
+ "zh_P": {
+  "questions": "MIRACL zh dev, 393",
+  "retrieve": "the day's default run on the zh index",
+  "then": "rerank and answer as arm P (the Blueprint's English prompts, as shipped)",
+  "measured": "the share of questions whose 10 passages hold a passage judged relevant (qrels relevance > 0), Wilson 95%; refusals by pattern; finish reasons. MIRACL has no answer strings: no answer score",
+  "expectation": "share of questions with a judged-relevant passage among the 10 between 0.6 and 0.9; confidence low"
+ },
+ "cell_R": {
+  "what": "Nano with the reasoning parser the NIM 2.0.12 documentation gives for reasoning models: the container command-line argument --reasoning-parser nemotron_v3 (docs.nvidia.com/nim/large-language-models/2.0.12/ai-assistant-integrations/codex-cli.html: 'Reasoning models emit thinking tokens. Without a parser, that text lands in the assistant message'; its example serves a Nemotron 3 model with nemotron_v3; parser names are model-specific)",
+  "questions": "the 200 of the C3 sample with arm P's reranked passages (not filtered)",
+  "request": "unchanged (the Blueprint's, with nvext.max_thinking_tokens 256)",
+  "measured": "the reasoning separated (reasoning_content) or not; reasoning tokens per answer and the share at most 256; whether the content still holds '</think>' or reasoning (what the Blueprint would show); contains on the same 200 against arm P",
+  "expectation": "the reasoning comes apart from the answer; whether the 256 budget then holds is open; confidence low"
+ },
+ "branches": {
+  "not_finished_by_STOP_AT": "07:45 or the owner's later time: the step stops, the progress file says where; the next night continues from the files",
+  "a_NIM_does_not_start": "its log is the result; that step stops, the others go on",
+  "finish_reason_length_over_2_percent": "recorded, max_tokens unchanged"
+ },
+ "harness_sha256": {
+  "scripts/p_arm.py": "21fd0d64278ec9034844cf9d8361f942fee4e90b1297c201da0a3aeba2b2f4c9",
+  "scripts/answer_arms.py": "f121b86768fab704f8b7df35a844dec7921f952f2bd9be6dcf62bed552ab62fc",
+  "scripts/c3_retrieve.py": "7cadbfaa958d7a80dad2e19157fc40b0bcc134bf1bcdeb61ca36be6b2ae97782",
+  "scripts/answers_extra.py": "a5c02e4a2bce899ee89db3308562c43bf8ad991c19ed425790019a22b1fbb1dc",
+  "scripts/es_latency_probe.py": "3b2ac8a1d17462b08f417e7812bb3ac4c4d479729caf0ee2f232c999d2e277a3",
+  "scripts/run_diff.py": "84c302779eefac71638b5c03c11eeb0fe1f9956c49d7978f4e06ba8b3fa03828",
+  "scripts/es_ann_vs_exact.py": "c27d0e76e0ae489db1dce00f6a271aa0cff97f9adf8b9a2afc9b07debef42e0f",
+  "scripts/capture_service_all.py": "2d08d7568388f5c4d3b2e6458dc15c09375507cfffb1ee56216fe5b3b6478af1",
+  "scripts/capture_requests_p.py": "e02096a6de419a88128f3db40bce25d5796c2da9d5cdc54cb49dac74e36ae039",
+  "results/c2/request_params.json": "ed09e9b257ad7538bef5c183db169bf6c57aeac5b1b9575b6f55ceb1d41f4042",
+  "results/c2/p_request_control.json": "226af583e2af7d729a09c0919401b47dbec91083cce7859107604b2e8493baa2",
+  "results/c2/c3_retrieval.json": "b3c90f8852ad1ac26d90bd3ce08fad2ebc0643d568b264c7e0114fc6d04b9732",
+  "eval/hotpot_scoring.py": "7cd6979e31c526a6690f52ca1be2a38e586aee6537693daefbb116652fe8edf6",
+  "eval/rag_eval.py": "9ed964de1ad84fa956c403963139d742c7eed1abf89273ccd730b13b3dd11d19"
+ },
+ "generator": "scripts/gen_addendum_4b_night3.py"
+}

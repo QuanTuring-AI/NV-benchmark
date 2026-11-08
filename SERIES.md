@@ -14,6 +14,7 @@ This file lists where each volume's evidence lives and which NVIDIA component ea
 | **Vol.2** · NIM + Nemotron: two deployment options on 32 GB | Data published 2026-09-25 · write-up to follow | [`vol2-nemotron/`](vol2-nemotron/) | [`vol2-nemotron/README.md`](vol2-nemotron/README.md) |
 | **Vol.3** · NeMo Guardrails on one RTX 5090: the models behind the rail | Baseline data published 2026-09-19 · judge study in progress | [`vol3-guardrails/`](vol3-guardrails/) | [`vol3-guardrails/README.md`](vol3-guardrails/README.md) |
 | **Vol.4** · Nemotron retrieval on one RTX 5090: embedding and reranking NIMs on whole corpora | Published 2026-10-31 · [forum thread 387528](https://forums.developer.nvidia.com/t/nemotron-retrieval-on-one-rtx-5090-4-9m-passage-miracl-zh-7-0m-ja-and-where-embedding-and-reranking-nims-top-out/387528) | [`vol4-retriever/`](vol4-retriever/) | [`vol4-retriever/README.md`](vol4-retriever/README.md) |
+| **Vol.5** · Nemotron on NVIDIA's RAG Blueprint, one RTX 5090: the default query path on whole corpora | Published 2026-11-08 | [`vol5-rag-blueprint/`](vol5-rag-blueprint/) | [`vol5-rag-blueprint/README.md`](vol5-rag-blueprint/README.md) |
 | Follow-ups to Vol.1's planned E4–E6 | Run as follow-ups; the records are in the directory | [`roadmap-e456/`](roadmap-e456/) | — |
 
 ---

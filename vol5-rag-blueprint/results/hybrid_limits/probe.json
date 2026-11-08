@@ -1,0 +1,175 @@
+{
+ "what": "the Blueprint's hybrid searches against the Elasticsearch it ships (scripts/es_hybrid_limits.py)",
+ "at": "2026-10-22T22:26:46+0800",
+ "index": "hotpotqa_whole",
+ "licence": {
+  "status": 200,
+  "type": "basic"
+ },
+ "version": "9.3.0",
+ "asked": [
+  {
+   "name": "rrf, top-level rank (what the client sends)",
+   "request_shape": {
+    "knn": {
+     "field": "vector",
+     "query_vector": "<fixed unit vector>",
+     "k": 100,
+     "num_candidates": 100
+    },
+    "query": {
+     "match": {
+      "text": "probe"
+     }
+    },
+    "rank": {
+     "rrf": {}
+    },
+    "size": 100
+   },
+   "status": 403,
+   "hits": null,
+   "error_type": "security_exception",
+   "error_reason": "current license is non-compliant for [Reciprocal Rank Fusion (RRF)]"
+  },
+  {
+   "name": "rrf, retriever form",
+   "request_shape": {
+    "retriever": {
+     "rrf": {
+      "retrievers": [
+       {
+        "standard": {
+         "query": {
+          "match": {
+           "text": "probe"
+          }
+         }
+        }
+       },
+       {
+        "knn": {
+         "field": "vector",
+         "query_vector": "<fixed unit vector>",
+         "k": 100,
+         "num_candidates": 100
+        }
+       }
+      ]
+     }
+    },
+    "size": 100
+   },
+   "status": 403,
+   "hits": null,
+   "error_type": "security_exception",
+   "error_reason": "current license is non-compliant for [Reciprocal Rank Fusion (RRF)]"
+  },
+  {
+   "name": "weighted, vdb_top_k 100",
+   "request_shape": {
+    "knn": {
+     "field": "vector",
+     "query_vector": "<fixed unit vector>",
+     "k": 100,
+     "num_candidates": 100,
+     "boost": 0.5
+    },
+    "query": {
+     "match": {
+      "text": {
+       "query": "probe",
+       "boost": 0.5
+      }
+     }
+    },
+    "size": 100
+   },
+   "status": 200,
+   "hits": 100,
+   "error_type": null,
+   "error_reason": null
+  },
+  {
+   "name": "weighted, vdb_top_k 200",
+   "request_shape": {
+    "knn": {
+     "field": "vector",
+     "query_vector": "<fixed unit vector>",
+     "k": 200,
+     "num_candidates": 100,
+     "boost": 0.5
+    },
+    "query": {
+     "match": {
+      "text": {
+       "query": "probe",
+       "boost": 0.5
+      }
+     }
+    },
+    "size": 200
+   },
+   "status": 400,
+   "hits": null,
+   "error_type": "illegal_argument_exception",
+   "error_reason": "[num_candidates] cannot be less than [k]"
+  },
+  {
+   "name": "weighted, vdb_top_k 400",
+   "request_shape": {
+    "knn": {
+     "field": "vector",
+     "query_vector": "<fixed unit vector>",
+     "k": 400,
+     "num_candidates": 100,
+     "boost": 0.5
+    },
+    "query": {
+     "match": {
+      "text": {
+       "query": "probe",
+       "boost": 0.5
+      }
+     }
+    },
+    "size": 400
+   },
+   "status": 400,
+   "hits": null,
+   "error_type": "illegal_argument_exception",
+   "error_reason": "[num_candidates] cannot be less than [k]"
+  },
+  {
+   "name": "control: kNN alone",
+   "request_shape": {
+    "knn": {
+     "field": "vector",
+     "query_vector": "<fixed unit vector>",
+     "k": 100,
+     "num_candidates": 100
+    },
+    "size": 100
+   },
+   "status": 200,
+   "hits": 100,
+   "error_type": null,
+   "error_reason": null
+  },
+  {
+   "name": "control: match alone",
+   "request_shape": {
+    "query": {
+     "match": {
+      "text": "probe"
+     }
+    },
+    "size": 100
+   },
+   "status": 200,
+   "hits": 100,
+   "error_type": null,
+   "error_reason": null
+  }
+ ]
+}

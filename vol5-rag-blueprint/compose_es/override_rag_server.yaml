@@ -1,0 +1,11 @@
+# Vol.5 · second -f file after the Blueprint's docker-compose-rag-server.yaml (the Blueprint's file is not edited): this
+# run's container name, the port on the loopback address only, and this run's name for the shared LanceDB volume (the
+# Elasticsearch default does not use it).
+services:
+  rag-server:
+    container_name: p137_rag_server
+    ports: !override
+      - "127.0.0.1:8081:8081"
+volumes:
+  rag-vol-lancedb:
+    name: p137-vol-lancedb

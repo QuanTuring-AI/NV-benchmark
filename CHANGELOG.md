@@ -2,6 +2,13 @@
 
 Every change to this repository that reached `main`, newest first. Volumes are named by their current numbers throughout; directory and tag names are given as they were at the time. To read the volumes themselves, start from the [README](README.md).
 
+## 2026-11-08 · Vol.5 published: Nemotron on NVIDIA's RAG Blueprint, one RTX 5090
+
+- **Vol.5 is published.** The NVIDIA RAG Blueprint v2.6.2 query path with its defaults on one RTX 5090: Elasticsearch, the Llama Nemotron reranking NIM and Nemotron 3 Nano against every passage of BEIR HotpotQA and MIRACL zh; what the default vector store loses against exact search and what its one setting gets back; the answer with no passages, through the Blueprint, with exact search's candidates and with the supporting passages; the supporting passages kept out; two ingestor defects; and three NIMs on one card. → [`vol5-rag-blueprint/README.md`](vol5-rag-blueprint/README.md)
+- **Figures:** the answers of the arms and the candidate-count trade-off, in the versions laid out for the forum page, with their point table.
+- **The tag `vol5`** points to the commit that merges the volume.
+- **`tools/bound_files.py`:** it now walks the supplements of each volume (`addendum*.json`) as well as its pre-registrations, so a file bound only by a supplement is checked too; the self-test binds a file through a supplement. Run again on Vol.1 to Vol.4, it finds no new mismatch.
+
 ## 2026-10-31 · Vol.4 forum post published
 
 - **Vol.4 forum post:** the article was posted on the NVIDIA Developer Forum on 2026-10-31. The link is on the front page, at the top of [`vol4-retriever/README.md`](vol4-retriever/README.md), in `SERIES.md` and in `releases/vol4.md`. → <https://forums.developer.nvidia.com/t/nemotron-retrieval-on-one-rtx-5090-4-9m-passage-miracl-zh-7-0m-ja-and-where-embedding-and-reranking-nims-top-out/387528>

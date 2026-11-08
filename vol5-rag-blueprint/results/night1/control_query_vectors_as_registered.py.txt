@@ -1,0 +1,72 @@
+#!/usr/bin/env python3
+"""Vol.5 · positive control (a) of the design: the query vectors the Blueprint's own query path makes with the swapped
+embedding model are Vol.4's query vectors (cosine at least 0.9999 for each of 20 questions), so the prefix, the input
+type and the truncation agree.
+
+  embed    runs inside the Blueprint's rag-server image: the rag-server's own factory
+           (nvidia_rag.utils.embedding.get_embedding_model, the call of rag_server/main.py) with the model name and the
+           address set the way the deployment sets them (APP_EMBEDDINGS_MODELNAME, APP_EMBEDDINGS_SERVERURL), then
+           `embed_query` for each question. Writes the vectors and the ids.
+  compare  on the host: each vector against Vol.4's vector of the same question (queries.npy of the 16-bit store,
+           checked against its recorded SHA-256).
+
+The 20 questions: the first 20 ids of the volume's HotpotQA id table in sorted order.
+usage: control_query_vectors.py embed --queries FILE(queries.jsonl) --ids FILE(id table) --out DIR
+       control_query_vectors.py compare --blueprint DIR --fp16-dir DIR --checkpoints FILE --out FILE
+"""
+import argparse, json, os, sys
+
+N, LIMIT = 20, 0.9999
+
+
+def first_ids(id_table):
+    return sorted(json.loads(l)["query_id"] for l in open(id_table, encoding="utf-8"))[:N]
+
+
+def embed(a):
+    import numpy as np
+    from nvidia_rag.utils.configuration import NvidiaRAGConfig
+    from nvidia_rag.utils.embedding import get_embedding_model
+    ids = first_ids(a.ids)
+    text = {}
+    for line in open(a.queries, encoding="utf-8"):
+        r = json.loads(line)
+        if r["_id"] in ids:
+            text[r["_id"]] = r["text"]
+    config = NvidiaRAGConfig()
+    model = get_embedding_model(model=os.environ["APP_EMBEDDINGS_MODELNAME"], url=os.environ["APP_EMBEDDINGS_SERVERURL"], config=config)
+    vecs = np.array([model.embed_query(text[q]) for q in ids], dtype=np.float32)
+    os.makedirs(a.out, exist_ok=True)
+    np.save(os.path.join(a.out, "blueprint_query_vectors.npy"), vecs)
+    json.dump({"ids": ids, "model": os.environ["APP_EMBEDDINGS_MODELNAME"], "class": type(model).__name__,
+               "truncate": getattr(model, "truncate", None), "dimensions": getattr(model, "dimensions", None)},
+              open(os.path.join(a.out, "blueprint_query_vectors.json"), "w", encoding="utf-8"), indent=1)
+    print(len(ids), vecs.shape)
+
+
+def compare(a):
+    import numpy as np
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "vol4-retriever", "scripts"))
+    import search_whole_corpus as S
+    _, qrec, _ = S.pieces_from_checkpoints(a.checkpoints)
+    q, _ = S.read_npy_checked(os.path.join(a.fp16_dir, "queries.npy"), qrec["queries_sha256"])
+    pos = {qid: i for i, qid in enumerate(json.load(open(os.path.join(a.fp16_dir, "query_ids.json"), encoding="utf-8")))}
+    meta = json.load(open(os.path.join(a.blueprint, "blueprint_query_vectors.json"), encoding="utf-8"))
+    b = np.load(os.path.join(a.blueprint, "blueprint_query_vectors.npy"))
+    cos = []
+    for qid, v in zip(meta["ids"], b):
+        w = q[pos[qid]].astype(np.float64); v = v.astype(np.float64)
+        cos.append(float(v @ w / (np.linalg.norm(v) * np.linalg.norm(w))))
+    rec = {"questions": len(cos), "cosine_min": min(cos), "cosine_mean": sum(cos) / len(cos), "limit": LIMIT, "pass": min(cos) >= LIMIT,
+           "per_question": dict(zip(meta["ids"], cos)), "blueprint_side": {k: v for k, v in meta.items() if k != "ids"}}
+    json.dump(rec, open(a.out, "w", encoding="utf-8", newline="\n"), indent=1)
+    print(json.dumps({k: rec[k] for k in ("questions", "cosine_min", "pass")}))
+    return 0 if rec["pass"] else 1
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser(); ap.add_argument("cmd", choices=("embed", "compare"))
+    for x in ("--queries", "--ids", "--out", "--blueprint", "--fp16-dir", "--checkpoints"):
+        ap.add_argument(x)
+    a = ap.parse_args()
+    sys.exit(embed(a) if a.cmd == "embed" else compare(a))

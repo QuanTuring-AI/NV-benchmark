@@ -1,0 +1,118 @@
+{
+ "what": "Vol.5, night 1: the two positive controls of the volume's three deviations from the RAG Blueprint v2.6.2, and cell C1 on BEIR HotpotQA's whole corpus (5,233,329 passages): the Blueprint's default vector store, Elasticsearch 9.3.0 with the index type its server applies, against Vol.4's exact search on the same vectors",
+ "draft": false,
+ "written_at": "2026-10-18T04:20:05+0800",
+ "authorised_by": "the design ticket of 2026-10-18 for Vol.5 (cells on the card only when the owner says start)",
+ "settings": "BLUEPRINT_SETTINGS.md (every default quoted with file and line; the three deviations)",
+ "question_set": {
+  "id_table": "results/question_set/hotpotqa_ids.jsonl",
+  "check": "results/question_set/hotpotqa_check_hf_mirror.json",
+  "all_matched": true,
+  "source_used": {
+   "name": "validation-00000-of-00001.parquet",
+   "sha256": "78933c0a31a5f7b420d4effdf4cd4eed573b28c6a3da6179dcf7a02b39e51d03"
+  },
+  "official_file": "http://curtis.ml.cmu.edu/datasets/hotpot/hotpot_dev_fullwiki_v1.json did not answer on 2026-10-18 (03:04, 03:05, 03:19 +0800); the matching ran on the Hugging Face copy and is run again on the official file when it can be fetched"
+ },
+ "images": {
+  "elasticsearch": {
+   "image": "docker.elastic.co/elasticsearch/elasticsearch:9.3.0",
+   "id": "sha256:4f6bdcb742e892539c6ac49b0dd3e4e182e90218546e8c6a22db378c344acb60"
+  },
+  "rag_server": {
+   "image": "nvcr.io/nvidia/blueprint/rag-server:2.6.0",
+   "id": "sha256:6042ad4d7e271fe1362ce8dbede6df7c659ff3df8878ae718550149c5075c972"
+  },
+  "ingestor_server": {
+   "image": "nvcr.io/nvidia/blueprint/ingestor-server:2.6.0",
+   "id": "sha256:5573a2ec107015daaeed6994d1f6779a1df57bd3e6f2daa904ac9ab8f0b7a557"
+  },
+  "nv_ingest": {
+   "image": "nvcr.io/nvidia/nemo-microservices/nv-ingest:26.3.0",
+   "id": "sha256:0a804b1d6ca7cbf8b3f386dcd76825ee25eb4056898f3a17c9f39f249afae9be"
+  },
+  "embedding_nim": {
+   "image": "nvcr.io/nim/nvidia/nemotron-3-embed-1b:2.2.2",
+   "id": "sha256:16f49c13bc9ee101f4abfaba972b2dc2e587871ab7474913ac40dbf0bffb7d92"
+  },
+  "es_client": {
+   "image": "vol5-es-client:es8.19.3",
+   "id": "sha256:0b0ccd3ea8c3bb01c1cc630a621443930852b66b1ad74d45b29c843cc8de61f7",
+   "dockerfile": "client_es/Dockerfile"
+  }
+ },
+ "elasticsearch_as_shipped": {
+  "compose": "deploy/compose/vectordb.yaml lines 90-126: single node, ES_JAVA_OPTS -Xms1024m -Xmx1024m, security off, basic licence, not on the card",
+  "index_type_read_back": "a 9.3.0 node given a 2,048-dimension cosine dense_vector with no index_options (the Blueprint's mapping) reports index_options {type: bbq_hnsw, m: 16, ef_construction: 100, rescore_vector: {oversample: 3.0}} (path test, 2026-10-18 03:1x, read with include_defaults); read again from the real indexes",
+  "query": "kNN, k = num_candidates = 100 (elastic_vdb.py:1107 with VECTOR_DB_TOPK 100)"
+ },
+ "control_a": {
+  "what": "the query vectors of the Blueprint's own query path (rag-server 2.6.0's get_embedding_model, embed_query) with the swapped model, against Vol.4's query vectors",
+  "questions": "the first 20 ids of the HotpotQA id table, sorted",
+  "rule": "cosine at least 0.9999 for every one of the 20; otherwise stop (the ticket's first stop)",
+  "program": "scripts/control_query_vectors.py"
+ },
+ "control_b": {
+  "what": "the first 100,000 passages of the HotpotQA corpus (file order) indexed twice: by the Blueprint's ingestor (uploaded as one text file per passage, batches of 500, its default split) and by es_bulk_load.py with the mapping read from the ingestor's index",
+  "questions": "the first 100 ids of the HotpotQA id table, sorted",
+  "rule": "mean overlap of the two indexes' top 100 at least 0.99; otherwise stop",
+  "if_slow": "if the ingestor has not finished the 100,000 within 2 hours, the control runs on the passages it finished, at least 20,000, and the record says so",
+  "programs": [
+   "scripts/ingest_slice_via_blueprint.py",
+   "scripts/es_bulk_load.py",
+   "scripts/es_ann_vs_exact.py"
+  ]
+ },
+ "C1": {
+  "load": "es_bulk_load.py into a fresh index created with the captured mapping; vectors from the 16-bit store, proven per piece; 200 documents per request; refresh off while loading",
+  "measured": {
+   "load_seconds": "first request to the last piece indexed, then to the refresh",
+   "disk": "_cat/indices store.size after the load",
+   "memory": "the Elasticsearch container's memory (docker stats) and the Docker VM's MemAvailable, sampled every 30 s through load and searches; the peak",
+   "overlap": "per query the share of Vol.4's exact top 10 / top 100 found in the store's top 10 / top 100: mean, lowest, queries under 0.9",
+   "quality": "nDCG@10 and Recall@100 of the store's run beside Vol.4's exact 0.80079 / 0.91567",
+   "latency": "c = 1 over the 7,405 queries, the duration of each call in the client container; p50, p99; the first ten apart"
+  },
+  "validity_gate": {
+   "rule": "on the 100,000-passage index of control (b) loaded by es_bulk_load.py: script_score exact search for 200 questions must give the top 100 of numpy's exact search on the same vectors, equal scores swapped apart and listed; otherwise no figure of the store is reported (the ticket's second stop)",
+   "why_on_the_slice": "brute force over the whole index reads about 43 GB of vectors per question, more than the Docker VM holds; the slice is loaded by the same program with the same mapping. Five questions are also searched by brute force on the whole index and listed as a supplement",
+   "questions": "the first 200 ids of the HotpotQA id table, sorted"
+  },
+  "negative_control": {
+   "what": "k = 10, num_candidates = 10, query rescore_vector.oversample = 0",
+   "rule": "the mean overlap at 10 falls at least 0.05 below the default query's"
+  },
+  "branches": {
+   "heap": "if the index cannot be built with the 1 GB heap: the error is the result; one more try with 4 GB (the only change)",
+   "vm_memory": "Docker VM memory at 85%: stop this corpus and record",
+   "disk": "under 60 GB free: no second corpus"
+  },
+  "expectation": {
+   "overlap_at_100": "mean between 0.90 and 0.99 (binary quantisation with a threefold rescore)",
+   "ndcg_at_10": "within 0.02 of 0.80079",
+   "latency_p50_ms": "between 5 and 100",
+   "load": "several hours (JSON floats, as the Blueprint sends them)",
+   "confidence": "low"
+  }
+ },
+ "not_this_night": [
+  "MIRACL zh (night 2)",
+  "answers (C2, C3)",
+  "co-residence (C4)"
+ ],
+ "harness_sha256": {
+  "scripts/es_bulk_load.py": "3514d3e4a837fd121385c4ce614d17e4b1b7fe210f383e97b57877e62e89d510",
+  "scripts/es_ann_vs_exact.py": "c27d0e76e0ae489db1dce00f6a271aa0cff97f9adf8b9a2afc9b07debef42e0f",
+  "scripts/control_query_vectors.py": "b56ec188833b9fe0cf6d75fdcc9814a7e2706f4afc66d84670acccaa9a43a614",
+  "scripts/ingest_slice_via_blueprint.py": "3292b9db7d4b17c42cd8733460cb7ad52f849caa9c0a932a54e73092b94b7c82",
+  "scripts/slice_exact.py": "4a7235cf3c9ebe756dbb6ba928d844d7eb4e628e725195b19bd88a52b8e7e926",
+  "client_es/Dockerfile": "4ecb6b049ca6cd1c531e2382cb3fff3e7518d549b3edae356faca0ab945a7b28",
+  "compose_es/night.env": "ffd2d5ad0299b1a369cd2fd891eed9a0ab474e7ba60b5b9c95693a77b7ce4721",
+  "compose_es/override_ingestor.yaml": "3216cd4158ad1c7303217c86c3bb680a0d66df3a7bbc6b55c9ca63bb0632f889",
+  "compose_es/override_vectordb.yaml": "9ee648299d2d3c73652344f80edc7ccbbed376463746cfdb5265401e33648f5f",
+  "eval/hotpotqa_set.py": "931740721ae609d42281bee1acad5c632389a5b6390b82b346c5e50eee2905fb",
+  "vol4-retriever/scripts/fp16_store.py": "56fa18e295191e0097d014ac7ba13eb074db287f7b1447107fb72b8fab410dee",
+  "tools/g8_gate.py": "7fdb9906f2efdb653b3a4db2231ba28a7d5d65ff006ed3260dd475014ee294cb"
+ },
+ "generator": "scripts/gen_prediction_v5_night1.py"
+}
