@@ -1,6 +1,8 @@
-# Vol.5 · The NVIDIA RAG Blueprint's default path on one RTX 5090, on Vol.4's corpora
+# Vol.5 · Nemotron on NVIDIA's RAG Blueprint, one RTX 5090: 5.2M-passage HotpotQA end to end, and nine defaults to check before you deploy
 
-**Measurements complete (2026-10-18 to 2026-10-22; arm P\* on 2026-10-26 and 2026-11-01); not yet published as an article.** Everything below is read from the result files of this folder; the table at the end gives the file and key of every number.
+> **Reproduce:** `git checkout vol5`. Every number of the article has a row in the claim → evidence tables below; `python tools/check_claims.py vol5-rag-blueprint/README.md` checks them all.
+
+Everything below is read from the result files of this folder; the table at the end gives the file and key of every number.
 
 The [NVIDIA RAG Blueprint](https://github.com/NVIDIA-AI-Blueprints/rag) v2.6.2 is run here as it ships, with three changes (below), on the corpora of [Vol.4](../vol4-retriever/README.md): BEIR HotpotQA (5,233,329 passages, 7,405 questions, English) and MIRACL zh (4,934,368 passages, 393 questions). Vol.4 measured the retrieval models alone; this volume measures the Blueprint's whole query path around them.
 
@@ -319,7 +321,7 @@ Every number of the forum post and its first reply that the table above does not
 | The settled index, default query: Recall@100 ('then 0.765') | 0.765 | `results/day3/nc_blueprint_100_now_score.json` | `metrics.recall_100` | rounds |
 | nDCG@10, first query minus settled | 0.0001 | `results/night1/c1_score.json` | `metrics.ndcg_cut_10 - results/day3/nc_blueprint_100_now_score.json::metrics.ndcg_cut_10` | rounds |
 | The same, inside the bound the post states ('moved by less than 0.001') | 0.001 | `results/night1/c1_score.json` | `metrics.ndcg_cut_10 - results/day3/nc_blueprint_100_now_score.json::metrics.ndcg_cut_10` | within |
-| Recall@100, first query minus settled | 0.0003 | `results/night1/c1_score.json` | `metrics.recall_100 - results/day3/nc_blueprint_100_now_score.json::metrics.recall_100` | rounds |
+| Recall@100, first query minus settled ('a difference of 0.0003') | 0.0003 | `results/night1/c1_score.json` | `metrics.recall_100 - results/day3/nc_blueprint_100_now_score.json::metrics.recall_100` | rounds |
 | The same, inside the bound the post states ('moved by less than 0.001') | 0.001 | `results/night1/c1_score.json` | `metrics.recall_100 - results/day3/nc_blueprint_100_now_score.json::metrics.recall_100` | within |
 | MIRACL zh: the first query, minutes after the load ('in the 17 minutes') | 17 | `results/index_state.json` | `miracl_zh.first_query_minutes_after_the_load[1]` | rounds |
 | MIRACL zh: the second query, from minutes after the load ('21 to') | 21 | `results/index_state.json` | `miracl_zh.second_query_minutes_after_the_load[0]` | rounds |
@@ -424,9 +426,9 @@ Every number of the forum post and its first reply that the table above does not
 | Supplements ('eight addenda') | 8 | `results/night1/addendum_8_p_star.json` | `supplement 8` | text |
 | Arm P*: its first container, 26 October | 26 | `results/p_star/events.jsonl` | `{"at": "2026-10-26T12:26:36+0800", "kind": "copied_commands_start"` | text |
 | Arm P*: the rest of its answers, 1 November | 1 | `results/p_star/events.jsonl` | `{"at": "2026-11-01T06:41:27+0800", "kind": "gen_done", "lines": 7405` | text |
-| Arm P* answered at this many requests in flight, 26 October ('10 requests in flight') | 10 | `results/p_star/events.jsonl` | `{"at": "2026-10-26T18:03:23+0800", "kind": "nano_ready", "concurrency": 10,` | text |
+| Arm P* answered at this many requests in flight, 26 October ('10 requests in flight'; the concurrency the NIM reported for that container when it started) | 10 | `results/p_star/events.jsonl` | `{"at": "2026-10-26T18:03:23+0800", "kind": "nano_ready", "concurrency": 10,` | text |
 | The same, 1 November | 10 | `results/p_star/events.jsonl` | `{"at": "2026-11-01T05:27:44+0800", "kind": "nano_ready", "concurrency": 10,` | text |
-| The default path (arm P, night 3, the container before its answers) answered at ('the default path at 7') | 7 | `results/night3/events.jsonl` | `{"at": "2026-10-20T03:42:36+0800", "kind": "nano_ready", "concurrency": 7,` | text |
+| The default path (arm P, night 3, the container before its answers) answered at ('the default path at 7'; the concurrency the NIM reported for that container when it started) | 7 | `results/night3/events.jsonl` | `{"at": "2026-10-20T03:42:36+0800", "kind": "nano_ready", "concurrency": 7,` | text |
 | The driver | 617.42 | `results/night1/events.jsonl` | `"driver": "617.42"` | text |
 
 Run `python ../tools/check_claims.py README.md` to check these rows with the others.

@@ -1,6 +1,4 @@
-Forum post: <FORUM_URL>
-
-![Nemotron on NVIDIA's RAG Blueprint, one RTX 5090](<COVER_URL>)
+![Nemotron on NVIDIA's RAG Blueprint, one RTX 5090](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol5-rag-blueprint/figures/nv_vol5_cover_1200x630.png)
 
 ![Share of answers containing the official answer on 7,405 HotpotQA questions: no passages 0.304, the Blueprint's default path 0.534, the two supporting passages 0.728, with Wilson intervals; beside it, 200 questions with their supporting passages kept out of the search: refused by pattern 0.335, refused by hand 0.540, still right 0.120](https://raw.githubusercontent.com/QuanTuring-AI/NV-benchmark/main/vol5-rag-blueprint/figures/answers_dark_forum.png)
 
