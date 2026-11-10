@@ -90,6 +90,7 @@ A tag opens the whole repository as it was at one commit; [`CHRONICLE.md`](CHRON
 | `NIM_MAX_MODEL_LEN=8192` (the default context does not leave room for the KV cache) | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) §3 |
 | NGC key without a trailing space · PowerShell single-line commands · Windows console encoding (cp950) with multilingual output | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) §4–§6 |
 | NeMo Guardrails self-check prompts | [`DEPLOYMENT_NOTES.md`](DEPLOYMENT_NOTES.md) (Guardrails section) · [`vol3-guardrails/BASELINE.md`](vol3-guardrails/BASELINE.md) §8–§9 |
+| Publish a container's port on the loopback address only: `-p 127.0.0.1:8000:8000`. Docker Desktop publishes a bare `-p 8000:8000` on every interface of the host, and the NIM endpoint has no authentication. Some scripts and commands of the published runs keep the bare form they ran with (most of those scripts are hash-bound to pre-registrations and are not edited); add `127.0.0.1:` before reusing one, including the *Run it* commands of the volume READMEs. | [`docker-compose.yml`](docker-compose.yml) (binds to 127.0.0.1) · [`vol1-nim/README.md`](vol1-nim/README.md) · [`vol2-nemotron/README.md`](vol2-nemotron/README.md) |
 
 `DEPLOYMENT_NOTES.md` records the stack of March 2026 and is kept as published. The current stack is NIM 2.0.12 on driver 591.86.
 

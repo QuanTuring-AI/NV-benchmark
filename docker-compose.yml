@@ -5,7 +5,7 @@ services:
     image: nvcr.io/nim/meta/llama-3.1-8b-instruct:latest
     container_name: nim-llama
     ports:
-      - "${NIM_PORT:-8000}:8000"
+      - "127.0.0.1:${NIM_PORT:-8000}:8000"
     environment:
       - NIM_MANIFEST_PROFILE=${NIM_MANIFEST_PROFILE:-vllm-bf16-tp1}
     deploy:
